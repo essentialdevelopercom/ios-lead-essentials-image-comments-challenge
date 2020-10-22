@@ -5,7 +5,7 @@
 import EssentialFeed
 import XCTest
 
-struct ImageComment {
+struct ImageComment: Decodable, Equatable {
     let id: UUID
     let message: String
     let createdAt: Date
@@ -26,6 +26,10 @@ class RemoteImageCommentsLoader {
         self.client = client
     }
 
+    private struct Root: Decodable {
+        let items: [ImageComment]
+    }
+
     func load(from url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             switch result {
@@ -34,9 +38,10 @@ class RemoteImageCommentsLoader {
                 if !statusOk.contains(response.statusCode) {
                     completion(.failure(Error.invalidData))
                 } else {
-                    guard let _ = try? JSONSerialization.jsonObject(with: data) else {
+                    guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
                         return completion(.failure(Error.invalidData))
                     }
+                    completion(.success(root.items))
                 }
             case .failure:
                 completion(.failure(Error.connectivity))
@@ -99,6 +104,15 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         })
     }
 
+    func test_load_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() {
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: .success([]), when: {
+            let emptyListJSON = Data("{\"items\": [] }".utf8)
+            client.complete(withStatusCode: 200, data: emptyListJSON)
+        })
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -129,6 +143,8 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
         sut.load(from: url) { receivedResult in
             switch (receivedResult, expectedResult) {
+            case let (.success(receivedComments), .success(expectedComments)):
+                XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
             case let (.failure(receivedError), .failure(expectedError)):
                 XCTAssertEqual(receivedError as NSError?, expectedError as NSError?, file: file, line: line)
             default:
