@@ -9,4 +9,11 @@ public struct ImageComment: Equatable {
     let message: String
     let createdAt: Date
     let author: String
+
+    public init(id: UUID, message: String, createdAt: Date, author: String) {
+        self.id = id
+        self.message = message
+        self.createdAt = createdAt
+        self.author = author
+    }
 }
