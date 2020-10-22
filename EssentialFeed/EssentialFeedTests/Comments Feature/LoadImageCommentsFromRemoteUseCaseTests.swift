@@ -29,10 +29,14 @@ class RemoteImageCommentsLoader {
     func load(from url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             switch result {
-            case let .success((_, response)):
+            case let .success((data, response)):
                 let statusOk = 200 ... 299
                 if !statusOk.contains(response.statusCode) {
                     completion(.failure(Error.invalidData))
+                } else {
+                    guard let _ = try? JSONSerialization.jsonObject(with: data) else {
+                        return completion(.failure(Error.invalidData))
+                    }
                 }
             case .failure:
                 completion(.failure(Error.connectivity))
@@ -88,6 +92,15 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         }
     }
 
+    func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: failure(.invalidData), when: {
+            let invalidJSON = Data("invalid json".utf8)
+            client.complete(withStatusCode: 201, data: invalidJSON)
+        })
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -100,6 +113,10 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
+    }
+
+    private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result {
+        .failure(error)
     }
 
     private func expect(
