@@ -5,8 +5,24 @@
 import EssentialFeed
 import XCTest
 
+struct ImageComment {
+    let id: UUID
+    let message: String
+    let createdAt: Date
+    let author: String
+}
+
 class RemoteImageCommentsLoader {
-    init(client _: HTTPClient) {}
+    let client: HTTPClient
+
+    init(client: HTTPClient) {
+        self.client = client
+    }
+
+    func load(from url: URL, completion: @escaping (Result<[ImageComment], Error>) -> Void) {
+        client.get(from: url) { _ in
+        }
+    }
 }
 
 final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
@@ -14,6 +30,15 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let (_, client) = makeSUT()
 
         XCTAssertTrue(client.requestedURLs.isEmpty)
+    }
+
+    func test_load_requestsDataFromURL() {
+        let url = URL(string: "https://a-given-url.com")!
+        let (sut, client) = makeSUT(url: url)
+
+        sut.load(from: url) { _ in }
+
+        XCTAssertEqual(client.requestedURLs, [url])
     }
 
     // MARK: - Helpers
