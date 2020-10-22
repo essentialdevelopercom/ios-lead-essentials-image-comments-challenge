@@ -68,44 +68,22 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
-        let url = URL(string: "https://a-given-url.com")!
         let expectedError = anyNSError()
 
-        let exp = expectation(description: "Wait completion loader")
-        sut.load(from: url) { result in
-            switch result {
-            case let .failure(receivedError):
-                XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
-            default:
-                XCTFail("Expected failure, git \(result) instead.")
-            }
-            exp.fulfill()
-        }
-
-        client.complete(with: expectedError)
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWith: .failure(anyNSError()), when: {
+            client.complete(with: expectedError)
+        })
     }
 
     func test_load_deliversErrorOnNon2xxHTTPResponse() {
         let (sut, client) = makeSUT()
-        let url = URL(string: "https://a-given-url.com")!
-        let expectedError = RemoteImageCommentsLoader.Error.invalidData
+        let expectedError: RemoteImageCommentsLoader.Error = .invalidData
         let samples = [199, 300, 345, 400, 500]
 
         samples.enumerated().forEach { index, code in
-            let exp = expectation(description: "Wait completion loader")
-            sut.load(from: url) { result in
-                switch result {
-                case let .failure(receivedError):
-                    XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
-                default:
-                    XCTFail("Expected failure, git \(result) instead.")
-                }
-                exp.fulfill()
-            }
-
-            client.complete(withStatusCode: code, data: anyData(), at: index)
-            wait(for: [exp], timeout: 1.0)
+            expect(sut, toCompleteWith: .failure(expectedError), when: {
+                client.complete(withStatusCode: code, data: anyData(), at: index)
+            })
         }
     }
 
@@ -121,5 +99,29 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
+    }
+
+    private func expect(
+        _ sut: RemoteImageCommentsLoader,
+        toCompleteWith expectedResult: RemoteImageCommentsLoader.Result,
+        when action: () -> Void,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Wait completion loader")
+        let url = URL(string: "https://a-given-url.com")!
+
+        sut.load(from: url) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError as NSError?, expectedError as NSError?, file: file, line: line)
+            default:
+                XCTFail("Expected failure, got \(receivedResult) instead.", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+
+        action()
+        wait(for: [exp], timeout: 1.0)
     }
 }
