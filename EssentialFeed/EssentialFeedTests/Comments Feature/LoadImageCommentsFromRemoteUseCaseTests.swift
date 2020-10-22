@@ -15,7 +15,11 @@ struct ImageComment {
 class RemoteImageCommentsLoader {
     let client: HTTPClient
 
-    typealias Result = Swift.Result<[ImageComment], Error>
+    typealias Result = Swift.Result<[ImageComment], Swift.Error>
+
+    enum Error: Swift.Error {
+        case invalidData
+    }
 
     init(client: HTTPClient) {
         self.client = client
@@ -24,10 +28,13 @@ class RemoteImageCommentsLoader {
     func load(from url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             switch result {
+            case let .success((_, response)):
+                let statusOk = 200 ... 299
+                if !statusOk.contains(response.statusCode) {
+                    completion(.failure(Error.invalidData))
+                }
             case let .failure(error):
                 completion(.failure(error))
-            default:
-                break
             }
         }
     }
@@ -77,6 +84,29 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
         client.complete(with: expectedError)
         wait(for: [exp], timeout: 1.0)
+    }
+
+    func test_load_deliversErrorOnNon2xxHTTPResponse() {
+        let (sut, client) = makeSUT()
+        let url = URL(string: "https://a-given-url.com")!
+        let expectedError = RemoteImageCommentsLoader.Error.invalidData
+        let samples = [199, 300, 345, 400, 500]
+
+        samples.enumerated().forEach { index, code in
+            let exp = expectation(description: "Wait completion loader")
+            sut.load(from: url) { result in
+                switch result {
+                case let .failure(receivedError):
+                    XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
+                default:
+                    XCTFail("Expected failure, git \(result) instead.")
+                }
+                exp.fulfill()
+            }
+
+            client.complete(withStatusCode: code, data: anyData(), at: index)
+            wait(for: [exp], timeout: 1.0)
+        }
     }
 
     // MARK: - Helpers
