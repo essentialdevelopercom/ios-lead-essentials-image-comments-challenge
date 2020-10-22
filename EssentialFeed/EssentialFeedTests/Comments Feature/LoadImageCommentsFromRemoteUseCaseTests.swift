@@ -73,20 +73,18 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
-        let expectedError: RemoteImageCommentsLoader.Error = .connectivity
 
-        expect(sut, toCompleteWith: .failure(expectedError), when: {
+        expect(sut, toCompleteWith: failure(.connectivity), when: {
             client.complete(with: anyNSError())
         })
     }
 
     func test_load_deliversErrorOnNon2xxHTTPResponse() {
         let (sut, client) = makeSUT()
-        let expectedError: RemoteImageCommentsLoader.Error = .invalidData
         let samples = [199, 300, 345, 400, 500]
 
         samples.enumerated().forEach { index, code in
-            expect(sut, toCompleteWith: .failure(expectedError), when: {
+            expect(sut, toCompleteWith: failure(.invalidData), when: {
                 client.complete(withStatusCode: code, data: anyData(), at: index)
             })
         }
