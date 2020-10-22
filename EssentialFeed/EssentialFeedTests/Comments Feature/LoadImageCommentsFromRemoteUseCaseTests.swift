@@ -18,6 +18,7 @@ class RemoteImageCommentsLoader {
     typealias Result = Swift.Result<[ImageComment], Swift.Error>
 
     enum Error: Swift.Error {
+        case connectivity
         case invalidData
     }
 
@@ -33,8 +34,8 @@ class RemoteImageCommentsLoader {
                 if !statusOk.contains(response.statusCode) {
                     completion(.failure(Error.invalidData))
                 }
-            case let .failure(error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(Error.connectivity))
             }
         }
     }
@@ -68,10 +69,10 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
-        let expectedError = anyNSError()
+        let expectedError: RemoteImageCommentsLoader.Error = .connectivity
 
-        expect(sut, toCompleteWith: .failure(anyNSError()), when: {
-            client.complete(with: expectedError)
+        expect(sut, toCompleteWith: .failure(expectedError), when: {
+            client.complete(with: anyNSError())
         })
     }
 
