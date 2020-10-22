@@ -5,11 +5,36 @@
 import EssentialFeed
 import XCTest
 
-struct ImageComment: Decodable, Equatable {
+struct ImageComment: Equatable {
     let id: UUID
     let message: String
     let createdAt: Date
     let author: String
+}
+
+struct RemoteImageCommentAuthor: Decodable {
+    let username: String
+}
+
+struct RemoteImageCommentItem: Decodable {
+    let id: UUID
+    let message: String
+    let created_at: Date
+    let author: RemoteImageCommentAuthor
+}
+
+class ImageCommentsItemsMapper {
+    static let statusOk = 200 ... 299
+    struct Root: Decodable {
+        let items: [RemoteImageCommentItem]
+    }
+
+    static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageCommentItem] {
+        guard statusOk.contains(response.statusCode), let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            throw RemoteImageCommentsLoader.Error.invalidData
+        }
+        return root.items
+    }
 }
 
 class RemoteImageCommentsLoader {
@@ -26,27 +51,30 @@ class RemoteImageCommentsLoader {
         self.client = client
     }
 
-    private struct Root: Decodable {
-        let items: [ImageComment]
-    }
-
     func load(from url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             switch result {
             case let .success((data, response)):
-                let statusOk = 200 ... 299
-                if !statusOk.contains(response.statusCode) {
-                    completion(.failure(Error.invalidData))
-                } else {
-                    guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
-                        return completion(.failure(Error.invalidData))
-                    }
-                    completion(.success(root.items))
-                }
+                completion(RemoteImageCommentsLoader.map(data, from: response))
             case .failure:
                 completion(.failure(Error.connectivity))
             }
         }
+    }
+
+    static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+        do {
+            let items = try ImageCommentsItemsMapper.map(data, from: response)
+            return .success(items.toModels())
+        } catch {
+            return .failure(error)
+        }
+    }
+}
+
+private extension Array where Element == RemoteImageCommentItem {
+    func toModels() -> [ImageComment] {
+        map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author.username) }
     }
 }
 
