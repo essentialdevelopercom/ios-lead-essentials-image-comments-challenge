@@ -4,10 +4,10 @@
 
 import Foundation
 
-public class RemoteImageCommentsLoader {
+public class RemoteImageCommentsLoader: ImageCommentsLoader {
     let client: HTTPClient
 
-    public typealias Result = Swift.Result<[ImageComment], Swift.Error>
+    public typealias Result = ImageCommentsLoader.Result
 
     public enum Error: Swift.Error {
         case connectivity
@@ -18,7 +18,7 @@ public class RemoteImageCommentsLoader {
         self.client = client
     }
 
-    private final class HTTPClientTaskWrapper: HTTPClientTask {
+    private final class HTTPClientTaskWrapper: ImageCommentsLoaderTask {
         private var completion: ((Result) -> Void)?
         var wrappedTask: HTTPClientTask?
 
@@ -40,7 +40,7 @@ public class RemoteImageCommentsLoader {
         }
     }
 
-    public func load(from url: URL, completion: @escaping (Result) -> Void) -> HTTPClientTask {
+    public func load(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
         let task = HTTPClientTaskWrapper(completion: completion)
         task.wrappedTask = client.get(from: url) { [weak self] result in
             guard self != nil else { return }
