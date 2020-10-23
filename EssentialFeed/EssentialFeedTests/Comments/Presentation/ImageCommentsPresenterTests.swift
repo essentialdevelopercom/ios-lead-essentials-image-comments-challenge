@@ -2,6 +2,7 @@
 //  Copyright © 2020 Essential Developer. All rights reserved.
 //
 
+import EssentialFeed
 import XCTest
 
 protocol ImageCommentsLoadingView {
@@ -12,7 +13,12 @@ protocol ImageCommentsErrorView {
     func display(errorMessage: String?)
 }
 
+protocol ImageCommentsView {
+    func display(comments: [ImageComment])
+}
+
 class ImageCommentsPresenter {
+    let imageCommentsView: ImageCommentsView
     let loadingView: ImageCommentsLoadingView
     let errorView: ImageCommentsErrorView
 
@@ -23,7 +29,8 @@ class ImageCommentsPresenter {
         comment: "Title for the image comments view"
     ) }
 
-    init(loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+    init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+        self.imageCommentsView = imageCommentsView
         self.loadingView = loadingView
         self.errorView = errorView
     }
@@ -31,6 +38,11 @@ class ImageCommentsPresenter {
     func didStartLoadingComments() {
         loadingView.display(isLoading: true)
         errorView.display(errorMessage: nil)
+    }
+
+    func didFinishLoading(with comments: [ImageComment]) {
+        imageCommentsView.display(comments: comments)
+        loadingView.display(isLoading: false)
     }
 }
 
@@ -53,11 +65,19 @@ final class ImageCommentsPresenterTests: XCTestCase {
         XCTAssertEqual(view.messages, [.display(errorMessage: nil), .display(isLoading: true)])
     }
 
+    func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
+        let (sut, view) = makeSUT()
+        let comments = uniqueComments()
+        sut.didFinishLoading(with: comments)
+
+        XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsPresenter, ViewSpy) {
         let view = ViewSpy()
-        let sut = ImageCommentsPresenter(loadingView: view, errorView: view)
+        let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(view, file: file, line: line)
         return (sut, view)
@@ -72,14 +92,40 @@ final class ImageCommentsPresenterTests: XCTestCase {
         }
         return value
     }
+    
+    private func uniqueComments() -> [ImageComment] {
+        [
+            ImageComment(
+                id: UUID(),
+                message: "a message",
+                createdAt: anyDate(),
+                author: "a username"
+            ),
+            ImageComment(
+                id: UUID(),
+                message: "another message",
+                createdAt: anyDate(),
+                author: "another username"
+            ),
+        ]
+    }
+    
+    private func anyDate() -> Date {
+        Date(timeIntervalSince1970: 1603416829)
+    }
 
-    private class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView {
+    private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
         enum Message: Hashable {
             case display(errorMessage: String?)
             case display(isLoading: Bool)
+            case display(comments: [ImageComment])
         }
 
-        var messages = Set<Message>()
+        private(set) var messages = Set<Message>()
+
+        func display(comments: [ImageComment]) {
+            messages.insert(.display(comments: comments))
+        }
 
         func display(isLoading: Bool) {
             messages.insert(.display(isLoading: isLoading))
