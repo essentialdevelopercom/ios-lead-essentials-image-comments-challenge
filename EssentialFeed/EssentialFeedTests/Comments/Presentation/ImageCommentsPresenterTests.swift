@@ -5,92 +5,6 @@
 import EssentialFeed
 import XCTest
 
-struct ImageCommentsLoadingViewModel {
-    let isLoading: Bool
-}
-
-protocol ImageCommentsLoadingView {
-    func display(_ viewModel: ImageCommentsLoadingViewModel)
-}
-
-struct ImageCommentsErrorViewModel {
-    let errorMessage: String?
-}
-
-protocol ImageCommentsErrorView {
-    func display(_ viewModel: ImageCommentsErrorViewModel)
-}
-
-struct PresentableImageComment: Hashable {
-    let username: String
-    let createdAt: String
-    let message: String
-}
-
-struct ImageCommentsViewModel {
-    let comments: [PresentableImageComment]
-}
-
-protocol ImageCommentsView {
-    func display(_ viewModel: ImageCommentsViewModel)
-}
-
-class ImageCommentsPresenter {
-    let imageCommentsView: ImageCommentsView
-    let loadingView: ImageCommentsLoadingView
-    let errorView: ImageCommentsErrorView
-    let currentDate: Date
-
-    public static var title: String { NSLocalizedString(
-        "IMAGE_COMMENTS_VIEW_TITLE",
-        tableName: "ImageComments",
-        bundle: Bundle(for: ImageCommentsPresenter.self),
-        comment: "Title for the image comments view"
-    ) }
-
-    private var errorMessage: String {
-        NSLocalizedString(
-            "IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
-            tableName: "ImageComments",
-            bundle: Bundle(for: ImageCommentsPresenter.self),
-            comment: "Error message when loading comments fails"
-        )
-    }
-
-    init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, currentDate: Date = Date()) {
-        self.imageCommentsView = imageCommentsView
-        self.loadingView = loadingView
-        self.errorView = errorView
-        self.currentDate = currentDate
-    }
-
-    func didStartLoadingComments() {
-        loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
-        errorView.display(ImageCommentsErrorViewModel(errorMessage: nil))
-    }
-
-    func didFinishLoading(with comments: [ImageComment]) {
-        let presentableComments = comments.map {
-            PresentableImageComment(username: $0.author, createdAt: formatDate(since: $0.createdAt), message: $0.message)
-        }
-        imageCommentsView.display(ImageCommentsViewModel(comments: presentableComments))
-        loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-    }
-
-    func didFinishLoading(with error: Error) {
-        errorView.display(ImageCommentsErrorViewModel(errorMessage: errorMessage))
-        loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-    }
-    
-    private func formatDate(since date: Date) -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        formatter.locale = .current
-        formatter.calendar = Calendar(identifier: .gregorian)
-        return formatter.localizedString(for: date, relativeTo: currentDate)
-    }
-}
-
 final class ImageCommentsPresenterTests: XCTestCase {
     func test_title_isLocalized() {
         XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
@@ -111,17 +25,47 @@ final class ImageCommentsPresenterTests: XCTestCase {
     }
 
     func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-        let fixedDate =  Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+        let fixedDate = Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
         let (sut, view) = makeSUT(date: fixedDate)
         let comments = [
-            ImageComment(id: UUID(), message: "first message", createdAt: Date(timeIntervalSince1970: 1603411200), author: "first username"),   // 23 OCT 2020 - 00:00:00
-            ImageComment(id: UUID(), message: "second message", createdAt: Date(timeIntervalSince1970: 1603494000), author: "second username"), // 23 OCT 2020 - 23:00:00
-            ImageComment(id: UUID(), message: "third message", createdAt: Date(timeIntervalSince1970: 1603495800), author: "third username"),   // 23 OCT 2020 - 23:30:00
-            ImageComment(id: UUID(), message: "fourth message", createdAt: Date(timeIntervalSince1970: 1603497590), author: "fourth username"), // 23 OCT 2020 - 23:59:50
-            ImageComment(id: UUID(), message: "fifth message", createdAt: Date(timeIntervalSince1970: 1602892800), author: "fifth username"),   // 17 OCT 2020 - 00:00:00
-            ImageComment(id: UUID(), message: "sixth message", createdAt: Date(timeIntervalSince1970: 1600300800), author: "sixth username"),   // 17 SEP 2020 - 00:00:00
+            ImageComment(
+                id: UUID(),
+                message: "first message",
+                createdAt: Date(timeIntervalSince1970: 1603411200),
+                author: "first username"
+            ), // 23 OCT 2020 - 00:00:00
+            ImageComment(
+                id: UUID(),
+                message: "second message",
+                createdAt: Date(timeIntervalSince1970: 1603494000),
+                author: "second username"
+            ), // 23 OCT 2020 - 23:00:00
+            ImageComment(
+                id: UUID(),
+                message: "third message",
+                createdAt: Date(timeIntervalSince1970: 1603495800),
+                author: "third username"
+            ), // 23 OCT 2020 - 23:30:00
+            ImageComment(
+                id: UUID(),
+                message: "fourth message",
+                createdAt: Date(timeIntervalSince1970: 1603497590),
+                author: "fourth username"
+            ), // 23 OCT 2020 - 23:59:50
+            ImageComment(
+                id: UUID(),
+                message: "fifth message",
+                createdAt: Date(timeIntervalSince1970: 1602892800),
+                author: "fifth username"
+            ), // 17 OCT 2020 - 00:00:00
+            ImageComment(
+                id: UUID(),
+                message: "sixth message",
+                createdAt: Date(timeIntervalSince1970: 1600300800),
+                author: "sixth username"
+            ), // 17 SEP 2020 - 00:00:00
         ]
-        
+
         let presentableComments = [
             PresentableImageComment(username: "first username", createdAt: "1 day ago", message: "first message"),
             PresentableImageComment(username: "second username", createdAt: "1 hour ago", message: "second message"),
@@ -130,7 +74,7 @@ final class ImageCommentsPresenterTests: XCTestCase {
             PresentableImageComment(username: "fifth username", createdAt: "1 week ago", message: "fifth message"),
             PresentableImageComment(username: "sixth username", createdAt: "1 month ago", message: "sixth message"),
         ]
-        
+
         sut.didFinishLoading(with: comments)
 
         XCTAssertEqual(view.messages, [.display(comments: presentableComments), .display(isLoading: false)])
@@ -145,7 +89,7 @@ final class ImageCommentsPresenterTests: XCTestCase {
         XCTAssertEqual(
             view.messages, [
                 .display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")),
-                .display(isLoading: false)
+                .display(isLoading: false),
             ]
         )
     }

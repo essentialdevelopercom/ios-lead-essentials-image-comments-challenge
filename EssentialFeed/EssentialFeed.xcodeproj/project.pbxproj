@@ -89,7 +89,11 @@
 		387891E425411F6F0035B2CD /* ImageCommentsItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387891E325411F6F0035B2CD /* ImageCommentsItemsMapper.swift */; };
 		38BB2D0125425D9700C5DBD7 /* ImageCommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D0025425D9700C5DBD7 /* ImageCommentsLoader.swift */; };
 		38BB2D102542628200C5DBD7 /* ImageCommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D0F2542628200C5DBD7 /* ImageCommentsPresenterTests.swift */; };
-		38BB2D1F2542647A00C5DBD7 /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38BB2D212542647A00C5DBD7 /* ImageComments.strings */; };
+		38BB2D37254280E200C5DBD7 /* ImageCommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D36254280E200C5DBD7 /* ImageCommentsPresenter.swift */; };
+		38BB2D442542818A00C5DBD7 /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38BB2D212542647A00C5DBD7 /* ImageComments.strings */; };
+		38BB2D4E254281A400C5DBD7 /* ImageCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D4D254281A400C5DBD7 /* ImageCommentsViewModel.swift */; };
+		38BB2D54254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */; };
+		38BB2D5A254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D59254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -202,6 +206,10 @@
 		38BB2D202542647A00C5DBD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		38BB2D262542647C00C5DBD7 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		38BB2D302542647F00C5DBD7 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
+		38BB2D36254280E200C5DBD7 /* ImageCommentsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsPresenter.swift; sourceTree = "<group>"; };
+		38BB2D4D254281A400C5DBD7 /* ImageCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewModel.swift; sourceTree = "<group>"; };
+		38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsErrorViewModel.swift; sourceTree = "<group>"; };
+		38BB2D59254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLoadingViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -541,6 +549,7 @@
 			children = (
 				387891DA25411F3F0035B2CD /* Feature */,
 				387891D225411E980035B2CD /* API */,
+				38BB2D35254280D100C5DBD7 /* Presentation */,
 			);
 			path = Comments;
 			sourceTree = "<group>";
@@ -575,6 +584,17 @@
 			isa = PBXGroup;
 			children = (
 				38BB2D0F2542628200C5DBD7 /* ImageCommentsPresenterTests.swift */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		38BB2D35254280D100C5DBD7 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */,
+				38BB2D59254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift */,
+				38BB2D36254280E200C5DBD7 /* ImageCommentsPresenter.swift */,
+				38BB2D4D254281A400C5DBD7 /* ImageCommentsViewModel.swift */,
 				38BB2D212542647A00C5DBD7 /* ImageComments.strings */,
 			);
 			path = Presentation;
@@ -728,6 +748,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38BB2D442542818A00C5DBD7 /* ImageComments.strings in Resources */,
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -736,7 +757,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38BB2D1F2542647A00C5DBD7 /* ImageComments.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,14 +783,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38BB2D37254280E200C5DBD7 /* ImageCommentsPresenter.swift in Sources */,
 				08C4E986233E139400D939F8 /* LocalFeedImageDataLoader.swift in Sources */,
 				08285AFB228C17B8000A8987 /* CoreDataHelpers.swift in Sources */,
+				38BB2D54254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift in Sources */,
 				08C0880E21E4EF2900ACFB30 /* FeedItemsMapper.swift in Sources */,
 				080EDF0E21B6DCB600813479 /* FeedLoader.swift in Sources */,
 				38BB2D0125425D9700C5DBD7 /* ImageCommentsLoader.swift in Sources */,
 				08868938221DAA01007BC3E7 /* RemoteFeedItem.swift in Sources */,
 				087148C4232BFCF100D6BE1A /* FeedImageViewModel.swift in Sources */,
 				387891D525411EBC0035B2CD /* RemoteImageCommentsLoader.swift in Sources */,
+				38BB2D4E254281A400C5DBD7 /* ImageCommentsViewModel.swift in Sources */,
 				08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */,
 				08897BED23393A2E0029F5E4 /* RemoteFeedImageDataLoader.swift in Sources */,
 				08B42EA421C3F09A00DDA349 /* RemoteFeedLoader.swift in Sources */,
@@ -789,6 +812,7 @@
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
 				08897BEF233A1C8E0029F5E4 /* HTTPURLResponse+StatusCode.swift in Sources */,
+				38BB2D5A254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift in Sources */,
 				08285AFD228C1843000A8987 /* ManagedCache.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
 				087148BD232BEC6700D6BE1A /* FeedErrorViewModel.swift in Sources */,
