@@ -5,16 +5,28 @@
 import EssentialFeed
 import XCTest
 
+struct ImageCommentsLoadingViewModel {
+    let isLoading: Bool
+}
+
 protocol ImageCommentsLoadingView {
-    func display(isLoading: Bool)
+    func display(_ viewModel: ImageCommentsLoadingViewModel)
+}
+
+struct ImageCommentsErrorViewModel {
+    let errorMessage: String?
 }
 
 protocol ImageCommentsErrorView {
-    func display(errorMessage: String?)
+    func display(_ viewModel: ImageCommentsErrorViewModel)
+}
+
+struct ImageCommentsViewModel {
+    let comments: [ImageComment]
 }
 
 protocol ImageCommentsView {
-    func display(comments: [ImageComment])
+    func display(_ viewModel: ImageCommentsViewModel)
 }
 
 class ImageCommentsPresenter {
@@ -45,18 +57,18 @@ class ImageCommentsPresenter {
     }
 
     func didStartLoadingComments() {
-        loadingView.display(isLoading: true)
-        errorView.display(errorMessage: nil)
+        loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
+        errorView.display(ImageCommentsErrorViewModel(errorMessage: nil))
     }
 
     func didFinishLoading(with comments: [ImageComment]) {
-        imageCommentsView.display(comments: comments)
-        loadingView.display(isLoading: false)
+        imageCommentsView.display(ImageCommentsViewModel(comments: comments))
+        loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
 
     func didFinishLoading(with error: Error) {
-        errorView.display(errorMessage: errorMessage)
-        loadingView.display(isLoading: false)
+        errorView.display(ImageCommentsErrorViewModel(errorMessage: errorMessage))
+        loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
 }
 
@@ -94,8 +106,10 @@ final class ImageCommentsPresenterTests: XCTestCase {
         sut.didFinishLoading(with: error)
 
         XCTAssertEqual(
-            view.messages,
-            [.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")), .display(isLoading: false)]
+            view.messages, [
+                .display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")),
+                .display(isLoading: false)
+            ]
         )
     }
 
@@ -149,16 +163,16 @@ final class ImageCommentsPresenterTests: XCTestCase {
 
         private(set) var messages = Set<Message>()
 
-        func display(comments: [ImageComment]) {
-            messages.insert(.display(comments: comments))
+        func display(_ viewModel: ImageCommentsViewModel) {
+            messages.insert(.display(comments: viewModel.comments))
         }
 
-        func display(isLoading: Bool) {
-            messages.insert(.display(isLoading: isLoading))
+        func display(_ viewModel: ImageCommentsLoadingViewModel) {
+            messages.insert(.display(isLoading: viewModel.isLoading))
         }
 
-        func display(errorMessage: String?) {
-            messages.insert(.display(errorMessage: errorMessage))
+        func display(_ viewModel: ImageCommentsErrorViewModel) {
+            messages.insert(.display(errorMessage: viewModel.errorMessage))
         }
     }
 }
