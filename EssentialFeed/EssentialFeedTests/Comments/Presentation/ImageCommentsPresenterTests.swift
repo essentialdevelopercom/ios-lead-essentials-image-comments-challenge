@@ -21,8 +21,14 @@ protocol ImageCommentsErrorView {
     func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
+struct PresentableImageComment: Hashable {
+    let username: String
+    let createdAt: String
+    let message: String
+}
+
 struct ImageCommentsViewModel {
-    let comments: [ImageComment]
+    let comments: [PresentableImageComment]
 }
 
 protocol ImageCommentsView {
@@ -33,6 +39,7 @@ class ImageCommentsPresenter {
     let imageCommentsView: ImageCommentsView
     let loadingView: ImageCommentsLoadingView
     let errorView: ImageCommentsErrorView
+    let currentDate: Date
 
     public static var title: String { NSLocalizedString(
         "IMAGE_COMMENTS_VIEW_TITLE",
@@ -50,10 +57,11 @@ class ImageCommentsPresenter {
         )
     }
 
-    init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+    init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, currentDate: Date = Date()) {
         self.imageCommentsView = imageCommentsView
         self.loadingView = loadingView
         self.errorView = errorView
+        self.currentDate = currentDate
     }
 
     func didStartLoadingComments() {
@@ -62,13 +70,24 @@ class ImageCommentsPresenter {
     }
 
     func didFinishLoading(with comments: [ImageComment]) {
-        imageCommentsView.display(ImageCommentsViewModel(comments: comments))
+        let presentableComments = comments.map {
+            PresentableImageComment(username: $0.author, createdAt: formatDate(since: $0.createdAt), message: $0.message)
+        }
+        imageCommentsView.display(ImageCommentsViewModel(comments: presentableComments))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
 
     func didFinishLoading(with error: Error) {
         errorView.display(ImageCommentsErrorViewModel(errorMessage: errorMessage))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+    }
+    
+    private func formatDate(since date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        formatter.locale = .current
+        formatter.calendar = Calendar(identifier: .gregorian)
+        return formatter.localizedString(for: date, relativeTo: currentDate)
     }
 }
 
@@ -92,11 +111,29 @@ final class ImageCommentsPresenterTests: XCTestCase {
     }
 
     func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-        let (sut, view) = makeSUT()
-        let comments = uniqueComments()
+        let fixedDate =  Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+        let (sut, view) = makeSUT(date: fixedDate)
+        let comments = [
+            ImageComment(id: UUID(), message: "first message", createdAt: Date(timeIntervalSince1970: 1603411200), author: "first username"),   // 23 OCT 2020 - 00:00:00
+            ImageComment(id: UUID(), message: "second message", createdAt: Date(timeIntervalSince1970: 1603494000), author: "second username"), // 23 OCT 2020 - 23:00:00
+            ImageComment(id: UUID(), message: "third message", createdAt: Date(timeIntervalSince1970: 1603495800), author: "third username"),   // 23 OCT 2020 - 23:30:00
+            ImageComment(id: UUID(), message: "fourth message", createdAt: Date(timeIntervalSince1970: 1603497590), author: "fourth username"), // 23 OCT 2020 - 23:59:50
+            ImageComment(id: UUID(), message: "fifth message", createdAt: Date(timeIntervalSince1970: 1602892800), author: "fifth username"),   // 17 OCT 2020 - 00:00:00
+            ImageComment(id: UUID(), message: "sixth message", createdAt: Date(timeIntervalSince1970: 1600300800), author: "sixth username"),   // 17 SEP 2020 - 00:00:00
+        ]
+        
+        let presentableComments = [
+            PresentableImageComment(username: "first username", createdAt: "1 day ago", message: "first message"),
+            PresentableImageComment(username: "second username", createdAt: "1 hour ago", message: "second message"),
+            PresentableImageComment(username: "third username", createdAt: "30 minutes ago", message: "third message"),
+            PresentableImageComment(username: "fourth username", createdAt: "10 seconds ago", message: "fourth message"),
+            PresentableImageComment(username: "fifth username", createdAt: "1 week ago", message: "fifth message"),
+            PresentableImageComment(username: "sixth username", createdAt: "1 month ago", message: "sixth message"),
+        ]
+        
         sut.didFinishLoading(with: comments)
 
-        XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+        XCTAssertEqual(view.messages, [.display(comments: presentableComments), .display(isLoading: false)])
     }
 
     func test_didFinishLoadingCommentsWithError_displaysErrorAndStopsLoading() {
@@ -115,9 +152,9 @@ final class ImageCommentsPresenterTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsPresenter, ViewSpy) {
+    private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsPresenter, ViewSpy) {
         let view = ViewSpy()
-        let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view)
+        let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view, currentDate: date)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(view, file: file, line: line)
         return (sut, view)
@@ -158,7 +195,7 @@ final class ImageCommentsPresenterTests: XCTestCase {
         enum Message: Hashable {
             case display(errorMessage: String?)
             case display(isLoading: Bool)
-            case display(comments: [ImageComment])
+            case display(comments: [PresentableImageComment])
         }
 
         private(set) var messages = Set<Message>()
