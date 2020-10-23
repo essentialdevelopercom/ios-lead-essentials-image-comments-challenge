@@ -11,11 +11,20 @@ class ImageCommentsPresenter {
         bundle: Bundle(for: ImageCommentsPresenter.self),
         comment: "Title for the image comments view"
     ) }
+
+    init(view _: Any) {}
 }
 
 final class ImageCommentsPresenterTests: XCTestCase {
     func test_title_isLocalized() {
         XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
+    }
+
+    func test_init_doesNotSendMessagesToView() {
+        let view = ViewSpy()
+        _ = ImageCommentsPresenter(view: view)
+
+        XCTAssertTrue(view.messages.isEmpty)
     }
 
     // MARK: - Helpers
@@ -28,5 +37,9 @@ final class ImageCommentsPresenterTests: XCTestCase {
             XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
         }
         return value
+    }
+
+    private class ViewSpy {
+        var messages = [Any]()
     }
 }
