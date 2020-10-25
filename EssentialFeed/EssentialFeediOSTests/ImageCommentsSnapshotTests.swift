@@ -28,7 +28,7 @@ final class ImageCommentsSnapshotTests: XCTestCase {
     func test_imageCommentsWithError() {
         let sut = makeSUT()
 
-        sut.display(ImageCommentsErrorViewModel(message: "This is a\nmulti-line\nerror message"))
+        sut.display(.error(message: "This is a\nmulti-line\nerror message"))
         
         assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_WITH_ERROR_light")
         assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_ERROR_dark")
