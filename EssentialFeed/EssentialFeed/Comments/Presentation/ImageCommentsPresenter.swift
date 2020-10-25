@@ -17,6 +17,8 @@ public protocol ImageCommentsView {
 }
 
 public class ImageCommentsPresenter {
+    private let locale: Locale
+    private let calendar: Calendar = Calendar(identifier: .gregorian)
     let imageCommentsView: ImageCommentsView
     let loadingView: ImageCommentsLoadingView
     let errorView: ImageCommentsErrorView
@@ -38,11 +40,12 @@ public class ImageCommentsPresenter {
         )
     }
 
-    public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, currentDate: Date = Date()) {
+    public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, currentDate: Date = Date(), locale: Locale = .current) {
         self.imageCommentsView = imageCommentsView
         self.loadingView = loadingView
         self.errorView = errorView
         self.currentDate = currentDate
+        self.locale = locale
     }
 
     public func didStartLoadingComments() {
@@ -66,8 +69,8 @@ public class ImageCommentsPresenter {
     private func formatDate(since date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
-        formatter.locale = .current
-        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = locale
+        formatter.calendar = calendar
         return formatter.localizedString(for: date, relativeTo: currentDate)
     }
 }
