@@ -158,7 +158,7 @@ final class ImageCommentsPresenterTests: XCTestCase {
         }
 
         func display(_ viewModel: ImageCommentsErrorViewModel) {
-            messages.insert(.display(errorMessage: viewModel.errorMessage))
+            messages.insert(.display(errorMessage: viewModel.message))
         }
     }
 }

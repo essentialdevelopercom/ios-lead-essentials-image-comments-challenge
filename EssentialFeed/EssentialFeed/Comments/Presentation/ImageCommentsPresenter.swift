@@ -56,7 +56,7 @@ public class ImageCommentsPresenter {
 
     public func didStartLoadingComments() {
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
-        errorView.display(ImageCommentsErrorViewModel(errorMessage: nil))
+        errorView.display(ImageCommentsErrorViewModel(message: nil))
     }
 
     public func didFinishLoading(with comments: [ImageComment]) {
@@ -68,7 +68,7 @@ public class ImageCommentsPresenter {
     }
 
     public func didFinishLoading(with error: Error) {
-        errorView.display(ImageCommentsErrorViewModel(errorMessage: errorMessage))
+        errorView.display(ImageCommentsErrorViewModel(message: errorMessage))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
 
