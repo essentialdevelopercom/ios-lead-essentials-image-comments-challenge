@@ -502,6 +502,7 @@
 			isa = PBXGroup;
 			children = (
 				08D917A322B92A5D003BC31B /* Info.plist */,
+				38853E4E254636C6006AAF89 /* Shared UI */,
 				38853E3425462146006AAF89 /* Image Comments UI */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 			);
@@ -534,7 +535,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -618,6 +618,14 @@
 				38853E4325462253006AAF89 /* ImageCommentsViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		38853E4E254636C6006AAF89 /* Shared UI */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
+			);
+			path = "Shared UI";
 			sourceTree = "<group>";
 		};
 		38BB2D0E2542624D00C5DBD7 /* Presentation */ = {

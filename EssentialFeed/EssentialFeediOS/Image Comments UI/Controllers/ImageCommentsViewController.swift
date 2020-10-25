@@ -11,15 +11,27 @@ class ImageCommentCell: UITableViewCell {
     @IBOutlet var commentLabel: UILabel?
 }
 
-public final class ImageCommentsViewController: UITableViewController, ImageCommentsView {
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView {
+    @IBOutlet private(set) public var errorView: ErrorView?
+    
     var models = [PresentableImageComment]() {
         didSet {
             tableView.reloadData()
         }
     }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        tableView.sizeTableHeaderToFit()
+    }
 
     public func display(_ viewModel: ImageCommentsViewModel) {
         models = viewModel.comments
+    }
+    
+    public func display(_ viewModel: ImageCommentsErrorViewModel) {
+        errorView?.message = viewModel.errorMessage
     }
 
     override public func numberOfSections(in _: UITableView) -> Int {
