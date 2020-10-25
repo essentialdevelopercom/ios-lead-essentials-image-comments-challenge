@@ -102,6 +102,12 @@
                             <outlet property="delegate" destination="YT5-Va-DJH" id="0dP-Bj-sqj"/>
                         </connections>
                     </tableView>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="TuY-72-Cdb">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refresh" destination="YT5-Va-DJH" eventType="valueChanged" id="DPA-9n-iLH"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="sit-bR-ZrW" id="ADy-SY-uft"/>
                     </connections>

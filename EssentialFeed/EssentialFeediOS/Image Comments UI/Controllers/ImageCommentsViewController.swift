@@ -11,16 +11,30 @@ class ImageCommentCell: UITableViewCell {
     @IBOutlet var commentLabel: UILabel?
 }
 
+public protocol ImageCommentsViewControllerDelegate {
+    func didRequestCommentsRefresh()
+}
+
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView {
-    @IBOutlet private(set) public var errorView: ErrorView?
-    
+    @IBOutlet public private(set) var errorView: ErrorView?
+    public var delegate: ImageCommentsViewControllerDelegate?
+
     var models = [PresentableImageComment]() {
         didSet {
             tableView.reloadData()
         }
     }
-    
-    public override func viewDidLayoutSubviews() {
+
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        refresh()
+    }
+
+    @IBAction func refresh() {
+        delegate?.didRequestCommentsRefresh()
+    }
+
+    override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         tableView.sizeTableHeaderToFit()
@@ -29,7 +43,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
     public func display(_ viewModel: ImageCommentsViewModel) {
         models = viewModel.comments
     }
-    
+
     public func display(_ viewModel: ImageCommentsErrorViewModel) {
         errorView?.message = viewModel.message
     }
