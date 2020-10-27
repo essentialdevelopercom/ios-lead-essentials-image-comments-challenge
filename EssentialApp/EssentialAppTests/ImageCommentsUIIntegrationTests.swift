@@ -84,7 +84,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
     }
 
     private class LoaderSpy: ImageCommentsLoader {
-        var loadCommentsCallCount = 0
+        var loadCommentsCallCount: Int { completions.count }
         var completions = [(ImageCommentsLoader.Result) -> Void]()
 
         private struct Task: ImageCommentsLoaderTask {
@@ -92,7 +92,6 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         }
 
         func load(from _: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-            loadCommentsCallCount += 1
             completions.append(completion)
             return Task()
         }
