@@ -118,6 +118,37 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(cell2?.commentLabel?.text, "another message")
     }
 
+    func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
+        let fixedDate = Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+        let comment0 = makeComment(
+            message: "a message",
+            createdAt: (Date(timeIntervalSince1970: 1603411200), "1 day ago"),
+            username: "a username"
+        ) // 23 OCT 2020 - 00:00:00
+        let comment1 = makeComment(
+            message: "another message",
+            createdAt: (Date(timeIntervalSince1970: 1603494000), "1 hour ago"),
+            username: "another username"
+        ) // 23 OCT 2020 - 23:00:00
+        let (sut, loader) = makeSUT(date: fixedDate)
+
+        sut.loadViewIfNeeded()
+        loader.completeCommentsLoading(with: [comment0.model, comment1.model], at: 0)
+
+        sut.simulateUserInitiatedCommentsReload()
+        loader.completeCommentsLoading(with: anyNSError())
+
+        let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
+        XCTAssertEqual(cell1?.usernameLabel?.text, comment0.comment.username)
+        XCTAssertEqual(cell1?.createdAtLabel?.text, comment0.comment.createdAt)
+        XCTAssertEqual(cell1?.commentLabel?.text, comment0.comment.message)
+
+        let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ImageCommentCell
+        XCTAssertEqual(cell2?.usernameLabel?.text, comment1.comment.username)
+        XCTAssertEqual(cell2?.createdAtLabel?.text, comment1.comment.createdAt)
+        XCTAssertEqual(cell2?.commentLabel?.text, comment1.comment.message)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -131,6 +162,16 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         trackForMemoryLeaks(controller, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
         return (controller, loader)
+    }
+
+    private func makeComment(
+        message: String,
+        createdAt: (date: Date, representaton: String),
+        username: String
+    ) -> (model: ImageComment, comment: PresentableImageComment) {
+        let model = ImageComment(id: UUID(), message: message, createdAt: createdAt.date, author: username)
+        let comment = PresentableImageComment(username: username, createdAt: createdAt.representaton, message: message)
+        return (model, comment)
     }
 
     private class LoaderSpy: ImageCommentsLoader {
