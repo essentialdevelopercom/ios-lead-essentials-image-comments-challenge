@@ -7,7 +7,11 @@ import EssentialFeediOS
 import XCTest
 
 class ImageCommentsUIComposer {
-    static func imageCommentsComposeWith(commentsLoader: ImageCommentsLoader, url: URL) -> ImageCommentsViewController {
+    static func imageCommentsComposeWith(
+        commentsLoader: ImageCommentsLoader,
+        url: URL,
+        date: Date = Date()
+    ) -> ImageCommentsViewController {
         let bundle = Bundle(for: ImageCommentsViewController.self)
         let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
         let commentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
@@ -16,7 +20,8 @@ class ImageCommentsUIComposer {
         let presenter = ImageCommentsPresenter(
             imageCommentsView: commentsController,
             loadingView: commentsController,
-            errorView: commentsController
+            errorView: commentsController,
+            currentDate: date
         )
         presentationAdapter.presenter = presenter
         return commentsController
@@ -81,15 +86,47 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         )
     }
 
+    func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+        let fixedDate = Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+        let (sut, loader) = makeSUT(date: fixedDate)
+
+        let comment1 = ImageComment(
+            id: UUID(),
+            message: "a message",
+            createdAt: Date(timeIntervalSince1970: 1603411200),
+            author: "a username"
+        ) // 23 OCT 2020 - 00:00:00
+        let comment2 = ImageComment(
+            id: UUID(),
+            message: "another message",
+            createdAt: Date(timeIntervalSince1970: 1603494000),
+            author: "another username"
+        ) // 23 OCT 2020 - 23:00:00
+
+        sut.loadViewIfNeeded()
+        loader.completeCommentsLoading(with: [comment1, comment2])
+
+        let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
+        XCTAssertEqual(cell1?.usernameLabel?.text, "a username")
+        XCTAssertEqual(cell1?.createdAtLabel?.text, "1 day ago")
+        XCTAssertEqual(cell1?.commentLabel?.text, "a message")
+
+        let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ImageCommentCell
+        XCTAssertEqual(cell2?.usernameLabel?.text, "another username")
+        XCTAssertEqual(cell2?.createdAtLabel?.text, "1 hour ago")
+        XCTAssertEqual(cell2?.commentLabel?.text, "another message")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
         url: URL = URL(string: "http://any-url.com")!,
+        date: Date = Date(),
         file _: StaticString = #filePath,
         line _: UInt = #line
     ) -> (ImageCommentsViewController, LoaderSpy) {
         let loader = LoaderSpy()
-        let controller = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url)
+        let controller = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url, date: date)
         return (controller, loader)
     }
 
@@ -106,8 +143,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
             return Task()
         }
 
-        func completeCommentsLoading(at index: Int = 0) {
-            completions[index](.success([]))
+        func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
+            completions[index](.success(comments))
         }
 
         func completeCommentsLoading(with error: Error, at index: Int = 0) {

@@ -5,10 +5,10 @@
 import EssentialFeed
 import UIKit
 
-class ImageCommentCell: UITableViewCell {
-    @IBOutlet var usernameLabel: UILabel?
-    @IBOutlet var createdAtLabel: UILabel?
-    @IBOutlet var commentLabel: UILabel?
+public class ImageCommentCell: UITableViewCell {
+    @IBOutlet public var usernameLabel: UILabel?
+    @IBOutlet public var createdAtLabel: UILabel?
+    @IBOutlet public var commentLabel: UILabel?
 }
 
 public protocol ImageCommentsViewControllerDelegate {
