@@ -88,65 +88,30 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
     }
 
     func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
-        let fixedDate = Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+        let fixedDate = makeFixedDate()
         let (sut, loader) = makeSUT(date: fixedDate)
-
-        let comment1 = ImageComment(
-            id: UUID(),
-            message: "a message",
-            createdAt: Date(timeIntervalSince1970: 1603411200),
-            author: "a username"
-        ) // 23 OCT 2020 - 00:00:00
-        let comment2 = ImageComment(
-            id: UUID(),
-            message: "another message",
-            createdAt: Date(timeIntervalSince1970: 1603494000),
-            author: "another username"
-        ) // 23 OCT 2020 - 23:00:00
+        let comments = makeUniqueComments()
+        let models = comments.map { $0.model }
 
         sut.loadViewIfNeeded()
-        loader.completeCommentsLoading(with: [comment1, comment2])
+        loader.completeCommentsLoading(with: models)
 
-        let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
-        XCTAssertEqual(cell1?.usernameLabel?.text, "a username")
-        XCTAssertEqual(cell1?.createdAtLabel?.text, "1 day ago")
-        XCTAssertEqual(cell1?.commentLabel?.text, "a message")
-
-        let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ImageCommentCell
-        XCTAssertEqual(cell2?.usernameLabel?.text, "another username")
-        XCTAssertEqual(cell2?.createdAtLabel?.text, "1 hour ago")
-        XCTAssertEqual(cell2?.commentLabel?.text, "another message")
+        assertThat(sut, isRendering: comments)
     }
 
     func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
-        let fixedDate = Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
-        let comment0 = makeComment(
-            message: "a message",
-            createdAt: (Date(timeIntervalSince1970: 1603411200), "1 day ago"),
-            username: "a username"
-        ) // 23 OCT 2020 - 00:00:00
-        let comment1 = makeComment(
-            message: "another message",
-            createdAt: (Date(timeIntervalSince1970: 1603494000), "1 hour ago"),
-            username: "another username"
-        ) // 23 OCT 2020 - 23:00:00
+        let fixedDate = makeFixedDate()
         let (sut, loader) = makeSUT(date: fixedDate)
+        let comments = makeUniqueComments()
+        let models = comments.map { $0.model }
 
         sut.loadViewIfNeeded()
-        loader.completeCommentsLoading(with: [comment0.model, comment1.model], at: 0)
+        loader.completeCommentsLoading(with: models, at: 0)
 
         sut.simulateUserInitiatedCommentsReload()
         loader.completeCommentsLoading(with: anyNSError())
 
-        let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
-        XCTAssertEqual(cell1?.usernameLabel?.text, comment0.comment.username)
-        XCTAssertEqual(cell1?.createdAtLabel?.text, comment0.comment.createdAt)
-        XCTAssertEqual(cell1?.commentLabel?.text, comment0.comment.message)
-
-        let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ImageCommentCell
-        XCTAssertEqual(cell2?.usernameLabel?.text, comment1.comment.username)
-        XCTAssertEqual(cell2?.createdAtLabel?.text, comment1.comment.createdAt)
-        XCTAssertEqual(cell2?.commentLabel?.text, comment1.comment.message)
+        assertThat(sut, isRendering: comments)
     }
 
     // MARK: - Helpers
@@ -168,10 +133,80 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         message: String,
         createdAt: (date: Date, representaton: String),
         username: String
-    ) -> (model: ImageComment, comment: PresentableImageComment) {
+    ) -> (model: ImageComment, presentable: PresentableImageComment) {
         let model = ImageComment(id: UUID(), message: message, createdAt: createdAt.date, author: username)
         let comment = PresentableImageComment(username: username, createdAt: createdAt.representaton, message: message)
         return (model, comment)
+    }
+
+    private func makeUniqueComments() -> [(model: ImageComment, presentable: PresentableImageComment)] {
+        let comment0 = makeComment(
+            message: "a message",
+            createdAt: (Date(timeIntervalSince1970: 1603411200), "1 day ago"),
+            username: "a username"
+        ) // 23 OCT 2020 - 00:00:00
+        let comment1 = makeComment(
+            message: "another message",
+            createdAt: (Date(timeIntervalSince1970: 1603494000), "1 hour ago"),
+            username: "another username"
+        ) // 23 OCT 2020 - 23:00:00
+
+        return [comment0, comment1]
+    }
+
+    private func assertThat(
+        _ sut: ImageCommentsViewController,
+        isRendering comments: [(model: ImageComment, presentable: PresentableImageComment)],
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard sut.numberOfRenderedComments() == comments.count else {
+            return XCTFail(
+                "Expected \(comments.count) comments, but got \(sut.numberOfRenderedComments()) instead.",
+                file: file,
+                line: line
+            )
+        }
+
+        comments.enumerated().forEach { index, comment in
+            assertThat(sut, hasViewConfiguredFor: comment, at: index)
+        }
+    }
+
+    private func makeFixedDate() -> Date {
+        Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+    }
+
+    private func assertThat(
+        _ sut: ImageCommentsViewController,
+        hasViewConfiguredFor comment: (model: ImageComment, presentable: PresentableImageComment),
+        at index: Int,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let view = sut.commentView(at: index)
+        let model = comment.model
+        let presentable = comment.presentable
+
+        guard let cell = view as? ImageCommentCell else {
+            return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+        }
+
+        XCTAssertEqual(
+            cell.usernameText,
+            model.author,
+            "Expected username text to be \(model.author), but got \(String(describing: cell.usernameText)) instead"
+        )
+        XCTAssertEqual(
+            cell.commentText,
+            model.message,
+            "Expected message text to be \(model.author), but got \(String(describing: cell.commentText)) instead"
+        )
+        XCTAssertEqual(
+            cell.createdAtText,
+            presentable.createdAt,
+            "Expected created at text to be \(presentable.createdAt), but got \(String(describing: cell.createdAtText)) instead"
+        )
     }
 
     private class LoaderSpy: ImageCommentsLoader {
@@ -204,5 +239,31 @@ extension ImageCommentsViewController {
 
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing == true
+    }
+
+    func numberOfRenderedComments() -> Int {
+        tableView.numberOfRows(inSection: commentsSection)
+    }
+
+    func commentView(at row: Int) -> UITableViewCell? {
+        let indexPath = IndexPath(row: row, section: commentsSection)
+        let ds = tableView.dataSource
+        return ds?.tableView(tableView, cellForRowAt: indexPath)
+    }
+
+    var commentsSection: Int { 0 }
+}
+
+extension ImageCommentCell {
+    var commentText: String? {
+        commentLabel?.text
+    }
+
+    var usernameText: String? {
+        usernameLabel?.text
+    }
+
+    var createdAtText: String? {
+        createdAtLabel?.text
     }
 }
