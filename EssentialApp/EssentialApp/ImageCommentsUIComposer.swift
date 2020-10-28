@@ -13,7 +13,7 @@ public final class ImageCommentsUIComposer {
         url: URL,
         date: Date
     ) -> ImageCommentsViewController {
-        let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader, url: url)
+        let presentationAdapter = ImageCommentsPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader), url: url)
         let commentsController = makeController(delegate: presentationAdapter)
         let presenter = ImageCommentsPresenter(
             imageCommentsView: WeakRefVirtualProxy(commentsController),
@@ -54,6 +54,27 @@ public final class ImageCommentsPresentationAdapter: ImageCommentsViewController
             case let .failure(error):
                 self?.presenter?.didFinishLoading(with: error)
             }
+        }
+    }
+}
+
+public final class MainQueueDispatchDecorator: ImageCommentsLoader {
+    let decoratee: ImageCommentsLoader
+
+    init(decoratee: ImageCommentsLoader) {
+        self.decoratee = decoratee
+    }
+
+    func dispatch(completion: @escaping () -> Void) {
+        guard Thread.isMainThread else {
+            return DispatchQueue.main.async { completion() }
+        }
+        completion()
+    }
+
+    public func load(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+        decoratee.load(from: url) { [weak self] result in
+            self?.dispatch { completion(result) }
         }
     }
 }
