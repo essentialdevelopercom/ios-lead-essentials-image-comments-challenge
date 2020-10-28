@@ -1,5 +1,5 @@
 //
-//  Copyright © 2020 Essential Developer. All rights reserved.
+//  Copyright © 2020 Jesús Alfredo Hernández Alarcón. All rights reserved.
 //
 
 import EssentialApp
@@ -8,6 +8,14 @@ import EssentialFeediOS
 import XCTest
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
+    func test_commenstView_hasLocalizedTitle() {
+        let (sut, _) = makeSUT()
+
+        sut.loadViewIfNeeded()
+
+        XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
+    }
+
     func test_loadCommentsAction_requestCommentsFromLoader() {
         let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.loadCommentsCallCount, 0, "Expected no loading requests before view is loaded")
