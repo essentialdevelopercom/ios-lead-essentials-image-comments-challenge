@@ -129,6 +129,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: comments)
     }
 
+    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let (sut, loader) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.errorMessage, nil)
+
+        loader.completeCommentsLoading(with: anyNSError())
+        XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+
+        sut.simulateUserInitiatedCommentsReload()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -245,6 +258,16 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
             completions[index](.failure(error))
         }
     }
+
+    private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+        let table = "ImageComments"
+        let bundle = Bundle(for: ImageCommentsPresenter.self)
+        let value = bundle.localizedString(forKey: key, value: nil, table: table)
+        if value == key {
+            XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+        }
+        return value
+    }
 }
 
 extension ImageCommentsViewController {
@@ -267,6 +290,10 @@ extension ImageCommentsViewController {
     }
 
     var commentsSection: Int { 0 }
+
+    var errorMessage: String? {
+        errorView?.message
+    }
 }
 
 extension ImageCommentCell {
