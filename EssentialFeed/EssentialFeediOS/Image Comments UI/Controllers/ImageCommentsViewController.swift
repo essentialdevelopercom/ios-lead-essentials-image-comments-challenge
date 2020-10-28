@@ -5,12 +5,6 @@
 import EssentialFeed
 import UIKit
 
-public class ImageCommentCell: UITableViewCell {
-    @IBOutlet public var usernameLabel: UILabel?
-    @IBOutlet public var createdAtLabel: UILabel?
-    @IBOutlet public var commentLabel: UILabel?
-}
-
 public protocol ImageCommentsViewControllerDelegate {
     func didRequestCommentsRefresh()
     func didCancelCommentsRequest()
