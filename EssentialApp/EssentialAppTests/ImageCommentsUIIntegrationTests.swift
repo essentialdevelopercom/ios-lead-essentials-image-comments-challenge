@@ -99,6 +99,21 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: comments)
     }
 
+    func test_loadCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
+        let fixedDate = makeFixedDate()
+        let comments = makeUniqueComments()
+        let models = comments.map { $0.model }
+        let (sut, loader) = makeSUT(date: fixedDate)
+
+        sut.loadViewIfNeeded()
+        loader.completeCommentsLoading(with: models)
+        assertThat(sut, isRendering: comments)
+
+        sut.simulateUserInitiatedCommentsReload()
+        loader.completeCommentsLoading(with: [])
+        assertThat(sut, isRendering: [])
+    }
+
     func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
         let fixedDate = makeFixedDate()
         let (sut, loader) = makeSUT(date: fixedDate)
