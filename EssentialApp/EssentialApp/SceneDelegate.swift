@@ -51,22 +51,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
 		configureWindow()
 	}
+    
+    private lazy var navigationController: UINavigationController = {
+        UINavigationController(
+            rootViewController:
+                FeedUIComposer.feedComposedWith(
+                    feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+                    imageLoader: makeLocalImageLoaderWithRemoteFallback,
+                    didSelectImage: didSelectImage(image:)
+                )
+        )
+    }()
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-                imageLoader: makeLocalImageLoaderWithRemoteFallback,
-                didSelectImage: { _ in }
-            )
-        )
-        
+		window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
 		localFeedLoader.validateCache { _ in }
 	}
+    
+    private func didSelectImage(image: FeedImage) {
+        let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
+        let loader = RemoteImageCommentsLoader(client: httpClient)
+        let controller = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url, date: Date())
+        navigationController.pushViewController(controller, animated: true)
+    }
     
     private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
         return remoteFeedLoader
