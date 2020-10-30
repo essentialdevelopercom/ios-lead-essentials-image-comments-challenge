@@ -88,9 +88,10 @@ class FeedAcceptanceTests: XCTestCase {
 		switch url.absoluteString {
 		case "http://image.com":
 			return makeImageData()
-			
-		default:
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed":
 			return makeFeedData()
+        default:
+            return Data("invalid-data".utf8)
 		}
 	}
 	
