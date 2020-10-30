@@ -18,11 +18,11 @@ final class EssentialFeedEndpointTests: XCTestCase {
 
     func test_imageCommentsEndpont_isCorrectURL() {
         let baseUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-        let imageId = "5bcc6f46-1a48-11eb-adc1-0242ac120002"
+        let imageId = UUID(uuidString: "5BCC6F46-1A48-11EB-ADC1-0242AC120002")!
         let endpoint = EssentialFeedEndpoint.comments(for: imageId).url(baseUrl)
 
         let expected =
-            URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/5bcc6f46-1a48-11eb-adc1-0242ac120002/comments")!
+            URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/5BCC6F46-1A48-11EB-ADC1-0242AC120002/comments")!
         XCTAssertEqual(endpoint, expected, "Expected \(expected.absoluteString) URL, but got \(endpoint.absoluteString) instead")
     }
 }

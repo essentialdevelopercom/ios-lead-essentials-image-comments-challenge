@@ -5,10 +5,8 @@
 import Foundation
 
 public enum EssentialFeedEndpoint {
-    public typealias ImageUUID = String
-
     case feed
-    case comments(for: ImageUUID)
+    case comments(for: UUID)
 
     public func url(_ baseUrl: URL) -> URL {
         switch self {
