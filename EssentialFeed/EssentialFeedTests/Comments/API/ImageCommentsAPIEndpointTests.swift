@@ -2,20 +2,8 @@
 //  Copyright © 2020 Jesús Alfredo Hernández Alarcón. All rights reserved.
 //
 
+import EssentialFeed
 import XCTest
-
-enum ImageCommentsEndpoint {
-    typealias ImageUUID = String
-
-    case comments(for: ImageUUID)
-
-    func url() -> URL {
-        switch self {
-        case let .comments(uuid):
-            return URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(uuid)/comments")!
-        }
-    }
-}
 
 final class ImageCommentsAPIEndpointTests: XCTestCase {
     func test_imageCommentsEndpont_isCorrectURL() {

@@ -101,6 +101,7 @@
 		38BB2D54254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */; };
 		38BB2D5A254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D59254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift */; };
 		38D749FB254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D749FA254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift */; };
+		38D74A01254B99F3006D0F9A /* ImageCommentsEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D74A00254B99F3006D0F9A /* ImageCommentsEndpoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -225,6 +226,7 @@
 		38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsErrorViewModel.swift; sourceTree = "<group>"; };
 		38BB2D59254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLoadingViewModel.swift; sourceTree = "<group>"; };
 		38D749FA254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsAPIEndpointTests.swift; sourceTree = "<group>"; };
+		38D74A00254B99F3006D0F9A /* ImageCommentsEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsEndpoint.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -579,6 +581,7 @@
 				387891D425411EBC0035B2CD /* RemoteImageCommentsLoader.swift */,
 				387891E325411F6F0035B2CD /* ImageCommentsItemsMapper.swift */,
 				38BB2D0025425D9700C5DBD7 /* ImageCommentsLoader.swift */,
+				38D74A00254B99F3006D0F9A /* ImageCommentsEndpoint.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -863,6 +866,7 @@
 				08C0880C21E4EED600ACFB30 /* HTTPClient.swift in Sources */,
 				387891DC25411F480035B2CD /* ImageComment.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
+				38D74A01254B99F3006D0F9A /* ImageCommentsEndpoint.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
 				08C4E988233E13CC00D939F8 /* FeedImageDataStore.swift in Sources */,
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
