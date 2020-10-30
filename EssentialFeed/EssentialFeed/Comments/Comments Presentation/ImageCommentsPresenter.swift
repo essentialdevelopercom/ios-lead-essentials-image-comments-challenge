@@ -22,7 +22,7 @@ public class ImageCommentsPresenter {
     private let imageCommentsView: ImageCommentsView
     private let loadingView: ImageCommentsLoadingView
     private let errorView: ImageCommentsErrorView
-    private let currentDate: Date
+    private let currentDate: () -> Date
 
     public static var title: String { NSLocalizedString(
         "IMAGE_COMMENTS_VIEW_TITLE",
@@ -44,7 +44,7 @@ public class ImageCommentsPresenter {
         imageCommentsView: ImageCommentsView,
         loadingView: ImageCommentsLoadingView,
         errorView: ImageCommentsErrorView,
-        currentDate: Date = Date(),
+        currentDate: @escaping () -> Date = Date.init,
         locale: Locale = .current
     ) {
         self.imageCommentsView = imageCommentsView
@@ -77,6 +77,6 @@ public class ImageCommentsPresenter {
         formatter.unitsStyle = .full
         formatter.locale = locale
         formatter.calendar = calendar
-        return formatter.localizedString(for: date, relativeTo: currentDate)
+        return formatter.localizedString(for: date, relativeTo: currentDate())
     }
 }

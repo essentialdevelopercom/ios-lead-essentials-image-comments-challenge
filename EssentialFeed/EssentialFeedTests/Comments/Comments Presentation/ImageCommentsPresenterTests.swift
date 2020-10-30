@@ -25,7 +25,7 @@ final class ImageCommentsPresenterTests: XCTestCase {
     }
 
     func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-        let fixedDate = Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+        let fixedDate = { Date(timeIntervalSince1970: 1603497600) } // 24 OCT 2020 - 00:00:00
         let (sut, view) = makeSUT(date: fixedDate, locale: Locale(identifier: "en_US"))
         let comments = [
             ImageComment(
@@ -97,7 +97,7 @@ final class ImageCommentsPresenterTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(
-        date: Date = Date(),
+        date: @escaping () -> Date = Date.init,
         locale: Locale = .current,
         file: StaticString = #filePath,
         line: UInt = #line

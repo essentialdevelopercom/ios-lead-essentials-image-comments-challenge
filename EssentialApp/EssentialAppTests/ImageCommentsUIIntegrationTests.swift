@@ -138,7 +138,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
     private func makeSUT(
         url: URL = URL(string: "http://any-url.com")!,
-        date: Date = Date(),
+        date: @escaping () -> Date = Date.init,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (ImageCommentsViewController, LoaderSpy) {
@@ -193,8 +193,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         }
     }
 
-    private func makeFixedDate() -> Date {
-        Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+    private func makeFixedDate() -> () -> Date {
+        { Date(timeIntervalSince1970: 1603497600) } // 24 OCT 2020 - 00:00:00
     }
 
     private func assertThat(
