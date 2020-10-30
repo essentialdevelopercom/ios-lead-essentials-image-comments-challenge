@@ -73,7 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
     
     private func didSelectImage(image: FeedImage) {
-        let url = ImageCommentsEndpoint.comments(for: image.id.uuidString).url()
+        let url = EssentialFeedEndpoint.comments(for: image.id.uuidString).url()
         let loader = RemoteImageCommentsLoader(client: httpClient)
         let controller = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url, date: Date())
         navigationController.pushViewController(controller, animated: true)
