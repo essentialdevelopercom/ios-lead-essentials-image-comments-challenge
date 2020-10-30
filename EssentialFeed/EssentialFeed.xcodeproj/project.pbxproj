@@ -290,6 +290,7 @@
 		080EDEF321B6DA7E00813479 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
+				38001326254BCC7A00012ED0 /* API */,
 				38D74A14254BA076006D0F9A /* Feed */,
 				387891D125411E7E0035B2CD /* Comments */,
 				080EDEF521B6DA7E00813479 /* Info.plist */,
@@ -552,6 +553,14 @@
 			path = "Feed UI";
 			sourceTree = "<group>";
 		};
+		38001326254BCC7A00012ED0 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				38D74A00254B99F3006D0F9A /* EssentialFeedEndpoint.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		387891C625410D3E0035B2CD /* Comments */ = {
 			isa = PBXGroup;
 			children = (
@@ -576,8 +585,6 @@
 			children = (
 				387891D425411EBC0035B2CD /* RemoteImageCommentsLoader.swift */,
 				387891E325411F6F0035B2CD /* ImageCommentsItemsMapper.swift */,
-				38BB2D0025425D9700C5DBD7 /* ImageCommentsLoader.swift */,
-				38D74A00254B99F3006D0F9A /* EssentialFeedEndpoint.swift */,
 			);
 			path = "Comments API";
 			sourceTree = "<group>";
@@ -593,6 +600,7 @@
 		387891DA25411F3F0035B2CD /* Comments Feature */ = {
 			isa = PBXGroup;
 			children = (
+				38BB2D0025425D9700C5DBD7 /* ImageCommentsLoader.swift */,
 				387891DB25411F480035B2CD /* ImageComment.swift */,
 			);
 			path = "Comments Feature";
