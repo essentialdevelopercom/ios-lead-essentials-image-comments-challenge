@@ -100,6 +100,7 @@
 		38BB2D4E254281A400C5DBD7 /* ImageCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D4D254281A400C5DBD7 /* ImageCommentsViewModel.swift */; };
 		38BB2D54254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */; };
 		38BB2D5A254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB2D59254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift */; };
+		38D749FB254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D749FA254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -223,6 +224,7 @@
 		38BB2D4D254281A400C5DBD7 /* ImageCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewModel.swift; sourceTree = "<group>"; };
 		38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsErrorViewModel.swift; sourceTree = "<group>"; };
 		38BB2D59254281D300C5DBD7 /* ImageCommentsLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLoadingViewModel.swift; sourceTree = "<group>"; };
+		38D749FA254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsAPIEndpointTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -585,6 +587,7 @@
 			isa = PBXGroup;
 			children = (
 				387891C725410D4E0035B2CD /* LoadImageCommentsFromRemoteUseCaseTests.swift */,
+				38D749FA254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -901,6 +904,7 @@
 				387891C825410D4E0035B2CD /* LoadImageCommentsFromRemoteUseCaseTests.swift in Sources */,
 				086BE4842232725E004CDC26 /* FeedStoreSpy.swift in Sources */,
 				081C0DB322491EEF00AC754E /* SharedTestHelpers.swift in Sources */,
+				38D749FB254B9766006D0F9A /* ImageCommentsAPIEndpointTests.swift in Sources */,
 				089C40D42216C37400DE552E /* CacheFeedUseCaseTests.swift in Sources */,
 				086044FC233E1A3B005ECD22 /* FeedImageDataStoreSpy.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
