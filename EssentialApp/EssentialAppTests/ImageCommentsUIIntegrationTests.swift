@@ -174,88 +174,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         return [comment0, comment1]
     }
 
-    private func assertThat(
-        _ sut: ImageCommentsViewController,
-        isRendering comments: [(model: ImageComment, presentable: PresentableImageComment)],
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        guard sut.numberOfRenderedComments() == comments.count else {
-            return XCTFail(
-                "Expected \(comments.count) comments, but got \(sut.numberOfRenderedComments()) instead.",
-                file: file,
-                line: line
-            )
-        }
-
-        comments.enumerated().forEach { index, comment in
-            assertThat(sut, hasViewConfiguredFor: comment, at: index)
-        }
-    }
-
     private func makeFixedDate() -> () -> Date {
         { Date(timeIntervalSince1970: 1603497600) } // 24 OCT 2020 - 00:00:00
-    }
-
-    private func assertThat(
-        _ sut: ImageCommentsViewController,
-        hasViewConfiguredFor comment: (model: ImageComment, presentable: PresentableImageComment),
-        at index: Int,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let view = sut.commentView(at: index)
-        let model = comment.model
-        let presentable = comment.presentable
-
-        guard let cell = view else {
-            return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
-        }
-
-        XCTAssertEqual(
-            cell.usernameText,
-            model.author,
-            "Expected username text to be \(model.author), but got \(String(describing: cell.usernameText)) instead"
-        )
-        XCTAssertEqual(
-            cell.commentText,
-            model.message,
-            "Expected message text to be \(model.author), but got \(String(describing: cell.commentText)) instead"
-        )
-        XCTAssertEqual(
-            cell.createdAtText,
-            presentable.createdAt,
-            "Expected created at text to be \(presentable.createdAt), but got \(String(describing: cell.createdAtText)) instead"
-        )
-    }
-
-    private class LoaderSpy: ImageCommentsLoader {
-        var loadCommentsCallCount: Int { completions.count }
-        var completions = [(ImageCommentsLoader.Result) -> Void]()
-        private(set) var cancelledRequests = [URL]()
-
-        private struct Task: ImageCommentsLoaderTask {
-            let cancelCallback: () -> Void
-
-            func cancel() {
-                cancelCallback()
-            }
-        }
-
-        func load(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-            completions.append(completion)
-            return Task { [weak self] in
-                self?.cancelledRequests.append(url)
-            }
-        }
-
-        func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
-            completions[index](.success(comments))
-        }
-
-        func completeCommentsLoading(with error: Error, at index: Int = 0) {
-            completions[index](.failure(error))
-        }
     }
 
     private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -266,60 +186,5 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
             XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
         }
         return value
-    }
-}
-
-extension ImageCommentsViewController {
-    func simulateUserInitiatedCommentsReload() {
-        refreshControl?.simulatePullToRefresh()
-    }
-
-    var isShowingLoadingIndicator: Bool {
-        return refreshControl?.isRefreshing == true
-    }
-
-    func numberOfRenderedComments() -> Int {
-        tableView.numberOfRows(inSection: commentsSection)
-    }
-    
-    func numberOfRows(in section: Int) -> Int {
-        tableView.numberOfSections > section ? tableView.numberOfRows(inSection: section) : 0
-    }
-    
-    func cell(for row: Int, in section: Int) -> UITableViewCell? {
-        guard numberOfRows(in: section) > row else {
-            return nil
-        }
-        let indexPath = IndexPath(row: row, section: commentsSection)
-        let ds = tableView.dataSource
-        return ds?.tableView(tableView, cellForRowAt: indexPath)
-    }
-
-    func commentView(at row: Int) -> ImageCommentCell? {
-        cell(for: row, in: commentsSection) as? ImageCommentCell
-    }
-    
-    func commentMessage(at row: Int) -> String? {
-        commentView(at: row)?.commentText
-    }
-
-    var commentsSection: Int { 0 }
-
-    var errorMessage: String? {
-        errorView?.message
-    }
-}
-
-extension ImageCommentCell {
-    var commentText: String? {
-        commentLabel?.text
-    }
-
-    var usernameText: String? {
-        usernameLabel?.text
-    }
-
-    var createdAtText: String? {
-        createdAtLabel?.text
     }
 }
