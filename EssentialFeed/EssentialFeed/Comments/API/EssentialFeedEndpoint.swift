@@ -10,12 +10,12 @@ public enum EssentialFeedEndpoint {
     case feed
     case comments(for: ImageUUID)
 
-    public func url() -> URL {
+    public func url(_ baseUrl: URL) -> URL {
         switch self {
         case .feed:
-            return URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
+            return baseUrl.appendingPathComponent("/v1/feed")
         case let .comments(uuid):
-            return URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(uuid)/comments")!
+            return baseUrl.appendingPathComponent("/v1/image/\(uuid)/comments")
         }
     }
 }
