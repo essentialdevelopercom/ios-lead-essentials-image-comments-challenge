@@ -290,12 +290,9 @@
 		080EDEF321B6DA7E00813479 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
+				38D74A14254BA076006D0F9A /* Feed */,
 				387891D125411E7E0035B2CD /* Comments */,
 				080EDEF521B6DA7E00813479 /* Info.plist */,
-				080EDF1021B6DFA200813479 /* Feed Feature */,
-				08B42EA221C3F08A00DDA349 /* Feed API */,
-				089C40DA22170EB200DE552E /* Feed Cache */,
-				087148B4232BEA9100D6BE1A /* Feed Presentation */,
 			);
 			path = EssentialFeed;
 			sourceTree = "<group>";
@@ -306,9 +303,7 @@
 				38D74A0E254B9FCC006D0F9A /* API */,
 				0844768D21FCB23900439BE9 /* Helpers */,
 				387891C625410D3E0035B2CD /* Comments */,
-				08C0880F21E4F53000ACFB30 /* Feed API */,
-				089C40D22216C32600DE552E /* Feed Cache */,
-				087148AA232BDF4B00D6BE1A /* Feed Presentation */,
+				38D74A13254BA063006D0F9A /* Feed */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
 			);
 			path = EssentialFeedTests;
@@ -560,8 +555,8 @@
 		387891C625410D3E0035B2CD /* Comments */ = {
 			isa = PBXGroup;
 			children = (
-				387891D325411E9D0035B2CD /* API */,
-				38BB2D0E2542624D00C5DBD7 /* Presentation */,
+				387891D325411E9D0035B2CD /* Comments API */,
+				38BB2D0E2542624D00C5DBD7 /* Comments Presentation */,
 			);
 			path = Comments;
 			sourceTree = "<group>";
@@ -569,14 +564,14 @@
 		387891D125411E7E0035B2CD /* Comments */ = {
 			isa = PBXGroup;
 			children = (
-				387891DA25411F3F0035B2CD /* Feature */,
-				387891D225411E980035B2CD /* API */,
-				38BB2D35254280D100C5DBD7 /* Presentation */,
+				387891DA25411F3F0035B2CD /* Comments Feature */,
+				387891D225411E980035B2CD /* Comments API */,
+				38BB2D35254280D100C5DBD7 /* Comments Presentation */,
 			);
 			path = Comments;
 			sourceTree = "<group>";
 		};
-		387891D225411E980035B2CD /* API */ = {
+		387891D225411E980035B2CD /* Comments API */ = {
 			isa = PBXGroup;
 			children = (
 				387891D425411EBC0035B2CD /* RemoteImageCommentsLoader.swift */,
@@ -584,23 +579,23 @@
 				38BB2D0025425D9700C5DBD7 /* ImageCommentsLoader.swift */,
 				38D74A00254B99F3006D0F9A /* EssentialFeedEndpoint.swift */,
 			);
-			path = API;
+			path = "Comments API";
 			sourceTree = "<group>";
 		};
-		387891D325411E9D0035B2CD /* API */ = {
+		387891D325411E9D0035B2CD /* Comments API */ = {
 			isa = PBXGroup;
 			children = (
 				387891C725410D4E0035B2CD /* LoadImageCommentsFromRemoteUseCaseTests.swift */,
 			);
-			path = API;
+			path = "Comments API";
 			sourceTree = "<group>";
 		};
-		387891DA25411F3F0035B2CD /* Feature */ = {
+		387891DA25411F3F0035B2CD /* Comments Feature */ = {
 			isa = PBXGroup;
 			children = (
 				387891DB25411F480035B2CD /* ImageComment.swift */,
 			);
-			path = Feature;
+			path = "Comments Feature";
 			sourceTree = "<group>";
 		};
 		38853E3425462146006AAF89 /* Image Comments UI */ = {
@@ -637,16 +632,16 @@
 			path = "Shared UI";
 			sourceTree = "<group>";
 		};
-		38BB2D0E2542624D00C5DBD7 /* Presentation */ = {
+		38BB2D0E2542624D00C5DBD7 /* Comments Presentation */ = {
 			isa = PBXGroup;
 			children = (
 				38BB2D0F2542628200C5DBD7 /* ImageCommentsPresenterTests.swift */,
 				38853E1F25461AF0006AAF89 /* ImageCommentsLocalizationTests.swift */,
 			);
-			path = Presentation;
+			path = "Comments Presentation";
 			sourceTree = "<group>";
 		};
-		38BB2D35254280D100C5DBD7 /* Presentation */ = {
+		38BB2D35254280D100C5DBD7 /* Comments Presentation */ = {
 			isa = PBXGroup;
 			children = (
 				38BB2D53254281BA00C5DBD7 /* ImageCommentsErrorViewModel.swift */,
@@ -655,7 +650,7 @@
 				38BB2D4D254281A400C5DBD7 /* ImageCommentsViewModel.swift */,
 				38BB2D212542647A00C5DBD7 /* ImageComments.strings */,
 			);
-			path = Presentation;
+			path = "Comments Presentation";
 			sourceTree = "<group>";
 		};
 		38D74A0E254B9FCC006D0F9A /* API */ = {
@@ -664,6 +659,27 @@
 				38D749FA254B9766006D0F9A /* EssentialFeedEndpointTests.swift */,
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		38D74A13254BA063006D0F9A /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				08C0880F21E4F53000ACFB30 /* Feed API */,
+				089C40D22216C32600DE552E /* Feed Cache */,
+				087148AA232BDF4B00D6BE1A /* Feed Presentation */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		38D74A14254BA076006D0F9A /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				080EDF1021B6DFA200813479 /* Feed Feature */,
+				08B42EA221C3F08A00DDA349 /* Feed API */,
+				089C40DA22170EB200DE552E /* Feed Cache */,
+				087148B4232BEA9100D6BE1A /* Feed Presentation */,
+			);
+			path = Feed;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
