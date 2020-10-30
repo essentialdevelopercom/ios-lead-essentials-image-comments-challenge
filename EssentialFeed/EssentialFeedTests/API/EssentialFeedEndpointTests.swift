@@ -21,8 +21,9 @@ final class EssentialFeedEndpointTests: XCTestCase {
         let imageId = UUID(uuidString: "5BCC6F46-1A48-11EB-ADC1-0242AC120002")!
         let endpoint = EssentialFeedEndpoint.comments(for: imageId).url(baseUrl)
 
-        let expected =
-            URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/5BCC6F46-1A48-11EB-ADC1-0242AC120002/comments")!
+        let expected = URL(
+            string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/5BCC6F46-1A48-11EB-ADC1-0242AC120002/comments"
+        )!
         XCTAssertEqual(endpoint, expected, "Expected \(expected.absoluteString) URL, but got \(endpoint.absoluteString) instead")
     }
 }
