@@ -258,8 +258,7 @@
 				08B42EA221C3F08A00DDA349 /* Feed API */,
 				089C40DA22170EB200DE552E /* Feed Cache */,
 				087148B4232BEA9100D6BE1A /* Feed Presentation */,
-				11DF90392556A19E00A10B2C /* ImageComment.swift */,
-				11DF90432556A3DF00A10B2C /* ImageCommentAuthor.swift */,
+				11DF90C42556AF8500A10B2C /* Image Comments Feature */,
 			);
 			path = EssentialFeed;
 			sourceTree = "<group>";
@@ -513,6 +512,15 @@
 				08EFB82C22D4A60300A46837 /* Views */,
 			);
 			path = "Feed UI";
+			sourceTree = "<group>";
+		};
+		11DF90C42556AF8500A10B2C /* Image Comments Feature */ = {
+			isa = PBXGroup;
+			children = (
+				11DF90392556A19E00A10B2C /* ImageComment.swift */,
+				11DF90432556A3DF00A10B2C /* ImageCommentAuthor.swift */,
+			);
+			path = "Image Comments Feature";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
