@@ -79,14 +79,24 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
             sut.loadComments(from: anyURL()) { capturedErrors.append($0) }
             
             client.complete(withStatusCode: code, data: Data(), at: index)
-
+            
             XCTAssertEqual(capturedErrors, [.invalidData])
         }
-        
-        
     }
-
-
+    
+    func test_loadComments_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+        let (sut, client) = makeSUT()
+        
+        var capturedErrors = [RemoteImageCommentsLoader.Error]()
+        let invalidData = Data("invalidData".utf8)
+        
+        sut.loadComments(from: anyURL()) { capturedErrors.append($0) }
+        
+        client.complete(withStatusCode: 200, data: invalidData)
+        
+        XCTAssertEqual(capturedErrors, [.invalidData])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
