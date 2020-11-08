@@ -15,6 +15,10 @@ class RemoteImageCommentsLoader {
     init(client: HTTPClient) {
         self.client = client
     }
+    
+    func loadComments(from url: URL) {
+        client.get(from: url) { _ in }
+    }
 }
 
 class RemoteImageCommentsLoaderTests: XCTestCase {
@@ -25,5 +29,15 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
         
         XCTAssertTrue(client.requestedURLs.isEmpty)
     }
+    
+    func test_loadComments_requestDataFromURL() {
+        let client = HTTPClientSpy()
+        let sut = RemoteImageCommentsLoader(client: client)
+        
+        sut.loadComments(from: anyURL())
+        
+        XCTAssertEqual(client.requestedURLs, [anyURL()])
+    }
+
     
 }
