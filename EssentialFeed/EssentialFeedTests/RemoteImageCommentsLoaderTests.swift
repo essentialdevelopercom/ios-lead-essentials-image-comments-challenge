@@ -12,12 +12,18 @@ import EssentialFeed
 class RemoteImageCommentsLoader {
     private let client: HTTPClient
     
+    enum Error: Swift.Error {
+        case connectivity
+    }
+    
     init(client: HTTPClient) {
         self.client = client
     }
     
-    func loadComments(from url: URL) {
-        client.get(from: url) { _ in }
+    func loadComments(from url: URL, completion: @escaping (Error) -> Void = { _ in }) {
+        client.get(from: url) { result in
+            completion(.connectivity)
+        }
     }
 }
 
@@ -47,6 +53,17 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
+    func test_loadComments_deliversErrorOnClientError() {
+        let (sut, client) = makeSUT()
+        
+        var capturedErrors = [RemoteImageCommentsLoader.Error]()
+        sut.loadComments(from: anyURL()) { capturedErrors.append($0) }
+        
+        client.complete(with: NSError(domain: "", code: 0))
+
+        XCTAssertEqual(capturedErrors, [.connectivity])
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
