@@ -280,7 +280,7 @@
 				08C0880F21E4F53000ACFB30 /* Feed API */,
 				089C40D22216C32600DE552E /* Feed Cache */,
 				087148AA232BDF4B00D6BE1A /* Feed Presentation */,
-				116BD0E52557F144006EA0A7 /* LoadImageCommentsFromRemoteUseCase.swift */,
+				114E78FF2559BDE00013DD5B /* Image Comments API */,
 			);
 			path = EssentialFeedTests;
 			sourceTree = "<group>";
@@ -530,6 +530,14 @@
 				114E78D92559B15E0013DD5B /* RemoteImageComment.swift */,
 				114E11EE255972D600A15426 /* RemoteImageCommentsLoader.swift */,
 				114E78E32559B2AB0013DD5B /* ImageCommentsMapper.swift */,
+			);
+			path = "Image Comments API";
+			sourceTree = "<group>";
+		};
+		114E78FF2559BDE00013DD5B /* Image Comments API */ = {
+			isa = PBXGroup;
+			children = (
+				116BD0E52557F144006EA0A7 /* LoadImageCommentsFromRemoteUseCase.swift */,
 			);
 			path = "Image Comments API";
 			sourceTree = "<group>";
