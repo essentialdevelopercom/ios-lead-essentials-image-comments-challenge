@@ -73,7 +73,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
         })
     }
     
-    func test_load_deliversItemsOn200HTTPResponse() {
+    func test_loadComments_deliversItemsOn200HTTPResponse() {
         let (sut, client) = makeSUT()
         
         let comment1 = makeItem(
@@ -99,6 +99,8 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
         }
         
     }
+    
+    
     
     // MARK: - Helpers
     
