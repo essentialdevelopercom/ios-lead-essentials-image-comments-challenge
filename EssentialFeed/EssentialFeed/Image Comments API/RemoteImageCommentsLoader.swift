@@ -28,35 +28,30 @@ public final class RemoteImageCommentsLoader {
     public func loadComments(from url: URL, completion: @escaping (Result) -> Void = { _ in }) {
         client.get(from: url) { result in
             switch result {
-            case let .success((data, _)):
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601
-                if let root = try? decoder.decode(Root.self, from: data) {
-                    completion(.success(root.items.map { $0.item }))
-                } else {
-                    completion(.failure(.invalidData))
-                }
+            case let .success((data, response)):
+                completion(RemoteImageCommentsLoader.map(data, from: response))
             case .failure:
                 completion(.failure(.connectivity))
             }
         }
     }
-
-}
-
-private struct Root: Decodable {
-    let items: [Item]
-}
-
-private struct Item: Decodable {
-    private let id: UUID
-    private let message: String
-    private let created_at: Date
-    private let author: ImageCommentAuthor
     
-    var item: ImageComment {
-        return ImageComment(id: id, message: message, createdAt: created_at, author: author)
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+        do {
+            let items = try ImageCommentsMapper.map(data, from: response)
+            return .success(items.toModels())
+        } catch {
+            return .failure(error as! RemoteImageCommentsLoader.Error)
+        }
     }
-    
 }
+
+private extension Array where Element == RemoteImageComment {
+    func toModels() -> [ImageComment] {
+        return map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, username: $0.author.username) }
+    }
+}
+
+
+
 

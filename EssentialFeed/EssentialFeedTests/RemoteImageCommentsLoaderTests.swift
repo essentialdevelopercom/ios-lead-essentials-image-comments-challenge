@@ -80,14 +80,14 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
             id: UUID(),
             message: "message1",
             createdAt: (Date(timeIntervalSince1970: 1604924092), "2020-11-09T13:14:52+0100"),
-            authorName: "username1")
+            username: "username1")
         
        
         let comment2 = makeItem(
             id: UUID(),
             message: "message2",
             createdAt: (Date(timeIntervalSince1970: 1604924092), "2020-11-09T13:14:52+0100"),
-            authorName: "username2")
+            username: "username2")
                 
         let commentsJSON = [
             "items": [comment1.json, comment2.json]
@@ -110,15 +110,16 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
         return (sut, client)
     }
     
-    private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), authorName: String) -> (comment: ImageComment, json: [String: Any]) {
-        let comment = ImageComment(id: id, message: message, createdAt: createdAt.date, author: ImageCommentAuthor(username: authorName))
+    private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (comment: ImageComment, json: [String: Any]) {
         
+        let comment = ImageComment(id: id, message: message, createdAt: createdAt.date, username: username)
+    
         let commentJSON: [String: Any] = [
             "id": id.uuidString,
             "message": message,
             "created_at": createdAt.iso8601String,
             "author": [
-                "username": authorName
+                "username": username
             ]]
         
         return(comment, commentJSON)
