@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct ImageCommentAuthor {
+struct ImageCommentAuthor: Equatable {
     let username: String
 }

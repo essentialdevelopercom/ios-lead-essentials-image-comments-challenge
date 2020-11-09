@@ -29,8 +29,12 @@ class RemoteImageCommentsLoader {
     func loadComments(from url: URL, completion: @escaping (Result) -> Void = { _ in }) {
         client.get(from: url) { result in
             switch result {
-            case .success:
-                completion(.failure(.invalidData))
+            case let .success((data, _)):
+                if (try? JSONSerialization.jsonObject(with: data)) != nil {
+                    completion(.success([]))
+                } else {
+                    completion(.failure(.invalidData))
+                }
             case .failure:
                 completion(.failure(.connectivity))
             }
@@ -67,39 +71,39 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
     func test_loadComments_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
         
-        var capturedErrors = [RemoteImageCommentsLoader.Error]()
-        sut.loadComments(from: anyURL()) { capturedErrors.append($0) }
-        
-        client.complete(with: NSError(domain: "", code: 0))
+        expect(sut: sut, toCompleteWith: .failure(.connectivity), when: {
+            client.complete(with: NSError(domain: "", code: 0))
+        })
 
-        XCTAssertEqual(capturedErrors, [.connectivity])
     }
     
     func test_loadComments_deliversErrorOnNon200HTTPResponse() {
         let (sut, client) = makeSUT()
-        
         let samples = [199, 201, 300, 400, 500]
+        
         samples.enumerated().forEach { index, code in
-            var capturedErrors = [RemoteImageCommentsLoader.Error]()
-            sut.loadComments(from: anyURL()) { capturedErrors.append($0) }
-            
-            client.complete(withStatusCode: code, data: Data(), at: index)
-            
-            XCTAssertEqual(capturedErrors, [.invalidData])
+            expect(sut: sut, toCompleteWith: .failure(.invalidData), when: {
+                client.complete(withStatusCode: code, data: Data(), at: index)
+            })
         }
     }
     
     func test_loadComments_deliversErrorOn200HTTPResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
         
-        var capturedErrors = [RemoteImageCommentsLoader.Error]()
-        let invalidData = Data("invalidData".utf8)
+        expect(sut: sut, toCompleteWith: .failure(.invalidData), when: {
+            let invalidData = Data("invalidData".utf8)
+            client.complete(withStatusCode: 200, data: invalidData)
+        })
+    }
+    
+    func test_loadComments_deliversNoItemsOn200HTTPResponseWithEmptyJson() {
+        let (sut, client) = makeSUT()
         
-        sut.loadComments(from: anyURL()) { capturedErrors.append($0) }
-        
-        client.complete(withStatusCode: 200, data: invalidData)
-        
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        expect(sut: sut, toCompleteWith: .success([]), when: {
+            let emptyJSON = Data("{\"items\": [] }".utf8)
+            client.complete(withStatusCode: 200, data: emptyJSON)
+        })
     }
     
     // MARK: - Helpers
@@ -110,5 +114,28 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
+    }
+    
+    private func expect(sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        
+        let exp = expectation(description: "Wait for load completion")
+        sut.loadComments(from: anyURL()) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedComments), .success(expectedComments)):
+                XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
+                
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            
+            default:
+                XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
     }
 }
