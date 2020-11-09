@@ -26,7 +26,9 @@ public final class RemoteImageCommentsLoader {
     }
     
     public func loadComments(from url: URL, completion: @escaping (Result) -> Void = { _ in }) {
-        client.get(from: url) { result in
+        client.get(from: url) { [weak self] result in
+            guard self != nil else { return }
+            
             switch result {
             case let .success((data, response)):
                 completion(RemoteImageCommentsLoader.map(data, from: response))

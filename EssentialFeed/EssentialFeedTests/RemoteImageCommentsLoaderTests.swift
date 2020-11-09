@@ -97,11 +97,23 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
             let json = try! JSONSerialization.data(withJSONObject: commentsJSON)
             client.complete(withStatusCode: 200, data: json)
         }
-        
     }
     
-    
-    
+    func test_loadComments_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        let url = anyURL()
+        let client = HTTPClientSpy()
+        var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client)
+        
+        var capturedResults = [RemoteImageCommentsLoader.Result]()
+        sut?.loadComments(from: url) { capturedResults.append($0) }
+
+        sut = nil
+        let emptyJSON = Data("{\"items\": [] }".utf8)
+        client.complete(withStatusCode: 200, data: emptyJSON)
+        
+        XCTAssertTrue(capturedResults.isEmpty)
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
