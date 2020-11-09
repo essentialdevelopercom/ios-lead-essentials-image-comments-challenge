@@ -9,8 +9,24 @@
 import Foundation
 
 public struct ImageComment: Equatable {
-    let id: UUID
-    let message: String
-    let created_at: Date
-    let author: ImageCommentAuthor
+    public let id: UUID
+    public let message: String
+    public let createdAt: Date
+    public let author: ImageCommentAuthor
+    
+    public init(id: UUID, message: String, createdAt: Date, author: ImageCommentAuthor) {
+        self.id = id
+        self.message = message
+        self.createdAt = createdAt
+        self.author = author
+    }
+}
+
+extension ImageComment: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case message
+        case createdAt = "created_at"
+        case author
+    }
 }
