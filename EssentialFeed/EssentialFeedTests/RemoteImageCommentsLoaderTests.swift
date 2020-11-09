@@ -116,43 +116,26 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
     func test_load_deliversItemsOn200HTTPResponse() {
         let (sut, client) = makeSUT()
         
-        let comment1 = ImageComment(
+        let comment1 = makeItem(
             id: UUID(),
             message: "message1",
-            createdAt: Date(timeIntervalSince1970: 1604924092),
-            author: ImageCommentAuthor(username: "username1"))
+            createdAt: (Date(timeIntervalSince1970: 1604924092), "2020-11-09T13:14:52+0100"),
+            authorName: "username1")
         
-        
-        let comment1JSON = [
-            "id": comment1.id.uuidString,
-            "message": comment1.message,
-            "created_at": "2020-11-09T13:14:52+0100",
-            "author": [
-                "username": comment1.author.username
-            ]] as [String : Any]
-        
-        let comment2 = ImageComment(
+       
+        let comment2 = makeItem(
             id: UUID(),
             message: "message2",
-            createdAt: Date(timeIntervalSince1970: 1604924092),
-            author: ImageCommentAuthor(username: "username2"))
-        
-        let commen2JSON = [
-            "id": comment2.id.uuidString,
-            "message": comment2.message,
-            "created_at": "2020-11-09T13:14:52+0100",
-            "author": [
-                "username": comment2.author.username
-            ]] as [String : Any]
-        
+            createdAt: (Date(timeIntervalSince1970: 1604924092), "2020-11-09T13:14:52+0100"),
+            authorName: "username2")
+                
         let commentsJSON = [
-            "items": [comment1JSON, commen2JSON]
+            "items": [comment1.json, comment2.json]
         ]
         
-        expect(sut: sut, toCompleteWith: .success([comment1, comment2])) {
+        expect(sut: sut, toCompleteWith: .success([comment1.comment, comment2.comment])) {
             let json = try! JSONSerialization.data(withJSONObject: commentsJSON)
             client.complete(withStatusCode: 200, data: json)
-
         }
         
     }
@@ -165,6 +148,21 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
+    }
+    
+    private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), authorName: String) -> (comment: ImageComment, json: [String: Any]) {
+        let comment = ImageComment(id: id, message: message, createdAt: createdAt.date, author: ImageCommentAuthor(username: authorName))
+        
+        let commentJSON: [String: Any] = [
+            "id": id.uuidString,
+            "message": message,
+            "created_at": createdAt.iso8601String,
+            "author": [
+                "username": authorName
+            ]]
+        
+        return(comment, commentJSON)
+        
     }
             
     private func expect(sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
