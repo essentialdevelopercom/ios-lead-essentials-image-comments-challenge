@@ -17,17 +17,22 @@ class RemoteImageCommentsLoader {
         case invalidData
     }
     
+    enum Result {
+        case success([ImageComment])
+        case failure(Error)
+    }
+    
     init(client: HTTPClient) {
         self.client = client
     }
     
-    func loadComments(from url: URL, completion: @escaping (Error) -> Void = { _ in }) {
+    func loadComments(from url: URL, completion: @escaping (Result) -> Void = { _ in }) {
         client.get(from: url) { result in
             switch result {
             case .success:
-                completion(.invalidData)
+                completion(.failure(.invalidData))
             case .failure:
-                completion(.connectivity)
+                completion(.failure(.connectivity))
             }
         }
     }
