@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ImageCommentsLoader {
+public protocol ImageCommentsLoader {
     typealias Result = Swift.Result<[ImageComment], Error>
     
     func loadComments(from url: URL, completion: @escaping (Result) -> Void)

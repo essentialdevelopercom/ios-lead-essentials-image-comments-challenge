@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class RemoteImageCommentsLoader {
+public final class RemoteImageCommentsLoader: ImageCommentsLoader {
     private let client: HTTPClient
     
     public enum Error: Swift.Error {
@@ -16,10 +16,7 @@ public final class RemoteImageCommentsLoader {
         case invalidData
     }
     
-    public enum Result {
-        case success([ImageComment])
-        case failure(Error)
-    }
+    public typealias Result = ImageCommentsLoader.Result
     
     public init(client: HTTPClient) {
         self.client = client
@@ -33,7 +30,7 @@ public final class RemoteImageCommentsLoader {
             case let .success((data, response)):
                 completion(RemoteImageCommentsLoader.map(data, from: response))
             case .failure:
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             }
         }
     }
@@ -43,7 +40,7 @@ public final class RemoteImageCommentsLoader {
             let items = try ImageCommentsMapper.map(data, from: response)
             return .success(items.toModels())
         } catch {
-            return .failure(error as! RemoteImageCommentsLoader.Error)
+            return .failure(error)
         }
     }
 }
