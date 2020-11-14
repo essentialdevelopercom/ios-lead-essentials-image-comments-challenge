@@ -20,7 +20,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
     func test_loadComments_requestDataFromURL() {
         let (sut, client) = makeSUT()
         
-        sut.loadComments(from: anyURL())
+        sut.loadComments(from: anyURL()) { _ in }
         
         XCTAssertEqual(client.requestedURLs, [anyURL()])
     }
@@ -29,8 +29,8 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT()
         
-        sut.loadComments(from: url)
-        sut.loadComments(from: url)
+        sut.loadComments(from: url) { _ in }
+        sut.loadComments(from: url) { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }

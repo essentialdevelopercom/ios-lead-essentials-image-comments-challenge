@@ -25,7 +25,7 @@ public final class RemoteImageCommentsLoader {
         self.client = client
     }
     
-    public func loadComments(from url: URL, completion: @escaping (Result) -> Void = { _ in }) {
+    public func loadComments(from url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             
