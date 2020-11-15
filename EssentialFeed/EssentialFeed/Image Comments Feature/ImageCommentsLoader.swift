@@ -8,8 +8,12 @@
 
 import Foundation
 
+public protocol ImageCommentsLoaderTask {
+    func cancel()
+}
+
 public protocol ImageCommentsLoader {
     typealias Result = Swift.Result<[ImageComment], Error>
     
-    func loadComments(from url: URL, completion: @escaping (Result) -> Void)
+    func loadComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask
 }

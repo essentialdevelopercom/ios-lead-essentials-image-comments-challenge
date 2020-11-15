@@ -22,8 +22,16 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
         self.client = client
     }
     
-    public func loadComments(from url: URL, completion: @escaping (Result) -> Void) {
-        client.get(from: url) { [weak self] result in
+    private final class HTTPClientTaskWrapper: ImageCommentsLoaderTask {
+        var wrapped: HTTPClientTask?
+        
+        func cancel() {}
+    }
+    
+    public func loadComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
+        let task = HTTPClientTaskWrapper()
+        
+        task.wrapped = client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             
             switch result {
@@ -33,6 +41,8 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
                 completion(.failure(Error.connectivity))
             }
         }
+        
+        return task
     }
     
     private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {

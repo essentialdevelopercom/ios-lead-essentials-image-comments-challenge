@@ -20,7 +20,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
     func test_loadComments_requestDataFromURL() {
         let (sut, client) = makeSUT()
         
-        sut.loadComments(from: anyURL()) { _ in }
+        _ = sut.loadComments(from: anyURL()) { _ in }
         
         XCTAssertEqual(client.requestedURLs, [anyURL()])
     }
@@ -29,8 +29,8 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT()
         
-        sut.loadComments(from: url) { _ in }
-        sut.loadComments(from: url) { _ in }
+        _ = sut.loadComments(from: url) { _ in }
+        _ = sut.loadComments(from: url) { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
@@ -105,7 +105,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
         var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client)
         
         var capturedResults = [RemoteImageCommentsLoader.Result]()
-        sut?.loadComments(from: url) { capturedResults.append($0) }
+        _ = sut?.loadComments(from: url) { capturedResults.append($0) }
 
         sut = nil
         let emptyJSON = Data("{\"items\": [] }".utf8)
@@ -143,7 +143,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
     private func expect(sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         
         let exp = expectation(description: "Wait for load completion")
-        sut.loadComments(from: anyURL()) { receivedResult in
+        _ = sut.loadComments(from: anyURL()) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedComments), .success(expectedComments)):
                 XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
