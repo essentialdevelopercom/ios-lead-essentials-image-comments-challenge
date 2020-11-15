@@ -99,6 +99,17 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
         }
     }
     
+    func test_cancelLoadCommentsURLTask_cancelsClientURLRequest() {
+        let (sut, client) = makeSUT()
+        let url = anyURL()
+
+        let task = sut.loadComments(from: url) { _ in }
+        XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
+        
+        task.cancel()
+        XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
+    }
+    
     func test_loadComments_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
         let url = anyURL()
         let client = HTTPClientSpy()

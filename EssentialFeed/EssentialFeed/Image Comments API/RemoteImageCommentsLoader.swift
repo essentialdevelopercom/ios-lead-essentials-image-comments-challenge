@@ -25,7 +25,9 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
     private final class HTTPClientTaskWrapper: ImageCommentsLoaderTask {
         var wrapped: HTTPClientTask?
         
-        func cancel() {}
+        func cancel() {
+            wrapped?.cancel()
+        }
     }
     
     public func loadComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
