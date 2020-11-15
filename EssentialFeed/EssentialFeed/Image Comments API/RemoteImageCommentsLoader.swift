@@ -52,12 +52,11 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
         task.wrapped = client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             
-            switch result {
-            case let .success((data, response)):
-                task.complete(with: RemoteImageCommentsLoader.map(data, from: response))
-            case .failure:
-                task.complete(with: .failure(Error.connectivity))
-            }
+            task.complete(with: result
+                .mapError { _ in Error.connectivity }
+                .flatMap { (data, response) in
+                    RemoteImageCommentsLoader.map(data, from: response)
+                })
         }
         
         return task
@@ -78,7 +77,3 @@ private extension Array where Element == RemoteImageComment {
         return map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, username: $0.author.username) }
     }
 }
-
-
-
-
