@@ -8,9 +8,18 @@
 
 import XCTest
 
-final class ImageCommentsViewController {
+final class ImageCommentsViewController: UIViewController {
+    private var loader: ImageCommentsViewControllerTests.LoaderSpy?
     
-    init(loader: Any) {}
+    convenience init(loader: ImageCommentsViewControllerTests.LoaderSpy) {
+        self.init()
+        self.loader = loader
+    }
+    
+    override func viewDidLoad() {
+        loader?.load()
+    }
+    
 }
 
 final class ImageCommentsViewControllerTests: XCTestCase {
@@ -22,10 +31,24 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallsCount, 0)
     }
     
+    func test_viewDidLoad_loadsComments() {
+        let loader = LoaderSpy()
+        let sut = ImageCommentsViewController(loader: loader)
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(loader.loadCallsCount, 1)
+    }
+
+    
     // MARK: - Helpers
     
     class LoaderSpy {
         private(set) var loadCallsCount = 0
+        
+        func load() {
+            loadCallsCount += 1
+        }
     }
 
 }
