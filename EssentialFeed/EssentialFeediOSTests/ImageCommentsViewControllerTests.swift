@@ -18,8 +18,7 @@ final class ImageCommentsViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        let url = URL(string: "http://any-url.com")!
-        _ = loader?.loadComments(from: url) { _ in }
+        _ = loader?.loadComments() { _ in }
     }
     
 }
@@ -27,23 +26,28 @@ final class ImageCommentsViewController: UIViewController {
 final class ImageCommentsViewControllerTests: XCTestCase {
 
     func test_init_doesNotLoadComments() {
-        let loader = LoaderSpy()
-        _ = ImageCommentsViewController(loader: loader)
+        let (_, loader) = makeSUT()
         
         XCTAssertEqual(loader.loadCallsCount, 0)
     }
     
     func test_viewDidLoad_loadsComments() {
-        let loader = LoaderSpy()
-        let sut = ImageCommentsViewController(loader: loader)
+        let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
         
         XCTAssertEqual(loader.loadCallsCount, 1)
     }
-
     
     // MARK: - Helpers
+    
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, client: LoaderSpy) {
+        let loader = LoaderSpy()
+        let sut = ImageCommentsViewController(loader: loader)
+        trackForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut, loader)
+    }
     
     class LoaderSpy: ImageCommentsLoader {
         private(set) var loadCallsCount = 0
@@ -52,7 +56,7 @@ final class ImageCommentsViewControllerTests: XCTestCase {
             func cancel() {}
         }
         
-        func loadComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+        func loadComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
             loadCallsCount += 1
             return TaskSpy()
         }
