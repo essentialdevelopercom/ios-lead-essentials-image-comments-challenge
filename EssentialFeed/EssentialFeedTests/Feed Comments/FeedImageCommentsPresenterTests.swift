@@ -22,11 +22,20 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
+	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+		 let (sut, view) = makeSUT()
+
+		 sut.didStartLoadingFeed()
+
+		 XCTAssertEqual(view.messages, [.display(errorMessage: .none),
+										.display(isLoading: true)])
+	 }
+	
 	//MARK: -Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImageCommentsPresenter(commentsView: view)
+		let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -42,8 +51,23 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 	
-	private class ViewSpy {
-		private(set) var messages = [Any]()
+	private class ViewSpy: FeedImageCommentsLoadingView, FeedImageCommentsErrorView {
+		
+		enum Message: Hashable {
+			case display(errorMessage: String?)
+			case display(isLoading: Bool)
+		}
+		
+		private(set) var messages = Set<Message>()
+		
+		func display(isLoading: Bool) {
+			messages.insert(.display(isLoading: isLoading))
+		}
+		
+		func display(errorMessage: String?) {
+			messages.insert(.display(errorMessage: errorMessage))
+		}
+		
 	}
 
 }

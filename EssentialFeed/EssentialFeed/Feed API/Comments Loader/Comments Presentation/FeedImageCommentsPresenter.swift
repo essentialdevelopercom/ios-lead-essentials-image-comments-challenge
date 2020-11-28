@@ -8,9 +8,19 @@
 
 import Foundation
 
+public protocol FeedImageCommentsLoadingView {
+	func display(isLoading: Bool)
+}
+
+public protocol FeedImageCommentsErrorView {
+	func display(errorMessage: String?)
+}
+
 public class FeedImageCommentsPresenter {
 	
 	private let commentsView: Any
+	private let loadingView: FeedImageCommentsLoadingView
+	private let errorView: FeedImageCommentsErrorView
 	
 	public static var title: String { NSLocalizedString(
 		"FEED_COMMENTS_VIEW_TITLE",
@@ -19,8 +29,15 @@ public class FeedImageCommentsPresenter {
 		comment: "Title for the image comments view"
 	) }
 	
-	public init(commentsView: Any) {
+	public init(commentsView: Any, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
 		self.commentsView = commentsView
+		self.loadingView = loadingView
+		self.errorView = errorView
+	}
+	
+	public func didStartLoadingFeed() {
+		errorView.display(errorMessage: nil)
+		loadingView.display(isLoading: true)
 	}
 	
 }
