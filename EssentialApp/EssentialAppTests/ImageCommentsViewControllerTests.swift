@@ -20,11 +20,11 @@ final class ImageCommentsViewController: UITableViewController {
     override func viewDidLoad() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        refreshControl?.beginRefreshing()
         load()
     }
     
     @objc func load() {
+        refreshControl?.beginRefreshing()
         _ = loader?.loadComments() { [weak self] _ in
             self?.refreshControl?.endRefreshing()
         }
@@ -39,60 +39,37 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallsCount, 0)
     }
     
-    func test_viewDidLoad_loadsComments() {
+    func test_loadCommentsActions_requestCommentsfromLoader() {
         let (sut, loader) = makeSUT()
         
+        XCTAssertEqual(loader.loadCallsCount, 0, "Expected no loading requests before view is loaded")
         sut.loadViewIfNeeded()
-        
-        XCTAssertEqual(loader.loadCallsCount, 1)
-    }
-    
-    func test_pullToRefresh_loadsComments() {
-        let (sut, loader) = makeSUT()
-        
-        sut.loadViewIfNeeded()
+        XCTAssertEqual(loader.loadCallsCount, 1, "Expected a loading request once view is loaded")
         
         sut.simulateUserInitiatedCommentsReload()
-        XCTAssertEqual(loader.loadCallsCount, 2)
+        XCTAssertEqual(loader.loadCallsCount, 2, "Expected another loading request once user initiates a reload")
         
         sut.simulateUserInitiatedCommentsReload()
-        XCTAssertEqual(loader.loadCallsCount, 3)
+        XCTAssertEqual(loader.loadCallsCount, 3, "Expected yet another loading request once user initiates another")
     }
-    
+  
     func test_viewDidLoad_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
-        
-        sut.loadViewIfNeeded()
-        
-        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
-    }
-    
-    func test_viewDidLoadHidesLoadingIndicatorOnLoaderCompletion() {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
-        loader.completeCommentsLoading()
-        
-        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
-    }
-    
-    func test_pullToRefresh_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
-        
-        sut.simulateUserInitiatedCommentsReload()
-        
-        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
-    }
-    
-    func test_pullToRefresh_hidesLoadingIndicatorOnLoaderCompletion() {
-        let (sut, loader) = makeSUT()
-        
-        sut.simulateUserInitiatedCommentsReload()
-        loader.completeCommentsLoading()
-        
-        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
-    }
 
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+        
+        loader.completeCommentsLoading(at: 0)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading is completed")
+        
+        sut.simulateUserInitiatedCommentsReload()
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
+        
+        loader.completeCommentsLoading(at: 1)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading is completed")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, client: LoaderSpy) {
@@ -120,12 +97,10 @@ final class ImageCommentsViewControllerTests: XCTestCase {
             return TaskSpy()
         }
         
-        func completeCommentsLoading() {
-            completions[0](.success([]))
+        func completeCommentsLoading(at index: Int) {
+            completions[index](.success([]))
         }
-
     }
-
 }
 
 private extension ImageCommentsViewController {
