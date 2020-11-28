@@ -74,11 +74,11 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
 		let (sut, client) = makeSUT()
 		let date = Date()
-		let item1 = makeItem(id: UUID(), message: "First message", createdAt: date, author: "First author")
-		let item2 = makeItem(id: UUID(), message: "Second message", createdAt: date, author: "Second author")
+		let item1 = makeCommentItem(id: UUID(), message: "First message", createdAt: date, author: "First author")
+		let item2 = makeCommentItem(id: UUID(), message: "Second message", createdAt: date, author: "Second author")
 		
-		expect(sut, toCompleteWithResult: .success([item1, item2].toModels())) {
-			let json = makeItemJSON([item1, item2])
+		expect(sut, toCompleteWithResult: .success([item1.item, item2.item])) {
+			let json = makeItemJSON([item1.codableItem, item2.codableItem])
 			client.complete(withStatusCode: 200, data: json)
 		}
 	}
@@ -158,16 +158,4 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let root = FeedImageCommentsMapper.Root(items: items)
 		return try! encoder.encode(root)
 	}
-	
-	private func makeItem(id: UUID = UUID(), message: String = "Any message", createdAt: Date = Date(), author name: String = "Author Name") -> CodableFeedImageComment {
-		let author = CodableFeedImageComment.Author(username: name)
-		let item = CodableFeedImageComment(id: id, message: message, created_at: createdAt, author: author)
-		return item
-	}
 }
-
-private extension Array where Element == CodableFeedImageComment {
-	 func toModels() -> [ImageComment] {
-		 map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author.username) }
-	 }
- }

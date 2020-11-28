@@ -16,9 +16,13 @@ public protocol FeedImageCommentsErrorView {
 	func display(errorMessage: String?)
 }
 
+public protocol FeedImageCommentsView {
+	func display(comments: [ImageComment])
+}
+
 public class FeedImageCommentsPresenter {
 	
-	private let commentsView: Any
+	private let commentsView: FeedImageCommentsView
 	private let loadingView: FeedImageCommentsLoadingView
 	private let errorView: FeedImageCommentsErrorView
 	
@@ -29,7 +33,7 @@ public class FeedImageCommentsPresenter {
 		comment: "Title for the image comments view"
 	) }
 	
-	public init(commentsView: Any, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
+	public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
@@ -38,6 +42,11 @@ public class FeedImageCommentsPresenter {
 	public func didStartLoadingFeed() {
 		errorView.display(errorMessage: nil)
 		loadingView.display(isLoading: true)
+	}
+	
+	public func didFinishLoadingFeed(with comments: [ImageComment]) {
+		commentsView.display(comments: comments)
+		loadingView.display(isLoading: false)
 	}
 	
 }
