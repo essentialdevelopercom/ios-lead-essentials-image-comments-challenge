@@ -7,6 +7,8 @@ import EssentialFeed
 
 final class RemoteFeedCommentsLoader {
 	
+	typealias Result = Swift.Result<Data, Error>
+	
 	private let url: URL
 	private let client: HTTPClient
 	
@@ -15,8 +17,15 @@ final class RemoteFeedCommentsLoader {
 		self.url = url
 	}
 	
-	func load() {
-		client.get(from: url) { _ in}
+	func load(completion: @escaping (Result) -> Void) {
+		client.get(from: url) { result in
+			switch result {
+			case let .failure(error):
+				completion(.failure(error))
+			default:
+				break
+			}
+		}
 	}
 }
 
@@ -32,7 +41,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load()
+		sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -41,10 +50,29 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load()
-		sut.load()
+		sut.load() { _ in }
+		sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_deliversErrorOnClientError() {
+		let expectedError = anyNSError()
+		let (sut, client) = makeSUT()
+		
+		let exp = expectation(description: "Waiting for request completion")
+		sut.load { result in
+			switch result {
+			case let .failure(receivedError):
+				XCTAssertEqual(expectedError, receivedError as NSError?)
+			default:
+				XCTFail("Expecting to receive an error, got the \(result) instead.")
+			}
+			exp.fulfill()
+		}
+		
+		client.complete(with: expectedError)
+		wait(for: [exp], timeout: 1.0)
 	}
 	
 	// MARK: - Helpers
@@ -56,4 +84,5 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
 	}
+	
 }
