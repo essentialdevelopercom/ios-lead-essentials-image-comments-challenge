@@ -14,6 +14,7 @@ final class RemoteFeedCommentsLoader {
 	
 	enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 	
 	init(url: URL, client: HTTPClient) {
@@ -24,10 +25,12 @@ final class RemoteFeedCommentsLoader {
 	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
+			case let .success((_, response)):
+				if !response.isOK {
+					completion(.failure(.invalidData))
+				}
 			case .failure(_):
 				completion(.failure(.connectivity))
-			default:
-				break
 			}
 		}
 	}
@@ -61,14 +64,14 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_deliversErrorOnClientError() {
-		let expectedError = anyNSError()
+		let expectedError = RemoteFeedCommentsLoader.Error.connectivity
 		let (sut, client) = makeSUT()
 		
 		let exp = expectation(description: "Waiting for request completion")
 		sut.load { result in
 			switch result {
 			case let .failure(receivedError):
-				XCTAssertEqual(expectedError, receivedError as NSError?)
+				XCTAssertEqual(expectedError as NSError?, receivedError as NSError?)
 			default:
 				XCTFail("Expecting to receive an error, got the \(result) instead.")
 			}
@@ -77,6 +80,27 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		client.complete(with: expectedError)
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		let expectedError = RemoteFeedCommentsLoader.Error.invalidData
+		
+		[199, 401, 300, 400, 500].enumerated().forEach { index, errorCode in
+			let exp = expectation(description: "Waiting for request completion")
+			sut.load { result in
+				switch result {
+				case let .failure(receivedError):
+					XCTAssertEqual(expectedError as NSError?, receivedError as NSError?)
+				default:
+					XCTFail("Expecting to receive an error, got the \(result) instead.")
+				}
+				exp.fulfill()
+			}
+			
+			client.complete(withStatusCode: errorCode, data: anyData(), at: index)
+			wait(for: [exp], timeout: 1.0)
+		}
 	}
 	
 	// MARK: - Helpers
@@ -90,3 +114,10 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 }
+
+extension HTTPURLResponse {
+	var isOK: Bool {
+		return (200...299).contains(statusCode)
+	}
+}
+
