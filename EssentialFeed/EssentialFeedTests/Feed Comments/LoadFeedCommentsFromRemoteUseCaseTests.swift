@@ -5,32 +5,44 @@
 import XCTest
 import EssentialFeed
 
-struct Root: Decodable {
-	let items: [FeedImageComment]
+final class FeedImageCommentsMapper {
+	
+	struct Root: Codable {
+		let items: [CodableFeedImageComment]
+	}
+	
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [CodableFeedImageComment] {
+		
+		guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data)
+		else {
+			throw RemoteFeedLoader.Error.invalidData
+		}
+		return root.items
+	}
 }
 
-struct FeedImageComment: Decodable, Equatable {
+struct CodableFeedImageComment: Codable, Equatable {
 	
-	struct Author: Decodable {
+	struct Author: Codable, Equatable {
 		let username: String
 	}
 	
 	let id: UUID
 	let message: String
-	let createdAt: Date
+	let created_at: Date
 	let author: Author
-	
-	static func == (lhs: FeedImageComment, rhs: FeedImageComment) -> Bool {
-		return lhs.id == rhs.id
-			&& lhs.message == rhs.message
-			&& lhs.createdAt == rhs.createdAt
-			&& lhs.author.username == rhs.author.username
-	}
+}
+
+struct ImageComment: Equatable {
+	let id: UUID
+	let message: String
+	let createdAt: Date
+	let author: String
 }
 
 final class RemoteFeedCommentsLoader {
 	
-	typealias Result = Swift.Result<[FeedImageComment], Error>
+	typealias Result = Swift.Result<[ImageComment], Error>
 	
 	private let url: URL
 	private let client: HTTPClient
@@ -49,19 +61,19 @@ final class RemoteFeedCommentsLoader {
 		client.get(from: url) { result in
 			switch result {
 			case let .success((data, response)):
-				
-				if !response.isOK {
-					completion(.failure(.invalidData))
-				} else {
-					guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
-						return completion(.failure(.invalidData))
-					}
-					completion(.success(root.items))
-				}
-				
+				completion(RemoteFeedCommentsLoader.map(data, from: response))
 			case .failure(_):
 				completion(.failure(.connectivity))
 			}
+		}
+	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		do {
+			let items = try FeedImageCommentsMapper.map(data, from: response)
+			return .success(items.toModels())
+		} catch {
+			return .failure(.invalidData)
 		}
 	}
 }
@@ -132,6 +144,18 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		let date = Date()
+		let item1 = makeItem(id: UUID(), message: "First message", createdAt: date, author: "First author")
+		let item2 = makeItem(id: UUID(), message: "Second message", createdAt: date, author: "Second author")
+		
+		expect(sut, toCompleteWithResult: .success([item1, item2].toModels())) {
+			let json = makeItemJSON([item1, item2])
+			client.complete(withStatusCode: 200, data: json)
+		}
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(),file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedCommentsLoader, client: HTTPClientSpy) {
@@ -162,9 +186,16 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
-	private func makeItemJSON(_ items: [[String: Any]]) -> Data {
-		let json = [ "items": items]
-		return try! JSONSerialization.data(withJSONObject: json)
+	private func makeItemJSON(_ items: [CodableFeedImageComment]) -> Data {
+		let encoder = JSONEncoder()
+		let root = FeedImageCommentsMapper.Root(items: items)
+		return try! encoder.encode(root)
+	}
+	
+	private func makeItem(id: UUID = UUID(), message: String = "Any message", createdAt: Date = Date(), author name: String = "Author Name") -> CodableFeedImageComment {
+		let author = CodableFeedImageComment.Author(username: name)
+		let item = CodableFeedImageComment(id: id, message: message, created_at: createdAt, author: author)
+		return item
 	}
 	
 }
@@ -175,3 +206,8 @@ extension HTTPURLResponse {
 	}
 }
 
+private extension Array where Element == CodableFeedImageComment {
+	 func toModels() -> [ImageComment] {
+		 map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author.username) }
+	 }
+ }
