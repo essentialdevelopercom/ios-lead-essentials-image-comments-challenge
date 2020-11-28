@@ -25,10 +25,16 @@ final class RemoteFeedCommentsLoader {
 	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .success((_, response)):
+			case let .success((data, response)):
+				
 				if !response.isOK {
 					completion(.failure(.invalidData))
+				} else {
+					guard let _ = try? JSONSerialization.jsonObject(with: data) else {
+						return completion(.failure(.invalidData))
+					}
 				}
+				
 			case .failure(_):
 				completion(.failure(.connectivity))
 			}
@@ -70,6 +76,15 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		expect(sut, toCompleteWithResult: .failure(.connectivity)) {
 			let expectedError = RemoteFeedCommentsLoader.Error.connectivity
 			client.complete(with: expectedError)
+		}
+	}
+	
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWithResult: .failure(.invalidData)) {
+			let invalidJson = Data("Invalid json".utf8)
+			client.complete(withStatusCode: 200, data: invalidJson)
 		}
 	}
 	
