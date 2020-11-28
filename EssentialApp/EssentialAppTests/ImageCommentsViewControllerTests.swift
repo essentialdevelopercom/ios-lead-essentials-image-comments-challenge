@@ -20,6 +20,7 @@ final class ImageCommentsViewController: UITableViewController {
     override func viewDidLoad() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        refreshControl?.beginRefreshing()
         load()
     }
     
@@ -54,8 +55,16 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         
         sut.refreshControl?.simulatePullToRefresh()
         XCTAssertEqual(loader.loadCallsCount, 3)
-
     }
+    
+    func test_viewDidLoad_showsLoadingIndicator() {
+        let (sut, _) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+    }
+
     
     // MARK: - Helpers
     
