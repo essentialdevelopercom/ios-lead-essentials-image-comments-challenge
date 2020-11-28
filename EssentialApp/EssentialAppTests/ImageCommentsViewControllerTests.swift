@@ -25,7 +25,9 @@ final class ImageCommentsViewController: UITableViewController {
     }
     
     @objc func load() {
-        _ = loader?.loadComments() { _ in }
+        _ = loader?.loadComments() { [weak self] _ in
+            self?.refreshControl?.endRefreshing()
+        }
     }
 }
 
@@ -64,6 +66,15 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
     }
+    
+    func test_viewDidLoadHidesLoadingIndicatorOnLoaderCompletion() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeCommentsLoading()
+        
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+    }
 
     
     // MARK: - Helpers
@@ -77,15 +88,24 @@ final class ImageCommentsViewControllerTests: XCTestCase {
     }
     
     class LoaderSpy: ImageCommentsLoader {
-        private(set) var loadCallsCount = 0
+        private var completions = [(ImageCommentsLoader.Result) -> Void]()
+        
+        var loadCallsCount: Int {
+            completions.count
+        }
+
         
         private struct TaskSpy: ImageCommentsLoaderTask {
             func cancel() {}
         }
         
         func loadComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-            loadCallsCount += 1
+            completions.append(completion)
             return TaskSpy()
+        }
+        
+        func completeCommentsLoading() {
+            completions[0](.success([]))
         }
 
     }
