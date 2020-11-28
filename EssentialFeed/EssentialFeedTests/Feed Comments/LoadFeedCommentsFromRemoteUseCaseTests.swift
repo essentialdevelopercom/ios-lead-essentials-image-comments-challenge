@@ -138,15 +138,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let item = CodableFeedImageComment(id: id, message: message, created_at: createdAt, author: author)
 		return item
 	}
-	
 }
-
-extension HTTPURLResponse {
-	var isOK: Bool {
-		return (200...299).contains(statusCode)
-	}
-}
-
 
 private extension Array where Element == CodableFeedImageComment {
 	 func toModels() -> [ImageComment] {
