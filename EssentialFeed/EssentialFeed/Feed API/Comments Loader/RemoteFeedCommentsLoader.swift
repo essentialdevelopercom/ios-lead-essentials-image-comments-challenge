@@ -11,8 +11,6 @@ import Foundation
 public final class RemoteFeedCommentsLoader {
 	
 	public typealias Result = Swift.Result<[ImageComment], Error>
-	
-	private let url: URL
 	private let client: HTTPClient
 	
 	public enum Error: Swift.Error {
@@ -20,13 +18,12 @@ public final class RemoteFeedCommentsLoader {
 		case invalidData
 	}
 	
-	public init(url: URL, client: HTTPClient) {
+	public init(client: HTTPClient) {
 		self.client = client
-		self.url = url
 	}
 	
 	@discardableResult
-	public func load(completion: @escaping (Result) -> Void) -> HTTPClientTask {
+	public func load(url: URL, completion: @escaping (Result) -> Void) -> HTTPClientTask {
 		let task = HTTPClientTaskWrapper(completion: completion)
 		
 		task.wrappedTask = client.get(from: url) { [weak self] result in
