@@ -17,7 +17,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -84,7 +84,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
-		let url = URL(string: "https://a-url.com")!
+		let url = anyURL()
 		let client = HTTPClientSpy()
 		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(url: url, client: client)
 		
@@ -95,6 +95,17 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		client.complete(withStatusCode: 200, data: makeItemJSON([]))
 		
 		XCTAssertTrue(capturedResult.isEmpty)
+	}
+	
+	func test_cancelLoadComments_cancelsClientURLRequest() {
+		let url = anyURL()
+		let (sut, client) = makeSUT(url: url)
+		
+		let task = sut.load { _ in }
+		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
+		
+		task.cancel()
+		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
 	}
 	
 	// MARK: - Helpers
