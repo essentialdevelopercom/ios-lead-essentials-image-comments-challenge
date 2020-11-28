@@ -1,1 +1,2 @@
 "FEED_COMMENTS_VIEW_TITLE" = "Comments";
+"FEED_COMMENTS_VIEW_ERROR_MESSAGE" = "Couldn't connect to the server";

@@ -41,6 +41,17 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 									   .display(isLoading: false)])
 	}
 	
+	func test_didFinishLoadingFeed_displayTheError() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingFeed(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE")),
+			.display(isLoading: false)
+		])
+	}
+	
 	//MARK: -Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {

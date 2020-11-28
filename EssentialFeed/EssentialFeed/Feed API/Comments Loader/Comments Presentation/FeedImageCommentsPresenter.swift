@@ -33,6 +33,13 @@ public class FeedImageCommentsPresenter {
 		comment: "Title for the image comments view"
 	) }
 	
+	public static var errorMessage: String { NSLocalizedString(
+		"FEED_COMMENTS_VIEW_ERROR_MESSAGE",
+		tableName: "FeedImageComments",
+		bundle: Bundle(for: FeedImageCommentsPresenter.self),
+		comment: "Title for the image comments view"
+	) }
+	
 	public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
@@ -46,6 +53,11 @@ public class FeedImageCommentsPresenter {
 	
 	public func didFinishLoadingFeed(with comments: [ImageComment]) {
 		commentsView.display(comments: comments)
+		loadingView.display(isLoading: false)
+	}
+	
+	public func didFinishLoadingFeed(with error: Error) {
+		errorView.display(errorMessage: FeedImageCommentsPresenter.errorMessage)
 		loadingView.display(isLoading: false)
 	}
 	
