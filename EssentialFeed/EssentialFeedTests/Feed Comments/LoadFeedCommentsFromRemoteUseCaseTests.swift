@@ -12,6 +12,10 @@ final class RemoteFeedCommentsLoader {
 	private let url: URL
 	private let client: HTTPClient
 	
+	enum Error: Swift.Error {
+		case connectivity
+	}
+	
 	init(url: URL, client: HTTPClient) {
 		self.client = client
 		self.url = url
@@ -20,8 +24,8 @@ final class RemoteFeedCommentsLoader {
 	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .failure(error):
-				completion(.failure(error))
+			case .failure(_):
+				completion(.failure(.connectivity))
 			default:
 				break
 			}
