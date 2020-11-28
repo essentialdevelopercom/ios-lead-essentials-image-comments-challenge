@@ -5,81 +5,6 @@
 import XCTest
 import EssentialFeed
 
-final class FeedImageCommentsMapper {
-	
-	struct Root: Codable {
-		let items: [CodableFeedImageComment]
-	}
-	
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [CodableFeedImageComment] {
-		
-		guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data)
-		else {
-			throw RemoteFeedLoader.Error.invalidData
-		}
-		return root.items
-	}
-}
-
-struct CodableFeedImageComment: Codable, Equatable {
-	
-	struct Author: Codable, Equatable {
-		let username: String
-	}
-	
-	let id: UUID
-	let message: String
-	let created_at: Date
-	let author: Author
-}
-
-struct ImageComment: Equatable {
-	let id: UUID
-	let message: String
-	let createdAt: Date
-	let author: String
-}
-
-final class RemoteFeedCommentsLoader {
-	
-	typealias Result = Swift.Result<[ImageComment], Error>
-	
-	private let url: URL
-	private let client: HTTPClient
-	
-	enum Error: Swift.Error {
-		case connectivity
-		case invalidData
-	}
-	
-	init(url: URL, client: HTTPClient) {
-		self.client = client
-		self.url = url
-	}
-	
-	func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url) { [weak self] result in
-			guard self != nil else { return }
-			
-			switch result {
-			case let .success((data, response)):
-				completion(RemoteFeedCommentsLoader.map(data, from: response))
-			case .failure(_):
-				completion(.failure(.connectivity))
-			}
-		}
-	}
-	
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
-		do {
-			let items = try FeedImageCommentsMapper.map(data, from: response)
-			return .success(items.toModels())
-		} catch {
-			return .failure(.invalidData)
-		}
-	}
-}
-
 class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
@@ -221,6 +146,7 @@ extension HTTPURLResponse {
 		return (200...299).contains(statusCode)
 	}
 }
+
 
 private extension Array where Element == CodableFeedImageComment {
 	 func toModels() -> [ImageComment] {
