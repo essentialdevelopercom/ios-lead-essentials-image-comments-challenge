@@ -22,7 +22,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
-	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+	func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
 		let (sut, view) = makeSUT()
 		
 		sut.didStartLoadingFeed()
@@ -31,7 +31,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 									   .display(isLoading: true)])
 	}
 	
-	func test_didFinishLoadingFeed_displaysFeedAndStopsLoading() {
+	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
 		let (sut, view) = makeSUT()
 		let comments = uniqueImageComments()
 		
@@ -83,19 +83,19 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 			case display(isLoading: Bool)
 			case display(comments: [ImageComment])
 		}
-		
+
 		private(set) var messages = Set<Message>()
 		
-		func display(isLoading: Bool) {
-			messages.insert(.display(isLoading: isLoading))
+		func display(_ viewModel: FeedImageCommentLoadingViewModel) {
+			messages.insert(.display(isLoading: viewModel.isLoading))
 		}
 		
-		func display(errorMessage: String?) {
-			messages.insert(.display(errorMessage: errorMessage))
+		func display(_ viewModel: FeedImageCommentErrorViewModel) {
+			messages.insert(.display(errorMessage: viewModel.message))
 		}
 		
-		func display(comments: [ImageComment]) {
-			messages.insert(.display(comments: comments))
+		func display(_ viewModel: FeedImageCommentsViewModel) {
+			messages.insert(.display(comments: viewModel.comments))
 		}
 	}
 	

@@ -9,15 +9,15 @@
 import Foundation
 
 public protocol FeedImageCommentsLoadingView {
-	func display(isLoading: Bool)
+	func display(_ viewModel: FeedImageCommentLoadingViewModel)
 }
 
 public protocol FeedImageCommentsErrorView {
-	func display(errorMessage: String?)
+	func display(_ viewModel: FeedImageCommentErrorViewModel)
 }
 
 public protocol FeedImageCommentsView {
-	func display(comments: [ImageComment])
+	func display(_ viewModel: FeedImageCommentsViewModel)
 }
 
 public class FeedImageCommentsPresenter {
@@ -47,18 +47,18 @@ public class FeedImageCommentsPresenter {
 	}
 	
 	public func didStartLoadingFeed() {
-		errorView.display(errorMessage: nil)
-		loadingView.display(isLoading: true)
+		errorView.display(.noError)
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: true))
 	}
 	
 	public func didFinishLoadingFeed(with comments: [ImageComment]) {
-		commentsView.display(comments: comments)
-		loadingView.display(isLoading: false)
+		commentsView.display(FeedImageCommentsViewModel(comments: comments))
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingFeed(with error: Error) {
-		errorView.display(errorMessage: FeedImageCommentsPresenter.errorMessage)
-		loadingView.display(isLoading: false)
+		errorView.display(.error(message: FeedImageCommentsPresenter.errorMessage))
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
 }
