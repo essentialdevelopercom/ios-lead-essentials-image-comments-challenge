@@ -52,10 +52,10 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedCommentsReload()
         XCTAssertEqual(loader.loadCallsCount, 2)
         
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedCommentsReload()
         XCTAssertEqual(loader.loadCallsCount, 3)
     }
     
@@ -79,7 +79,7 @@ final class ImageCommentsViewControllerTests: XCTestCase {
     func test_pullToRefresh_showsLoadingIndicator() {
         let (sut, _) = makeSUT()
         
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedCommentsReload()
         
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
     }
@@ -87,7 +87,7 @@ final class ImageCommentsViewControllerTests: XCTestCase {
     func test_pullToRefresh_hidesLoadingIndicatorOnLoaderCompletion() {
         let (sut, loader) = makeSUT()
         
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedCommentsReload()
         loader.completeCommentsLoading()
         
         XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
@@ -126,5 +126,11 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 
     }
 
+}
+
+private extension ImageCommentsViewController {
+    func simulateUserInitiatedCommentsReload() {
+        refreshControl?.simulatePullToRefresh()
+    }
 }
 
