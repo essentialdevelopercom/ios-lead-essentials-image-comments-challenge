@@ -8,9 +8,9 @@
 
 import Foundation
 
-public final class RemoteFeedCommentsLoader {
-	
-	public typealias Result = Swift.Result<[ImageComment], Error>
+public final class RemoteFeedCommentsLoader: FeedImageCommentsLoader {
+
+	public typealias Result = FeedImageCommentsLoader.Result
 	private let client: HTTPClient
 	
 	public enum Error: Swift.Error {
@@ -23,7 +23,7 @@ public final class RemoteFeedCommentsLoader {
 	}
 	
 	@discardableResult
-	public func load(url: URL, completion: @escaping (Result) -> Void) -> HTTPClientTask {
+	public func load(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageCommentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion: completion)
 		
 		task.wrappedTask = client.get(from: url) { [weak self] result in
@@ -33,7 +33,7 @@ public final class RemoteFeedCommentsLoader {
 			case let .success((data, response)):
 				task.complete(with: RemoteFeedCommentsLoader.map(data, from: response))
 			case .failure(_):
-				task.complete(with: .failure(.connectivity))
+				task.complete(with: .failure(RemoteFeedCommentsLoader.Error.connectivity))
 			}
 		}
 		
@@ -45,11 +45,11 @@ public final class RemoteFeedCommentsLoader {
 			let items = try FeedImageCommentsMapper.map(data, from: response)
 			return .success(items.toModels())
 		} catch {
-			return .failure(.invalidData)
+			return .failure(RemoteFeedCommentsLoader.Error.invalidData)
 		}
 	}
 	
-	private final class HTTPClientTaskWrapper: HTTPClientTask {
+	private final class HTTPClientTaskWrapper: FeedImageCommentsLoaderTask {
 		private var completion: ((Result) -> Void)?
 		var wrappedTask: HTTPClientTask?
 		
