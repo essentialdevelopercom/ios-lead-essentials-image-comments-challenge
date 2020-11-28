@@ -10,10 +10,17 @@ import Foundation
 
 public class FeedImageCommentsPresenter {
 	
+	private let commentsView: Any
+	
 	public static var title: String { NSLocalizedString(
 		"FEED_COMMENTS_VIEW_TITLE",
 		tableName: "FeedImageComments",
 		bundle: Bundle(for: FeedImageCommentsPresenter.self),
 		comment: "Title for the image comments view"
 	) }
+	
+	public init(commentsView: Any) {
+		self.commentsView = commentsView
+	}
+	
 }
