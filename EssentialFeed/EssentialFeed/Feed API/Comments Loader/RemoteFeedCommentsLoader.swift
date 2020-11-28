@@ -27,16 +27,20 @@ public final class RemoteFeedCommentsLoader {
 	
 	@discardableResult
 	public func load(completion: @escaping (Result) -> Void) -> HTTPClientTask {
-		return client.get(from: url) { [weak self] result in
+		let task = HTTPClientTaskWrapper(completion: completion)
+		
+		task.wrappedTask = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			
 			switch result {
 			case let .success((data, response)):
-				completion(RemoteFeedCommentsLoader.map(data, from: response))
+				task.complete(with: RemoteFeedCommentsLoader.map(data, from: response))
 			case .failure(_):
-				completion(.failure(.connectivity))
+				task.complete(with: .failure(.connectivity))
 			}
 		}
+		
+		return task
 	}
 	
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
@@ -47,6 +51,28 @@ public final class RemoteFeedCommentsLoader {
 			return .failure(.invalidData)
 		}
 	}
+	
+	private final class HTTPClientTaskWrapper: HTTPClientTask {
+		private var completion: ((Result) -> Void)?
+		var wrappedTask: HTTPClientTask?
+		
+		init(completion: @escaping (Result) -> Void) {
+			self.completion = completion
+		}
+		
+		func complete(with result: Result) {
+			completion?(result)
+		}
+		
+		func cancel() {
+			wrappedTask?.cancel()
+			preventFurtherCompletions()
+		}
+		
+		private func preventFurtherCompletions() {
+			completion = nil
+		}
+	}
 }
 
 private extension Array where Element == CodableFeedImageComment {
@@ -54,3 +80,4 @@ private extension Array where Element == CodableFeedImageComment {
 		 map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author.username) }
 	 }
  }
+
