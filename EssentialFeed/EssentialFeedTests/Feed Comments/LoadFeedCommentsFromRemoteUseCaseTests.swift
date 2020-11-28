@@ -5,9 +5,32 @@
 import XCTest
 import EssentialFeed
 
+struct Root: Decodable {
+	let items: [FeedImageComment]
+}
+
+struct FeedImageComment: Decodable, Equatable {
+	
+	struct Author: Decodable {
+		let username: String
+	}
+	
+	let id: UUID
+	let message: String
+	let createdAt: Date
+	let author: Author
+	
+	static func == (lhs: FeedImageComment, rhs: FeedImageComment) -> Bool {
+		return lhs.id == rhs.id
+			&& lhs.message == rhs.message
+			&& lhs.createdAt == rhs.createdAt
+			&& lhs.author.username == rhs.author.username
+	}
+}
+
 final class RemoteFeedCommentsLoader {
 	
-	typealias Result = Swift.Result<Data, Error>
+	typealias Result = Swift.Result<[FeedImageComment], Error>
 	
 	private let url: URL
 	private let client: HTTPClient
@@ -30,9 +53,10 @@ final class RemoteFeedCommentsLoader {
 				if !response.isOK {
 					completion(.failure(.invalidData))
 				} else {
-					guard let _ = try? JSONSerialization.jsonObject(with: data) else {
+					guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
 						return completion(.failure(.invalidData))
 					}
+					completion(.success(root.items))
 				}
 				
 			case .failure(_):
@@ -99,6 +123,15 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWithResult: .success([])) {
+			let emptyListJSON = makeItemJSON([])
+			client.complete(withStatusCode: 200, data: emptyListJSON)
+		}
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(),file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedCommentsLoader, client: HTTPClientSpy) {
@@ -127,6 +160,11 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		action()
 		
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	private func makeItemJSON(_ items: [[String: Any]]) -> Data {
+		let json = [ "items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
 }
