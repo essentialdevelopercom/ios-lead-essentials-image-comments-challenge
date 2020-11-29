@@ -28,9 +28,14 @@ final class ImageCommentsViewController: UITableViewController {
     @objc func load() {
         refreshControl?.beginRefreshing()
         _ = loader?.loadComments() { [weak self] result in
-            self?.tableModel = (try? result.get()) ?? []
-            self?.tableView.reloadData()
-            self?.refreshControl?.endRefreshing()
+            switch result {
+            case let .success(comments):
+                self?.tableModel = comments
+                self?.tableView.reloadData()
+                self?.refreshControl?.endRefreshing()
+            case .failure:
+                break
+            }
         }
     }
     
@@ -112,6 +117,20 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         assertThat(sut, isRendering: comments)
     }
     
+    func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
+        let comment0 = ImageComment(id: UUID(), message: "message0", createdAt: Date(), username: "username0")
+        
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeCommentsLoading(with: [comment0], at: 0)
+        assertThat(sut, isRendering: [comment0])
+        
+        sut.simulateUserInitiatedCommentsReload()
+        loader.completeCommentsLoadingWithError(at: 1)
+        assertThat(sut, isRendering: [comment0])
+    }
+    
 
     // MARK: - Helpers
     
@@ -165,6 +184,11 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         
         func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int) {
             completions[index](.success(comments))
+        }
+        
+        func completeCommentsLoadingWithError(at index: Int) {
+            let error = NSError(domain: "an error", code: 0)
+            completions[index](.failure(error))
         }
     }
 }
