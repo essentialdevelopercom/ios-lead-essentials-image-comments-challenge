@@ -92,7 +92,11 @@ final class ImageCommentsViewControllerTests: XCTestCase {
     }
     
     func test_loadCommentsCompletion_rendersSuccessfullyLoadedComment() {
+    func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
         let comment0 = ImageComment(id: UUID(), message: "message0", createdAt: Date(), username: "username0")
+        let comment1 = ImageComment(id: UUID(), message: "message1", createdAt: Date(), username: "username1")
+        let comment2 = ImageComment(id: UUID(), message: "message2", createdAt: Date(), username: "username2")
+        let comment3 = ImageComment(id: UUID(), message: "message3", createdAt: Date(), username: "username3")
         
         let (sut, loader) = makeSUT()
         
@@ -109,6 +113,20 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         XCTAssertEqual(cell?.author.text, comment0.username)
         XCTAssertEqual(cell?.date.text, comment0.createdAt.relativeDate())
         XCTAssertEqual(cell?.message.text, comment0.message)
+        
+        let comments = [comment0, comment1, comment2, comment3]
+        sut.simulateUserInitiatedCommentsReload()
+        loader.completeCommentsLoading(with: comments, at: 1)
+        
+        comments.enumerated().forEach { index, comment in
+            let index = IndexPath(row: index, section: 0)
+            let cell = dataSource?.tableView(sut.tableView, cellForRowAt: index) as? ImageCommentCell
+            
+            XCTAssertEqual(cell?.author.text, comment.username)
+            XCTAssertEqual(cell?.date.text, comment.createdAt.relativeDate())
+            XCTAssertEqual(cell?.message.text, comment.message)
+        }
+
     }
 
     // MARK: - Helpers
