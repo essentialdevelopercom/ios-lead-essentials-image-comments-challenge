@@ -22,6 +22,7 @@ final class ImageCommentsViewController: UITableViewController {
     override func viewDidLoad() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageCommentCell")
         load()
     }
     
@@ -49,7 +50,7 @@ final class ImageCommentsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellModel = tableModel[indexPath.row]
-        let cell = ImageCommentCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCommentCell") as! ImageCommentCell
         cell.author.text = cellModel.username
         cell.date.text = cellModel.createdAt.relativeDate(to: Date())
         cell.message.text = cellModel.message
