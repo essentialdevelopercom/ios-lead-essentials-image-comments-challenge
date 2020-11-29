@@ -20,3 +20,9 @@ public struct FeedImageCommentPresentingModel: Hashable {
 		self.creationTime = creationTime
 	}
 }
+
+public extension Array where Element == ImageComment {
+	func toModels() -> [FeedImageCommentPresentingModel] {
+		map { FeedImageCommentPresentingModel(username: $0.author, comment: $0.message, creationTime: $0.createdAt.timeAgoDisplay()) }
+	}
+}

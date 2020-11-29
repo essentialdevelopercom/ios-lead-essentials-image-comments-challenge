@@ -68,12 +68,6 @@ public class FeedImageCommentsPresenter {
 	
 }
 
-public extension Array where Element == ImageComment {
-	func toModels() -> [FeedImageCommentPresentingModel] {
-		map { FeedImageCommentPresentingModel(username: $0.author, comment: $0.message, creationTime: $0.createdAt.timeAgoDisplay()) }
-	}
-}
-
 extension Date {
 	
 	func timeAgoDisplay() -> String {
