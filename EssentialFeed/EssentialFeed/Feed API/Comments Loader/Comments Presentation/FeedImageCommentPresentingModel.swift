@@ -10,9 +10,9 @@ import Foundation
 
 public struct FeedImageCommentPresentingModel: Hashable {
 	
-	let username: String
-	let creationTime: String
-	let comment: String
+	public let username: String
+	public let creationTime: String
+	public let comment: String
 	
 	public init(username: String, comment: String, creationTime: String) {
 		self.username = username

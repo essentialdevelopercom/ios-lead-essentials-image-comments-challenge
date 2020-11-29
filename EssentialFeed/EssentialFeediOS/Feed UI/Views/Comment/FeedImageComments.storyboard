@@ -22,18 +22,66 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="6qY-Dd-6uZ">
-                            <rect key="frame" x="0.0" y="143.5" width="414" height="44"/>
+                            <rect key="frame" x="0.0" y="230" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="aMv-63-xdI">
-                                <rect key="frame" x="0.0" y="72" width="414" height="43.5"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCommentCell" rowHeight="130" id="aMv-63-xdI" customClass="FeedImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="72" width="414" height="130"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aMv-63-xdI" id="Mx6-Sb-Lgc">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="130"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="39D-LG-5Ap">
+                                            <rect key="frame" x="20" y="11" width="374" height="108"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="MuG-sz-fpN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="19.5"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g7N-vG-g2c">
+                                                            <rect key="frame" x="0.0" y="0.0" width="187" height="19.5"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 weeks ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zhK-Sf-UBe">
+                                                            <rect key="frame" x="187" y="0.0" width="187" height="19.5"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="zhK-Sf-UBe" secondAttribute="trailing" id="3G3-MC-Xpp"/>
+                                                    </constraints>
+                                                </stackView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You are called to add a new feature to the Feed App: displaying image comments when a user taps on an image in the feed." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z1J-bc-EiO">
+                                                    <rect key="frame" x="0.0" y="24.5" width="374" height="83.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="Z1J-bc-EiO" secondAttribute="trailing" id="EKa-LF-vk2"/>
+                                                <constraint firstItem="Z1J-bc-EiO" firstAttribute="leading" secondItem="39D-LG-5Ap" secondAttribute="leading" id="Pk7-Wh-uZp"/>
+                                                <constraint firstItem="MuG-sz-fpN" firstAttribute="leading" secondItem="39D-LG-5Ap" secondAttribute="leading" id="Zvj-52-dm8"/>
+                                            </constraints>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="39D-LG-5Ap" firstAttribute="top" secondItem="Mx6-Sb-Lgc" secondAttribute="topMargin" id="BXT-TO-3ru"/>
+                                        <constraint firstItem="39D-LG-5Ap" firstAttribute="leading" secondItem="Mx6-Sb-Lgc" secondAttribute="leadingMargin" id="D18-35-XZP"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="39D-LG-5Ap" secondAttribute="trailing" id="Qdp-wL-PkD"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="39D-LG-5Ap" secondAttribute="bottom" id="baV-NM-jIa"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="commentLabel" destination="Z1J-bc-EiO" id="nv3-3V-NlQ"/>
+                                    <outlet property="creationTimeLabel" destination="zhK-Sf-UBe" id="uNk-ic-oRO"/>
+                                    <outlet property="usernameLabel" destination="g7N-vG-g2c" id="TXz-Wd-H6p"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -44,10 +92,13 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vd1-7l-Gdb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="19" y="-56"/>
+            <point key="canvasLocation" x="18.840579710144929" y="-56.25"/>
         </scene>
     </scenes>
     <resources>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

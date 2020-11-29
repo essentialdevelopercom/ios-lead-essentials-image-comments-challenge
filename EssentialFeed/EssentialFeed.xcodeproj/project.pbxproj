@@ -100,6 +100,7 @@
 		7355BFD42573881500C30D0A /* FeedImageCommentsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7355BFD32573881500C30D0A /* FeedImageCommentsSnapshotTests.swift */; };
 		7355BFF5257389F500C30D0A /* FeedImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7355BFF3257389F500C30D0A /* FeedImageCommentsViewController.swift */; };
 		7355C00B25738ECE00C30D0A /* FeedImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7355C00A25738ECE00C30D0A /* FeedImageComments.storyboard */; };
+		7355C0112573916300C30D0A /* FeedImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7355C0102573916300C30D0A /* FeedImageCommentCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -222,6 +223,7 @@
 		7355BFD32573881500C30D0A /* FeedImageCommentsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentsSnapshotTests.swift; sourceTree = "<group>"; };
 		7355BFF3257389F500C30D0A /* FeedImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentsViewController.swift; sourceTree = "<group>"; };
 		7355C00A25738ECE00C30D0A /* FeedImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FeedImageComments.storyboard; sourceTree = "<group>"; };
+		7355C0102573916300C30D0A /* FeedImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -607,6 +609,7 @@
 			isa = PBXGroup;
 			children = (
 				7355C00A25738ECE00C30D0A /* FeedImageComments.storyboard */,
+				7355C0102573916300C30D0A /* FeedImageCommentCell.swift */,
 			);
 			path = Comment;
 			sourceTree = "<group>";
@@ -884,6 +887,7 @@
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
+				7355C0112573916300C30D0A /* FeedImageCommentCell.swift in Sources */,
 				7355BFF5257389F500C30D0A /* FeedImageCommentsViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
