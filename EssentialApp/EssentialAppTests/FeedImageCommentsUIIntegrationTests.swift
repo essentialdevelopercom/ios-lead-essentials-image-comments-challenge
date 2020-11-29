@@ -40,6 +40,29 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	 }
 	
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+		let currentDate = Date()
+		
+		
+		let comment1 = ImageComment(id: UUID(), message: "First message", createdAt: currentDate.adding(days: -2), author: "First Author")
+		let comment2 = ImageComment(id: UUID(), message: "Second message", createdAt: currentDate.adding(seconds: -305), author: "Second Author")
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: [comment1, comment2])
+		
+		let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? FeedImageCommentCell
+		
+		XCTAssertEqual(cell1?.usernameLabel?.text, "First Author")
+		XCTAssertEqual(cell1?.creationTimeLabel?.text, "2 days ago")
+		XCTAssertEqual(cell1?.commentLabel?.text, "First message")
+		
+		let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? FeedImageCommentCell
+		XCTAssertEqual(cell2?.usernameLabel?.text, "Second Author")
+		XCTAssertEqual(cell2?.creationTimeLabel?.text, "5 minutes ago")
+		XCTAssertEqual(cell2?.commentLabel?.text, "Second message")
+	}
+	
 	//MARK: -Helpers
 	
 	private func makeSUT(url: URL = anyURL(),file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {
@@ -65,8 +88,8 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 			return Task()
 		}
 		
-		func completeCommentsLoading(at index: Int = 0) {
-			completions[index](.success([]))
+		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
+			completions[index](.success(comments))
 		}
 		
 		func completeCommentsLoading(with error: Error, at index: Int = 0) {
@@ -83,5 +106,17 @@ private extension FeedImageCommentsViewController {
 	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
+	}
+}
+
+
+extension Date {
+	
+	func adding(seconds: TimeInterval) -> Date {
+		return self + seconds
+	}
+	
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }

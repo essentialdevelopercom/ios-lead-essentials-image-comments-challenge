@@ -11,9 +11,9 @@ import EssentialFeed
 
 public final class FeedImageCommentCell: UITableViewCell {
 	
-	@IBOutlet private weak var usernameLabel: UILabel?
-	@IBOutlet private weak var creationTimeLabel: UILabel?
-	@IBOutlet private weak var commentLabel: UILabel?
+	@IBOutlet public private(set) weak var usernameLabel: UILabel?
+	@IBOutlet public private(set) weak var creationTimeLabel: UILabel?
+	@IBOutlet public private(set) weak var commentLabel: UILabel?
 	
 	func display(_ viewModel: FeedImageCommentPresentingModel) {
 		usernameLabel?.text = viewModel.username
