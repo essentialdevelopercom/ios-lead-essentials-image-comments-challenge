@@ -9,7 +9,7 @@
 import UIKit
 import EssentialFeed
 
-public protocol FeedImageCommentsViewControllerDelegate {
+public protocol FeedImageCommentsViewControllerDelegate: class {
 	 func didRequestCommentsRefresh()
  }
 
@@ -63,3 +63,14 @@ extension FeedImageCommentsViewController: FeedImageCommentsErrorView {
 		errorView?.message = viewModel.message
 	}
 }
+
+extension FeedImageCommentsViewController: FeedImageCommentsLoadingView {
+	public func display(_ viewModel: FeedImageCommentLoadingViewModel) {
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
+	}
+}
+

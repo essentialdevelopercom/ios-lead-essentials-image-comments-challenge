@@ -8,23 +8,23 @@
 
 import Foundation
 
-public protocol FeedImageCommentsLoadingView {
+public protocol FeedImageCommentsLoadingView: class {
 	func display(_ viewModel: FeedImageCommentLoadingViewModel)
 }
 
-public protocol FeedImageCommentsErrorView {
+public protocol FeedImageCommentsErrorView: class {
 	func display(_ viewModel: FeedImageCommentErrorViewModel)
 }
 
-public protocol FeedImageCommentsView {
+public protocol FeedImageCommentsView: class {
 	func display(_ viewModel: FeedImageCommentsViewModel)
 }
 
 public class FeedImageCommentsPresenter {
 	
-	private let commentsView: FeedImageCommentsView
-	private let loadingView: FeedImageCommentsLoadingView
-	private let errorView: FeedImageCommentsErrorView
+	private weak var commentsView: FeedImageCommentsView?
+	private weak var loadingView: FeedImageCommentsLoadingView?
+	private weak var errorView: FeedImageCommentsErrorView?
 	private let currentDate: Date
 	
 	public static var title: String { NSLocalizedString(
@@ -43,27 +43,26 @@ public class FeedImageCommentsPresenter {
 	
 	public init(commentsView: FeedImageCommentsView,
 				loadingView: FeedImageCommentsLoadingView,
-				errorView: FeedImageCommentsErrorView,
-				currentDate: Date) {
+				errorView: FeedImageCommentsErrorView) {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
-		self.currentDate = currentDate
+		self.currentDate = Date()
 	}
 	
 	public func didStartLoadingComments() {
-		errorView.display(.noError)
-		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: true))
+		errorView?.display(.noError)
+		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: true))
 	}
 	
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
-		commentsView.display(FeedImageCommentsViewModel(comments: comments.toModels()))
-		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
+		commentsView?.display(FeedImageCommentsViewModel(comments: comments.toModels()))
+		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
-		errorView.display(.error(message: FeedImageCommentsPresenter.errorMessage))
-		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
+		errorView?.display(.error(message: FeedImageCommentsPresenter.errorMessage))
+		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
 }

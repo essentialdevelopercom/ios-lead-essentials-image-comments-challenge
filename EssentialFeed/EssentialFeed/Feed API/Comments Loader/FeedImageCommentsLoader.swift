@@ -12,7 +12,7 @@ public protocol FeedImageCommentsLoaderTask {
 	func cancel()
 }
 
-public protocol FeedImageCommentsLoader {
+public protocol FeedImageCommentsLoader: class {
 	typealias Result = Swift.Result<[ImageComment], Swift.Error>
 	
 	func load(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageCommentsLoaderTask

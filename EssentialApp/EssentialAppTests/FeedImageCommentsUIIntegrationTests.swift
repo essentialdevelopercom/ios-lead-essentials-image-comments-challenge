@@ -24,6 +24,16 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 	
+	func test_loadingCommentsIndicator_isVisibleWhileLoadingComments() {
+		 let (sut, loader) = makeSUT()
+
+		 sut.loadViewIfNeeded()
+		 XCTAssertEqual(sut.isShowingLoadingIndicator, true)
+
+		 loader.completeCommentsLoading()
+		 XCTAssertEqual(sut.isShowingLoadingIndicator, false)
+	 }
+	
 	//MARK: -Helpers
 	
 	private func makeSUT(url: URL = anyURL(),file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {
@@ -35,15 +45,22 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	private class LoaderSpy: FeedImageCommentsLoader {
-		var loadCommentsCallCount = 0
+		var loadCommentsCallCount: Int {
+			return completions.count
+		}
+		var completions = [(FeedImageCommentsLoader.Result) -> Void]()
 		
 		private struct Task: FeedImageCommentsLoaderTask {
 			func cancel() {}
 		}
 		
-		func load(from _: URL, completion _: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-			loadCommentsCallCount += 1
+		func load(from _: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+			completions.append(completion)
 			return Task()
+		}
+		
+		func completeCommentsLoading(at index: Int = 0) {
+			completions[index](.success([]))
 		}
 	}
 	
@@ -52,5 +69,9 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 private extension FeedImageCommentsViewController {
 	func simulateUserInitiatedCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 }
