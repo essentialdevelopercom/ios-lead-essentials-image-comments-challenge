@@ -91,7 +91,6 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading is completed")
     }
     
-    func test_loadCommentsCompletion_rendersSuccessfullyLoadedComment() {
     func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
         let comment0 = ImageComment(id: UUID(), message: "message0", createdAt: Date(), username: "username0")
         let comment1 = ImageComment(id: UUID(), message: "message1", createdAt: Date(), username: "username1")
@@ -101,33 +100,18 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
-        XCTAssertEqual(sut.tableView.numberOfRows(inSection: 0), 0)
+        assertThat(sut, isRendering: [])
         
         loader.completeCommentsLoading(with: [comment0], at: 0)
-        XCTAssertEqual(sut.tableView.numberOfRows(inSection: 0), 1)
-        
-        let dataSource = sut.tableView.dataSource
-        let index = IndexPath(row: 0, section: 0)
-        let cell = dataSource?.tableView(sut.tableView, cellForRowAt: index) as? ImageCommentCell
-        
-        XCTAssertEqual(cell?.author.text, comment0.username)
-        XCTAssertEqual(cell?.date.text, comment0.createdAt.relativeDate())
-        XCTAssertEqual(cell?.message.text, comment0.message)
+        assertThat(sut, isRendering: [comment0])
         
         let comments = [comment0, comment1, comment2, comment3]
         sut.simulateUserInitiatedCommentsReload()
         loader.completeCommentsLoading(with: comments, at: 1)
         
-        comments.enumerated().forEach { index, comment in
-            let index = IndexPath(row: index, section: 0)
-            let cell = dataSource?.tableView(sut.tableView, cellForRowAt: index) as? ImageCommentCell
-            
-            XCTAssertEqual(cell?.author.text, comment.username)
-            XCTAssertEqual(cell?.date.text, comment.createdAt.relativeDate())
-            XCTAssertEqual(cell?.message.text, comment.message)
-        }
-
+        assertThat(sut, isRendering: comments)
     }
+    
 
     // MARK: - Helpers
     
@@ -139,6 +123,30 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         return (sut, loader)
     }
     
+    private func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
+       guard sut.numberOfRenderedImageComments() == comments.count else {
+            return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedImageComments()) instead.", file: file, line: line)
+        }
+
+        comments.enumerated().forEach { index, comment in
+            assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
+        }
+    }
+    
+    private func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor comment: ImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
+        let view = sut.comment(at: index)
+
+        guard let cell = view as? ImageCommentCell else {
+            return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+        }
+
+        XCTAssertEqual(cell.author.text, comment.username, "Expected username text to be \(String(describing: comment.username)) for comment at index (\(index))", file: file, line: line)
+
+        XCTAssertEqual(cell.date.text, comment.createdAt.relativeDate(), "Expected relative date text to be \(String(describing: comment.createdAt.relativeDate())) for comment at index (\(index))", file: file, line: line)
+        
+        XCTAssertEqual(cell.message.text, comment.message, "Expected message text to be \(String(describing: comment.message)) for comment at index (\(index))", file: file, line: line)
+    }
+ 
     class LoaderSpy: ImageCommentsLoader {
         private var completions = [(ImageCommentsLoader.Result) -> Void]()
         
@@ -168,6 +176,19 @@ private extension ImageCommentsViewController {
     
     func simulateUserInitiatedCommentsReload() {
         refreshControl?.simulatePullToRefresh()
+    }
+    
+    func numberOfRenderedImageComments() -> Int {
+        return tableView.numberOfRows(inSection: 0)
+    }
+    
+    func comment(at row: Int) -> UITableViewCell? {
+        guard numberOfRenderedImageComments() > row else {
+            return nil
+        }
+        let datasource = tableView.dataSource
+        let index = IndexPath(row: row, section: 0)
+        return datasource?.tableView(tableView, cellForRowAt: index)
     }
 }
 
