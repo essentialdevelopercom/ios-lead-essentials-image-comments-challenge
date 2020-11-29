@@ -9,14 +9,24 @@
 import UIKit
 import EssentialFeed
 
+public protocol FeedImageCommentsViewControllerDelegate {
+	 func didRequestCommentsRefresh()
+ }
+
 final public class FeedImageCommentsViewController: UITableViewController {
 	
 	@IBOutlet private(set) public var errorView: ErrorView?
+	public var delegate: FeedImageCommentsViewControllerDelegate?
 	
 	var models = [FeedImageCommentPresentingModel]() {
 		didSet {
 			tableView.reloadData()
 		}
+	}
+	
+	override public func viewDidLoad() {
+		super.viewDidLoad()
+		refresh()
 	}
 	
 	public override func viewDidLayoutSubviews() {
@@ -37,7 +47,9 @@ final public class FeedImageCommentsViewController: UITableViewController {
 		return cell
 	}
 	
-
+	@IBAction func refresh() {
+		delegate?.didRequestCommentsRefresh()
+	}
 }
 
 extension FeedImageCommentsViewController: FeedImageCommentsView {
