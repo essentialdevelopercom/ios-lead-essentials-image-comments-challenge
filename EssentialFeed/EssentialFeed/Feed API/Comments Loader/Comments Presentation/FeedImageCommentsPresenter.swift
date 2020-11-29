@@ -25,6 +25,7 @@ public class FeedImageCommentsPresenter {
 	private let commentsView: FeedImageCommentsView
 	private let loadingView: FeedImageCommentsLoadingView
 	private let errorView: FeedImageCommentsErrorView
+	private let currentDate: Date
 	
 	public static var title: String { NSLocalizedString(
 		"FEED_COMMENTS_VIEW_TITLE",
@@ -40,25 +41,45 @@ public class FeedImageCommentsPresenter {
 		comment: "Title for the image comments view"
 	) }
 	
-	public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
+	public init(commentsView: FeedImageCommentsView,
+				loadingView: FeedImageCommentsLoadingView,
+				errorView: FeedImageCommentsErrorView,
+				currentDate: Date) {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.currentDate = currentDate
 	}
 	
-	public func didStartLoadingFeed() {
+	public func didStartLoadingComments() {
 		errorView.display(.noError)
 		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: true))
 	}
 	
-	public func didFinishLoadingFeed(with comments: [ImageComment]) {
-		commentsView.display(FeedImageCommentsViewModel(comments: comments))
+	public func didFinishLoadingComments(with comments: [ImageComment]) {
+		commentsView.display(FeedImageCommentsViewModel(comments: comments.toModels()))
 		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
-	public func didFinishLoadingFeed(with error: Error) {
+	public func didFinishLoadingComments(with error: Error) {
 		errorView.display(.error(message: FeedImageCommentsPresenter.errorMessage))
 		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
+	}
+	
+}
+
+public extension Array where Element == ImageComment {
+	func toModels() -> [FeedImageCommentPresentingModel] {
+		map { FeedImageCommentPresentingModel(username: $0.author, comment: $0.message, creationTime: $0.createdAt.timeAgoDisplay()) }
+	}
+}
+
+extension Date {
+	
+	func timeAgoDisplay() -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		return formatter.localizedString(for: self, relativeTo: Date())
 	}
 	
 }

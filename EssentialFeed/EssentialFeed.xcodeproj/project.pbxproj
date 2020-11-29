@@ -95,6 +95,7 @@
 		7340B7902572B675009C459B /* FeedImageCommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7340B78A2572B644009C459B /* FeedImageCommentLoadingViewModel.swift */; };
 		7340B79A2572B6A3009C459B /* FeedImageCommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7340B7992572B6A3009C459B /* FeedImageCommentErrorViewModel.swift */; };
 		7340B7A02572B809009C459B /* FeedImageCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7340B79F2572B809009C459B /* FeedImageCommentsViewModel.swift */; };
+		7340B7AE257375A1009C459B /* FeedImageCommentPresentingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7340B7AD257375A1009C459B /* FeedImageCommentPresentingModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -212,6 +213,7 @@
 		7340B78A2572B644009C459B /* FeedImageCommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentLoadingViewModel.swift; sourceTree = "<group>"; };
 		7340B7992572B6A3009C459B /* FeedImageCommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentErrorViewModel.swift; sourceTree = "<group>"; };
 		7340B79F2572B809009C459B /* FeedImageCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentsViewModel.swift; sourceTree = "<group>"; };
+		7340B7AD257375A1009C459B /* FeedImageCommentPresentingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentPresentingModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -568,6 +570,7 @@
 				7340B78A2572B644009C459B /* FeedImageCommentLoadingViewModel.swift */,
 				7340B7662572A68A009C459B /* FeedImageCommentsPresenter.swift */,
 				7340B7742572A761009C459B /* FeedImageComments.strings */,
+				7340B7AD257375A1009C459B /* FeedImageCommentPresentingModel.swift */,
 			);
 			path = "Comments Presentation";
 			sourceTree = "<group>";
@@ -789,6 +792,7 @@
 				08897BEF233A1C8E0029F5E4 /* HTTPURLResponse+StatusCode.swift in Sources */,
 				08285AFD228C1843000A8987 /* ManagedCache.swift in Sources */,
 				7340B7672572A68A009C459B /* FeedImageCommentsPresenter.swift in Sources */,
+				7340B7AE257375A1009C459B /* FeedImageCommentPresentingModel.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
 				7340B7A02572B809009C459B /* FeedImageCommentsViewModel.swift in Sources */,
 				087148BD232BEC6700D6BE1A /* FeedErrorViewModel.swift in Sources */,

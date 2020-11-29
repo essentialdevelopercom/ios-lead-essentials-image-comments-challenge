@@ -16,7 +16,6 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	}
 	
 	func test_init_doesNotSendMessagesToView() {
-		
 		let (_, view) = makeSUT()
 		
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
@@ -25,7 +24,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
 		let (sut, view) = makeSUT()
 		
-		sut.didStartLoadingFeed()
+		sut.didStartLoadingComments()
 		
 		XCTAssertEqual(view.messages, [.display(errorMessage: .none),
 									   .display(isLoading: true)])
@@ -34,17 +33,18 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
 		let (sut, view) = makeSUT()
 		let comments = uniqueImageComments()
+		let presentedComments = comments.toModels()
 		
-		sut.didFinishLoadingFeed(with: comments)
+		sut.didFinishLoadingComments(with: comments)
 		
-		XCTAssertEqual(view.messages, [.display(comments: comments),
+		XCTAssertEqual(view.messages, [.display(comments: presentedComments),
 									   .display(isLoading: false)])
 	}
 	
 	func test_didFinishLoadingFeed_displayTheError() {
 		let (sut, view) = makeSUT()
 		
-		sut.didFinishLoadingFeed(with: anyNSError())
+		sut.didFinishLoadingComments(with: anyNSError())
 		
 		XCTAssertEqual(view.messages, [
 			.display(errorMessage: localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE")),
@@ -54,9 +54,9 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	
 	//MARK: -Helpers
 	
-	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(currentDate: Date = Date(), file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+		let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view, currentDate: currentDate)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -73,7 +73,10 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	}
 	
 	private func uniqueImageComments() -> [ImageComment] {
-		return [makeCommentItem(id: UUID(), message: "First message", createdAt: Date(), author: "Some Author").item, makeCommentItem().item]
+		return [
+			makeCommentItem(id: UUID(), message: "First message", createdAt: Date(), author: "Some Author").item,
+			makeCommentItem().item,
+			makeCommentItem(id: UUID(), message: "Third message", createdAt: Date(), author: " Third Author").item]
 	}
 	
 	private class ViewSpy: FeedImageCommentsLoadingView, FeedImageCommentsErrorView, FeedImageCommentsView {
@@ -81,7 +84,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
-			case display(comments: [ImageComment])
+			case display(comments: [FeedImageCommentPresentingModel])
 		}
 
 		private(set) var messages = Set<Message>()
