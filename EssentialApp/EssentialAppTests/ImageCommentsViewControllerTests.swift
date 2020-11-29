@@ -13,6 +13,7 @@ import EssentialFeediOS
 final class ImageCommentsViewController: UITableViewController {
     private var loader: ImageCommentsLoader?
     private var tableModel = [ImageComment]()
+    private var task: ImageCommentsLoaderTask?
     
     convenience init(loader: ImageCommentsLoader) {
         self.init()
@@ -26,9 +27,14 @@ final class ImageCommentsViewController: UITableViewController {
         load()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        cancelLoad()
+    }
+    
     @objc func load() {
         refreshControl?.beginRefreshing()
-        _ = loader?.loadComments() { [weak self] result in
+        task = loader?.loadComments() { [weak self] result in
             switch result {
             case let .success(comments):
                 self?.tableModel = comments
@@ -38,6 +44,11 @@ final class ImageCommentsViewController: UITableViewController {
             }
             self?.refreshControl?.endRefreshing()
         }
+    }
+    
+    func cancelLoad() {
+        task?.cancel()
+        task = nil
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -132,7 +143,16 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         assertThat(sut, isRendering: [comment0])
     }
     
-
+    func test_viewWillDisappear_cancelsLoadCommentsRequest() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(loader.loadCallsCount, 1, "Expected a loading request once view is loaded")
+        
+        sut.viewWillDisappear(true)
+        XCTAssertEqual(loader.loadCallsCount, 0, "Expected no loading requests after task is cancelled")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, client: LoaderSpy) {
@@ -175,12 +195,16 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         }
 
         private struct TaskSpy: ImageCommentsLoaderTask {
-            func cancel() {}
+            let cancelCallBack: () -> Void
+
+            func cancel() {
+                cancelCallBack()
+            }
         }
         
         func loadComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
             completions.append(completion)
-            return TaskSpy()
+            return TaskSpy { self.completions = [] }
         }
         
         func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int) {

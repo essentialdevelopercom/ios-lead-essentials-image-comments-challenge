@@ -33,8 +33,7 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
             self.completion = completion
         }
         
-        func complete(with result: ImageCommentsLoader
-                        .Result) {
+        func complete(with result: ImageCommentsLoader.Result) {
             completion?(result)
         }
         
