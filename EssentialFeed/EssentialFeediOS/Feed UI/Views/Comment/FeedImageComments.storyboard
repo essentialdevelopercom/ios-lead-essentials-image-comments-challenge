@@ -16,10 +16,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="sectionIndexBackgroundColor" systemColor="systemBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="Fzc-zo-2rj">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Fzc-zo-2rj" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OK3-tg-H21">
+                                    <rect key="frame" x="0.0" y="5" width="414" height="34"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="1" green="0.40392156862745099" blue="0.47843137254901957" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstItem="OK3-tg-H21" firstAttribute="leading" secondItem="Fzc-zo-2rj" secondAttribute="leading" id="IRW-3A-OGk"/>
+                                <constraint firstAttribute="bottom" secondItem="OK3-tg-H21" secondAttribute="bottom" constant="5" id="IUE-EI-yIs"/>
+                                <constraint firstItem="OK3-tg-H21" firstAttribute="top" secondItem="Fzc-zo-2rj" secondAttribute="top" constant="5" id="fR5-2j-8Xh"/>
+                                <constraint firstAttribute="trailing" secondItem="OK3-tg-H21" secondAttribute="trailing" id="rp1-V9-n87"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="label" destination="OK3-tg-H21" id="YKk-bf-Dup"/>
+                            </connections>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="6qY-Dd-6uZ">
                             <rect key="frame" x="0.0" y="230" width="414" height="44"/>
@@ -89,6 +105,9 @@
                             <outlet property="delegate" destination="oaf-FN-qun" id="Odv-MT-tFt"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="errorView" destination="Fzc-zo-2rj" id="b6Z-c9-E3b"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vd1-7l-Gdb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

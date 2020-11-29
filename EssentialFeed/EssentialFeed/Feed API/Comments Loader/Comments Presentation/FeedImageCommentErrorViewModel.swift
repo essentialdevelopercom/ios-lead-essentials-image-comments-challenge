@@ -11,11 +11,11 @@ public struct FeedImageCommentErrorViewModel {
 	
 	public let message: String?
 	
-	static var noError: FeedImageCommentErrorViewModel {
+	public static var noError: FeedImageCommentErrorViewModel {
 		return FeedImageCommentErrorViewModel(message: nil)
 	}
 	
-	static func error(message:String) -> FeedImageCommentErrorViewModel {
+	public static func error(message:String) -> FeedImageCommentErrorViewModel {
 		return FeedImageCommentErrorViewModel(message: message)
 	}
 }

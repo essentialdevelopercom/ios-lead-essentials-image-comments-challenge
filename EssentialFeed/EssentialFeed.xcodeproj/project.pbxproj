@@ -359,7 +359,6 @@
 				086AEFBB23A7E5C300EE8933 /* UIImage+TestHelpers.swift */,
 				0800314623B68FAB00720217 /* UIViewController+Snapshot.swift */,
 				0800314823B6909A00720217 /* XCTestCase+Snapshot.swift */,
-				7355BFD32573881500C30D0A /* FeedImageCommentsSnapshotTests.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -515,6 +514,7 @@
 			isa = PBXGroup;
 			children = (
 				08D917AF22B92A5D003BC31B /* Info.plist */,
+				7355BFD32573881500C30D0A /* FeedImageCommentsSnapshotTests.swift */,
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
 			);

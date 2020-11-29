@@ -9,12 +9,20 @@
 import UIKit
 import EssentialFeed
 
-final public class FeedImageCommentsViewController: UITableViewController, FeedImageCommentsView {
+final public class FeedImageCommentsViewController: UITableViewController {
+	
+	@IBOutlet private(set) public var errorView: ErrorView?
 	
 	var models = [FeedImageCommentPresentingModel]() {
 		didSet {
 			tableView.reloadData()
 		}
+	}
+	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
 	}
 	
 	override public func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
@@ -29,7 +37,17 @@ final public class FeedImageCommentsViewController: UITableViewController, FeedI
 		return cell
 	}
 	
+
+}
+
+extension FeedImageCommentsViewController: FeedImageCommentsView {
 	public func display(_ viewModel: FeedImageCommentsViewModel) {
 		models = viewModel.comments
+	}
+}
+
+extension FeedImageCommentsViewController: FeedImageCommentsErrorView {
+	public func display(_ viewModel: FeedImageCommentErrorViewModel) {
+		errorView?.message = viewModel.message
 	}
 }
