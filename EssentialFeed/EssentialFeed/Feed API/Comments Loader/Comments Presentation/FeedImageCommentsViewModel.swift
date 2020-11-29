@@ -9,5 +9,10 @@
 import Foundation
 
 public struct FeedImageCommentsViewModel {
+	
 	public let comments: [FeedImageCommentPresentingModel]
+	
+	public init(comments: [FeedImageCommentPresentingModel]) {
+		self.comments = comments
+	}
 }
