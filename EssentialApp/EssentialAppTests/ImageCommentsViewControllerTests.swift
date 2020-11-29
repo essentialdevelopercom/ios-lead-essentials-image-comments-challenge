@@ -8,9 +8,11 @@
 
 import XCTest
 import EssentialFeed
+import EssentialFeediOS
 
 final class ImageCommentsViewController: UITableViewController {
     private var loader: ImageCommentsLoader?
+    private var tableModel = [ImageComment]()
     
     convenience init(loader: ImageCommentsLoader) {
         self.init()
@@ -25,9 +27,28 @@ final class ImageCommentsViewController: UITableViewController {
     
     @objc func load() {
         refreshControl?.beginRefreshing()
-        _ = loader?.loadComments() { [weak self] _ in
+        _ = loader?.loadComments() { [weak self] result in
+            self?.tableModel = (try? result.get()) ?? []
+            self?.tableView.reloadData()
             self?.refreshControl?.endRefreshing()
         }
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tableModel.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cellModel = tableModel[indexPath.row]
+        let cell = ImageCommentCell()
+        cell.author.text = cellModel.username
+        cell.date.text = cellModel.createdAt.relativeDate(to: Date())
+        cell.message.text = cellModel.message
+        return cell
     }
 }
 
@@ -70,6 +91,26 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading is completed")
     }
     
+    func test_loadCommentsCompletion_rendersSuccessfullyLoadedComment() {
+        let comment0 = ImageComment(id: UUID(), message: "message0", createdAt: Date(), username: "username0")
+        
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.tableView.numberOfRows(inSection: 0), 0)
+        
+        loader.completeCommentsLoading(with: [comment0], at: 0)
+        XCTAssertEqual(sut.tableView.numberOfRows(inSection: 0), 1)
+        
+        let dataSource = sut.tableView.dataSource
+        let index = IndexPath(row: 0, section: 0)
+        let cell = dataSource?.tableView(sut.tableView, cellForRowAt: index) as? ImageCommentCell
+        
+        XCTAssertEqual(cell?.author.text, comment0.username)
+        XCTAssertEqual(cell?.date.text, comment0.createdAt.relativeDate())
+        XCTAssertEqual(cell?.message.text, comment0.message)
+    }
+
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, client: LoaderSpy) {
@@ -87,7 +128,6 @@ final class ImageCommentsViewControllerTests: XCTestCase {
             completions.count
         }
 
-        
         private struct TaskSpy: ImageCommentsLoaderTask {
             func cancel() {}
         }
@@ -97,8 +137,8 @@ final class ImageCommentsViewControllerTests: XCTestCase {
             return TaskSpy()
         }
         
-        func completeCommentsLoading(at index: Int) {
-            completions[index](.success([]))
+        func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int) {
+            completions[index](.success(comments))
         }
     }
 }
@@ -113,3 +153,11 @@ private extension ImageCommentsViewController {
     }
 }
 
+private extension Date {
+    
+    func relativeDate(to date: Date = Date()) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: self, relativeTo: date)
+    }
+}
