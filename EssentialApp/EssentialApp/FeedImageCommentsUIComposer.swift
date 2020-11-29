@@ -46,8 +46,8 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
 			switch result {
 			case let .success(comments):
 				self?.presenter?.didFinishLoadingComments(with: comments)
-			default:
-				break
+			case let .failure(error):
+				self?.presenter?.didFinishLoadingComments(with: error)
 			}
 			
 		}
