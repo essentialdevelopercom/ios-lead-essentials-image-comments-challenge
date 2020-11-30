@@ -22,9 +22,9 @@ public protocol FeedImageCommentsView: class {
 
 public class FeedImageCommentsPresenter {
 	
-	private weak var commentsView: FeedImageCommentsView?
-	private weak var loadingView: FeedImageCommentsLoadingView?
-	private weak var errorView: FeedImageCommentsErrorView?
+	private var commentsView: FeedImageCommentsView
+	private var loadingView: FeedImageCommentsLoadingView
+	private var errorView: FeedImageCommentsErrorView
 	private let currentDate: Date
 	
 	public static var title: String { NSLocalizedString(
@@ -51,18 +51,18 @@ public class FeedImageCommentsPresenter {
 	}
 	
 	public func didStartLoadingComments() {
-		errorView?.display(.noError)
-		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: true))
+		errorView.display(.noError)
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: true))
 	}
 	
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
-		commentsView?.display(FeedImageCommentsViewModel(comments: comments.toModels()))
-		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
+		commentsView.display(FeedImageCommentsViewModel(comments: comments.toModels()))
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
-		errorView?.display(.error(message: FeedImageCommentsPresenter.errorMessage))
-		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
+		errorView.display(.error(message: FeedImageCommentsPresenter.errorMessage))
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
 }

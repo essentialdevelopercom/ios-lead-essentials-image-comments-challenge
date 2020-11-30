@@ -19,8 +19,11 @@ public final class FeedImageCommentsUIComposer {
 		let commentsController = storyboard.instantiateInitialViewController() as! FeedImageCommentsViewController
 		let presentationAdapter = FeedImageCommentsPresentationAdapter(loader: commentsLoader, url: url)
 		commentsController.delegate = presentationAdapter
-		
-		let presenter = FeedImageCommentsPresenter(commentsView: commentsController, loadingView: commentsController, errorView: commentsController)
+
+		let presenter = FeedImageCommentsPresenter(
+			commentsView: WeakRefVirtualProxy(commentsController),
+			loadingView: WeakRefVirtualProxy(commentsController),
+			errorView: WeakRefVirtualProxy(commentsController))
 		presentationAdapter.presenter = presenter
 		
 		return commentsController
@@ -30,7 +33,7 @@ public final class FeedImageCommentsUIComposer {
 public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewControllerDelegate {
 	
 	var presenter: FeedImageCommentsPresenter?
-	private weak var loader: FeedImageCommentsLoader?
+	private var loader: FeedImageCommentsLoader?
 	let url: URL
 	
 	init(loader: FeedImageCommentsLoader, url: URL) {

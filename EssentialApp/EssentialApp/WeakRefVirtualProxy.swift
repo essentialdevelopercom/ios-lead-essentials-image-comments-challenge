@@ -37,6 +37,11 @@ extension WeakRefVirtualProxy: FeedImageCommentsView where T: FeedImageCommentsV
 	}
 }
 
+extension WeakRefVirtualProxy: FeedImageCommentsLoadingView where T: FeedImageCommentsLoadingView {
+	func display(_ viewModel: FeedImageCommentLoadingViewModel) {
+		object?.display(viewModel)
+	}
+}
 
 extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == UIImage {
 	func display(_ model: FeedImageViewModel<UIImage>) {
