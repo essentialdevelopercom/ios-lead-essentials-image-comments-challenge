@@ -99,6 +99,7 @@
 		A006C102257675310067F0C2 /* ImageCommentsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C101257675310067F0C2 /* ImageCommentsSnapshotTests.swift */; };
 		A006C10D257676850067F0C2 /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */; };
 		A006C117257677210067F0C2 /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A006C116257677210067F0C2 /* ImageComments.storyboard */; };
+		A006C12225767C550067F0C2 /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C12125767C550067F0C2 /* ImageCommentCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +221,7 @@
 		A006C101257675310067F0C2 /* ImageCommentsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsSnapshotTests.swift; sourceTree = "<group>"; };
 		A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
 		A006C116257677210067F0C2 /* ImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
+		A006C12125767C550067F0C2 /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -596,6 +598,7 @@
 			children = (
 				A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */,
 				A006C116257677210067F0C2 /* ImageComments.storyboard */,
+				A006C12125767C550067F0C2 /* ImageCommentCell.swift */,
 			);
 			path = "Image Comments UI";
 			sourceTree = "<group>";
@@ -876,6 +879,7 @@
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
 				08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */,
+				A006C12225767C550067F0C2 /* ImageCommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
