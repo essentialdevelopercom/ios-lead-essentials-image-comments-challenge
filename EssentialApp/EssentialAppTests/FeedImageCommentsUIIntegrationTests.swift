@@ -25,20 +25,20 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadingCommentsIndicator_isVisibleWhileLoadingComments() {
-		 let (sut, loader) = makeSUT()
-
-		 sut.loadViewIfNeeded()
-		 XCTAssertEqual(sut.isShowingLoadingIndicator, true)
-
-		 loader.completeCommentsLoading()
-		 XCTAssertEqual(sut.isShowingLoadingIndicator, false)
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.isShowingLoadingIndicator, true)
+		
+		loader.completeCommentsLoading()
+		XCTAssertEqual(sut.isShowingLoadingIndicator, false)
 		
 		sut.simulateUserInitiatedCommentsReload()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
 		
 		loader.completeCommentsLoading(with: anyNSError())
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
-	 }
+	}
 	
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
 		
@@ -55,11 +55,11 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		
 		let (sut, loader) = makeSUT()
 		let comments = makeUniqComments()
-
+		
 		sut.loadViewIfNeeded()
 		loader.completeCommentsLoading(with: comments, at: 0)
 		assertThat(sut, isRendering: comments.toModels())
-
+		
 		sut.simulateUserInitiatedCommentsReload()
 		loader.completeCommentsLoading(with: [], at: 1)
 		assertThat(sut, isRendering: [])
@@ -76,6 +76,19 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedCommentsReload()
 		loader.completeCommentsLoading(with: anyNSError(), at: 1)
 		assertThat(sut, isRendering: comments.toModels())
+	}
+	
+	func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeCommentsLoading(with: anyNSError())
+		XCTAssertEqual(sut.errorMessage, localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE"))
+		
+		sut.simulateUserInitiatedCommentsReload()
+		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
 	//MARK: -Helpers
@@ -120,6 +133,16 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		return [comment1, comment2]
 	}
 	
+	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "FeedImageComments"
+		let bundle = Bundle(for: FeedImageCommentsPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
+	}
+	
 	private class LoaderSpy: FeedImageCommentsLoader {
 		var loadCommentsCallCount: Int {
 			return completions.count
@@ -147,28 +170,19 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 }
 
 private extension FeedImageCommentsViewController {
-	func simulateUserInitiatedCommentsReload() {
-		refreshControl?.simulatePullToRefresh()
-	}
 	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}
-}
-
-extension Date {
 	
-	func adding(seconds: TimeInterval) -> Date {
-		return self + seconds
+	var errorMessage: String? {
+		return errorView?.message
 	}
 	
-	func adding(days: Int) -> Date {
-		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+	func simulateUserInitiatedCommentsReload() {
+		refreshControl?.simulatePullToRefresh()
 	}
-}
-
-
-extension FeedImageCommentsViewController {
+	
 	func feedCommentView(at row: Int) -> UITableViewCell? {
 		guard numberOfRenderedFeedCommentViews() > row else {
 			return nil
@@ -186,3 +200,16 @@ extension FeedImageCommentsViewController {
 		return 0
 	}
 }
+
+extension Date {
+	
+	func adding(seconds: TimeInterval) -> Date {
+		return self + seconds
+	}
+	
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+	}
+}
+
+
