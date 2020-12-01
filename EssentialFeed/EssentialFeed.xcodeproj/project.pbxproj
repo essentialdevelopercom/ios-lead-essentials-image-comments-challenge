@@ -96,6 +96,9 @@
 		A006C0EA257661DB0067F0C2 /* PresentableImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C0E9257661DB0067F0C2 /* PresentableImageComment.swift */; };
 		A006C0F0257663400067F0C2 /* ImageCommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C0EF257663400067F0C2 /* ImageCommentsLocalizationTests.swift */; };
 		A006C0F6257672260067F0C2 /* XCTests+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C0F5257672260067F0C2 /* XCTests+Localization.swift */; };
+		A006C102257675310067F0C2 /* ImageCommentsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C101257675310067F0C2 /* ImageCommentsSnapshotTests.swift */; };
+		A006C10D257676850067F0C2 /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */; };
+		A006C117257677210067F0C2 /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A006C116257677210067F0C2 /* ImageComments.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,6 +217,9 @@
 		A006C0E9257661DB0067F0C2 /* PresentableImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentableImageComment.swift; sourceTree = "<group>"; };
 		A006C0EF257663400067F0C2 /* ImageCommentsLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLocalizationTests.swift; sourceTree = "<group>"; };
 		A006C0F5257672260067F0C2 /* XCTests+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTests+Localization.swift"; sourceTree = "<group>"; };
+		A006C101257675310067F0C2 /* ImageCommentsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsSnapshotTests.swift; sourceTree = "<group>"; };
+		A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
+		A006C116257677210067F0C2 /* ImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -495,6 +501,7 @@
 			isa = PBXGroup;
 			children = (
 				08D917A322B92A5D003BC31B /* Info.plist */,
+				A006C10B257675D30067F0C2 /* Image Comments UI */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 			);
 			path = EssentialFeediOS;
@@ -506,6 +513,7 @@
 				08D917AF22B92A5D003BC31B /* Info.plist */,
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
+				A006C101257675310067F0C2 /* ImageCommentsSnapshotTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -580,6 +588,15 @@
 				A006C0E9257661DB0067F0C2 /* PresentableImageComment.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		A006C10B257675D30067F0C2 /* Image Comments UI */ = {
+			isa = PBXGroup;
+			children = (
+				A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */,
+				A006C116257677210067F0C2 /* ImageComments.storyboard */,
+			);
+			path = "Image Comments UI";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -747,6 +764,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
+				A006C117257677210067F0C2 /* ImageComments.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -853,6 +871,7 @@
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
+				A006C10D257676850067F0C2 /* ImageCommentsViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
 				08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */,
@@ -867,6 +886,7 @@
 				086AEFB923A7DFA400EE8933 /* FeedSnapshotTests.swift in Sources */,
 				0800314923B6909A00720217 /* XCTestCase+Snapshot.swift in Sources */,
 				0800314723B68FAB00720217 /* UIViewController+Snapshot.swift in Sources */,
+				A006C102257675310067F0C2 /* ImageCommentsSnapshotTests.swift in Sources */,
 				086AEFBC23A7E5C300EE8933 /* UIImage+TestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
