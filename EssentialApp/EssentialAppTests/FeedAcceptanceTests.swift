@@ -52,6 +52,15 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
+	func test_onSelectImage_displaysImageComments() {
+		 let feed = launch(httpClient: .online(response), store: .empty)
+
+		feed.simulateTapOnImage(at: 0)
+		RunLoop.current.run(until: Date())
+		
+		XCTAssertNotNil(feed.navigationController?.topViewController as? FeedImageCommentsViewController)
+	}
+	
 	// MARK: - Helpers
 	
 	private func launch(

@@ -52,14 +52,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		configureWindow()
 	}
 	
-	func configureWindow() {
-		window?.rootViewController = UINavigationController(
+	private lazy var navigationController: UINavigationController = {
+		return UINavigationController(
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				didSelectImage: { _ in }))
-		
+				didSelectImage: { [weak self] in
+					self?.didSelectImage(image: $0)
+				}))
+	}()
+	
+	func configureWindow() {
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
+	}
+	
+	private func didSelectImage(image: FeedImage) {
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
+		let loader = RemoteFeedCommentsLoader(client: httpClient)
+		let controller = FeedImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url)
+		navigationController.pushViewController(controller, animated: true)
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
