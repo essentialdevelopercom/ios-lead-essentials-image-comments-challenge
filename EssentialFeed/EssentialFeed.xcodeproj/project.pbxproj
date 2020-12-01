@@ -503,6 +503,7 @@
 			isa = PBXGroup;
 			children = (
 				08D917A322B92A5D003BC31B /* Info.plist */,
+				A006C12825767CB70067F0C2 /* Common */,
 				A006C10B257675D30067F0C2 /* Image Comments UI */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 			);
@@ -534,7 +535,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -600,6 +600,14 @@
 				A006C12125767C550067F0C2 /* ImageCommentCell.swift */,
 			);
 			path = "Image Comments UI";
+			sourceTree = "<group>";
+		};
+		A006C12825767CB70067F0C2 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
