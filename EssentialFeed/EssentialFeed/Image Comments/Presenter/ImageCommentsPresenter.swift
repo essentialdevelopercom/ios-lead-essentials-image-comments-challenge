@@ -21,10 +21,10 @@ public protocol ImageCommentsView {
 }
 
 public class ImageCommentsPresenter {
-	let imageCommentsView: ImageCommentsView
-	let loadingView: ImageCommentsLoadingView
-	let errorView: ImageCommentsErrorView
-	let currentDate: Date
+	private let imageCommentsView: ImageCommentsView
+	private let loadingView: ImageCommentsLoadingView
+	private let errorView: ImageCommentsErrorView
+	private let currentDate: Date
 
 	public static var title: String { NSLocalizedString(
 		"IMAGE_COMMENTS_VIEW_TITLE",
