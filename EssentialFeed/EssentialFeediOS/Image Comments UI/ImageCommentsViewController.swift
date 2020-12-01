@@ -13,7 +13,7 @@ public protocol ImageCommentsViewControllerDelegate {
 	func didRequestCommentsRefresh()
 }
 
-public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView {
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
 
 	@IBOutlet public private(set) var errorView: ErrorView?
 	public var delegate: ImageCommentsViewControllerDelegate?
@@ -37,6 +37,14 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		super.viewDidLayoutSubviews()
 
 		tableView.sizeTableHeaderToFit()
+	}
+
+	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
 	}
 
 	public func display(_ viewModel: ImageCommentsViewModel) {
