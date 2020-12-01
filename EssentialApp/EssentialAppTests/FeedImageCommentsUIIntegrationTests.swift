@@ -65,6 +65,19 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [])
 	}
 	
+	func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let comments = makeUniqComments()
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: comments, at: 0)
+		assertThat(sut, isRendering: comments.toModels())
+		
+		sut.simulateUserInitiatedCommentsReload()
+		loader.completeCommentsLoading(with: anyNSError(), at: 1)
+		assertThat(sut, isRendering: comments.toModels())
+	}
+	
 	//MARK: -Helpers
 	
 	private func makeSUT(url: URL = anyURL(),file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {
