@@ -7,7 +7,17 @@
 //
 
 import XCTest
+import EssentialFeed
+
+class RemoteImageCommentsLoader {
+	init(client _: HTTPClient) {}
+}
 
 class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
+	func test_init_doesNotPerformAnyURLRequest() {
+		let client = HTTPClientSpy()
+		let _ = RemoteImageCommentsLoader(client: client)
 
+		XCTAssertTrue(client.requestedURLs.isEmpty)
+	}
 }
