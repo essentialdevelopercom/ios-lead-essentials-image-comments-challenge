@@ -71,6 +71,10 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 		indexPaths.forEach(cancelCellControllerLoad)
 	}
 	
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		cellController(forRowAt: indexPath).selected()
+	}
+	
 	private func cellController(forRowAt indexPath: IndexPath) -> FeedImageCellController {
 		let controller = tableModel[indexPath.row]
 		loadingControllers[indexPath] = controller
