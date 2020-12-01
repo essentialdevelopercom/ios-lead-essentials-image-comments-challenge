@@ -116,8 +116,8 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	
 	//MARK: -Helpers
 	
-	private func makeSUT(url: URL = anyURL(),file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {
-		let loader = LoaderSpy()
+	private func makeSUT(url: URL = anyURL(),file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: FeedCommentsLoaderSpy) {
+		let loader = FeedCommentsLoaderSpy()
 		let sut = FeedImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
@@ -165,89 +165,5 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		}
 		return value
 	}
-	
-	private class LoaderSpy: FeedImageCommentsLoader {
-		var loadCommentsCallCount: Int {
-			return commentRequests.count
-		}
-		
-		private(set) var cancelledRequestURLs = [URL]()
-		
-		private var commentRequests = [(url: URL, completion: (FeedImageCommentsLoader.Result) -> Void)]()
-		
-		var loadedImageURLs: [URL] {
-			return commentRequests.map { $0.url }
-		}
-		
-		private struct TaskSpy: FeedImageCommentsLoaderTask {
-			let cancelCallback: () -> Void
-			func cancel() {
-				cancelCallback()
-			}
-		}
-		
-		func load(from url: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-			commentRequests.append((url, completion))
-			return TaskSpy { [weak self] in self?.cancelledRequestURLs.append(url) }
-		}
-		
-		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
-			commentRequests[index].completion(.success(comments))
-		}
-		
-		func completeCommentsLoading(with error: Error, at index: Int = 0) {
-			commentRequests[index].completion(.failure(error))
-		}
-	}
-	
+
 }
-
-private extension FeedImageCommentsViewController {
-	
-	var isShowingLoadingIndicator: Bool {
-		return refreshControl?.isRefreshing == true
-	}
-	
-	var errorMessage: String? {
-		return errorView?.message
-	}
-	
-	@discardableResult
-	func simulateFeedCommentViewVisible(at index: Int) -> FeedImageCommentCell? {
-		return feedCommentView(at: index) as? FeedImageCommentCell
-	}
-	
-	func simulateUserInitiatedCommentsReload() {
-		refreshControl?.simulatePullToRefresh()
-	}
-	
-	func feedCommentView(at row: Int) -> UITableViewCell? {
-		guard numberOfRenderedFeedCommentViews() > row else {
-			return nil
-		}
-		let ds = tableView.dataSource
-		let index = IndexPath(row: row, section: feedCommentsSection)
-		return ds?.tableView(tableView, cellForRowAt: index)
-	}
-	
-	func numberOfRenderedFeedCommentViews() -> Int {
-		return tableView.numberOfRows(inSection: feedCommentsSection)
-	}
-	
-	private var feedCommentsSection: Int {
-		return 0
-	}
-}
-
-extension Date {
-	
-	func adding(seconds: TimeInterval) -> Date {
-		return self + seconds
-	}
-	
-	func adding(days: Int) -> Date {
-		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-	}
-}
-
-
