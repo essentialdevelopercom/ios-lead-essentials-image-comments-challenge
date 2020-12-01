@@ -21,6 +21,15 @@ final class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_EMPTY_COMMENTS_dark")
 	}
 
+	func test_imageWithComments() {
+		let sut = makeSUT()
+
+		sut.display(imageComments())
+
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_WITH_COMMENTS_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_COMMENTS_dark")
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> ImageCommentsViewController {
@@ -35,5 +44,29 @@ final class ImageCommentsSnapshotTests: XCTestCase {
 
 	private func noComments() -> ImageCommentsViewModel {
 		ImageCommentsViewModel(comments: [])
+	}
+	
+	private func imageComments() -> ImageCommentsViewModel {
+		let comment1 = PresentableImageComment(
+			username: "Diego Jota",
+			createdAt: "2 weeks ago",
+			message: "In nature, light creates the color. In the picture, color creates the light."
+		)
+		let comment2 = PresentableImageComment(
+			username: "Rakesh R",
+			createdAt: "3 months ago",
+			message: "The power of beauty lies within the soul. This picture is worth a thousand words."
+		)
+		let comment3 = PresentableImageComment(
+			username: "Cristiano Ronaldo",
+			createdAt: "2 hours ago",
+			message: "Beauty is power; a smile is its sword."
+		)
+		let comment4 = PresentableImageComment(
+			username: "Steven Gerrard",
+			createdAt: "3 years ago",
+			message: "Man oh man, if I didn't look a second time I wouldn't believe someone as beautiful as you existed."
+		)
+		return ImageCommentsViewModel(comments: [comment1, comment2, comment3, comment4])
 	}
 }
