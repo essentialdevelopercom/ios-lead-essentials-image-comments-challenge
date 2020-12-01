@@ -14,14 +14,16 @@ public final class FeedImageCommentsUIComposer {
 	
 	public static func imageCommentsComposeWith(commentsLoader: FeedImageCommentsLoader, url: URL) -> FeedImageCommentsViewController {
 		
-		let presentationAdapter = FeedImageCommentsPresentationAdapter(loader: commentsLoader, url: url)
+		let dispatchToMainCompletionLoader = MainQueueDispatchDecorator(decoratee: commentsLoader)
+		let presentationAdapter = FeedImageCommentsPresentationAdapter(loader: dispatchToMainCompletionLoader, url: url)
 		
 		let commentsController = makeFeedImageCommentsViewController(delegate: presentationAdapter, title: FeedImageCommentsPresenter.title)
+		let weakController = WeakRefVirtualProxy(commentsController)
 		
 		presentationAdapter.presenter = FeedImageCommentsPresenter(
-			commentsView: WeakRefVirtualProxy(commentsController),
-			loadingView: WeakRefVirtualProxy(commentsController),
-			errorView: WeakRefVirtualProxy(commentsController))
+			commentsView: weakController,
+			loadingView: weakController,
+			errorView: weakController)
 		
 		return commentsController
 	}
@@ -39,7 +41,7 @@ public final class FeedImageCommentsUIComposer {
 public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewControllerDelegate {
 	
 	var presenter: FeedImageCommentsPresenter?
-	private var loader: FeedImageCommentsLoader?
+	private let loader: FeedImageCommentsLoader
 	let url: URL
 	
 	init(loader: FeedImageCommentsLoader, url: URL) {
@@ -49,7 +51,7 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
 	
 	public func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
-		_ = loader?.load(from: url) { [weak self] result
+		_ = loader.load(from: url) { [weak self] result
 			in
 			
 			switch result {
@@ -58,7 +60,7 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
 			case let .failure(error):
 				self?.presenter?.didFinishLoadingComments(with: error)
 			}
-			
+
 		}
 	}
 }
