@@ -160,7 +160,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
 	private func expect(
 		_ sut: RemoteImageCommentsLoader,
-		toCompleteWith expectedResult: RemoteImageCommentsLoader.Result,
+		toCompleteWith expectedResult: ImageCommentsLoader.Result,
 		when action: () -> Void,
 		file: StaticString = #filePath,
 		line: UInt = #line
