@@ -7,3 +7,4 @@
 */
 
 "IMAGE_COMMENTS_VIEW_TITLE" = "Comentários";
+"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR" = "Não foi possível conectar ao servidor";
