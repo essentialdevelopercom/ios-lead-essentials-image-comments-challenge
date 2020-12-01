@@ -34,9 +34,13 @@ class RemoteImageCommentsLoader {
 	func load(from url: URL, completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .success((_, response)):
+			case let .success((data, response)):
 				if response.statusCode != RemoteImageCommentsLoader.OK_HTTP_200 {
 					completion(.failure(Error.invalidData))
+				} else {
+					guard let _ = try? JSONSerialization.jsonObject(with: data) else {
+						return completion(.failure(Error.invalidData))
+					}
 				}
 			case .failure:
 				completion(.failure(Error.connectivity))
@@ -72,7 +76,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
 
-	func test_load_deliversErrorOnNon2xxHTTPResponse() {
+	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 
 		let expectedError: RemoteImageCommentsLoader.Error = .invalidData
@@ -94,6 +98,15 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			client.complete(with: anyNSError())
 		})
 	}
+	
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+
+		expect(sut, toCompleteWith: failure(.invalidData), when: {
+			let invalidJSON = Data("invalid json".utf8)
+			client.complete(withStatusCode: 201, data: invalidJSON)
+		})
+	}
 
 	// MARK: - Helpers
 	
@@ -109,6 +122,10 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return (sut, client)
 	}
 	
+	private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result {
+		.failure(error)
+	}
+
 	private func expect(
 		_ sut: RemoteImageCommentsLoader,
 		toCompleteWith expectedResult: RemoteImageCommentsLoader.Result,
