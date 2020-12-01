@@ -32,19 +32,31 @@ class RemoteImageCommentsLoader {
 class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_init_doesNotPerformAnyURLRequest() {
-		let client = HTTPClientSpy()
-		let _ = RemoteImageCommentsLoader(client: client)
+		let (_, client) = makeSUT()
 
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
 	func test_load_requestsDataFromURL() {
 		let url = URL(string: "https://a-given-url.com")!
-		let client = HTTPClientSpy()
-		let sut = RemoteImageCommentsLoader(client: client)
+		let (sut, client) = makeSUT(url: url)
 
 		sut.load(from: url) { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url])
+	}
+	
+	// MARK: - Helpers
+	
+	private func makeSUT(
+		url _: URL = anyURL(),
+		file: StaticString = #filePath,
+		line: UInt = #line
+	) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
+		let client = HTTPClientSpy()
+		let sut = RemoteImageCommentsLoader(client: client)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		trackForMemoryLeaks(client, file: file, line: line)
+		return (sut, client)
 	}
 }
