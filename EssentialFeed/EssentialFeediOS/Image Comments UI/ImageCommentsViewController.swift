@@ -9,12 +9,6 @@
 import UIKit
 import EssentialFeed
 
-class ImageCommentCell: UITableViewCell {
-	@IBOutlet var usernameLabel: UILabel?
-	@IBOutlet var createdAtLabel: UILabel?
-	@IBOutlet var commentLabel: UILabel?
-}
-
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsView {
 	
 	var models = [PresentableImageComment]() {
