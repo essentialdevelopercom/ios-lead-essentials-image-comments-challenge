@@ -5,6 +5,5 @@
   Created by Rakesh Ramamurthy on 01/12/20.
   Copyright © 2020 Essential Developer. All rights reserved.
 */
-
-"IMAGE_COMMENTS_VIEW_TITLE" = "Comentários";
-"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR" = "Não foi possível conectar ao servidor";
+"IMAGE_COMMENTS_VIEW_TITLE" = "Comments";
+"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR" = "Couldn't connect to server";
