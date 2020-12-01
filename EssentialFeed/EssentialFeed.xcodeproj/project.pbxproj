@@ -88,6 +88,8 @@
 		A006C066257641F00067F0C2 /* RemoteImageCommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C065257641F00067F0C2 /* RemoteImageCommentsLoader.swift */; };
 		A006C06C257642150067F0C2 /* ImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C06B257642150067F0C2 /* ImageComment.swift */; };
 		A006C072257648A80067F0C2 /* ImageCommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C071257648A80067F0C2 /* ImageCommentsLoader.swift */; };
+		A006C09325764EB10067F0C2 /* ImageCommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A006C09225764EB10067F0C2 /* ImageCommentsPresenterTests.swift */; };
+		A006C09825764ED70067F0C2 /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = A006C09A25764ED70067F0C2 /* ImageComments.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,6 +198,10 @@
 		A006C065257641F00067F0C2 /* RemoteImageCommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageCommentsLoader.swift; sourceTree = "<group>"; };
 		A006C06B257642150067F0C2 /* ImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComment.swift; sourceTree = "<group>"; };
 		A006C071257648A80067F0C2 /* ImageCommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLoader.swift; sourceTree = "<group>"; };
+		A006C09225764EB10067F0C2 /* ImageCommentsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsPresenterTests.swift; sourceTree = "<group>"; };
+		A006C09925764ED70067F0C2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
+		A006C09F25764EDE0067F0C2 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
+		A006C0A025764EF90067F0C2 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -524,6 +530,7 @@
 		A006C03125761BCF0067F0C2 /* Image Comments */ = {
 			isa = PBXGroup;
 			children = (
+				A006C08725764E890067F0C2 /* Presentation */,
 				A006C03225761C0D0067F0C2 /* LoadImageCommentsFromRemoteUseCaseTests.swift */,
 			);
 			path = "Image Comments";
@@ -538,6 +545,15 @@
 				A006C071257648A80067F0C2 /* ImageCommentsLoader.swift */,
 			);
 			path = "Image Comments";
+			sourceTree = "<group>";
+		};
+		A006C08725764E890067F0C2 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				A006C09A25764ED70067F0C2 /* ImageComments.strings */,
+				A006C09225764EB10067F0C2 /* ImageCommentsPresenterTests.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -696,6 +712,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A006C09825764ED70067F0C2 /* ImageComments.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,6 +786,7 @@
 				081C0DAF22491A2400AC754E /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				087148AC232BDF6900D6BE1A /* FeedPresenterTests.swift in Sources */,
 				08897BE8233910040029F5E4 /* LoadFeedImageDataFromRemoteUseCaseTests.swift in Sources */,
+				A006C09325764EB10067F0C2 /* ImageCommentsPresenterTests.swift in Sources */,
 				08DDC13A21BEA99E00F490ED /* LoadFeedFromRemoteUseCaseTests.swift in Sources */,
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				087546922272381700542C32 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */,
@@ -845,6 +863,16 @@
 				087148B3232BE90D00D6BE1A /* el */,
 			);
 			name = Feed.strings;
+			sourceTree = "<group>";
+		};
+		A006C09A25764ED70067F0C2 /* ImageComments.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A006C09925764ED70067F0C2 /* en */,
+				A006C09F25764EDE0067F0C2 /* pt-BR */,
+				A006C0A025764EF90067F0C2 /* el */,
+			);
+			name = ImageComments.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
