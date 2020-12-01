@@ -22,16 +22,40 @@ public class RemoteImageCommentsLoader {
 		self.client = client
 	}
 
+	private final class HTTPClientTaskWrapper: HTTPClientTask {
+		private var completion: ((Result) -> Void)?
+		var wrappedTask: HTTPClientTask?
+
+		init(completion: @escaping (Result) -> Void) {
+			self.completion = completion
+		}
+
+		func complete(with result: Result) {
+			completion?(result)
+		}
+
+		func cancel() {
+			wrappedTask?.cancel()
+			preventFurtherCompletions()
+		}
+
+		private func preventFurtherCompletions() {
+			completion = nil
+		}
+	}
+
 	public func load(from url: URL, completion: @escaping (Result) -> Void) -> HTTPClientTask {
-		return client.get(from: url) { [weak self] result in
+		let task = HTTPClientTaskWrapper(completion: completion)
+		task.wrappedTask = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
-				completion(RemoteImageCommentsLoader.map(data, from: response))
+				task.complete(with: RemoteImageCommentsLoader.map(data, from: response))
 			case .failure:
-				completion(.failure(Error.connectivity))
+				task.complete(with: .failure(Error.connectivity))
 			}
 		}
+		return task
 	}
 
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
