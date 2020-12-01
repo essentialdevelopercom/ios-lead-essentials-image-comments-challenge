@@ -99,6 +99,21 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_cancelsCommentsLoading_whenViewIsNotVisibleAnymore() {
+		let url = URL(string: "http://url-0.com")!
+		let (sut, loader) = makeSUT(url: url)
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.cancelledRequestURLs, [], "Expected to has not cancelled requests")
+		
+		loader.completeCommentsLoading()
+		XCTAssertEqual(loader.cancelledRequestURLs, [], "Expected to has not cancelled requests after loading")
+		
+		sut.simulateUserInitiatedCommentsReload()
+		sut.viewWillDisappear(false)
+		XCTAssertEqual(loader.cancelledRequestURLs, [url], "Expected to has cancelled requests")
+	}
+	
 	//MARK: -Helpers
 	
 	private func makeSUT(url: URL = anyURL(),file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {
@@ -153,25 +168,35 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private class LoaderSpy: FeedImageCommentsLoader {
 		var loadCommentsCallCount: Int {
-			return completions.count
-		}
-		var completions = [(FeedImageCommentsLoader.Result) -> Void]()
-		
-		private struct Task: FeedImageCommentsLoaderTask {
-			func cancel() {}
+			return commentRequests.count
 		}
 		
-		func load(from _: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-			completions.append(completion)
-			return Task()
+		private(set) var cancelledRequestURLs = [URL]()
+		
+		private var commentRequests = [(url: URL, completion: (FeedImageCommentsLoader.Result) -> Void)]()
+		
+		var loadedImageURLs: [URL] {
+			return commentRequests.map { $0.url }
+		}
+		
+		private struct TaskSpy: FeedImageCommentsLoaderTask {
+			let cancelCallback: () -> Void
+			func cancel() {
+				cancelCallback()
+			}
+		}
+		
+		func load(from url: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+			commentRequests.append((url, completion))
+			return TaskSpy { [weak self] in self?.cancelledRequestURLs.append(url) }
 		}
 		
 		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
-			completions[index](.success(comments))
+			commentRequests[index].completion(.success(comments))
 		}
 		
 		func completeCommentsLoading(with error: Error, at index: Int = 0) {
-			completions[index](.failure(error))
+			commentRequests[index].completion(.failure(error))
 		}
 	}
 	
@@ -185,6 +210,11 @@ private extension FeedImageCommentsViewController {
 	
 	var errorMessage: String? {
 		return errorView?.message
+	}
+	
+	@discardableResult
+	func simulateFeedCommentViewVisible(at index: Int) -> FeedImageCommentCell? {
+		return feedCommentView(at: index) as? FeedImageCommentCell
 	}
 	
 	func simulateUserInitiatedCommentsReload() {
