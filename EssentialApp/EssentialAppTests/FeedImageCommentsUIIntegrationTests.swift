@@ -41,26 +41,28 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	 }
 	
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
-		let currentDate = Date()
 		
-		
-		let comment1 = ImageComment(id: UUID(), message: "First message", createdAt: currentDate.adding(days: -2), author: "First Author")
-		let comment2 = ImageComment(id: UUID(), message: "Second message", createdAt: currentDate.adding(seconds: -305), author: "Second Author")
 		let (sut, loader) = makeSUT()
+		let comments = makeUniqComments()
 		
 		sut.loadViewIfNeeded()
-		loader.completeCommentsLoading(with: [comment1, comment2])
+		loader.completeCommentsLoading(with: comments)
 		
-		let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? FeedImageCommentCell
+		assertThat(sut, isRendering: comments.toModels())
+	}
+	
+	func test_loadFeedCompletion_rendersSuccessfullyLoadedCommentsAfterNonEmptyComments() {
 		
-		XCTAssertEqual(cell1?.usernameLabel?.text, "First Author")
-		XCTAssertEqual(cell1?.creationTimeLabel?.text, "2 days ago")
-		XCTAssertEqual(cell1?.commentLabel?.text, "First message")
-		
-		let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? FeedImageCommentCell
-		XCTAssertEqual(cell2?.usernameLabel?.text, "Second Author")
-		XCTAssertEqual(cell2?.creationTimeLabel?.text, "5 minutes ago")
-		XCTAssertEqual(cell2?.commentLabel?.text, "Second message")
+		let (sut, loader) = makeSUT()
+		let comments = makeUniqComments()
+
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: comments, at: 0)
+		assertThat(sut, isRendering: comments.toModels())
+
+		sut.simulateUserInitiatedCommentsReload()
+		loader.completeCommentsLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
 	}
 	
 	//MARK: -Helpers
@@ -71,6 +73,38 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	func assertThat(_ sut: FeedImageCommentsViewController, isRendering comment: [FeedImageCommentPresentingModel], file: StaticString = #file, line: UInt = #line) {
+		sut.tableView.layoutIfNeeded()
+		RunLoop.main.run(until: Date())
+		guard sut.numberOfRenderedFeedCommentViews() == comment.count else {
+			return XCTFail("Expected \(comment.count) images, got \(sut.numberOfRenderedFeedCommentViews()) instead.", file: file, line: line)
+		}
+		
+		comment.enumerated().forEach { index, comment in
+			assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
+		}
+	}
+	
+	private func assertThat(_ sut: FeedImageCommentsViewController, hasViewConfiguredFor commentModel: FeedImageCommentPresentingModel, at index: Int, file: StaticString = #file, line: UInt = #line) {
+		
+		let view = sut.feedCommentView(at: index)
+		
+		guard let cell = view as? FeedImageCommentCell else {
+			return XCTFail("Expected \(FeedImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+		
+		XCTAssertEqual(cell.usernameLabelText, commentModel.username, file: file, line: line)
+		XCTAssertEqual(cell.creationTimeText, commentModel.creationTime, file: file, line: line)
+		XCTAssertEqual(cell.commentText, commentModel.comment, file: file, line: line)
+	}
+	
+	private func makeUniqComments() -> [ImageComment] {
+		let currentDate = Date()
+		let comment1 = ImageComment(id: UUID(), message: "First message", createdAt: currentDate.adding(days: -2), author: "First Author")
+		let comment2 = ImageComment(id: UUID(), message: "Second message", createdAt: currentDate.adding(seconds: -305), author: "Second Author")
+		return [comment1, comment2]
 	}
 	
 	private class LoaderSpy: FeedImageCommentsLoader {
@@ -109,7 +143,6 @@ private extension FeedImageCommentsViewController {
 	}
 }
 
-
 extension Date {
 	
 	func adding(seconds: TimeInterval) -> Date {
@@ -118,5 +151,25 @@ extension Date {
 	
 	func adding(days: Int) -> Date {
 		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+	}
+}
+
+
+extension FeedImageCommentsViewController {
+	func feedCommentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedFeedCommentViews() > row else {
+			return nil
+		}
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: feedCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	func numberOfRenderedFeedCommentViews() -> Int {
+		return tableView.numberOfRows(inSection: feedCommentsSection)
+	}
+	
+	private var feedCommentsSection: Int {
+		return 0
 	}
 }
