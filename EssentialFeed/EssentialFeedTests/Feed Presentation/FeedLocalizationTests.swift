@@ -5,8 +5,7 @@
 import XCTest
 import EssentialFeed
 
-final class FeedLocalizationTests: XCTestCase {
-	
+class FeedLocalizationTests: XCTestCase, XCTestLocalization {
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
 		let table = "Feed"
 		let presentationBundle = Bundle(for: FeedPresenter.self)
