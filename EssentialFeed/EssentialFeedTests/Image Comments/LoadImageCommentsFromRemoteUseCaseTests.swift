@@ -21,7 +21,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 
-		sut.load(from: url) { _ in }
+		_ = sut.load(from: url) { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -30,8 +30,8 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 
-		sut.load(from: url) { _ in }
-		sut.load(from: url) { _ in }
+		_ = sut.load(from: url) { _ in }
+		_ = sut.load(from: url) { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -106,7 +106,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client)
 
 		var capturedResults = [RemoteImageCommentsLoader.Result]()
-		sut?.load(from: url) { capturedResults.append($0) }
+		_ = sut?.load(from: url) { capturedResults.append($0) }
 
 		sut = nil
 		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
@@ -114,6 +114,17 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertTrue(capturedResults.isEmpty)
 	}
 	
+	func test_cancelLoadTask_cancelsClientURLRequest() {
+		let (sut, client) = makeSUT()
+		let url = anyURL()
+
+		let task = sut.load(from: url) { _ in }
+		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
+
+		task.cancel()
+		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
+	}
+
 	// MARK: - Helpers
 	
 	private func makeSUT(
@@ -142,7 +153,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let exp = expectation(description: "Wait completion loader")
 		let url = anyURL()
 
-		sut.load(from: url) { receivedResult in
+		_ = sut.load(from: url) { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedComments), .success(expectedComments)):
 				XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
