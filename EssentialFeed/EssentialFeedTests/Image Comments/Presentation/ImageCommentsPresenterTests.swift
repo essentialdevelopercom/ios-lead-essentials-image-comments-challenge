@@ -33,6 +33,15 @@ class ImageCommentsPresenter {
 		comment: "Title for the image comments view"
 	) }
 	
+	private var errorMessage: String {
+		NSLocalizedString(
+			"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
+			tableName: "ImageComments",
+			bundle: Bundle(for: ImageCommentsPresenter.self),
+			comment: "Error message when loading comments fails"
+		)
+	}
+
 	init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
 		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
@@ -46,6 +55,11 @@ class ImageCommentsPresenter {
 	
 	func didFinishLoading(with comments: [ImageComment]) {
 		imageCommentsView.display(comments: comments)
+		loadingView.display(isLoading: false)
+	}
+	
+	func didFinishLoading(with error: Error) {
+		errorView.display(errorMessage: errorMessage)
 		loadingView.display(isLoading: false)
 	}
 }
@@ -76,6 +90,18 @@ class ImageCommentsPresenterTests: XCTestCase {
 		sut.didFinishLoading(with: comments)
 
 		XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+	}
+
+	func test_didFinishLoadingCommentsWithError_displaysErrorAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let error = anyNSError()
+
+		sut.didFinishLoading(with: error)
+
+		XCTAssertEqual(
+			view.messages,
+			[.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")), .display(isLoading: false)]
+		)
 	}
 
 	// MARK: - Helpers
