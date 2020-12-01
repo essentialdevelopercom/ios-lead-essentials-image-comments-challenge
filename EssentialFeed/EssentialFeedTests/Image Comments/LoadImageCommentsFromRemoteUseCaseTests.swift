@@ -76,7 +76,30 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			client.complete(withStatusCode: 200, data: emptyListJSON)
 		})
 	}
+	
+	func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
 
+		let item1 = makeItem(
+			id: UUID(),
+			message: "a message",
+			createdAt: (Date(timeIntervalSince1970: 754833685), "1993-12-02T12:01:25+0000"),
+			username: "a username"
+		)
+
+		let item2 = makeItem(
+			id: UUID(),
+			message: "another message",
+			createdAt: (Date(timeIntervalSince1970: 694958485), "1992-01-09T12:01:25+0000"),
+			username: "another username"
+		)
+
+		expect(sut, toCompleteWith: .success([item1.model, item2.model]), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(
@@ -112,12 +135,37 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			case let (.failure(receivedError), .failure(expectedError)):
 				XCTAssertEqual(receivedError as NSError?, expectedError as NSError?, file: file, line: line)
 			default:
-				XCTFail("Expected failure, got \(receivedResult) instead.", file: file, line: line)
+				XCTFail("Expected \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
 			}
 			exp.fulfill()
 		}
 
 		action()
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	private func makeItem(
+		id: UUID,
+		message: String,
+		createdAt: (date: Date, iso8601Representation: String),
+		username: String
+	) -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, author: username)
+
+		let json: [String: Any] = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.iso8601Representation,
+			"author": [
+				"username": username,
+			],
+		]
+
+		return (item, json)
+	}
+
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
