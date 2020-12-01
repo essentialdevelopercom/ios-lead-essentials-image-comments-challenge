@@ -42,6 +42,7 @@
 		7355C01E2573B6BB00C30D0A /* FeedImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7355C01D2573B6BB00C30D0A /* FeedImageCommentsUIComposer.swift */; };
 		73949EA425761EED005D8D27 /* FeedImageCommentCell+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73949EA325761EED005D8D27 /* FeedImageCommentCell+TestHelpers.swift */; };
 		73949EA825762C61005D8D27 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73949EA725762C61005D8D27 /* MainQueueDispatchDecorator.swift */; };
+		73949EAD25763B61005D8D27 /* FeedImageCommentsPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73949EAC25763B61005D8D27 /* FeedImageCommentsPresentationAdapter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		7355C01D2573B6BB00C30D0A /* FeedImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentsUIComposer.swift; sourceTree = "<group>"; };
 		73949EA325761EED005D8D27 /* FeedImageCommentCell+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageCommentCell+TestHelpers.swift"; sourceTree = "<group>"; };
 		73949EA725762C61005D8D27 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
+		73949EAC25763B61005D8D27 /* FeedImageCommentsPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentsPresentationAdapter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +222,7 @@
 				08073B42238D2DF900A75DC6 /* FeedUIComposer.swift */,
 				7355C01D2573B6BB00C30D0A /* FeedImageCommentsUIComposer.swift */,
 				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
+				73949EAC25763B61005D8D27 /* FeedImageCommentsPresentationAdapter.swift */,
 			);
 			path = Composers;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
 				73949EA825762C61005D8D27 /* MainQueueDispatchDecorator.swift in Sources */,
 				08073B49238D2DFA00A75DC6 /* FeedViewAdapter.swift in Sources */,
+				73949EAD25763B61005D8D27 /* FeedImageCommentsPresentationAdapter.swift in Sources */,
 				0835BF6D24850F9800A793D2 /* CombineHelpers.swift in Sources */,
 				7355C01E2573B6BB00C30D0A /* FeedImageCommentsUIComposer.swift in Sources */,
 			);
