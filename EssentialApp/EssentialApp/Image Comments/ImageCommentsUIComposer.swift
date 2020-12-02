@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 public final class ImageCommentsUIComposer {
-	public static func imageCommentsComposeWith(commentsLoader: ImageCommentsLoader, url: URL, date: Date = Date()) -> ImageCommentsViewController {
+	public static func imageCommentsComposeWith(commentsLoader: ImageCommentsLoader, url: URL, date: @escaping () -> Date = Date.init) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader), url: url)
 		let commentsController = makeController(delegate: presentationAdapter)
 		let presenter = ImageCommentsPresenter(
