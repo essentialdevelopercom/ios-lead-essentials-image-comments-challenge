@@ -30,7 +30,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-		let fixedDate =  Date(timeIntervalSince1970: 1603497600) // 24 OCT 2020 - 00:00:00
+		let fixedDate = { Date(timeIntervalSince1970: 1603497600) } // 24 OCT 2020 - 00:00:00
 		let (sut, view) = makeSUT(date: fixedDate)
 		let comments = [
 			ImageComment(id: UUID(), message: "first message", createdAt: Date(timeIntervalSince1970: 1603411200), author: "first username"),
@@ -71,7 +71,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	// MARK: - Helpers
 	
-	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsPresenter, ViewSpy) {
+	private func makeSUT(date: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsPresenter, ViewSpy) {
 		let view = ViewSpy()
 		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view, currentDate: date)
 		trackForMemoryLeaks(sut, file: file, line: line)
