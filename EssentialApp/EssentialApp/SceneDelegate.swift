@@ -56,9 +56,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.rootViewController = UINavigationController(
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
-        
-        window?.makeKeyAndVisible()
+				imageLoader: makeLocalImageLoaderWithRemoteFallback,
+				didSelectImage: { _ in }
+			)
+		)
+
+		window?.makeKeyAndVisible()
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
