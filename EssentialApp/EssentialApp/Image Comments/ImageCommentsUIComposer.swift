@@ -25,6 +25,7 @@ public final class ImageCommentsUIComposer {
 			currentDate: date
 		)
 		presentationAdapter.presenter = presenter
+		commentsController.title = ImageCommentsPresenter.title
 		return commentsController
 	}
 }
