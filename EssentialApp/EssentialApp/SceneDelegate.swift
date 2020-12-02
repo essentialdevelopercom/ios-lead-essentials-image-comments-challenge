@@ -9,7 +9,8 @@ import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
-	
+	private let baseUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+
 	private lazy var httpClient: HTTPClient = {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
 	}()
@@ -23,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	private lazy var remoteFeedLoader: RemoteFeedLoader = {
 		RemoteFeedLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
+			url: EssentialFeedEndpoint.feed.url(baseUrl),
 			client: httpClient)
 	}()
 	
@@ -69,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	private func didSelectImage(image: FeedImage) {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
+		let url = EssentialFeedEndpoint.comments(for: image.id).url(baseUrl)
 		let loader = RemoteImageCommentsLoader(client: httpClient)
 		let controller = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url, date: Date())
 		navigationController.pushViewController(controller, animated: true)
