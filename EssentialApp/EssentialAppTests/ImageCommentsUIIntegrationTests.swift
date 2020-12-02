@@ -120,6 +120,21 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: comments)
 	}
 
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
+		let fixedDate = makeFixedDate()
+		let comments = makeUniqueComments()
+		let models = comments.map { $0.model }
+		let (sut, loader) = makeSUT(date: fixedDate)
+
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: models)
+		assertThat(sut, isRendering: comments)
+
+		sut.simulateUserInitiatedCommentsReload()
+		loader.completeCommentsLoading(with: [])
+		assertThat(sut, isRendering: [])
+	}
+
 	// MARK: - Helpers
 	private func makeSUT(
 		url: URL = URL(string: "http://any-url.com")!,
