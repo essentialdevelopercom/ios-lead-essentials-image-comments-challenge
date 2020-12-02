@@ -602,9 +602,8 @@
 		A006C10B257675D30067F0C2 /* Image Comments UI */ = {
 			isa = PBXGroup;
 			children = (
-				A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */,
-				A006C116257677210067F0C2 /* ImageComments.storyboard */,
-				A006C12125767C550067F0C2 /* ImageCommentCell.swift */,
+				A006C15825779F530067F0C2 /* Controllers */,
+				A006C15D25779F720067F0C2 /* Views */,
 			);
 			path = "Image Comments UI";
 			sourceTree = "<group>";
@@ -615,6 +614,23 @@
 				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		A006C15825779F530067F0C2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A006C10C257676850067F0C2 /* ImageCommentsViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		A006C15D25779F720067F0C2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A006C116257677210067F0C2 /* ImageComments.storyboard */,
+				A006C12125767C550067F0C2 /* ImageCommentCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
