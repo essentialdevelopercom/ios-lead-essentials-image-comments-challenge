@@ -129,6 +129,21 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
+	func test_cancelsCommentsLoading_whenViewIsNotVisible() {
+		let url = URL(string: "https://any-image-url.com")!
+		let (sut, loader) = makeSUT(url: url)
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests")
+
+		loader.completeCommentsLoading()
+		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests after loading")
+
+		sut.simulateUserInitiatedCommentsReload()
+		sut.viewWillDisappear(false)
+		XCTAssertEqual(loader.cancelledRequests, [url], "Expected to has cancelled requests")
+	}
+
 	// MARK: - Helpers
 	private func makeSUT(
 		url: URL = URL(string: "http://any-url.com")!,
@@ -235,15 +250,22 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	private class LoaderSpy: ImageCommentsLoader {
 		var loadCommentsCallCount = 0
 		var completions = [(ImageCommentsLoader.Result) -> Void]()
+		private(set) var cancelledRequests = [URL]()
 
 		private struct Task: ImageCommentsLoaderTask {
-			func cancel() {}
+			let cancelCallback: () -> Void
+
+			func cancel() {
+				cancelCallback()
+			}
 		}
 
-		func load(from _: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+		func load(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			loadCommentsCallCount += 1
 			completions.append(completion)
-			return Task()
+			return Task { [weak self] in
+				self?.cancelledRequests.append(url)
+			}
 		}
 		
 		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
