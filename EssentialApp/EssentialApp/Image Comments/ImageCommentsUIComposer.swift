@@ -13,11 +13,8 @@ import UIKit
 
 public final class ImageCommentsUIComposer {
 	public static func imageCommentsComposeWith(commentsLoader: ImageCommentsLoader, url: URL, date: Date = Date()) -> ImageCommentsViewController {
-		let bundle = Bundle(for: ImageCommentsViewController.self)
-		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-		let commentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
 		let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader, url: url)
-		commentsController.delegate = presentationAdapter
+		let commentsController = makeController(delegate: presentationAdapter)
 		let presenter = ImageCommentsPresenter(
 			imageCommentsView: WeakRefVirtualProxy(commentsController),
 			loadingView: WeakRefVirtualProxy(commentsController),
@@ -25,9 +22,17 @@ public final class ImageCommentsUIComposer {
 			currentDate: date
 		)
 		presentationAdapter.presenter = presenter
-		commentsController.title = ImageCommentsPresenter.title
 		return commentsController
 	}
+}
+
+private func makeController(delegate: ImageCommentsViewControllerDelegate) -> ImageCommentsViewController {
+	let bundle = Bundle(for: ImageCommentsViewController.self)
+	let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+	let controller = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+	controller.title = ImageCommentsPresenter.title
+	controller.delegate = delegate
+	return controller
 }
 
 public final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
