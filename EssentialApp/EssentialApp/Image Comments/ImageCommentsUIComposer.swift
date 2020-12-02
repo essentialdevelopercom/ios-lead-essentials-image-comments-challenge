@@ -11,8 +11,8 @@ import EssentialFeediOS
 import Foundation
 import UIKit
 
-class ImageCommentsUIComposer {
-	static func imageCommentsComposeWith(commentsLoader: ImageCommentsLoader, url: URL, date: Date = Date()) -> ImageCommentsViewController {
+public final class ImageCommentsUIComposer {
+	public static func imageCommentsComposeWith(commentsLoader: ImageCommentsLoader, url: URL, date: Date = Date()) -> ImageCommentsViewController {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let commentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
@@ -29,17 +29,17 @@ class ImageCommentsUIComposer {
 	}
 }
 
-class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
+public final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 	var presenter: ImageCommentsPresenter?
 	let loader: ImageCommentsLoader
 	let url: URL
 
-	init(loader: ImageCommentsLoader, url: URL) {
+	public init(loader: ImageCommentsLoader, url: URL) {
 		self.loader = loader
 		self.url = url
 	}
 
-	func didRequestCommentsRefresh() {
+	public func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		_ = loader.load(from: url) { [weak self] result in
 			switch result {

@@ -9,7 +9,7 @@
 import EssentialFeed
 import EssentialFeediOS
 import XCTest
-@testable import EssentialApp
+import EssentialApp
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
