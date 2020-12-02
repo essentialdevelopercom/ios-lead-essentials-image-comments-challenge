@@ -7,10 +7,10 @@ import EssentialFeed
 import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
-
+	
 	func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #filePath, line: UInt = #line) {
-        sut.view.enforceLayoutCycle()
-        
+		sut.view.enforceLayoutCycle()
+		
 		guard sut.numberOfRenderedFeedImageViews() == feed.count else {
 			return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
 		}
@@ -18,8 +18,8 @@ extension FeedUIIntegrationTests {
 		feed.enumerated().forEach { index, image in
 			assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
 		}
-        
-        executeRunLoopToCleanUpReferences()
+		
+		executeRunLoopToCleanUpReferences()
 	}
 	
 	func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
@@ -36,9 +36,9 @@ extension FeedUIIntegrationTests {
 		
 		XCTAssertEqual(cell.descriptionText, image.description, "Expected description text to be \(String(describing: image.description)) for image view at index (\(index)", file: file, line: line)
 	}
-    
-    private func executeRunLoopToCleanUpReferences() {
-        RunLoop.current.run(until: Date())
-    }
+	
+	private func executeRunLoopToCleanUpReferences() {
+		RunLoop.current.run(until: Date())
+	}
 	
 }

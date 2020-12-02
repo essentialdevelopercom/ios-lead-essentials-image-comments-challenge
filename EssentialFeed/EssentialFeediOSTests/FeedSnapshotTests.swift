@@ -12,7 +12,7 @@ class FeedSnapshotTests: XCTestCase {
 		let sut = makeSUT()
 		
 		sut.display(emptyFeed())
-
+		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_FEED_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_FEED_dark")
 	}
@@ -21,31 +21,31 @@ class FeedSnapshotTests: XCTestCase {
 		let sut = makeSUT()
 		
 		sut.display(feedWithContent())
-
+		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_CONTENT_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_CONTENT_dark")
 	}
 	
 	func test_feedWithErrorMessage() {
 		let sut = makeSUT()
-
+		
 		sut.display(.error(message: "This is a\nmulti-line\nerror message"))
-
+		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_ERROR_MESSAGE_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_ERROR_MESSAGE_dark")
 	}
 	
 	func test_feedWithFailedImageLoading() {
 		let sut = makeSUT()
-
+		
 		sut.display(feedWithFailedImageLoading())
-
+		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
 	}
 	
 	// MARK: - Helpers
-
+	
 	private func makeSUT() -> FeedViewController {
 		let bundle = Bundle(for: FeedViewController.self)
 		let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
@@ -107,7 +107,7 @@ private extension FeedViewController {
 private class ImageStub: FeedImageCellControllerDelegate {
 	let viewModel: FeedImageViewModel<UIImage>
 	weak var controller: FeedImageCellController?
-
+	
 	init(description: String?, location: String?, image: UIImage?) {
 		viewModel = FeedImageViewModel(
 			description: description,

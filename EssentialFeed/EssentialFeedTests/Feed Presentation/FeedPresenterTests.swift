@@ -6,22 +6,22 @@ import XCTest
 import EssentialFeed
 
 class FeedPresenterTests: XCTestCase {
-
+	
 	func test_title_isLocalized() {
 		XCTAssertEqual(FeedPresenter.title, localized("FEED_VIEW_TITLE"))
 	}
-
+	
 	func test_init_doesNotSendMessagesToView() {
 		let (_, view) = makeSUT()
-
+		
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
 	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
 		let (sut, view) = makeSUT()
-
+		
 		sut.didStartLoadingFeed()
-
+		
 		XCTAssertEqual(view.messages, [
 			.display(errorMessage: .none),
 			.display(isLoading: true)
@@ -52,7 +52,7 @@ class FeedPresenterTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-
+	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedPresenter, view: ViewSpy) {
 		let view = ViewSpy()
 		let sut = FeedPresenter(feedView: view, loadingView: view, errorView: view)
@@ -60,7 +60,7 @@ class FeedPresenterTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
 	}
-
+	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "Feed"
 		let bundle = Bundle(for: FeedPresenter.self)
@@ -70,7 +70,7 @@ class FeedPresenterTests: XCTestCase {
 		}
 		return value
 	}
-
+	
 	private class ViewSpy: FeedView, FeedLoadingView, FeedErrorView {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
@@ -92,5 +92,5 @@ class FeedPresenterTests: XCTestCase {
 			messages.insert(.display(feed: viewModel.feed))
 		}
 	}
-
+	
 }

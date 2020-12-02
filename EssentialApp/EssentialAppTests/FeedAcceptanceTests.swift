@@ -24,7 +24,7 @@ class FeedAcceptanceTests: XCTestCase {
 		onlineFeed.simulateFeedImageViewVisible(at: 1)
 		
 		let offlineFeed = launch(httpClient: .offline, store: sharedStore)
-
+		
 		XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 2)
 		XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData())
 		XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 1), makeImageData())
@@ -40,7 +40,7 @@ class FeedAcceptanceTests: XCTestCase {
 		let store = InMemoryFeedStore.withExpiredFeedCache
 		
 		enterBackground(with: store)
-
+		
 		XCTAssertNil(store.feedCache, "Expected to delete expired cache")
 	}
 	
@@ -53,7 +53,7 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-
+	
 	private func launch(
 		httpClient: HTTPClientStub = .offline,
 		store: InMemoryFeedStore = .empty
@@ -70,7 +70,7 @@ class FeedAcceptanceTests: XCTestCase {
 		let sut = SceneDelegate(httpClient: HTTPClientStub.offline, store: store)
 		sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
 	}
-
+	
 	private func response(for url: URL) -> (Data, HTTPURLResponse) {
 		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
 		return (makeData(for: url), response)
@@ -96,5 +96,5 @@ class FeedAcceptanceTests: XCTestCase {
 			["id": UUID().uuidString, "image": "http://image.com"]
 		]])
 	}
-
+	
 }

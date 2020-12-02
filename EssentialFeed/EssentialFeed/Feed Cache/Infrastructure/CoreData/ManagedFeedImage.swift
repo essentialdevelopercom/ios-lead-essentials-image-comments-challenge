@@ -22,7 +22,7 @@ extension ManagedFeedImage {
 		request.fetchLimit = 1
 		return try context.fetch(request).first
 	}
-
+	
 	static func images(from localFeed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSOrderedSet {
 		return NSOrderedSet(array: localFeed.map { local in
 			let managed = ManagedFeedImage(context: context)

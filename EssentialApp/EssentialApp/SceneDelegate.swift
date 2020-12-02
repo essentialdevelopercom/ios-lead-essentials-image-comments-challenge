@@ -20,25 +20,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.defaultDirectoryURL()
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
-
-    private lazy var remoteFeedLoader: RemoteFeedLoader = {
-        RemoteFeedLoader(
-            url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
-            client: httpClient)
-    }()
-
+	
+	private lazy var remoteFeedLoader: RemoteFeedLoader = {
+		RemoteFeedLoader(
+			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
+			client: httpClient)
+	}()
+	
 	private lazy var localFeedLoader: LocalFeedLoader = {
 		LocalFeedLoader(store: store, currentDate: Date.init)
 	}()
-    
-    private lazy var remoteImageLoader: RemoteFeedImageDataLoader = {
-        RemoteFeedImageDataLoader(client: httpClient)
-    }()
-
-    private lazy var localImageLoader: LocalFeedImageDataLoader = {
-        LocalFeedImageDataLoader(store: store)
-    }()
-
+	
+	private lazy var remoteImageLoader: RemoteFeedImageDataLoader = {
+		RemoteFeedImageDataLoader(client: httpClient)
+	}()
+	
+	private lazy var localImageLoader: LocalFeedImageDataLoader = {
+		LocalFeedImageDataLoader(store: store)
+	}()
+	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
 		self.httpClient = httpClient
@@ -47,8 +47,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		guard let scene = (scene as? UIWindowScene) else { return }
-	
-        window = UIWindow(windowScene: scene)
+		
+		window = UIWindow(windowScene: scene)
 		configureWindow()
 	}
 	
@@ -57,28 +57,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback))
-        
-        window?.makeKeyAndVisible()
+		
+		window?.makeKeyAndVisible()
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
 		localFeedLoader.validateCache { _ in }
 	}
-    
-    private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
-        return remoteFeedLoader
-            .loadPublisher()
-            .caching(to: localFeedLoader)
-            .fallback(to: localFeedLoader.loadPublisher)
-    }
-    
-    private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
-        return localImageLoader
-            .loadImageDataPublisher(from: url)
-            .fallback(to: { [remoteImageLoader, localImageLoader] in
-                remoteImageLoader
-                    .loadImageDataPublisher(from: url)
-                    .caching(to: localImageLoader, using: url)
-            })
-    }
+	
+	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
+		return remoteFeedLoader
+			.loadPublisher()
+			.caching(to: localFeedLoader)
+			.fallback(to: localFeedLoader.loadPublisher)
+	}
+	
+	private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+		return localImageLoader
+			.loadImageDataPublisher(from: url)
+			.fallback(to: { [remoteImageLoader, localImageLoader] in
+				remoteImageLoader
+					.loadImageDataPublisher(from: url)
+					.caching(to: localImageLoader, using: url)
+			})
+	}
 }
