@@ -9,6 +9,8 @@ import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
+    
+    private let baseUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 	
 	private lazy var httpClient: HTTPClient = {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
@@ -23,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private lazy var remoteFeedLoader: RemoteFeedLoader = {
         RemoteFeedLoader(
-            url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
+            url: EssentialFeedEndpoint.feed.url(baseUrl),
             client: httpClient)
     }()
 
@@ -51,19 +53,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
 		configureWindow()
 	}
+    
+    private lazy var navigationController: UINavigationController = {
+        UINavigationController(
+            rootViewController:
+                FeedUIComposer.feedComposedWith(
+                    feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+                    imageLoader: makeLocalImageLoaderWithRemoteFallback,
+                    didSelectImage: didSelectImage(image:)
+                )
+        )
+    }()
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
-        
+		window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
 		localFeedLoader.validateCache { _ in }
 	}
+    
+    private func didSelectImage(image: FeedImage) {
+        let url = EssentialFeedEndpoint.comments(for: image.id).url(baseUrl)
+        let loader = RemoteImageCommentsLoader(client: httpClient)
+        let controller = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url)
+        navigationController.pushViewController(controller, animated: true)
+    }
     
     private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
         return remoteFeedLoader
