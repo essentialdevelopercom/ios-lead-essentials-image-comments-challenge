@@ -20,8 +20,8 @@ struct RemoteImageCommentItem: Decodable {
 }
 
 class ImageCommentsItemsMapper {
-	private static var OK_HTTP_200: Int { return 200 }
-	
+    static let statusOkCodes = 200 ... 299
+
 	struct Root: Decodable {
 		let items: [RemoteImageCommentItem]
 	}
@@ -30,10 +30,9 @@ class ImageCommentsItemsMapper {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		
-		guard response.statusCode == OK_HTTP_200,
-			  let root = try? decoder.decode(Root.self, from: data) else {
-			throw RemoteImageCommentsLoader.Error.invalidData
-		}
+        guard statusOkCodes.contains(response.statusCode), let root = try? decoder.decode(Root.self, from: data) else {
+            throw RemoteImageCommentsLoader.Error.invalidData
+        }
 		return root.items
 	}
 }

@@ -41,7 +41,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_load_deliversErrorOnNon200HTTPResponse() {
+	func test_load_deliversErrorOnNon2XXHTTPResponse() {
 		let (sut, client) = makeSUT()
 		
 		let samples = [199, 201, 300, 400, 500]
@@ -54,7 +54,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+	func test_load_deliversErrorOn2XXHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
 		
 		expect(sut, toCompleteWith: failure(.invalidData), when: {
@@ -63,7 +63,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+	func test_load_deliversNoItemsOn2XXHTTPResponseWithEmptyJSONList() {
 		let (sut, client) = makeSUT()
 
 		expect(sut, toCompleteWith: .success([]), when: {
@@ -72,7 +72,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+	func test_load_deliversItemsOn2XXHTTPResponseWithJSONItems() {
 		let (sut, client) = makeSUT()
 		
 		let item1 = makeItem(
