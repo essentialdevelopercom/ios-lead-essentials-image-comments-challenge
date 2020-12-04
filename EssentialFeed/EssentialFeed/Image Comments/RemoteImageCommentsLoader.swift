@@ -9,7 +9,7 @@
 import Foundation
 
 public class RemoteImageCommentsLoader: ImageCommentsLoader {
-	let client: HTTPClient
+	private let client: HTTPClient
 
 	public typealias Result = ImageCommentsLoader.Result
 
