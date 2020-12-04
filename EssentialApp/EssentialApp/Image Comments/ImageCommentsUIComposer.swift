@@ -39,6 +39,7 @@ public final class ImageCommentsPresentationAdapter: ImageCommentsViewController
 	var presenter: ImageCommentsPresenter?
 	let loader: ImageCommentsLoader
 	let url: URL
+    private var task: ImageCommentsLoaderTask?
 
 	public init(loader: ImageCommentsLoader, url: URL) {
 		self.loader = loader
@@ -47,7 +48,7 @@ public final class ImageCommentsPresentationAdapter: ImageCommentsViewController
 
 	public func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
-		_ = loader.load(from: url) { [weak self] result in
+        task = loader.load(from: url) { [weak self] result in
 			switch result {
 			case let .success(comments):
 				self?.presenter?.didFinishLoading(with: comments)
@@ -56,6 +57,10 @@ public final class ImageCommentsPresentationAdapter: ImageCommentsViewController
 			}
 		}
 	}
+    
+    public func didCancelCommentsRequest() {
+        task?.cancel()
+    }
 }
 
 public final class MainQueueDispatchDecorator: ImageCommentsLoader {
