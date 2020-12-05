@@ -10,46 +10,33 @@ import UIKit
 import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
-    private var loader: ImageCommentsLoader?
     private var tableModel = [ImageComment]()
-    private var task: ImageCommentsLoaderTask?
+    
+    private var refreshController: ImageCommentsRefreshController?
     
     public convenience init(loader: ImageCommentsLoader) {
         self.init()
-        self.loader = loader
+        self.refreshController = ImageCommentsRefreshController(loader: loader)
     }
     
     public override func viewDidLoad() {
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        super.viewDidLoad()
+        
         tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageCommentCell")
-        load()
+        refreshControl = refreshController?.view
+        refreshController?.onRefresh = { [weak self] imageComments in
+            self?.tableModel = imageComments
+            self?.tableView.reloadData()
+        }
+        refreshController?.refresh()
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        cancelLoad()
+        
+        refreshController?.cancelLoad()
     }
-    
-    @objc func load() {
-        refreshControl?.beginRefreshing()
-        task = loader?.loadComments() { [weak self] result in
-            switch result {
-            case let .success(comments):
-                self?.tableModel = comments
-                self?.tableView.reloadData()
-            case .failure:
-                break
-            }
-            self?.refreshControl?.endRefreshing()
-        }
-    }
-    
-    func cancelLoad() {
-        task?.cancel()
-        task = nil
-    }
-    
+
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableModel.count
     }
