@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeed
 import EssentialFeediOS
 
-final class ImageCommentsViewControllerTests: XCTestCase {
+final class ImageCommentsUIIntegrationTests: XCTestCase {
 
     func test_init_doesNotLoadComments() {
         let (_, loader) = makeSUT()
@@ -126,36 +126,6 @@ final class ImageCommentsViewControllerTests: XCTestCase {
         XCTAssertEqual(cell.date.text, comment.createdAt.relativeDate(), "Expected relative date text to be \(String(describing: comment.createdAt.relativeDate())) for comment at index (\(index))", file: file, line: line)
         
         XCTAssertEqual(cell.message.text, comment.message, "Expected message text to be \(String(describing: comment.message)) for comment at index (\(index))", file: file, line: line)
-    }
- 
-    class LoaderSpy: ImageCommentsLoader {
-        private var completions = [(ImageCommentsLoader.Result) -> Void]()
-        
-        var loadCallsCount: Int {
-            completions.count
-        }
-
-        private struct TaskSpy: ImageCommentsLoaderTask {
-            let cancelCallBack: () -> Void
-
-            func cancel() {
-                cancelCallBack()
-            }
-        }
-        
-        func loadComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-            completions.append(completion)
-            return TaskSpy { self.completions = [] }
-        }
-        
-        func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int) {
-            completions[index](.success(comments))
-        }
-        
-        func completeCommentsLoadingWithError(at index: Int) {
-            let error = NSError(domain: "an error", code: 0)
-            completions[index](.failure(error))
-        }
     }
 }
 
