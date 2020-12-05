@@ -10,8 +10,7 @@ import UIKit
 import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
-    private var tableModel = [ImageComment]()
-    
+    private var tableModel = [ImageCommentCellController]()
     private var refreshController: ImageCommentsRefreshController?
     
     public convenience init(loader: ImageCommentsLoader) {
@@ -25,7 +24,7 @@ public final class ImageCommentsViewController: UITableViewController {
         tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageCommentCell")
         refreshControl = refreshController?.view
         refreshController?.onRefresh = { [weak self] imageComments in
-            self?.tableModel = imageComments
+            self?.tableModel = imageComments.map { ImageCommentCellController(model: $0) }
             self?.tableView.reloadData()
         }
         refreshController?.refresh()
@@ -42,11 +41,6 @@ public final class ImageCommentsViewController: UITableViewController {
     }
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellModel = tableModel[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCommentCell") as! ImageCommentCell
-        cell.author.text = cellModel.username
-        cell.date.text = cellModel.createdAt.relativeDate(to: Date())
-        cell.message.text = cellModel.message
-        return cell
+        return tableModel[indexPath.row].view(in: tableView)
     }
 }
