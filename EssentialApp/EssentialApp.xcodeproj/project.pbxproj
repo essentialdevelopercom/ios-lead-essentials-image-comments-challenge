@@ -42,6 +42,7 @@
 		1158584D257B8A87008AA2A6 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1158584C257B8A87008AA2A6 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */; };
 		11585858257B8CCC008AA2A6 /* ImageCommentsViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11585857257B8CCC008AA2A6 /* ImageCommentsViewController+TestHelpers.swift */; };
 		1158585B257B8D36008AA2A6 /* ImageCommentsUIIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1158585A257B8D36008AA2A6 /* ImageCommentsUIIntegrationTests+Assertions.swift */; };
+		11585884257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11585883257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		1158584C257B8A87008AA2A6 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+LoaderSpy.swift"; sourceTree = "<group>"; };
 		11585857257B8CCC008AA2A6 /* ImageCommentsViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsViewController+TestHelpers.swift"; sourceTree = "<group>"; };
 		1158585A257B8D36008AA2A6 /* ImageCommentsUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
+		11585883257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIComposer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 				0895DA8F234B3B970031BB2D /* Assets.xcassets */,
 				0895DA91234B3B970031BB2D /* LaunchScreen.storyboard */,
 				0895DA94234B3B970031BB2D /* Info.plist */,
+				11585883257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -337,6 +340,7 @@
 			files = (
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
+				11585884257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* FeedLoaderPresentationAdapter.swift in Sources */,
 				08073B47238D2DFA00A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,

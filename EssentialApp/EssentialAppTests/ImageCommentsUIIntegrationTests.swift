@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
@@ -98,7 +99,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, client: LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = ImageCommentsViewController(loader: loader)
+        let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, loader)

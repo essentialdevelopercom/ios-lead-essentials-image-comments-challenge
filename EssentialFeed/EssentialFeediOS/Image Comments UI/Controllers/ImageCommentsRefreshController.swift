@@ -9,7 +9,7 @@
 import UIKit
 import EssentialFeed
 
-final class ImageCommentsRefreshController: NSObject {
+public final class ImageCommentsRefreshController: NSObject {
     private var task: ImageCommentsLoaderTask?
     
     private(set) lazy var view: UIRefreshControl = {
@@ -20,11 +20,11 @@ final class ImageCommentsRefreshController: NSObject {
     
     private let loader: ImageCommentsLoader
     
-    init(loader: ImageCommentsLoader) {
+    public init(loader: ImageCommentsLoader) {
         self.loader = loader
     }
     
-    var onRefresh: (([ImageComment]) -> Void)?
+    public var onRefresh: (([ImageComment]) -> Void)?
     
     @objc func refresh() {
         view.beginRefreshing()
