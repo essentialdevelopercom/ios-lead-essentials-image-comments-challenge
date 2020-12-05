@@ -128,27 +128,3 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(cell.message.text, comment.message, "Expected message text to be \(String(describing: comment.message)) for comment at index (\(index))", file: file, line: line)
     }
 }
-
-private extension ImageCommentsViewController {
-    var isShowingLoadingIndicator: Bool {
-        return refreshControl?.isRefreshing == true
-    }
-    
-    func simulateUserInitiatedCommentsReload() {
-        refreshControl?.simulatePullToRefresh()
-    }
-    
-    func numberOfRenderedImageComments() -> Int {
-        return tableView.numberOfRows(inSection: 0)
-    }
-    
-    func comment(at row: Int) -> UITableViewCell? {
-        guard numberOfRenderedImageComments() > row else {
-            return nil
-        }
-        let datasource = tableView.dataSource
-        let index = IndexPath(row: row, section: 0)
-        return datasource?.tableView(tableView, cellForRowAt: index)
-    }
-}
-
