@@ -140,7 +140,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests after loading")
 
 		sut.simulateUserInitiatedCommentsReload()
-        sut.simulateBackButtonPress()
+		sut.viewWillDisappear(false)
 		XCTAssertEqual(loader.cancelledRequests, [url], "Expected to has cancelled requests")
 	}
 
@@ -282,10 +282,6 @@ extension ImageCommentsViewController {
 	func simulateUserInitiatedCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
-    
-    func simulateBackButtonPress() {
-        popViewController()
-    }
 	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true

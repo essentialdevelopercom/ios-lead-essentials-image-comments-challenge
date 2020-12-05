@@ -27,23 +27,12 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 
 	override public func viewDidLoad() {
 		super.viewDidLoad()
-        navigationItem.backBarButtonItem = UIBarButtonItem(
-            title: "",
-            style: .plain,
-            target: self,
-            action: #selector(popViewController)
-        )
-        
 		refresh()
 	}
 
-    @objc public func popViewController() {
-        delegate?.didCancelCommentsRequest()
-        navigationController?.popViewController(animated: true)
-    }
-
 	override public func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+		delegate?.didCancelCommentsRequest()
 	}
 
 	@IBAction func refresh() {
