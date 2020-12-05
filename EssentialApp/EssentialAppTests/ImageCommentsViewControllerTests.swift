@@ -10,65 +10,6 @@ import XCTest
 import EssentialFeed
 import EssentialFeediOS
 
-final class ImageCommentsViewController: UITableViewController {
-    private var loader: ImageCommentsLoader?
-    private var tableModel = [ImageComment]()
-    private var task: ImageCommentsLoaderTask?
-    
-    convenience init(loader: ImageCommentsLoader) {
-        self.init()
-        self.loader = loader
-    }
-    
-    override func viewDidLoad() {
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageCommentCell")
-        load()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        cancelLoad()
-    }
-    
-    @objc func load() {
-        refreshControl?.beginRefreshing()
-        task = loader?.loadComments() { [weak self] result in
-            switch result {
-            case let .success(comments):
-                self?.tableModel = comments
-                self?.tableView.reloadData()
-            case .failure:
-                break
-            }
-            self?.refreshControl?.endRefreshing()
-        }
-    }
-    
-    func cancelLoad() {
-        task?.cancel()
-        task = nil
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableModel.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellModel = tableModel[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCommentCell") as! ImageCommentCell
-        cell.author.text = cellModel.username
-        cell.date.text = cellModel.createdAt.relativeDate(to: Date())
-        cell.message.text = cellModel.message
-        return cell
-    }
-}
-
 final class ImageCommentsViewControllerTests: XCTestCase {
 
     func test_init_doesNotLoadComments() {
@@ -241,11 +182,3 @@ private extension ImageCommentsViewController {
     }
 }
 
-private extension Date {
-    
-    func relativeDate(to date: Date = Date()) -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        return formatter.localizedString(for: self, relativeTo: date)
-    }
-}
