@@ -50,10 +50,6 @@ public final class ImageCommentsViewController: UITableViewController {
         task = nil
     }
     
-    public override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableModel.count
     }
