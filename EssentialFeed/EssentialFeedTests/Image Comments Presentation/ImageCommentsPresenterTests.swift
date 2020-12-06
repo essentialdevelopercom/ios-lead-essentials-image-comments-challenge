@@ -8,10 +8,19 @@
 
 import XCTest
 
+protocol ImageCommentsView {
+    func display(errorMesagge: String?)
+}
+
 final class ImageCommentsPresenter {
+    private let view: ImageCommentsView
     
-    init(view: Any) {
-        
+    init(view: ImageCommentsView) {
+        self.view = view
+    }
+    
+    func didStartLoadingComments() {
+        view.display(errorMesagge: nil)
     }
 }
 
@@ -21,6 +30,14 @@ class ImageCommentsPresenterTests: XCTestCase {
         let (_, view) = makeSUT()
        
         XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
+    }
+    
+    func test_didStartLoadingComments_displaysNoErrorMessage() {
+        let (sut, view) = makeSUT()
+        
+        sut.didStartLoadingComments()
+
+        XCTAssertEqual(view.messages, [.display(errorMessage: .none)])
     }
     
     // MARK: - Helpers
@@ -34,7 +51,15 @@ class ImageCommentsPresenterTests: XCTestCase {
     }
 
     
-    private class ViewSpy {
-        private(set) var messages = [Any]()
+    private class ViewSpy: ImageCommentsView {
+        enum Message: Equatable {
+            case display(errorMessage: String?)
+        }
+        
+        private(set) var messages = [Message]()
+        
+        func display(errorMesagge: String?) {
+            messages.append(.display(errorMessage: errorMesagge))
+        }
     }
 }
