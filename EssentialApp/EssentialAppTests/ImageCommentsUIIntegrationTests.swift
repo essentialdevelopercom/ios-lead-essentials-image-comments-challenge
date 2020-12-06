@@ -129,9 +129,11 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
-	func test_cancelsCommentsLoading_whenViewIsNotVisible() {
+	func test_cancelsCommentsLoading_onlyWhenNavigatingBack() {
 		let url = URL(string: "https://any-image-url.com")!
 		let (sut, loader) = makeSUT(url: url)
+
+        sut.simulateNavigationStack()
 
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests")
@@ -140,8 +142,15 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests after loading")
 
 		sut.simulateUserInitiatedCommentsReload()
-        sut.delegate = nil
-		XCTAssertEqual(loader.cancelledRequests, [url], "Expected to has cancelled requests")
+
+        sut.simulateNavigationPopController()
+        
+        let exp = expectation(description: "Wait for Navigation Back")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            XCTAssertEqual(loader.cancelledRequests, [url], "Expected to have cancelled requests")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 2)
 	}
 
 	// MARK: - Helpers
@@ -282,6 +291,24 @@ extension ImageCommentsViewController {
 	func simulateUserInitiatedCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
+    
+    func simulateNavigationStack() {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        let navigationController = UINavigationController()
+        window.rootViewController = navigationController
+        let viewController = self
+
+        navigationController.viewControllers = [
+            UIViewController(),
+            viewController
+        ]
+
+        window.makeKeyAndVisible()
+    }
+    
+    func simulateNavigationPopController() {
+        navigationController?.popViewController(animated: false)
+    }
 	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true

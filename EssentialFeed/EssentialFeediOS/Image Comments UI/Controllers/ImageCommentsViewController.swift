@@ -31,9 +31,12 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 
 	override public func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
+        super.viewWillDisappear(animated)
+        if isMovingFromParent {
+            delegate?.didCancelCommentsRequest()
+        }
 	}
-
+    
 	@IBAction func refresh() {
 		delegate?.didRequestCommentsRefresh()
 	}
