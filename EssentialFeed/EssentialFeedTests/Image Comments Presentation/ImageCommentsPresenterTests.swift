@@ -39,7 +39,8 @@ class ImageCommentsPresenterTests: XCTestCase {
         
         sut.didFinishLoadingComments(with: anyNSError())
         
-        XCTAssertEqual(view.messages, [.display(errorMessage: ), .display(isLoading: false)])
+        XCTAssertEqual(view.messages, [.display(errorMessage: localized("COMMENTS_VIEW_CONNECTION_ERROR")),
+                                       .display(isLoading: false)])
     }
 
 
@@ -55,6 +56,17 @@ class ImageCommentsPresenterTests: XCTestCase {
     
     func comment() -> ImageComment {
         return ImageComment(id: UUID(), message: "any", createdAt: Date(), username: "any")
+    }
+    
+    private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+        let table = "ImageComments"
+        let bundle = Bundle(for: ImageCommentsPresenter.self)
+        let value = bundle.localizedString(forKey: key, value: nil, table: table)
+        
+        if value == key {
+            XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+        }
+        return value
     }
 
     private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {

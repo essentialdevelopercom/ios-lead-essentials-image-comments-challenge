@@ -12,4 +12,8 @@ public struct ImageCommentsErrorViewModel {
     static var noError: ImageCommentsErrorViewModel {
         return ImageCommentsErrorViewModel(message: nil)
     }
+    
+    static func error(message: String) -> ImageCommentsErrorViewModel {
+        return ImageCommentsErrorViewModel(message: message)
+    }
 }
