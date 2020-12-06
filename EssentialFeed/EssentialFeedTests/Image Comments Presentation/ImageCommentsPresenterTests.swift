@@ -8,21 +8,38 @@
 
 import XCTest
 
-protocol ImageCommentsView {
-    func display(errorMesagge: String?)
-    func display(isLoading: Bool)
+struct ImageCommentsLoadingViewModel {
+    let isLoading: Bool
+}
+
+protocol ImageCommentsLoadingView {
+    func display(_ viewModel: ImageCommentsLoadingViewModel)
+}
+
+struct ImageCommentsErrorViewModel {
+    let message: String?
+    
+    static var noError: ImageCommentsErrorViewModel {
+        return ImageCommentsErrorViewModel(message: nil)
+    }
+}
+
+protocol ImageCommentsErrorView {
+    func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
 final class ImageCommentsPresenter {
-    private let view: ImageCommentsView
+    private let loadingView: ImageCommentsLoadingView
+    private let errorView: ImageCommentsErrorView
     
-    init(view: ImageCommentsView) {
-        self.view = view
+    init(loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+        self.loadingView = loadingView
+        self.errorView = errorView
     }
     
     func didStartLoadingComments() {
-        view.display(errorMesagge: nil)
-        view.display(isLoading: true)
+        errorView.display(.noError)
+        loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
     }
 }
 
@@ -46,14 +63,14 @@ class ImageCommentsPresenterTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
         let view = ViewSpy()
-        let sut = ImageCommentsPresenter(view: view)
+        let sut = ImageCommentsPresenter(loadingView: view, errorView: view)
         trackForMemoryLeaks(view, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, view)
     }
 
     
-    private class ViewSpy: ImageCommentsView {
+    private class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView {
         enum Message: Equatable {
             case display(errorMessage: String?)
             case display(isLoading: Bool)
@@ -61,12 +78,12 @@ class ImageCommentsPresenterTests: XCTestCase {
         
         private(set) var messages = [Message]()
         
-        func display(errorMesagge: String?) {
-            messages.append(.display(errorMessage: errorMesagge))
+        func display(_ viewModel: ImageCommentsLoadingViewModel) {
+            messages.append(.display(isLoading: viewModel.isLoading))
         }
         
-        func display(isLoading: Bool) {
-            messages.append(.display(isLoading: isLoading))
+        func display(_ viewModel: ImageCommentsErrorViewModel) {
+            messages.append(.display(errorMessage: viewModel.message))
         }
     }
 }
