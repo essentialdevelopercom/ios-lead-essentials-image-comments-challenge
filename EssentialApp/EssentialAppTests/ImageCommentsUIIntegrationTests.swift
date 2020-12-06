@@ -132,16 +132,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_cancelsCommentsLoading_whenViewIsDismissed() {
 		let url = URL(string: "https://any-image-url.com")!
         let loader = LoaderSpy()
-        var sut: ImageCommentsViewController? = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url, date: Date.init)
+        var sut: ImageCommentsViewController?
 
-		sut?.loadViewIfNeeded()
+        autoreleasepool {
+            sut = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url, date: Date.init)
+            
+            sut?.loadViewIfNeeded()
+        }
+        
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests")
 
 		loader.completeCommentsLoading()
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests after loading")
 
-        sut?.simulateUserInitiatedCommentsReload()
-        sut?.delegate = nil
         sut = nil
 
         XCTAssertEqual(loader.cancelledRequests, [url], "Expected to have cancelled requests")
