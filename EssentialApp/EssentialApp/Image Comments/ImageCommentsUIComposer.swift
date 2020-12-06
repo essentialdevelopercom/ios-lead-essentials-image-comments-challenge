@@ -57,13 +57,9 @@ public final class ImageCommentsPresentationAdapter: ImageCommentsViewController
 			}
 		}
 	}
-	
-	public func didCancelCommentsRequest() {
-		task?.cancel()
-	}
-    
+	    
     deinit {
-        didCancelCommentsRequest()
+        task?.cancel()
     }
 }
 

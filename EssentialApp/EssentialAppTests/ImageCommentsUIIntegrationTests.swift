@@ -129,28 +129,22 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
-	func test_cancelsCommentsLoading_onlyWhenNavigatingBack() {
+	func test_cancelsCommentsLoading_whenViewIsDismissed() {
 		let url = URL(string: "https://any-image-url.com")!
-		let (sut, loader) = makeSUT(url: url)
+        let loader = LoaderSpy()
+        var sut: ImageCommentsViewController? = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url, date: Date.init)
 
-        sut.simulateNavigationStack()
-
-		sut.loadViewIfNeeded()
+		sut?.loadViewIfNeeded()
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests")
 
 		loader.completeCommentsLoading()
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests after loading")
 
-		sut.simulateUserInitiatedCommentsReload()
+        sut?.simulateUserInitiatedCommentsReload()
+        sut?.delegate = nil
+        sut = nil
 
-        sut.simulateNavigationPopController()
-        
-        let exp = expectation(description: "Wait for Navigation Back")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            XCTAssertEqual(loader.cancelledRequests, [url], "Expected to have cancelled requests")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 2)
+        XCTAssertEqual(loader.cancelledRequests, [url], "Expected to have cancelled requests")
 	}
 
 	// MARK: - Helpers
@@ -291,24 +285,6 @@ extension ImageCommentsViewController {
 	func simulateUserInitiatedCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
-    
-    func simulateNavigationStack() {
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        let navigationController = UINavigationController()
-        window.rootViewController = navigationController
-        let viewController = self
-
-        navigationController.viewControllers = [
-            UIViewController(),
-            viewController
-        ]
-
-        window.makeKeyAndVisible()
-    }
-    
-    func simulateNavigationPopController() {
-        navigationController?.popViewController(animated: false)
-    }
 	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true

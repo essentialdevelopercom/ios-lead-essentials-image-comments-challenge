@@ -11,7 +11,6 @@ import EssentialFeed
 
 public protocol ImageCommentsViewControllerDelegate {
 	func didRequestCommentsRefresh()
-	func didCancelCommentsRequest()
 }
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
@@ -32,9 +31,6 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 
 	override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if isMovingFromParent {
-            delegate?.didCancelCommentsRequest()
-        }
 	}
     
 	@IBAction func refresh() {
