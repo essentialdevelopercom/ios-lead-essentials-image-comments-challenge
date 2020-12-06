@@ -61,6 +61,10 @@ public final class ImageCommentsPresentationAdapter: ImageCommentsViewController
 	public func didCancelCommentsRequest() {
 		task?.cancel()
 	}
+    
+    deinit {
+        didCancelCommentsRequest()
+    }
 }
 
 public final class MainQueueDispatchDecorator: ImageCommentsLoader {

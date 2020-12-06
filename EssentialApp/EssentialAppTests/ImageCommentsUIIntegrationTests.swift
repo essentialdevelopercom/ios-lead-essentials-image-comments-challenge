@@ -140,7 +140,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests after loading")
 
 		sut.simulateUserInitiatedCommentsReload()
-		sut.viewWillDisappear(false)
+        sut.delegate = nil
 		XCTAssertEqual(loader.cancelledRequests, [url], "Expected to has cancelled requests")
 	}
 
