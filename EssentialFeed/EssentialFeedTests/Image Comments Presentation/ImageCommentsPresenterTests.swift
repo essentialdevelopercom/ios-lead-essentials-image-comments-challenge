@@ -10,6 +10,7 @@ import XCTest
 
 protocol ImageCommentsView {
     func display(errorMesagge: String?)
+    func display(isLoading: Bool)
 }
 
 final class ImageCommentsPresenter {
@@ -21,6 +22,7 @@ final class ImageCommentsPresenter {
     
     func didStartLoadingComments() {
         view.display(errorMesagge: nil)
+        view.display(isLoading: true)
     }
 }
 
@@ -32,12 +34,12 @@ class ImageCommentsPresenterTests: XCTestCase {
         XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
     }
     
-    func test_didStartLoadingComments_displaysNoErrorMessage() {
+    func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
         let (sut, view) = makeSUT()
         
         sut.didStartLoadingComments()
 
-        XCTAssertEqual(view.messages, [.display(errorMessage: .none)])
+        XCTAssertEqual(view.messages, [.display(errorMessage: .none), .display(isLoading: true)])
     }
     
     // MARK: - Helpers
@@ -54,12 +56,17 @@ class ImageCommentsPresenterTests: XCTestCase {
     private class ViewSpy: ImageCommentsView {
         enum Message: Equatable {
             case display(errorMessage: String?)
+            case display(isLoading: Bool)
         }
         
         private(set) var messages = [Message]()
         
         func display(errorMesagge: String?) {
             messages.append(.display(errorMessage: errorMesagge))
+        }
+        
+        func display(isLoading: Bool) {
+            messages.append(.display(isLoading: isLoading))
         }
     }
 }
