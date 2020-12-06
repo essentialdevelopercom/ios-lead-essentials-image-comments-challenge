@@ -25,6 +25,13 @@ public final class ImageCommentsPresenter {
     private let loadingView: ImageCommentsLoadingView
     private let errorView: ImageCommentsErrorView
     
+    public static var title: String {
+        NSLocalizedString("COMMENTS_VIEW_TITLE",
+                          tableName: "ImageComments",
+                          bundle: Bundle(for: ImageCommentsPresenter.self),
+                          comment: "Title for the comments view")
+    }
+    
     private var commentsLoadError: String {
         NSLocalizedString("COMMENTS_VIEW_CONNECTION_ERROR",
                           tableName: "ImageComments",

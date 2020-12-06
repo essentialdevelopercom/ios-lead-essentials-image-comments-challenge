@@ -11,6 +11,10 @@ import EssentialFeed
 
 class ImageCommentsPresenterTests: XCTestCase {
     
+    func test_title_isLocalized() {
+        XCTAssertEqual(ImageCommentsPresenter.title, localized("COMMENTS_VIEW_TITLE"))
+    }
+    
     func test_init_doesNotSendMessagesToView() {
         let (_, view) = makeSUT()
        
