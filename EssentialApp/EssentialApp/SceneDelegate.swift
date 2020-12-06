@@ -9,7 +9,8 @@ import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
-	
+	private let baseUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+
 	private lazy var httpClient: HTTPClient = {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
 	}()
@@ -20,13 +21,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.defaultDirectoryURL()
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
-
-    private lazy var remoteFeedLoader: RemoteFeedLoader = {
-        RemoteFeedLoader(
-            url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
-            client: httpClient)
-    }()
-
+	
+	private lazy var remoteFeedLoader: RemoteFeedLoader = {
+		RemoteFeedLoader(
+			url: EssentialFeedEndpoint.feed.url(baseUrl),
+			client: httpClient)
+	}()
+	
 	private lazy var localFeedLoader: LocalFeedLoader = {
 		LocalFeedLoader(store: store, currentDate: Date.init)
 	}()
@@ -52,15 +53,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		configureWindow()
 	}
 	
+	private lazy var navigationController: UINavigationController = {
+		UINavigationController(
+			rootViewController:
+				FeedUIComposer.feedComposedWith(
+					feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+					imageLoader: makeLocalImageLoaderWithRemoteFallback,
+					didSelectImage: didSelectImage(image:)
+				)
+		)
+	}()
+
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
-        
-        window?.makeKeyAndVisible()
+		window?.rootViewController = navigationController
+		window?.makeKeyAndVisible()
 	}
 	
+	private func didSelectImage(image: FeedImage) {
+		let url = EssentialFeedEndpoint.comments(for: image.id).url(baseUrl)
+		let loader = RemoteImageCommentsLoader(client: httpClient)
+		let controller = ImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url)
+		navigationController.pushViewController(controller, animated: true)
+	}
+
 	func sceneWillResignActive(_ scene: UIScene) {
 		localFeedLoader.validateCache { _ in }
 	}
