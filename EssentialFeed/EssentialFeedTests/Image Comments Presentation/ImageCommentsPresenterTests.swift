@@ -9,56 +9,6 @@
 import XCTest
 import EssentialFeed
 
-struct ImageCommentsViewModel {
-    let comments: [ImageComment]
-}
-
-protocol ImageCommentsView {
-    func display(_ viewModel: ImageCommentsViewModel)
-}
-
-struct ImageCommentsLoadingViewModel {
-    let isLoading: Bool
-}
-
-protocol ImageCommentsLoadingView {
-    func display(_ viewModel: ImageCommentsLoadingViewModel)
-}
-
-struct ImageCommentsErrorViewModel {
-    let message: String?
-    
-    static var noError: ImageCommentsErrorViewModel {
-        return ImageCommentsErrorViewModel(message: nil)
-    }
-}
-
-protocol ImageCommentsErrorView {
-    func display(_ viewModel: ImageCommentsErrorViewModel)
-}
-
-final class ImageCommentsPresenter {
-    private let imageCommentsView: ImageCommentsView
-    private let loadingView: ImageCommentsLoadingView
-    private let errorView: ImageCommentsErrorView
-    
-    init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
-        self.imageCommentsView = imageCommentsView
-        self.loadingView = loadingView
-        self.errorView = errorView
-    }
-    
-    func didStartLoadingComments() {
-        errorView.display(.noError)
-        loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
-    }
-    
-    func didFinishLoadingComments(with comments: [ImageComment]) {
-        imageCommentsView.display(ImageCommentsViewModel(comments: comments))
-        loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-    }
-}
-
 class ImageCommentsPresenterTests: XCTestCase {
     
     func test_init_doesNotSendMessagesToView() {
