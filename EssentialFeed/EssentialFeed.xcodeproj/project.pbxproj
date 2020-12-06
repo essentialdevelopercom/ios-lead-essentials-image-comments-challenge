@@ -91,6 +91,7 @@
 		11574BBF257CF42F00E902DF /* ImageCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11574BBE257CF42F00E902DF /* ImageCommentsViewModel.swift */; };
 		11574BC5257CF44B00E902DF /* ImageCommentsLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11574BC4257CF44B00E902DF /* ImageCommentsLoadingViewModel.swift */; };
 		11574BCB257CF46B00E902DF /* ImageCommentsErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11574BCA257CF46B00E902DF /* ImageCommentsErrorViewModel.swift */; };
+		11574BD6257CF54100E902DF /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11574BD8257CF54100E902DF /* ImageComments.strings */; };
 		11585870257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1158586F257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift */; };
 		1158587A257BA6E7008AA2A6 /* ImageCommentCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11585879257BA6E7008AA2A6 /* ImageCommentCellController.swift */; };
 		115AC3812573A8B700977C17 /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AC3802573A8B700977C17 /* ImageCommentCell.swift */; };
@@ -210,6 +211,9 @@
 		11574BBE257CF42F00E902DF /* ImageCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewModel.swift; sourceTree = "<group>"; };
 		11574BC4257CF44B00E902DF /* ImageCommentsLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLoadingViewModel.swift; sourceTree = "<group>"; };
 		11574BCA257CF46B00E902DF /* ImageCommentsErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsErrorViewModel.swift; sourceTree = "<group>"; };
+		11574BD7257CF54100E902DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
+		11574BDD257CF54D00E902DF /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
+		11574BDE257CF54E00E902DF /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
 		1158586F257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsRefreshController.swift; sourceTree = "<group>"; };
 		11585879257BA6E7008AA2A6 /* ImageCommentCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCellController.swift; sourceTree = "<group>"; };
 		115AC3802573A8B700977C17 /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
@@ -596,6 +600,7 @@
 				11574BBE257CF42F00E902DF /* ImageCommentsViewModel.swift */,
 				11574BC4257CF44B00E902DF /* ImageCommentsLoadingViewModel.swift */,
 				11574BCA257CF46B00E902DF /* ImageCommentsErrorViewModel.swift */,
+				11574BD8257CF54100E902DF /* ImageComments.strings */,
 			);
 			path = "Image Comments Presentation";
 			sourceTree = "<group>";
@@ -793,6 +798,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11574BD6257CF54100E902DF /* ImageComments.strings in Resources */,
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -961,6 +967,16 @@
 				087148B3232BE90D00D6BE1A /* el */,
 			);
 			name = Feed.strings;
+			sourceTree = "<group>";
+		};
+		11574BD8257CF54100E902DF /* ImageComments.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				11574BD7257CF54100E902DF /* en */,
+				11574BDD257CF54D00E902DF /* el */,
+				11574BDE257CF54E00E902DF /* pt-BR */,
+			);
+			name = ImageComments.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

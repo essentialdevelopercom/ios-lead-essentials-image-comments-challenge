@@ -33,6 +33,15 @@ class ImageCommentsPresenterTests: XCTestCase {
         
         XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
     }
+    
+    func test_didFinishLoadingCommentsWithError_displaysLocalizedErrorMessageAndStopLoading() {
+        let (sut, view) = makeSUT()
+        
+        sut.didFinishLoadingComments(with: anyNSError())
+        
+        XCTAssertEqual(view.messages, [.display(errorMessage: ), .display(isLoading: false)])
+    }
+
 
     // MARK: - Helpers
     
