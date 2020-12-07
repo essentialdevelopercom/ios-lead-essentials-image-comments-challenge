@@ -6,13 +6,19 @@
 //  Copyright © 2020 Essential Developer. All rights reserved.
 //
 
+import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
     public static func imageCommentsComposedWith(loader: ImageCommentsLoader) -> ImageCommentsViewController {
         let refreshController = ImageCommentsRefreshController(loader: loader)
-        let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
+        
+        let bundle = Bundle(for: ImageCommentsViewController.self)
+        let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+        let imageCommentsViewController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+        imageCommentsViewController.refreshController = refreshController
+
         refreshController.onRefresh = { [weak imageCommentsViewController] imageComments in
             imageCommentsViewController?.tableModel = imageComments.map { ImageCommentCellController(model: $0) }
             imageCommentsViewController?.tableView.reloadData()

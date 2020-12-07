@@ -11,7 +11,7 @@ import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
     public var tableModel = [ImageCommentCellController]()
-    private var refreshController: ImageCommentsRefreshController?
+    public var refreshController: ImageCommentsRefreshController?
     
     public convenience init(refreshController: ImageCommentsRefreshController) {
         self.init()
@@ -20,8 +20,6 @@ public final class ImageCommentsViewController: UITableViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageCommentCell")
         refreshControl = refreshController?.view
         refreshController?.refresh()
     }
