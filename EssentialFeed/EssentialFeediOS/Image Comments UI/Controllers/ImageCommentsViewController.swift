@@ -11,6 +11,7 @@ import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
     public var tableModel = [ImageCommentCellController]()
+    @IBOutlet private(set) public var errorView: ErrorView?
     @IBOutlet public var refreshController: ImageCommentsRefreshController?
     
     public convenience init(refreshController: ImageCommentsRefreshController) {
