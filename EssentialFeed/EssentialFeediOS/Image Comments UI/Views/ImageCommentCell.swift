@@ -9,8 +9,9 @@
 import UIKit
 
 public class ImageCommentCell: UITableViewCell {
-    public let author = UILabel()
-    public let date = UILabel()
-    public let message = UILabel()
+    @IBOutlet private(set) public var author: UILabel!
+    @IBOutlet private(set) public var date: UILabel!
+    @IBOutlet private(set) public var message: UILabel!
+    
 }
 
