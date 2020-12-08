@@ -20,6 +20,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
     public var tableModel = [ImageCommentCellController]() {
         didSet { tableView.reloadData() }
     }
+    
     public var delegate: ImageCommentsViewControllerDelegate?
 
     public override func viewDidLoad() {

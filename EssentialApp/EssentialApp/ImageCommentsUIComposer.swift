@@ -30,6 +30,7 @@ public final class ImageCommentsUIComposer {
         let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
         let imageCommentsViewController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
         imageCommentsViewController.delegate = delegate
+        imageCommentsViewController.title = ImageCommentsPresenter.title
         return imageCommentsViewController
     }
 }

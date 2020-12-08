@@ -12,6 +12,14 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
+    
+    func test_ImageCommentsView_hasTitle() {
+        let (sut, _) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.title, localized("COMMENTS_VIEW_TITLE"))
+    }
 
     func test_init_doesNotLoadComments() {
         let (_, loader) = makeSUT()
@@ -103,5 +111,15 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, loader)
+    }
+    
+    func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+        let table = "ImageComments"
+        let bundle = Bundle(for: ImageCommentsPresenter.self)
+        let value = bundle.localizedString(forKey: key, value: nil, table: table)
+        if value == key {
+            XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+        }
+        return value
     }
 }
