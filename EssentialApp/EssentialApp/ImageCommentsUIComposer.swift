@@ -12,7 +12,7 @@ import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
     public static func imageCommentsComposedWith(loader: ImageCommentsLoader) -> ImageCommentsViewController {
-        let adapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader)
+        let adapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: MainQueueDispatchDecorator(decoratee: loader))
         
         let imageCommentsViewController = makeImageCommentsViewController(delegate: adapter)
         
@@ -34,3 +34,21 @@ public final class ImageCommentsUIComposer {
         return imageCommentsViewController
     }
 }
+
+private final class MainQueueDispatchDecorator: ImageCommentsLoader {
+    let decoratee: ImageCommentsLoader
+    
+    init(decoratee: ImageCommentsLoader) {
+        self.decoratee = decoratee
+    }
+    
+    func loadComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+        return decoratee.loadComments { result in
+            guard Thread.isMainThread else {
+                return DispatchQueue.main.async { completion(result) }
+            }
+            completion(result)
+        }
+    }
+}
+

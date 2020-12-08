@@ -46,34 +46,16 @@ public final class ImageCommentsPresenter {
     }
     
     public func didStartLoadingComments() {
-        guard Thread.isMainThread else {
-            return DispatchQueue.main.async { [weak self] in
-                self?.errorView.display(.noError)
-                self?.loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
-            }
-        }
         self.errorView.display(.noError)
         self.loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
     }
     
     public func didFinishLoadingComments(with comments: [ImageComment]) {
-        guard Thread.isMainThread else {
-            return DispatchQueue.main.async { [weak self] in
-                self?.imageCommentsView.display(ImageCommentsViewModel(comments: comments))
-                self?.loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-            }
-        }
         imageCommentsView.display(ImageCommentsViewModel(comments: comments))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
     
     public func didFinishLoadingComments(with error: Error) {
-        guard Thread.isMainThread else {
-            return DispatchQueue.main.async { [weak self] in
-                self?.errorView.display(.error(message: self?.commentsLoadError ?? ""))
-                self?.loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-            }
-        }
         errorView.display(.error(message: commentsLoadError))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
