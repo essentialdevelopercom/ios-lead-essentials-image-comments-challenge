@@ -37,6 +37,12 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
         delegate?.didRequestCancelLoad()
     }
     
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        tableView.sizeTableHeaderToFit()
+    }
+
     @IBAction private func refresh() {
         delegate?.didRequestCommentsRefresh()
     }

@@ -4,7 +4,7 @@
 
 import UIKit
 
-extension UITableView {
+public extension UITableView {
 	func sizeTableHeaderToFit() {
 		guard let header = tableHeaderView else { return }
 		

@@ -457,7 +457,6 @@
 			children = (
 				08B5EB4F22CE328100FE8683 /* UIView+Shimmering.swift */,
 				0822D0F6230581D2004B3345 /* UIImageView+Animations.swift */,
-				086AEFBD23A7E75400EE8933 /* UITableView+HeaderSizing.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -590,6 +589,7 @@
 		1152F2B6257E5BD500F342BC /* Shared Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				086AEFBD23A7E75400EE8933 /* UITableView+HeaderSizing.swift */,
 				08A3F2BA232BA64700127C15 /* UIRefreshControl+Helpers.swift */,
 				0822D0F423058078004B3345 /* UITableView+Dequeueing.swift */,
 			);
