@@ -7,8 +7,8 @@
 //
 
 import XCTest
-import EssentialFeed
 import EssentialFeediOS
+@testable import EssentialFeed
 
 class ImageCommentsSnapshotTests: XCTestCase {
     func test_emptyComments() {
@@ -28,7 +28,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
         record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "COMMENTS_WITH_CONTENT_light")
         record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_CONTENT_dark")
     }
-
+    
+    func test_feedWithErrorMessage() {
+        let sut = makeSUT()
+                
+        sut.display(.error(message: "This is a\nmulti-line\n error message"))
+        
+        record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "COMMENTS_WITH_ERROR_MESSAGE_light")
+        record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_ERROR_MESSAGE_dark")
+    }
     
     // MARK: - Helpers
 
