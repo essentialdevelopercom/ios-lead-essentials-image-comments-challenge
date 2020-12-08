@@ -93,7 +93,6 @@
 		11574BC5257CF44B00E902DF /* ImageCommentsLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11574BC4257CF44B00E902DF /* ImageCommentsLoadingViewModel.swift */; };
 		11574BCB257CF46B00E902DF /* ImageCommentsErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11574BCA257CF46B00E902DF /* ImageCommentsErrorViewModel.swift */; };
 		11574BD6257CF54100E902DF /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11574BD8257CF54100E902DF /* ImageComments.strings */; };
-		11585870257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1158586F257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift */; };
 		1158587A257BA6E7008AA2A6 /* ImageCommentCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11585879257BA6E7008AA2A6 /* ImageCommentCellController.swift */; };
 		115AC3812573A8B700977C17 /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AC3802573A8B700977C17 /* ImageCommentCell.swift */; };
 		115AC3902573CC5A00977C17 /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AC38F2573CC5A00977C17 /* ImageCommentsViewController.swift */; };
@@ -216,7 +215,6 @@
 		11574BD7257CF54100E902DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		11574BDD257CF54D00E902DF /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		11574BDE257CF54E00E902DF /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
-		1158586F257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsRefreshController.swift; sourceTree = "<group>"; };
 		11585879257BA6E7008AA2A6 /* ImageCommentCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCellController.swift; sourceTree = "<group>"; };
 		115AC3802573A8B700977C17 /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
 		115AC38F2573CC5A00977C17 /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
@@ -646,7 +644,6 @@
 			isa = PBXGroup;
 			children = (
 				115AC38F2573CC5A00977C17 /* ImageCommentsViewController.swift */,
-				1158586F257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift */,
 				11585879257BA6E7008AA2A6 /* ImageCommentCellController.swift */,
 			);
 			path = Controllers;
@@ -943,7 +940,6 @@
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
-				11585870257B9E3F008AA2A6 /* ImageCommentsRefreshController.swift in Sources */,
 				115AC3902573CC5A00977C17 /* ImageCommentsViewController.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
 				1158587A257BA6E7008AA2A6 /* ImageCommentCellController.swift in Sources */,

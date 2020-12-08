@@ -9,7 +9,7 @@
 import EssentialFeed
 import EssentialFeediOS
 
-final class ImageCommentsLoaderPresentationAdapter: ImageCommentsRefreshControllerDelegate {
+final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
     private let imageCommentsLoader: ImageCommentsLoader
     private let presenter: ImageCommentsPresenter
     

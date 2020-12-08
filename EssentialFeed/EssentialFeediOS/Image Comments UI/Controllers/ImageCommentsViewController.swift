@@ -9,25 +9,41 @@
 import UIKit
 import EssentialFeed
 
-public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView {
-    public var tableModel = [ImageCommentCellController]()
+public protocol ImageCommentsViewControllerDelegate {
+    func didRequestCommentsRefresh()
+    func didRequestCancelLoad()
+}
+
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView, ImageCommentsLoadingView, ImageCommentsView {
     @IBOutlet private(set) public var errorView: ErrorView?
-    @IBOutlet public var refreshController: ImageCommentsRefreshController?
     
-    public convenience init(refreshController: ImageCommentsRefreshController) {
-        self.init()
-        self.refreshController = refreshController
+    public var tableModel = [ImageCommentCellController]() {
+        didSet { tableView.reloadData() }
     }
-    
+    public var delegate: ImageCommentsViewControllerDelegate?
+
     public override func viewDidLoad() {
         super.viewDidLoad()
-        refreshController?.refresh()
+        
+        refresh()
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        refreshController?.cancelLoad()
+        delegate?.didRequestCancelLoad()
+    }
+    
+    @IBAction private func refresh() {
+        delegate?.didRequestCommentsRefresh()
+    }
+    
+    public func display(_ viewModel: ImageCommentsViewModel) {
+        tableModel = viewModel.comments.map { ImageCommentCellController(model: $0) }
+    }
+    
+    public func display(_ viewModel: ImageCommentsLoadingViewModel) {
+        refreshControl?.update(isRefreshing: viewModel.isLoading)
     }
     
     public func display(_ viewModel: ImageCommentsErrorViewModel) {
