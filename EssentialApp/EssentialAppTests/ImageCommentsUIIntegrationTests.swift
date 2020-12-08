@@ -21,12 +21,6 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.title, localized("COMMENTS_VIEW_TITLE"))
     }
 
-    func test_init_doesNotLoadComments() {
-        let (_, loader) = makeSUT()
-        
-        XCTAssertEqual(loader.loadCallsCount, 0)
-    }
-    
     func test_loadCommentsActions_requestCommentsfromLoader() {
         let (sut, loader) = makeSUT()
         
