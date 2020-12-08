@@ -12,10 +12,12 @@ import EssentialFeediOS
 
 extension ImageCommentsUIIntegrationTests {
     func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
-       guard sut.numberOfRenderedImageComments() == comments.count else {
+        sut.view.enforceLayoutCycle()
+        
+        guard sut.numberOfRenderedImageComments() == comments.count else {
             return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedImageComments()) instead.", file: file, line: line)
         }
-
+        
         comments.enumerated().forEach { index, comment in
             assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
         }
