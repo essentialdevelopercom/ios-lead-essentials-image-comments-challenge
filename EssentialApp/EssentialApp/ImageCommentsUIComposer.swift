@@ -17,7 +17,7 @@ public final class ImageCommentsUIComposer {
         let imageCommentsViewController = makeImageCommentsViewController(delegate: adapter)
         
         adapter.presenter = ImageCommentsPresenter(
-            imageCommentsView: WeakRefVirtualProxy(imageCommentsViewController),
+            imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsViewController),
             loadingView: WeakRefVirtualProxy(imageCommentsViewController),
             errorView: WeakRefVirtualProxy(imageCommentsViewController)
         )

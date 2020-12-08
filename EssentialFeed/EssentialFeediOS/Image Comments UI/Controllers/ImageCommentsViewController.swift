@@ -14,7 +14,7 @@ public protocol ImageCommentsViewControllerDelegate {
     func didRequestCancelLoad()
 }
 
-public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView, ImageCommentsLoadingView, ImageCommentsView {
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView, ImageCommentsLoadingView {
     @IBOutlet private(set) public var errorView: ErrorView?
     
     public var tableModel = [ImageCommentCellController]() {
@@ -41,8 +41,8 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
         delegate?.didRequestCommentsRefresh()
     }
     
-    public func display(_ viewModel: ImageCommentsViewModel) {
-        tableModel = viewModel.comments.map { ImageCommentCellController(model: $0) }
+    public func display(_ cellControlllers: [ImageCommentCellController]) {
+        tableModel = cellControlllers
     }
     
     public func display(_ viewModel: ImageCommentsLoadingViewModel) {
