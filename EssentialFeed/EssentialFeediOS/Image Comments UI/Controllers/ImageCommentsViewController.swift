@@ -19,13 +19,8 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
     
     public var tableModel = [ImageCommentCellController]() {
         didSet {
-            guard Thread.isMainThread else {
-                return DispatchQueue.main.async { [weak self] in self?.tableView.reloadData() }
-            }
-            
             self.tableView.reloadData()
         }
-
     }
     
     public var delegate: ImageCommentsViewControllerDelegate?
@@ -51,11 +46,6 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
     }
     
     public func display(_ viewModel: ImageCommentsLoadingViewModel) {
-        guard Thread.isMainThread else {
-            return DispatchQueue.main.async { [weak self] in
-                self?.refreshControl?.update(isRefreshing: viewModel.isLoading)
-            }
-        }
         refreshControl?.update(isRefreshing: viewModel.isLoading)
     }
     
