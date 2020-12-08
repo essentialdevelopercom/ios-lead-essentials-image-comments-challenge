@@ -16,12 +16,24 @@ public final class ImageCommentsUIComposer {
         let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
         let imageCommentsViewController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
         let refreshController = imageCommentsViewController.refreshController!
-        refreshController.loader = loader
+        
+        let presenter = ImageCommentsPresenter(
+            imageCommentsView: WeakRefVirtualProxy(refreshController),
+            loadingView: WeakRefVirtualProxy(refreshController),
+            errorView: WeakRefVirtualProxy(imageCommentsViewController)
+        )
+        
+        let adapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader, presenter: presenter)
+
+        
+        refreshController.delegate = adapter
 
         refreshController.onRefresh = { [weak imageCommentsViewController] imageComments in
             imageCommentsViewController?.tableModel = imageComments.map { ImageCommentCellController(model: $0) }
             imageCommentsViewController?.tableView.reloadData()
         }
+        
+        
         return imageCommentsViewController
     }
 }

@@ -9,27 +9,31 @@
 import UIKit
 import EssentialFeed
 
-public final class ImageCommentsRefreshController: NSObject {
-    private var task: ImageCommentsLoaderTask?
-    
+public protocol ImageCommentsRefreshControllerDelegate {
+    func didRequestCommentsRefresh()
+    func didRequestCancelLoad()
+}
+
+public final class ImageCommentsRefreshController: NSObject, ImageCommentsView, ImageCommentsLoadingView {
     @IBOutlet private var view: UIRefreshControl?
-        
-    public var loader: ImageCommentsLoader?
-    
+            
     public var onRefresh: (([ImageComment]) -> Void)?
     
+    public var delegate: ImageCommentsRefreshControllerDelegate?
+    
     @IBAction func refresh() {
-        view?.beginRefreshing()
-        task = loader?.loadComments { [weak self] result in
-            if let imageComments = try? result.get() {
-                self?.onRefresh?(imageComments)
-            }
-            self?.view?.endRefreshing()
-        }
+        delegate?.didRequestCommentsRefresh()
     }
     
     func cancelLoad() {
-        task?.cancel()
-        task = nil
+        delegate?.didRequestCancelLoad()
+    }
+    
+    public func display(_ viewModel: ImageCommentsViewModel) {
+        onRefresh?(viewModel.comments)
+    }
+    
+    public func display(_ viewModel: ImageCommentsLoadingViewModel) {
+        view?.update(isRefreshing: viewModel.isLoading)
     }
 }

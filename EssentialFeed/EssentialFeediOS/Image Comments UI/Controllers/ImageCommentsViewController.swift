@@ -9,7 +9,7 @@
 import UIKit
 import EssentialFeed
 
-public final class ImageCommentsViewController: UITableViewController {
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView {
     public var tableModel = [ImageCommentCellController]()
     @IBOutlet private(set) public var errorView: ErrorView?
     @IBOutlet public var refreshController: ImageCommentsRefreshController?
@@ -29,7 +29,11 @@ public final class ImageCommentsViewController: UITableViewController {
         
         refreshController?.cancelLoad()
     }
-
+    
+    public func display(_ viewModel: ImageCommentsErrorViewModel) {
+        errorView?.message = viewModel.message
+    }
+    
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableModel.count
     }
