@@ -10,24 +10,23 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
-    private let imageCommentsLoader: ImageCommentsLoader
-    private let presenter: ImageCommentsPresenter
-    
+    var presenter: ImageCommentsPresenter?
     private var task: ImageCommentsLoaderTask?
     
-    init(imageCommentsLoader: ImageCommentsLoader, presenter: ImageCommentsPresenter) {
+    private let imageCommentsLoader: ImageCommentsLoader
+    
+    init(imageCommentsLoader: ImageCommentsLoader) {
         self.imageCommentsLoader = imageCommentsLoader
-        self.presenter = presenter
     }
     
     func didRequestCommentsRefresh() {
-        presenter.didStartLoadingComments()
+        presenter?.didStartLoadingComments()
         task = imageCommentsLoader.loadComments { [weak self] result in
             switch result {
             case let .success(comments):
-                self?.presenter.didFinishLoadingComments(with: comments)
+                self?.presenter?.didFinishLoadingComments(with: comments)
             case let .failure(error):
-                self?.presenter.didFinishLoadingComments(with: error)
+                self?.presenter?.didFinishLoadingComments(with: error)
             }
         }
     }

@@ -12,21 +12,24 @@ import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
     public static func imageCommentsComposedWith(loader: ImageCommentsLoader) -> ImageCommentsViewController {
-        let bundle = Bundle(for: ImageCommentsViewController.self)
-        let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-        let imageCommentsViewController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+        let adapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader)
         
-        let presenter = ImageCommentsPresenter(
+        let imageCommentsViewController = makeImageCommentsViewController(delegate: adapter)
+        
+        adapter.presenter = ImageCommentsPresenter(
             imageCommentsView: WeakRefVirtualProxy(imageCommentsViewController),
             loadingView: WeakRefVirtualProxy(imageCommentsViewController),
             errorView: WeakRefVirtualProxy(imageCommentsViewController)
         )
         
-        let adapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader, presenter: presenter)
-
-        
-        imageCommentsViewController.delegate = adapter
-        
+        return imageCommentsViewController
+    }
+    
+    private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate) -> ImageCommentsViewController {
+        let bundle = Bundle(for: ImageCommentsViewController.self)
+        let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+        let imageCommentsViewController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+        imageCommentsViewController.delegate = delegate
         return imageCommentsViewController
     }
 }
