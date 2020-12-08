@@ -35,7 +35,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadCallsCount, 3, "Expected yet another loading request once user initiates another")
     }
   
-    func test_viewDidLoad_showsLoadingIndicator() {
+    func test_loadingCommentsIndicator_isVisibleWhileLoadingComents() {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
