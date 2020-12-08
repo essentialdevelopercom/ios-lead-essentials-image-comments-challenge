@@ -30,4 +30,8 @@ extension ImageCommentsViewController {
         let index = IndexPath(row: row, section: 0)
         return datasource?.tableView(tableView, cellForRowAt: index)
     }
+    
+    var errorMessage: String? {
+        return errorView?.message
+    }
 }
