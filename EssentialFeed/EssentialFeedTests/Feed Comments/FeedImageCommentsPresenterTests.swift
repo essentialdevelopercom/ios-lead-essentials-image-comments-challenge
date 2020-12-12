@@ -74,9 +74,13 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	
 	private func uniqueImageComments() -> [ImageComment] {
 		return [
-			makeCommentItem(id: UUID(), message: "First message", createdAt: Date(), author: "Some Author").item,
-			makeCommentItem().item,
-			makeCommentItem(id: UUID(), message: "Third message", createdAt: Date(), author: " Third Author").item]
+			ImageComment( id: UUID(), message: "First message", createdAt: anyDate(), author: "Some Author"),
+			ImageComment( id: UUID(), message: "Second message", createdAt: anyDate(), author: "Second Author")
+		]
+	}
+	
+	private func anyDate() -> Date {
+		Date(timeIntervalSince1970: 1603416829)
 	}
 	
 	private class ViewSpy: FeedImageCommentsLoadingView, FeedImageCommentsErrorView, FeedImageCommentsView {

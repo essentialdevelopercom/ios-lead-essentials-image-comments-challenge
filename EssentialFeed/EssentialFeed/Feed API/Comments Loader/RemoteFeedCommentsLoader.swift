@@ -72,7 +72,7 @@ public final class RemoteFeedCommentsLoader: FeedImageCommentsLoader {
 	}
 }
 
-private extension Array where Element == CodableFeedImageComment {
+private extension Array where Element == DecodableFeedImageComment {
 	 func toModels() -> [ImageComment] {
 		 map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author.username) }
 	 }

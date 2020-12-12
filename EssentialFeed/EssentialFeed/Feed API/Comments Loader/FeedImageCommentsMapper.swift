@@ -7,42 +7,25 @@
 //
 import Foundation
 
-public struct CodableFeedImageComment: Codable {
+struct DecodableFeedImageComment: Decodable {
 	
-	public struct Author: Codable, Equatable {
-
-		public let username: String
-		
-		public init(username: String) {
-			self.username = username
-		}
+	struct Author: Decodable {
+		let username: String
 	}
 	
-	public let id: UUID
-	public let message: String
-	public let created_at: Date
-	public let author: Author
-	
-	public init(id: UUID, message: String, created_at: Date, author: CodableFeedImageComment.Author) {
-		self.id = id
-		self.message = message
-		self.created_at = created_at
-		self.author = author
-	}
+	let id: UUID
+	let message: String
+	let created_at: Date
+	let author: Author
 }
 
-public final class FeedImageCommentsMapper {
+final class FeedImageCommentsMapper {
 	
-	public struct Root: Codable {
-
-		let items: [CodableFeedImageComment]
-		
-		public init(items: [CodableFeedImageComment]) {
-			self.items = items
-		}
+	struct Root: Decodable {
+		let items: [DecodableFeedImageComment]
 	}
 	
-	public static func map(_ data: Data, from response: HTTPURLResponse) throws -> [CodableFeedImageComment] {
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [DecodableFeedImageComment] {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		guard response.isOK, let root = try? decoder.decode(Root.self, from: data)

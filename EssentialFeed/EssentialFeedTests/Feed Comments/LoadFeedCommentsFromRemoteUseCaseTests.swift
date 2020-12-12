@@ -66,7 +66,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		
 		expect(sut, toCompleteWithResult: .success([])) {
-			let emptyListJSON = makeItemJSON([])
+			let emptyListJSON = Data("{\"items\": [] }".utf8)
 			client.complete(withStatusCode: 200, data: emptyListJSON)
 		}
 	}
@@ -100,7 +100,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		sut?.load(from: url) { capturedResult.append($0) }
 		
 		sut = nil
-		client.complete(withStatusCode: 200, data: makeItemJSON([]))
+		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
 		
 		XCTAssertTrue(capturedResult.isEmpty)
 	}
@@ -161,11 +161,28 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
-	private func makeItemJSON(_ items: [CodableFeedImageComment]) -> Data {
-		let encoder = JSONEncoder()
-		encoder.dateEncodingStrategy = .iso8601
-
-		let root = FeedImageCommentsMapper.Root(items: items)
-		return try! encoder.encode(root)
+	private func makeItem(
+		id: UUID,
+		message: String,
+		createdAt: (date: Date, iso8601Representation: String),
+		username: String
+	) -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, author: username)
+		
+		let json: [String: Any] = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.iso8601Representation,
+			"author": [
+				"username": username,
+			],
+		]
+		
+		return (item, json)
+	}
+	
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
