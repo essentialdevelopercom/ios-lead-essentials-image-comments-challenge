@@ -34,7 +34,7 @@ public class FeedImageCommentsPresenter {
 		comment: "Title for the image comments view"
 	) }
 	
-	public static var errorMessage: String { NSLocalizedString(
+	private static var errorMessage: String { NSLocalizedString(
 		"FEED_COMMENTS_VIEW_ERROR_MESSAGE",
 		tableName: "FeedImageComments",
 		bundle: Bundle(for: FeedImageCommentsPresenter.self),
