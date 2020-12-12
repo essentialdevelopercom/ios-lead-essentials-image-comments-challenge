@@ -58,7 +58,15 @@ class FeedAcceptanceTests: XCTestCase {
 		feed.simulateTapOnImage(at: 0)
 		RunLoop.current.run(until: Date())
 		
-		XCTAssertNotNil(feed.navigationController?.topViewController as? FeedImageCommentsViewController)
+		let comments = feed.navigationController?.topViewController as? FeedImageCommentsViewController
+		XCTAssertNotNil(comments, "Expected comments controller to not be nil")
+		
+		XCTAssertEqual(comments?.numberOfRenderedFeedCommentViews(), 2)
+		XCTAssertNotNil(comments?.feedCommentView(at: 0), "Expected a comment on view")
+		XCTAssertEqual(comments?.commentMessage(at: 0), "first message")
+		
+		XCTAssertNotNil(comments?.feedCommentView(at: 1), "Expected a comment on view")
+		XCTAssertEqual(comments?.commentMessage(at: 1), "second message")
 	}
 	
 	// MARK: - Helpers
@@ -89,10 +97,35 @@ class FeedAcceptanceTests: XCTestCase {
 		switch url.absoluteString {
 		case "http://image.com":
 			return makeImageData()
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed":
+			return makeFeedData()
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/5BCC6F46-1A48-11EB-ADC1-0242AC120002/comments":
+			return makeCommentsData()
 			
 		default:
 			return makeFeedData()
 		}
+	}
+	
+	private func makeCommentsData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString,
+				"message": "first message",
+				"created_at": "1993-12-02T00:00:00+0000",
+				"author": [
+					"username": "first username"
+				]
+			],
+			[
+				"id": UUID().uuidString,
+				"message": "second message",
+				"created_at": "1993-12-02T01:00:00+0000",
+				"author": [
+					"username": "another username"
+				]
+			],
+		]])
 	}
 	
 	private func makeImageData() -> Data {
@@ -101,8 +134,8 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
-			["id": UUID().uuidString, "image": "http://image.com"]
+			["id": "5BCC6F46-1A48-11EB-ADC1-0242AC120002", "image": "http://image.com"],
+			["id": "5BCC6F46-1A48-11EB-ADC1-0242AC120003", "image": "http://image.com"]
 		]])
 	}
 	
