@@ -32,13 +32,14 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
 		let (sut, view) = makeSUT()
-		let comments = uniqueImageComments()
-		let presentedComments = comments.toModels()
+		var comments = uniqueImageComments()
+		var presentedComments = comments.toModels()
 		
 		sut.didFinishLoadingComments(with: comments)
 		
 		XCTAssertEqual(view.messages, [.display(comments: presentedComments),
 									   .display(isLoading: false)])
+		checkPropertiesEquality(for: &comments, against: &presentedComments)
 	}
 	
 	func test_didFinishLoadingFeed_displayTheError() {
@@ -62,6 +63,16 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
+	private func checkPropertiesEquality(for models: inout [ImageComment], against presentedModels: inout [FeedImageCommentPresentingModel]) {
+		
+		for (index, imageComment) in models.enumerated() {
+			let presentedModel = presentedModels[index]
+			XCTAssertEqual(imageComment.message, presentedModel.comment)
+			XCTAssertEqual(timeAgoDisplay(imageComment.createdAt), presentedModel.creationTime)
+			XCTAssertEqual(imageComment.author, presentedModel.username)
+		}
+	}
+	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "FeedImageComments"
 		let bundle = Bundle(for: FeedImageCommentsPresenter.self)
@@ -72,6 +83,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 	
+	
 	private func uniqueImageComments() -> [ImageComment] {
 		return [
 			ImageComment( id: UUID(), message: "First message", createdAt: anyDate(), author: "Some Author"),
@@ -81,6 +93,12 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	
 	private func anyDate() -> Date {
 		Date(timeIntervalSince1970: 1603416829)
+	}
+	
+	private func timeAgoDisplay(_ date: Date) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		return formatter.localizedString(for: date, relativeTo: Date())
 	}
 	
 	private class ViewSpy: FeedImageCommentsLoadingView, FeedImageCommentsErrorView, FeedImageCommentsView {
