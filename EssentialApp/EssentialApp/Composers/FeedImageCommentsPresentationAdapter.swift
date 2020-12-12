@@ -21,6 +21,10 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
 		self.url = url
 	}
 	
+	deinit {
+		task?.cancel()
+	}
+	
 	public func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		task = loader.load(from: url) { [weak self] result
@@ -34,9 +38,5 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
 			}
 			
 		}
-	}
-	
-	public func didCancelCommentsRequest() {
-		task?.cancel()
 	}
 }

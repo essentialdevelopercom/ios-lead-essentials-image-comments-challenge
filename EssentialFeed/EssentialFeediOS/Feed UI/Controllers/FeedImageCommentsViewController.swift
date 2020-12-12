@@ -11,7 +11,6 @@ import EssentialFeed
 
 public protocol FeedImageCommentsViewControllerDelegate: class {
 	func didRequestCommentsRefresh()
-	func didCancelCommentsRequest()
 }
 
 final public class FeedImageCommentsViewController: UITableViewController {
@@ -28,11 +27,6 @@ final public class FeedImageCommentsViewController: UITableViewController {
 	override public func viewDidLoad() {
 		super.viewDidLoad()
 		refresh()
-	}
-	
-	public override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		delegate?.didCancelCommentsRequest()
 	}
 	
 	public override func viewDidLayoutSubviews() {
