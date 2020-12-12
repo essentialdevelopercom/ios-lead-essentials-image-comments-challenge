@@ -13,7 +13,7 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
 	
 	var presenter: FeedImageCommentsPresenter?
 	private let loader: FeedImageCommentsLoader
-	let url: URL
+	private let url: URL
 	private var task: FeedImageCommentsLoaderTask?
 	
 	init(loader: FeedImageCommentsLoader, url: URL) {
