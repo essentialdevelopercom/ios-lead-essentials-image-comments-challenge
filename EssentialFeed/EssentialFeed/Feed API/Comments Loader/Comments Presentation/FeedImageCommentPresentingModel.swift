@@ -26,3 +26,12 @@ public extension Array where Element == ImageComment {
 		map { FeedImageCommentPresentingModel(username: $0.author, comment: $0.message, creationTime: $0.createdAt.timeAgoDisplay()) }
 	}
 }
+
+private extension Date {
+	
+	func timeAgoDisplay() -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		return formatter.localizedString(for: self, relativeTo: Date())
+	}
+}
