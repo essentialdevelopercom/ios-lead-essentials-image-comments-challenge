@@ -71,25 +71,24 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
-	// QUESTION: I'm encode date in .iso8601 and decode date in this format.
-	// But I'm got result that this objects not equal here. And print of the equal objects.
-	
-//	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
-//		let (sut, client) = makeSUT()
-//		let item1 = makeCommentItem(id: UUID(),
-//									message: "First message",
-//									author: "First author")
-//
-//		let item2 = makeCommentItem(id: UUID(),
-//									message: "Second message",
-//									author: "Second author")
-//
-//		expect(sut, toCompleteWithResult: .success([item1.item, item2.item])) {
-//
-//			let json = makeItemJSON([item1.codableItem, item2.codableItem])
-//			client.complete(withStatusCode: 200, data: json)
-//		}
-//	}
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		let item1 = makeItem(id: UUID(),
+							 message: "First message",
+							 createdAt: (Date(timeIntervalSince1970: 754833685), "1993-12-02T12:01:25+0000"),
+							 username: "First author")
+		
+		let item2 = makeItem(id: UUID(),
+							 message: "Second message",
+							 createdAt: (Date(timeIntervalSince1970: 694958485), "1992-01-09T12:01:25+0000"),
+							 username: "Second author")
+
+		expect(sut, toCompleteWithResult: .success([item1.model, item2.model])) {
+
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		}
+	}
 	
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
 		let url = anyURL()
