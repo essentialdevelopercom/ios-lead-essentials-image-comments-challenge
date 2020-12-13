@@ -73,7 +73,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		})
 	}
 
-	func test_load_deliversErrorOnHTTPRequestWithStatusCodeOutsideOf2XXRange() {
+	func test_load_deliversErrorOnHTTPResponseWithStatusCodeOutsideOf2XXRange() {
 		let (sut, client) = makeSUT()
 
 		let nonAcceptedCodes = [100, 199, 301, 404, 503]
