@@ -17,7 +17,7 @@ class RemoteImageCommentsLoader {
 
 class RemoteImageCommentsLoaderTests: XCTestCase {
 
-	func test_init_doesNotRequestFromClientUponInitilization() {
+	func test_init_doesNotRequestFromURL() {
 		let client = HTTPClientSpy()
 		_ = RemoteImageCommentsLoader(client: client)
 
