@@ -9,6 +9,14 @@
 import XCTest
 import EssentialFeed
 
+struct Root: Decodable {
+	let items: [ImageComment]
+}
+
+struct ImageComment: Decodable {
+
+}
+
 class RemoteImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
@@ -23,17 +31,22 @@ class RemoteImageCommentsLoader {
 		self.url = url
 	}
 
-	func load(completion: @escaping (Swift.Error?) -> Void) {
+	func load(completion: @escaping (Result<[ImageComment], Swift.Error>) -> Void) {
 		client.get(from: url) { result in
 			switch result {
 			case .failure:
-				completion(Error.connectivity)
+				completion(.failure(Error.connectivity))
 
-			case let .success((_, response)):
+			case let .success((data, response)):
 				if !(200 ... 299 ~= response.statusCode) {
-					completion(Error.invalidData)
+					completion(.failure(Error.invalidData))
 				} else {
-					completion(Error.invalidData)
+					let jsonDecoder = JSONDecoder()
+					if let _ = try? jsonDecoder.decode(Root.self, from: data) {
+						completion(.success([]))
+					} else {
+						completion(.failure(Error.invalidData))
+					}
 				}
 			}
 		}
@@ -96,6 +109,25 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		})
 	}
 
+	func test_load_deliversNoCommentItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		let exp = expectation(description: "Wait for load completion")
+
+		sut.load { result in
+			switch result {
+			case let .success(comments):
+				XCTAssertTrue(comments.isEmpty)
+			default:
+				XCTFail("Expected success, got \(result) instead")
+			}
+			exp.fulfill()
+		}
+
+		client.complete(withStatusCode: 200, data: try! JSONSerialization.data(withJSONObject: ["items": []]))
+
+		wait(for: [exp], timeout: 1.0)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
@@ -109,8 +141,14 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedError: RemoteImageCommentsLoader.Error, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 
-		sut.load { receivedError in
-			XCTAssertEqual(receivedError as! RemoteImageCommentsLoader.Error, expectedError, file: file, line: line)
+		sut.load { result in
+			switch result {
+			case let .failure(receivedError):
+				XCTAssertEqual(receivedError as! RemoteImageCommentsLoader.Error, expectedError, file: file, line: line)
+
+			default:
+				XCTFail("Expected failure, got \(result) instead", file: file, line: line)
+			}
 			exp.fulfill()
 		}
 
