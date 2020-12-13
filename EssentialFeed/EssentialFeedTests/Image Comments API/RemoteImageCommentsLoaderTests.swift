@@ -15,6 +15,7 @@ class RemoteImageCommentsLoader {
 
 	enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 
 	init(client: HTTPClient, url: URL) {
@@ -28,7 +29,10 @@ class RemoteImageCommentsLoader {
 			case .failure:
 				completion(Error.connectivity)
 
-			default: break
+			case let .success((_, response)):
+				if !(200 ... 299 ~= response.statusCode) {
+					completion(Error.invalidData)
+				}
 			}
 		}
 	}
@@ -76,6 +80,28 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 
 		XCTAssertNotNil(receivedError)
+	}
+
+	func test_load_deliversErrorOnHTTPRequestWithStatusCodeOutsideOf2XXRange() {
+		let (sut, client) = makeSUT()
+
+		let nonAcceptedCodes = [100]//, 199, 301, 404, 503]
+
+		nonAcceptedCodes.enumerated().forEach { index, code in
+			let exp = expectation(description: "Wait for load completion")
+
+			var receivedError: Error?
+			sut.load { error in
+				receivedError = error
+				exp.fulfill()
+			}
+
+			client.complete(withStatusCode: code, data: anyData(), at: index)
+
+			wait(for: [exp], timeout: 1.0)
+
+			XCTAssertNotNil(receivedError)
+		}
 	}
 
 	// MARK: - Helpers
