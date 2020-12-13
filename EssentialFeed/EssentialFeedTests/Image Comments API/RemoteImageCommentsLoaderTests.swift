@@ -32,6 +32,8 @@ class RemoteImageCommentsLoader {
 			case let .success((_, response)):
 				if !(200 ... 299 ~= response.statusCode) {
 					completion(Error.invalidData)
+				} else {
+					completion(Error.invalidData)
 				}
 			}
 		}
@@ -83,6 +85,15 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			})
 		}
+	}
+
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJsonData() {
+		let (sut, client) = makeSUT()
+
+		expect(sut, toCompleteWith: .invalidData, when: {
+			let invalidJsonData = Data("invalid data".utf8)
+			client.complete(withStatusCode: 200, data: invalidJsonData)
+		})
 	}
 
 	// MARK: - Helpers
