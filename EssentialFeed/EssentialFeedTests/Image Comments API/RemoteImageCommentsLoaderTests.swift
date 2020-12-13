@@ -13,16 +13,20 @@ class RemoteImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
 
+	enum Error: Swift.Error {
+		case connectivity
+	}
+
 	init(client: HTTPClient, url: URL) {
 		self.client = client
 		self.url = url
 	}
 
-	func load(completion: @escaping (Error?) -> Void) {
+	func load(completion: @escaping (Swift.Error?) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .failure(error):
-				completion(error)
+			case .failure:
+				completion(Error.connectivity)
 
 			default: break
 			}
