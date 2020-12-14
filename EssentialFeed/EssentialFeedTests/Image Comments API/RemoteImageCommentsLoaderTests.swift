@@ -14,7 +14,14 @@ struct Root: Decodable {
 }
 
 struct ImageComment: Equatable, Decodable {
+	let id: UUID
+	let message: String
+	let created_at: Date
+	let author: CommentAuthorObject
+}
 
+struct CommentAuthorObject: Equatable, Decodable {
+	let username: String
 }
 
 class RemoteImageCommentsLoader {
@@ -42,8 +49,9 @@ class RemoteImageCommentsLoader {
 					completion(.failure(Error.invalidData))
 				} else {
 					let jsonDecoder = JSONDecoder()
-					if let _ = try? jsonDecoder.decode(Root.self, from: data) {
-						completion(.success([]))
+					jsonDecoder.dateDecodingStrategy = .iso8601
+					if let root = try? jsonDecoder.decode(Root.self, from: data) {
+						completion(.success(root.items))
 					} else {
 						completion(.failure(Error.invalidData))
 					}
@@ -117,14 +125,58 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		})
 	}
 
+	func test_load_deliversItemOn200HTTPResponseWithNonEmtpyJSONList() {
+		let (sut, client) = makeSUT()
+		let image0 = makeItem(
+			id: UUID(),
+			message: "some message",
+			createdAt: (Date(timeIntervalSince1970: 1222222222), "2008-09-24T02:10:22+00:00"),
+			author: "some user"
+		)
+		let image1 = makeItem(
+			id: UUID(),
+			message: "another message",
+			createdAt: (Date(timeIntervalSince1970: 1333333333), "2012-04-02T02:22:13+00:00"),
+			author: "some other user"
+		)
+
+		expect(sut, toCompleteWith: .success([image0.model, image1.model]), when: {
+			let data = makeItemJSON(with: [image0.json, image1.json])
+			client.complete(withStatusCode: 200, data: data)
+		})
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteImageCommentsLoader(client: client, url: url)
-		trackForMemoryLeaks(client)
-		trackForMemoryLeaks(sut)
+		trackForMemoryLeaks(client, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, client)
+	}
+
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601: String), author: String) -> (model: ImageComment, json: [String: Any]) {
+		let model = ImageComment(
+			id: id,
+			message: message,
+			created_at: createdAt.date,
+			author: CommentAuthorObject(username: author))
+
+		let json: [String: Any] = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.iso8601,
+			"author": [
+				"username": author
+			]
+		]
+		return (model, json)
+	}
+
+	private func makeItemJSON(with items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 
 	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: Result<[ImageComment], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
