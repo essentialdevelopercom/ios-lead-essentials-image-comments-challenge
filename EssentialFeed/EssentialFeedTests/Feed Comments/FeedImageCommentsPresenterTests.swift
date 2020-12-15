@@ -32,14 +32,14 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
 		let (sut, view) = makeSUT()
-		var comments = uniqueImageComments()
-		var presentedComments = comments.toModels()
+		let comments = uniqueImageComments()
+		let presentedComments = comments.toModels()
 		
 		sut.didFinishLoadingComments(with: comments)
 		
 		XCTAssertEqual(view.messages, [.display(comments: presentedComments),
 									   .display(isLoading: false)])
-		checkPropertiesEquality(for: &comments, against: &presentedComments)
+		checkPropertiesEquality(for: comments, against: presentedComments)
 	}
 	
 	func test_didFinishLoadingFeed_displayTheError() {
@@ -63,7 +63,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
-	private func checkPropertiesEquality(for models: inout [ImageComment], against presentedModels: inout [FeedImageCommentPresentingModel]) {
+	private func checkPropertiesEquality(for models: [ImageComment], against presentedModels: [FeedImageCommentPresentingModel]) {
 		
 		for (index, imageComment) in models.enumerated() {
 			let presentedModel = presentedModels[index]
