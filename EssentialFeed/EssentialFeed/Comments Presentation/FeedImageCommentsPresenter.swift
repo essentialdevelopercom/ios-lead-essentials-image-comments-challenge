@@ -8,15 +8,15 @@
 
 import Foundation
 
-public protocol FeedImageCommentsLoadingView: class {
+public protocol FeedImageCommentsLoadingView {
 	func display(_ viewModel: FeedImageCommentLoadingViewModel)
 }
 
-public protocol FeedImageCommentsErrorView: class {
+public protocol FeedImageCommentsErrorView {
 	func display(_ viewModel: FeedImageCommentErrorViewModel)
 }
 
-public protocol FeedImageCommentsView: class {
+public protocol FeedImageCommentsView {
 	func display(_ viewModel: FeedImageCommentsViewModel)
 }
 
