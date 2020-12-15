@@ -9,7 +9,7 @@
 import UIKit
 import EssentialFeed
 
-public protocol FeedImageCommentsViewControllerDelegate: class {
+public protocol FeedImageCommentsViewControllerDelegate {
 	func didRequestCommentsRefresh()
 }
 
