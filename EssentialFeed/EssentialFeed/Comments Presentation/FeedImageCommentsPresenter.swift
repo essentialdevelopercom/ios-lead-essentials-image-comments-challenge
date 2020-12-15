@@ -25,7 +25,6 @@ public class FeedImageCommentsPresenter {
 	private let commentsView: FeedImageCommentsView
 	private let loadingView: FeedImageCommentsLoadingView
 	private let errorView: FeedImageCommentsErrorView
-	private let currentDate: Date
 	
 	public static var title: String { NSLocalizedString(
 		"FEED_COMMENTS_VIEW_TITLE",
@@ -47,7 +46,6 @@ public class FeedImageCommentsPresenter {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
-		self.currentDate = Date()
 	}
 	
 	public func didStartLoadingComments() {
