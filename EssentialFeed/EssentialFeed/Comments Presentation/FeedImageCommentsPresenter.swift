@@ -22,9 +22,9 @@ public protocol FeedImageCommentsView: class {
 
 public class FeedImageCommentsPresenter {
 	
-	private var commentsView: FeedImageCommentsView
-	private var loadingView: FeedImageCommentsLoadingView
-	private var errorView: FeedImageCommentsErrorView
+	private let commentsView: FeedImageCommentsView
+	private let loadingView: FeedImageCommentsLoadingView
+	private let errorView: FeedImageCommentsErrorView
 	private let currentDate: Date
 	
 	public static var title: String { NSLocalizedString(
