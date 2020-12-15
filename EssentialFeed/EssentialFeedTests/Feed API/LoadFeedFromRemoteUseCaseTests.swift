@@ -44,7 +44,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 		
-		let samples = [199, 199, 300, 400, 500]
+		let samples = [199, 201, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
