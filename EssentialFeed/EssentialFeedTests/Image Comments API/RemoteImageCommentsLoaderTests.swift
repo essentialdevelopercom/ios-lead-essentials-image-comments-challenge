@@ -9,17 +9,6 @@
 import XCTest
 import EssentialFeed
 
-struct ImageComment: Equatable {
-	let id: UUID
-	let message: String
-	let createdAt: Date
-	let author: CommentAuthorObject
-}
-
-struct CommentAuthorObject: Equatable {
-	let username: String
-}
-
 class RemoteImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
@@ -95,7 +84,7 @@ private extension Array where Element == RemoteImageCommentsItem {
 				id: $0.id,
 				message: $0.message,
 				createdAt: $0.created_at,
-				author: CommentAuthorObject(username: $0.author.username)
+				author: ImageCommentAuthor(username: $0.author.username)
 			)
 		}
 	}
@@ -201,7 +190,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 			id: id,
 			message: message,
 			createdAt: createdAt.date,
-			author: CommentAuthorObject(username: author))
+			author: ImageCommentAuthor(username: author))
 
 		let json: [String: Any] = [
 			"id": id.uuidString,
