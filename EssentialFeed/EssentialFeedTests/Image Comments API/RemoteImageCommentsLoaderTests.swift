@@ -34,43 +34,59 @@ class RemoteImageCommentsLoader {
 		self.url = url
 	}
 
-	func load(completion: @escaping (Result<[ImageComment], Swift.Error>) -> Void) {
+	typealias Result = Swift.Result<[ImageComment], Swift.Error>
+
+	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
 			case .failure:
 				completion(.failure(Error.connectivity))
 
 			case let .success((data, response)):
-				if !(200 ... 299 ~= response.statusCode) {
-					completion(.failure(Error.invalidData))
-				} else {
-					let jsonDecoder = JSONDecoder()
-					jsonDecoder.dateDecodingStrategy = .iso8601
-					if let root = try? jsonDecoder.decode(Root.self, from: data) {
-						completion(.success(root.items.mapToModels()))
-					} else {
-						completion(.failure(Error.invalidData))
-					}
-				}
+				completion(RemoteImageCommentsLoader.map(data, from: response))
 			}
+		}
+	}
+
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		Result {
+			try RemoteImageCommentMapper.map(data, from: response).mapToModels()
 		}
 	}
 }
 
-private struct Root: Decodable {
-	let items: [RemoteImageCommentsItem]
+class RemoteImageCommentMapper {
+
+	static let jsonDecoder: JSONDecoder = {
+		let jsonDecoder = JSONDecoder()
+		jsonDecoder.dateDecodingStrategy = .iso8601
+		return jsonDecoder
+	}()
+
+	private struct Root: Decodable {
+		let items: [RemoteImageCommentsItem]
+	}
+
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageCommentsItem] {
+		if response.isInSuccessRange, let root = try? jsonDecoder.decode(Root.self, from: data) {
+			return root.items
+		} else {
+			throw RemoteImageCommentsLoader.Error.invalidData
+		}
+	}
 }
 
-private struct RemoteImageCommentsItem: Decodable {
+struct RemoteImageCommentsItem: Decodable {
 	let id: UUID
 	let message: String
 	let created_at: Date
 	let author: RemoteImageCommentAuthorItem
 }
 
-private struct RemoteImageCommentAuthorItem: Decodable {
+struct RemoteImageCommentAuthorItem: Decodable {
 	let username: String
 }
+
 
 private extension Array where Element == RemoteImageCommentsItem {
 	func mapToModels() -> [ImageComment] {
