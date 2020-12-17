@@ -7,76 +7,7 @@
 //
 
 import XCTest
-@testable import EssentialFeed
-
-class RemoteImageCommentsLoader {
-	private let client: HTTPClient
-	private let url: URL
-
-	enum Error: Swift.Error {
-		case connectivity
-		case invalidData
-	}
-
-	init(client: HTTPClient, url: URL) {
-		self.client = client
-		self.url = url
-	}
-
-	typealias Result = Swift.Result<[ImageComment], Swift.Error>
-
-	func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url) { result in
-			switch result {
-			case .failure:
-				completion(.failure(Error.connectivity))
-
-			case let .success((data, response)):
-				completion(RemoteImageCommentsLoader.map(data, from: response))
-			}
-		}
-	}
-
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
-		Result {
-			try RemoteImageCommentMapper.map(data, from: response).mapToModels()
-		}
-	}
-}
-
-class RemoteImageCommentMapper {
-
-	static let jsonDecoder: JSONDecoder = {
-		let jsonDecoder = JSONDecoder()
-		jsonDecoder.dateDecodingStrategy = .iso8601
-		return jsonDecoder
-	}()
-
-	private struct Root: Decodable {
-		let items: [RemoteImageCommentItem]
-	}
-
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageCommentItem] {
-		if response.isInSuccessRange, let root = try? jsonDecoder.decode(Root.self, from: data) {
-			return root.items
-		} else {
-			throw RemoteImageCommentsLoader.Error.invalidData
-		}
-	}
-}
-
-private extension Array where Element == RemoteImageCommentItem {
-	func mapToModels() -> [ImageComment] {
-		return map {
-			.init(
-				id: $0.id,
-				message: $0.message,
-				createdAt: $0.created_at,
-				author: ImageCommentAuthor(username: $0.author.username)
-			)
-		}
-	}
-}
+import EssentialFeed
 
 class RemoteImageCommentsLoaderTests: XCTestCase {
 
