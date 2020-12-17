@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import EssentialFeed
+@testable import EssentialFeed
 
 class RemoteImageCommentsLoader {
 	private let client: HTTPClient
@@ -53,10 +53,10 @@ class RemoteImageCommentMapper {
 	}()
 
 	private struct Root: Decodable {
-		let items: [RemoteImageCommentsItem]
+		let items: [RemoteImageCommentItem]
 	}
 
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageCommentsItem] {
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageCommentItem] {
 		if response.isInSuccessRange, let root = try? jsonDecoder.decode(Root.self, from: data) {
 			return root.items
 		} else {
@@ -65,19 +65,7 @@ class RemoteImageCommentMapper {
 	}
 }
 
-struct RemoteImageCommentsItem: Decodable {
-	let id: UUID
-	let message: String
-	let created_at: Date
-	let author: RemoteImageCommentAuthorItem
-}
-
-struct RemoteImageCommentAuthorItem: Decodable {
-	let username: String
-}
-
-
-private extension Array where Element == RemoteImageCommentsItem {
+private extension Array where Element == RemoteImageCommentItem {
 	func mapToModels() -> [ImageComment] {
 		return map {
 			.init(
