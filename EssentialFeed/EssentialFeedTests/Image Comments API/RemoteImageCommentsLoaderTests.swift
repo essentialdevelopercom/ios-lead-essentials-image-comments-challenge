@@ -94,6 +94,23 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		})
 	}
 
+	func test_load_doesNotDeliverResultAfterInstanceHasBeenDeallocated() {
+		let client = HTTPClientSpy()
+		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client, url: anyURL())
+
+		var receivedResults = [(RemoteImageCommentsLoader.Result)]()
+		sut?.load(completion: { result in
+			receivedResults.append(result)
+		})
+
+		sut = nil
+
+		client.complete(with: anyNSError())
+		client.complete(withStatusCode: 200, data: anyData())
+
+		XCTAssertTrue(receivedResults.isEmpty)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
