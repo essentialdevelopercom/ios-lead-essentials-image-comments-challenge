@@ -9,18 +9,14 @@
 import XCTest
 import EssentialFeed
 
-struct Root: Decodable {
-	let items: [ImageComment]
-}
-
-struct ImageComment: Equatable, Decodable {
+struct ImageComment: Equatable {
 	let id: UUID
 	let message: String
-	let created_at: Date
+	let createdAt: Date
 	let author: CommentAuthorObject
 }
 
-struct CommentAuthorObject: Equatable, Decodable {
+struct CommentAuthorObject: Equatable {
 	let username: String
 }
 
@@ -51,12 +47,40 @@ class RemoteImageCommentsLoader {
 					let jsonDecoder = JSONDecoder()
 					jsonDecoder.dateDecodingStrategy = .iso8601
 					if let root = try? jsonDecoder.decode(Root.self, from: data) {
-						completion(.success(root.items))
+						completion(.success(root.items.mapToModels()))
 					} else {
 						completion(.failure(Error.invalidData))
 					}
 				}
 			}
+		}
+	}
+}
+
+private struct Root: Decodable {
+	let items: [RemoteImageCommentsItem]
+}
+
+private struct RemoteImageCommentsItem: Decodable {
+	let id: UUID
+	let message: String
+	let created_at: Date
+	let author: RemoteImageCommentAuthorItem
+}
+
+private struct RemoteImageCommentAuthorItem: Decodable {
+	let username: String
+}
+
+private extension Array where Element == RemoteImageCommentsItem {
+	func mapToModels() -> [ImageComment] {
+		return map {
+			.init(
+				id: $0.id,
+				message: $0.message,
+				createdAt: $0.created_at,
+				author: CommentAuthorObject(username: $0.author.username)
+			)
 		}
 	}
 }
@@ -160,7 +184,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let model = ImageComment(
 			id: id,
 			message: message,
-			created_at: createdAt.date,
+			createdAt: createdAt.date,
 			author: CommentAuthorObject(username: author))
 
 		let json: [String: Any] = [
