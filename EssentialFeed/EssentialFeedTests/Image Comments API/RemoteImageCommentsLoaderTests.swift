@@ -121,6 +121,21 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		XCTAssertEqual(client.cancelledURLs, [url])
 	}
 
+	func test_load_doesNotDeliverResultAfterTaskHasBeenCancelled() {
+		let (sut, client) = makeSUT()
+
+		var receivedResult = [RemoteImageCommentsLoader.Result]()
+		let task = sut.load { result in
+			receivedResult.append(result)
+		}
+		task.cancel()
+
+		client.complete(with: anyNSError())
+		client.complete(withStatusCode: 200, data: anyData())
+
+		XCTAssertTrue(receivedResult.isEmpty)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {

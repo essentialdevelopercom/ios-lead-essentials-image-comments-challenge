@@ -23,34 +23,48 @@ public class RemoteImageCommentsLoader {
 	}
 
 	public class Task {
-		private let wrappedTask: HTTPClientTask
+		private var completion: ((Result) -> Void)?
 
-		init(wrappedTask: HTTPClientTask) {
-			self.wrappedTask = wrappedTask
+		var wrapped: HTTPClientTask?
+
+		init(_ completion: @escaping (Result) -> Void) {
+			self.completion = completion
+		}
+
+		func complete(with result: Result) {
+			completion?(result)
 		}
 
 		public func cancel() {
-			wrappedTask.cancel()
+			preventFurtherCompletions()
+			wrapped?.cancel()
+		}
+
+		private func preventFurtherCompletions() {
+			completion = nil
 		}
 	}
+
 
 	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
 
 	@discardableResult
 	public func load(completion: @escaping (Result) -> Void) -> Task {
-		let task = client.get(from: url) { [weak self] result in
+		let task = Task(completion)
+		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 
-			switch result {
-			case .failure:
-				completion(.failure(Error.connectivity))
-
-			case let .success((data, response)):
-				completion(RemoteImageCommentsLoader.map(data, from: response))
-			}
+			task.complete(with: result
+							.mapError { _ in Error.connectivity }
+							.flatMap({ data, response in
+								Result {
+									try RemoteImageCommentMapper.map(data, from: response).mapToModels()
+								}
+							})
+			)
 		}
 
-		return Task(wrappedTask: task)
+		return task
 	}
 
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
