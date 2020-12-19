@@ -6,6 +6,7 @@
 //  Copyright © 2020 Essential Developer. All rights reserved.
 //
 
+import Foundation
 import Combine
 import EssentialFeed
 import EssentialFeediOS
@@ -14,16 +15,18 @@ final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerD
     var presenter: ImageCommentsPresenter?
     private var cancellable: Cancellable?
     
-    private let imageCommentsLoader: () -> ImageCommentsLoader.Publisher
+    private let url: URL
+    private let imageCommentsLoader: (URL) -> ImageCommentsLoader.Publisher
     
-    init(imageCommentsLoader: @escaping () -> ImageCommentsLoader.Publisher) {
+    init(url: URL, imageCommentsLoader: @escaping (URL) -> ImageCommentsLoader.Publisher) {
+        self.url = url
         self.imageCommentsLoader = imageCommentsLoader
     }
     
     func didRequestCommentsRefresh() {
         presenter?.didStartLoadingComments()
                 
-        let cancellable = imageCommentsLoader()
+        let cancellable = imageCommentsLoader(url)
             .dispatchOnMainQueue()
             .sink(
                 receiveCompletion: { [weak self] completion in

@@ -13,7 +13,6 @@ extension ImageCommentsUIIntegrationTests {
     class LoaderSpy: ImageCommentsLoader {
         private var completions = [(ImageCommentsLoader.Result) -> Void]()
         private var cancelledCompletions = [(ImageCommentsLoader.Result) -> Void]()
-
         
         var loadCallsCount: Int {
             completions.count
@@ -32,7 +31,7 @@ extension ImageCommentsUIIntegrationTests {
             }
         }
         
-        func loadComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+        func loadComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
             completions.append(completion)
             return TaskSpy { self.cancelledCompletions.append(completion) }
         }

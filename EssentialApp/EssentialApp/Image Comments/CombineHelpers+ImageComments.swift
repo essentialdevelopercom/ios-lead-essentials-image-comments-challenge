@@ -13,12 +13,12 @@ import EssentialFeed
 public extension ImageCommentsLoader {
     typealias Publisher = AnyPublisher<[ImageComment], Error>
     
-    func loadCommentsPublisher() -> Publisher {
+    func loadCommentsPublisher(from url: URL) -> Publisher {
         var task: ImageCommentsLoaderTask?
         
         return Deferred {
             Future { completion in
-                task = self.loadComments(completion: completion)
+                task = self.loadComments(from: url, completion: completion)
             }
         }
         .handleEvents(receiveCancel: { task?.cancel() })

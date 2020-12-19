@@ -15,5 +15,5 @@ public protocol ImageCommentsLoaderTask {
 public protocol ImageCommentsLoader {
     typealias Result = Swift.Result<[ImageComment], Error>
     
-    func loadComments(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask
+    func loadComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask
 }

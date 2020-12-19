@@ -11,8 +11,8 @@ import EssentialFeed
 import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
-    public static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
-        let adapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader)
+    public static func imageCommentsComposedWith(url: URL, loader: @escaping (URL) -> ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
+        let adapter = ImageCommentsLoaderPresentationAdapter(url: url, imageCommentsLoader: loader)
         
         let imageCommentsViewController = makeImageCommentsViewController(delegate: adapter)
         
