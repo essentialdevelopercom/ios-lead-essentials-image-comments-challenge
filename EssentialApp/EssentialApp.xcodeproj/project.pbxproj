@@ -231,9 +231,9 @@
 		1150BBF0257FA2D200F21A6F /* Image Comments */ = {
 			isa = PBXGroup;
 			children = (
+				11585883257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift */,
 				1150BBE8257FA10B00F21A6F /* ImageCommentsViewAdapter.swift */,
 				1150BBCB257F81E600F21A6F /* ImageCommentsLoaderPresentationAdapter.swift */,
-				11585883257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift */,
 				1150BBF1257FA2F600F21A6F /* WeakRefVirtualProxy+ImageComments.swift */,
 			);
 			path = "Image Comments";

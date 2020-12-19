@@ -13,9 +13,11 @@ public protocol FeedImageCellControllerDelegate {
 public final class FeedImageCellController: FeedImageView {
 	private let delegate: FeedImageCellControllerDelegate
 	private var cell: FeedImageCell?
+    private let selection: () -> Void
 	
-	public init(delegate: FeedImageCellControllerDelegate) {
+	public init(delegate: FeedImageCellControllerDelegate, selection: @escaping () -> Void) {
 		self.delegate = delegate
+        self.selection = selection
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
@@ -42,6 +44,10 @@ public final class FeedImageCellController: FeedImageView {
 		cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
 		cell?.onRetry = delegate.didRequestImage
 	}
+    
+    public func selected() {
+        selection()
+    }
 	
 	private func releaseCellForReuse() {
 		cell = nil
