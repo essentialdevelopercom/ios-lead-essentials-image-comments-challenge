@@ -6,33 +6,43 @@
 //  Copyright © 2020 Essential Developer. All rights reserved.
 //
 
+import Combine
 import EssentialFeed
 import EssentialFeediOS
 
 final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
     var presenter: ImageCommentsPresenter?
-    private var task: ImageCommentsLoaderTask?
+    private var cancellable: Cancellable?
     
-    private let imageCommentsLoader: ImageCommentsLoader
+    private let imageCommentsLoader: () -> ImageCommentsLoader.Publisher
     
-    init(imageCommentsLoader: ImageCommentsLoader) {
+    init(imageCommentsLoader: @escaping () -> ImageCommentsLoader.Publisher) {
         self.imageCommentsLoader = imageCommentsLoader
     }
     
     func didRequestCommentsRefresh() {
         presenter?.didStartLoadingComments()
-        task = imageCommentsLoader.loadComments { [weak self] result in
-            switch result {
-            case let .success(comments):
-                self?.presenter?.didFinishLoadingComments(with: comments)
-            case let .failure(error):
-                self?.presenter?.didFinishLoadingComments(with: error)
-            }
-        }
+                
+        let cancellable = imageCommentsLoader()
+            .dispatchOnMainQueue()
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case let .failure(error):
+                        self?.presenter?.didFinishLoadingComments(with: error)
+                    }
+                    
+                }, receiveValue: { [weak self] comments in
+                    self?.presenter?.didFinishLoadingComments(with: comments)
+                })
+        
+        self.cancellable = cancellable
     }
     
     func didRequestCancelLoad() {
-        task?.cancel()
-        task = nil
+        cancellable?.cancel()
+        cancellable = nil
     }
 }

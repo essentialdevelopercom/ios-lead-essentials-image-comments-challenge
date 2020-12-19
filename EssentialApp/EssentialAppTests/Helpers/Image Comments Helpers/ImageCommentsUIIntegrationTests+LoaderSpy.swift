@@ -12,13 +12,20 @@ import EssentialFeed
 extension ImageCommentsUIIntegrationTests {
     class LoaderSpy: ImageCommentsLoader {
         private var completions = [(ImageCommentsLoader.Result) -> Void]()
+        private var cancelledCompletions = [(ImageCommentsLoader.Result) -> Void]()
+
         
         var loadCallsCount: Int {
             completions.count
         }
+        
+        var cancelledLoadCallsCount: Int {
+            cancelledCompletions.count
+        }
 
         private struct TaskSpy: ImageCommentsLoaderTask {
             let cancelCallBack: () -> Void
+            
 
             func cancel() {
                 cancelCallBack()
@@ -27,7 +34,7 @@ extension ImageCommentsUIIntegrationTests {
         
         func loadComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
             completions.append(completion)
-            return TaskSpy { self.completions = [] }
+            return TaskSpy { self.cancelledCompletions.append(completion) }
         }
         
         func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int) {

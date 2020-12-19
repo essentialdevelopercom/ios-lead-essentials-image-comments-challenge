@@ -121,7 +121,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadCallsCount, 1, "Expected a loading request once view is loaded")
         
         sut.viewWillDisappear(true)
-        XCTAssertEqual(loader.loadCallsCount, 0, "Expected no loading requests after task is cancelled")
+        XCTAssertEqual(loader.cancelledLoadCallsCount, 1, "Expected cancelled requests after task is cancelled")
     }
     
     func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
@@ -140,7 +140,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, client: LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
+        let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader.loadCommentsPublisher)
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, loader)

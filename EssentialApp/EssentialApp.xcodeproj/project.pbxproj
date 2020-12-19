@@ -48,6 +48,7 @@
 		1158585B257B8D36008AA2A6 /* ImageCommentsUIIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1158585A257B8D36008AA2A6 /* ImageCommentsUIIntegrationTests+Assertions.swift */; };
 		11585884257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11585883257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift */; };
 		116185B5258E097D002A444B /* CombineHelpers+Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116185B4258E097D002A444B /* CombineHelpers+Feed.swift */; };
+		116185B9258E0ABD002A444B /* CombineHelpers+ImageComments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116185B8258E0ABD002A444B /* CombineHelpers+ImageComments.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +123,7 @@
 		1158585A257B8D36008AA2A6 /* ImageCommentsUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 		11585883257BAB2F008AA2A6 /* ImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIComposer.swift; sourceTree = "<group>"; };
 		116185B4258E097D002A444B /* CombineHelpers+Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CombineHelpers+Feed.swift"; sourceTree = "<group>"; };
+		116185B8258E0ABD002A444B /* CombineHelpers+ImageComments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CombineHelpers+ImageComments.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +240,7 @@
 				1150BBE8257FA10B00F21A6F /* ImageCommentsViewAdapter.swift */,
 				1150BBCB257F81E600F21A6F /* ImageCommentsLoaderPresentationAdapter.swift */,
 				1150BBF1257FA2F600F21A6F /* WeakRefVirtualProxy+ImageComments.swift */,
+				116185B8258E0ABD002A444B /* CombineHelpers+ImageComments.swift */,
 			);
 			path = "Image Comments";
 			sourceTree = "<group>";
@@ -379,6 +382,7 @@
 				1150BBF2257FA2F600F21A6F /* WeakRefVirtualProxy+ImageComments.swift in Sources */,
 				1150BBED257FA27400F21A6F /* WeakRefVirtualProxy+Feed.swift in Sources */,
 				08073B47238D2DFA00A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift in Sources */,
+				116185B9258E0ABD002A444B /* CombineHelpers+ImageComments.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
 				08073B49238D2DFA00A75DC6 /* FeedViewAdapter.swift in Sources */,

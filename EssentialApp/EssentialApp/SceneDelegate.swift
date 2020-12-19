@@ -38,7 +38,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var localImageLoader: LocalFeedImageDataLoader = {
         LocalFeedImageDataLoader(store: store)
     }()
-
+    
+    private var remoteImageCommentsLoader: RemoteImageCommentsLoader?
+    
+    private var selectedFeedImage: FeedImage?
+        
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
 		self.httpClient = httpClient
@@ -67,9 +71,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
     
     private func showComments(for image: FeedImage) {
-        let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
-        let loader = RemoteImageCommentsLoader(url: url, client: httpClient)
-        let comments = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
+        selectedFeedImage = image
+        let comments = ImageCommentsUIComposer.imageCommentsComposedWith(loader: makeRemoteImageCommentsLoader)
         let nav = window?.rootViewController as! UINavigationController
         nav.pushViewController(comments, animated: true)
     }
@@ -89,5 +92,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     .loadImageDataPublisher(from: url)
                     .caching(to: localImageLoader, using: url)
             })
+    }
+    
+    private func makeRemoteImageCommentsLoader() -> ImageCommentsLoader.Publisher {
+        let id = selectedFeedImage?.id.uuidString ?? ""
+        let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!
+        remoteImageCommentsLoader = RemoteImageCommentsLoader(url: url, client: httpClient)
+        return remoteImageCommentsLoader!.loadCommentsPublisher()
     }
 }
