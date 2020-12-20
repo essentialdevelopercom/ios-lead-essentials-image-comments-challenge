@@ -11,9 +11,8 @@ import EssentialFeed
 import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
-    public static func imageCommentsComposedWith(url: URL, loader: @escaping (URL) -> ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
-        let adapter = ImageCommentsLoaderPresentationAdapter(url: url, imageCommentsLoader: loader)
-        
+	public static func imageCommentsComposedWith(url: URL, loader: ImageCommentsLoader) -> ImageCommentsViewController {
+		let adapter = ImageCommentsLoaderPresentationAdapter(url: url, imageCommentsLoader: MainQueueDispatchDecorator(decoratee: loader))
         let imageCommentsViewController = makeImageCommentsViewController(delegate: adapter)
         
         adapter.presenter = ImageCommentsPresenter(
@@ -33,4 +32,21 @@ public final class ImageCommentsUIComposer {
         imageCommentsViewController.title = ImageCommentsPresenter.title
         return imageCommentsViewController
     }
+}
+
+private final class MainQueueDispatchDecorator: ImageCommentsLoader {
+	let decoratee: ImageCommentsLoader
+	
+	init(decoratee: ImageCommentsLoader) {
+		self.decoratee = decoratee
+	}
+	
+	func loadComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+		return decoratee.loadComments(from: url) { result in
+			guard Thread.isMainThread else {
+				return DispatchQueue.main.async { completion(result) }
+			}
+			completion(result)
+		}
+	}
 }
