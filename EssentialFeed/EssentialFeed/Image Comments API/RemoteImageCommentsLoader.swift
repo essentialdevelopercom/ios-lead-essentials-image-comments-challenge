@@ -65,12 +65,6 @@ public class RemoteImageCommentsLoader {
 
 		return task
 	}
-
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
-		Result {
-			try RemoteImageCommentMapper.map(data, from: response).mapToModels()
-		}
-	}
 }
 
 private extension Array where Element == RemoteImageCommentItem {
