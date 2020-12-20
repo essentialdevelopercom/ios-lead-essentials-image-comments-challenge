@@ -12,10 +12,6 @@ public protocol ImageCommentsLoadingView {
 	func display(_ viewModel: ImageCommentsLoadingViewModel)
 }
 
-public struct ImageCommentsErrorViewModel {
-	public let message: String?
-}
-
 public protocol ImageCommentsErrorView {
 	func display(_ viewModel: ImageCommentsErrorViewModel)
 }
