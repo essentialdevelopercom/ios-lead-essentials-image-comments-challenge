@@ -65,7 +65,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
 		let (sut, client) = makeSUT()
-
+		
 		expect(sut, toCompleteWith: .success([]), when: {
 			let emptyListJSON = makeItemsJSON([])
 			client.complete(withStatusCode: 200, data: emptyListJSON)
@@ -100,7 +100,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 		
 		var capturedResults = [RemoteFeedLoader.Result]()
 		sut?.load { capturedResults.append($0) }
-
+		
 		sut = nil
 		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
 		
@@ -120,7 +120,7 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 	private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
 		return .failure(error)
 	}
-		
+	
 	private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
 		let item = FeedImage(id: id, description: description, location: location, url: imageURL)
 		
@@ -161,5 +161,5 @@ class LoadFeedFromRemoteUseCaseTests: XCTestCase {
 		
 		wait(for: [exp], timeout: 1.0)
 	}
-
+	
 }

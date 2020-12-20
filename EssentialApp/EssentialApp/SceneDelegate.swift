@@ -20,13 +20,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.defaultDirectoryURL()
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
-
-    private lazy var remoteFeedLoader: RemoteFeedLoader = {
-        RemoteFeedLoader(
-            url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
-            client: httpClient)
-    }()
-
+	
+	private lazy var remoteFeedLoader: RemoteFeedLoader = {
+		RemoteFeedLoader(
+			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
+			client: httpClient)
+	}()
+	
 	private lazy var localFeedLoader: LocalFeedLoader = {
 		LocalFeedLoader(store: store, currentDate: Date.init)
 	}()
@@ -43,7 +43,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         RemoteImageCommentsLoader(client: httpClient)
     }()
     
-    private var selectedFeedImage: FeedImage?
         
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
@@ -53,8 +52,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		guard let scene = (scene as? UIWindowScene) else { return }
-	
-        window = UIWindow(windowScene: scene)
+		
+		window = UIWindow(windowScene: scene)
 		configureWindow()
 	}
 	
@@ -66,6 +65,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 feedSelection: showComments))
         
         window?.makeKeyAndVisible()
+
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {

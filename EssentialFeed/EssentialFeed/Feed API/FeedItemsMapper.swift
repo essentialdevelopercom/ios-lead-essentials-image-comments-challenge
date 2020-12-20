@@ -13,7 +13,7 @@ final class FeedItemsMapper {
 		guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data) else {
 			throw RemoteFeedLoader.Error.invalidData
 		}
-
+		
 		return root.items
 	}
 }

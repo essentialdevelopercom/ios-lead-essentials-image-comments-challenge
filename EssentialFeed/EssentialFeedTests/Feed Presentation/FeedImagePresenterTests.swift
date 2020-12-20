@@ -101,5 +101,5 @@ class FeedImagePresenterTests: XCTestCase {
 			messages.append(model)
 		}
 	}
-
+	
 }

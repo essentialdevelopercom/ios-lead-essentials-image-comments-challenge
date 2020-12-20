@@ -170,7 +170,9 @@ https://ile-api.essentialdeveloper.com/essential-feed/v1/image/{image-id}/commen
 
 1) Fork the latest version of this repository. Here's <a href="https://guides.github.com/activities/forking" target="_blank">how forking works</a>.
 
-2) Open the `EssentialApp/EssentialApp.xcworkspace` workspace project on Xcode 12.
+2) Open the `EssentialApp/EssentialApp.xcworkspace` workspace project on Xcode 12.2 (you can use other Xcode versions by switching to the appropriate branch, e.g., `xcode11`/`xcode12`).
+
+	- ⚠️ Important: ***On Xcode 12.2, run the snapshot tests using the 'iPhone 12 - iOS 14.2' simulator*** (the same simulator used to take the snapshots). On older Xcode branches, run the tests with the 'iPhone 11 - iOS 13.x or 14.x' simulator.
 
 3) You can develop the platform-agnostic logic in the `EssentialFeed` target using the `macOS` platform to speed up the TDD cycle.
 
