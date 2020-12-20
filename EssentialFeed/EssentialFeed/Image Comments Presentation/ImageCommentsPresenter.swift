@@ -21,10 +21,9 @@ public protocol ImageCommentsView {
 }
 
 public class ImageCommentsPresenter {
-
-	let loadingView: ImageCommentsLoadingView
-	let errorView: ImageCommentsErrorView
-	let commentsView: ImageCommentsView
+	private let loadingView: ImageCommentsLoadingView
+	private let errorView: ImageCommentsErrorView
+	private let commentsView: ImageCommentsView
 
 	private var errorMessage: String {
 		return NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
