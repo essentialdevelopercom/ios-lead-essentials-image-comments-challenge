@@ -120,7 +120,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
         sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadCallsCount, 1, "Expected a loading request once view is loaded")
         
-        sut.viewWillDisappear(true)
+        sut.delegate = nil
         XCTAssertEqual(loader.cancelledLoadCallsCount, 1, "Expected cancelled requests after task is cancelled")
     }
     
