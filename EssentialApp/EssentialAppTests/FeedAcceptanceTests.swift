@@ -56,12 +56,14 @@ class FeedAcceptanceTests: XCTestCase {
         let feed = launch(httpClient: .online(response), store: .empty)
         
         feed.simulateTapOnFeedImage(at: 0)
-        feed.view.enforceLayoutCycle()
+        RunLoop.current.run(until: Date())
         
         let nav = feed.navigationController
         let comments = nav?.topViewController as! ImageCommentsViewController
         
-        XCTAssertNotNil(comments)
+        XCTAssertNotNil(comments, "Expected ImageCommentsViewController")
+        XCTAssertEqual(comments.numberOfRenderedImageComments(), 1)
+        XCTAssertEqual(comments.commentMessage(at: 0), makeCommentMessage())
     }
 	
 	// MARK: - Helpers
@@ -88,15 +90,16 @@ class FeedAcceptanceTests: XCTestCase {
 		return (makeData(for: url), response)
 	}
 	
-	private func makeData(for url: URL) -> Data {
-		switch url.absoluteString {
-		case "http://image.com":
-			return makeImageData()
-			
-		default:
-			return makeFeedData()
-		}
-	}
+    private func makeData(for url: URL) -> Data {
+        switch url.absoluteString {
+        case "http://image.com":
+            return makeImageData()
+        case "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/396B8F9D-5FA6-4FFF-B269-3DD708CEE32D/comments":
+            return makeCommentsData()
+        default:
+            return makeFeedData()
+        }
+    }
 	
 	private func makeImageData() -> Data {
 		return UIImage.make(withColor: .red).pngData()!
@@ -104,9 +107,26 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
+			["id": "396B8F9D-5FA6-4FFF-B269-3DD708CEE32D", "image": "http://image.com"],
 			["id": UUID().uuidString, "image": "http://image.com"]
 		]])
 	}
+    
+    private func makeCommentsData() -> Data {
+        return try! JSONSerialization.data(withJSONObject: ["items": [
+            [
+                "id": UUID().uuidString,
+                "message": makeCommentMessage(),
+                "created_at": "2020-05-20T11:24:59+0000",
+                "author": [
+                    "username": "a username"
+                ]
+            ],
+        ]])
+    }
+    
+    private func makeCommentMessage() -> String {
+        "a message"
+    }
 
 }

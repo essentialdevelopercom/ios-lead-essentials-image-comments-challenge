@@ -31,6 +31,14 @@ extension ImageCommentsViewController {
         return datasource?.tableView(tableView, cellForRowAt: index)
     }
     
+    private func commentView(at row: Int) -> ImageCommentCell? {
+        comment(at: row) as? ImageCommentCell
+    }
+    
+    func commentMessage(at row: Int) -> String? {
+        commentView(at: row)?.message.text
+    }
+    
     var errorMessage: String? {
         return errorView?.message
     }
