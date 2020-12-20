@@ -8,7 +8,15 @@
 
 import Foundation
 
+public protocol ImageCommentsView {
+	
+}
+
 public class ImageCommentsPresenter {
+
+	public init(view: ImageCommentsView) {
+		
+	}
 
 	public static var title: String {
 		return NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE",

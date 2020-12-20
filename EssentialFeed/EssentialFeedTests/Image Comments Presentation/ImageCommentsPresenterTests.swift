@@ -15,6 +15,13 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
 
+	func test_init_doesNotSendMessageToView() {
+		let view = ViewSpy()
+		_ = ImageCommentsPresenter(view: view)
+
+		XCTAssertTrue(view.receivedMessages.isEmpty)
+	}
+
 	// MARK: - Helpers
 
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -27,4 +34,12 @@ class ImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 
+	private class ViewSpy: ImageCommentsView {
+
+		enum Message {
+
+		}
+
+		var receivedMessages = [Message]()
+	}
 }
