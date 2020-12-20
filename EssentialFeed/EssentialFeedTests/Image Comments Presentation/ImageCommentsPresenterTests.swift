@@ -16,15 +16,13 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 
 	func test_init_doesNotSendMessageToView() {
-		let view = ViewSpy()
-		_ = ImageCommentsPresenter(loadingView: view, errorView: view)
+		let (_, view) = makeSUT()
 
 		XCTAssertTrue(view.receivedMessages.isEmpty)
 	}
 
 	func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
-		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(loadingView: view, errorView: view)
+		let (sut, view) = makeSUT()
 
 		sut.didStartLoadingComments()
 
@@ -35,6 +33,14 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 
 	// MARK: - Helpers
+
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, ViewSpy) {
+		let view = ViewSpy()
+		let sut = ImageCommentsPresenter(loadingView: view, errorView: view)
+		trackForMemoryLeaks(view)
+		trackForMemoryLeaks(sut)
+		return (sut, view)
+	}
 
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
