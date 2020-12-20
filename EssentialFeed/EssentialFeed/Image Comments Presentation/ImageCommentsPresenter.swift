@@ -24,14 +24,27 @@ public protocol ImageCommentsErrorView {
 	func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
+public struct ImageCommentsViewModel {
+	public let comments: [ImageComment]
+}
+
+public protocol ImageCommentsView {
+	func display(_ viewModel: ImageCommentsViewModel)
+}
+
 public class ImageCommentsPresenter {
 
 	let loadingView: ImageCommentsLoadingView
 	let errorView: ImageCommentsErrorView
+	let commentsView: ImageCommentsView
 
-	public init(loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+	public init(
+		loadingView: ImageCommentsLoadingView,
+		errorView: ImageCommentsErrorView,
+		commentsView: ImageCommentsView) {
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.commentsView = commentsView
 	}
 
 	public static var title: String {
@@ -44,5 +57,10 @@ public class ImageCommentsPresenter {
 	public func didStartLoadingComments() {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 		errorView.display(ImageCommentsErrorViewModel(message: nil))
+	}
+
+	public func didFinishLoadingComments(with comments: [ImageComment]) {
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+		commentsView.display(ImageCommentsViewModel(comments: comments))
 	}
 }

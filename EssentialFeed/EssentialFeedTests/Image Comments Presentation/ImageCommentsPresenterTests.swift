@@ -32,11 +32,23 @@ class ImageCommentsPresenterTests: XCTestCase {
 		])
 	}
 
+	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let comments = imageComments()
+
+		sut.didFinishLoadingComments(with: comments)
+
+		XCTAssertEqual(view.receivedMessages, [
+			.display(isLoading: false),
+			.display(comments: comments)
+		])
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(loadingView: view, errorView: view)
+		let sut = ImageCommentsPresenter(loadingView: view, errorView: view, commentsView: view)
 		trackForMemoryLeaks(view)
 		trackForMemoryLeaks(sut)
 		return (sut, view)
@@ -52,11 +64,12 @@ class ImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 
-	private class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView {
+	private class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView, ImageCommentsView {
 
 		enum Message: Hashable {
 			case display(isLoading: Bool)
 			case display(errorMessage: String?)
+			case display(comments: [ImageComment])
 		}
 
 		var receivedMessages = Set<Message>()
@@ -68,5 +81,16 @@ class ImageCommentsPresenterTests: XCTestCase {
 		func display(_ viewModel: ImageCommentsErrorViewModel) {
 			receivedMessages.insert(.display(errorMessage: viewModel.message))
 		}
+
+		func display(_ viewModel: ImageCommentsViewModel) {
+			receivedMessages.insert(.display(comments: viewModel.comments))
+		}
+	}
+
+	private func imageComments() -> [ImageComment] {
+		return [
+			ImageComment(id: UUID(), message: "Some message", createdAt: Date(), author: ImageCommentAuthor(username: "Some user")),
+			ImageComment(id: UUID(), message: "Another message", createdAt: Date(), author: ImageCommentAuthor(username: "Another user"))
+		]
 	}
 }
