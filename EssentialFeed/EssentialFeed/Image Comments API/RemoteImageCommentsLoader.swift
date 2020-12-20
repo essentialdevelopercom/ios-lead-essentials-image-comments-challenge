@@ -56,12 +56,11 @@ public class RemoteImageCommentsLoader {
 
 			task.complete(with: result
 							.mapError { _ in Error.connectivity }
-							.flatMap({ data, response in
+							.flatMap { data, response in
 								Result {
 									try RemoteImageCommentMapper.map(data, from: response).mapToModels()
 								}
 							})
-			)
 		}
 
 		return task
