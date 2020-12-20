@@ -44,6 +44,18 @@ class ImageCommentsPresenterTests: XCTestCase {
 		])
 	}
 
+	func test_didFinishLoadingCommentsWithError_displaysErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let commentsLoadingError = anyNSError()
+
+		sut.didFinishLoadingComments(with: commentsLoadingError)
+
+		XCTAssertEqual(view.receivedMessages, [
+			.display(isLoading: false),
+			.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+		])
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, ViewSpy) {
