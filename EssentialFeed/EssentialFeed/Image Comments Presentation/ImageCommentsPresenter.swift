@@ -16,10 +16,6 @@ public protocol ImageCommentsErrorView {
 	func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
-public struct ImageCommentsViewModel {
-	public let comments: [ImageComment]
-}
-
 public protocol ImageCommentsView {
 	func display(_ viewModel: ImageCommentsViewModel)
 }
