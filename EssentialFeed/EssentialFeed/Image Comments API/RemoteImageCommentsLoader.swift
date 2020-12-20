@@ -8,7 +8,17 @@
 
 import Foundation
 
-public class RemoteImageCommentsLoader {
+public protocol ImageCommentsLoader {
+	typealias Result = Swift.Result<[ImageComment], Swift.Error>
+
+	func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask
+}
+
+public protocol ImageCommentsLoaderTask {
+	func cancel()
+}
+
+public class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
 
@@ -22,7 +32,7 @@ public class RemoteImageCommentsLoader {
 		self.url = url
 	}
 
-	public class Task {
+	private class Task: ImageCommentsLoaderTask {
 		private var completion: ((Result) -> Void)?
 
 		var wrapped: HTTPClientTask?
@@ -45,11 +55,10 @@ public class RemoteImageCommentsLoader {
 		}
 	}
 
-
-	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
+	public typealias Result = ImageCommentsLoader.Result
 
 	@discardableResult
-	public func load(completion: @escaping (Result) -> Void) -> Task {
+	public func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
 		let task = Task(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
