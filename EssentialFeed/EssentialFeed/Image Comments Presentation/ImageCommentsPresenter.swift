@@ -62,19 +62,21 @@ public class ImageCommentsPresenter {
 
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-
-		let presentables: [PresentableImageComment] = comments.map { comment in
-			let name = comment.author.username
-			let message = comment.message
-			let date = dateFormatter.localizedString(for: comment.createdAt, relativeTo: currentDate())
-			return PresentableImageComment(username: name, message: message, date: date)
-		}
-
-		commentsView.display(ImageCommentsViewModel(comments: presentables))
+		commentsView.display(ImageCommentsViewModel(presentables: createPresentables(from: comments)))
 	}
 
 	public func didFinishLoadingComments(with error: Error) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 		errorView.display(ImageCommentsErrorViewModel.error(message: errorMessage))
+	}
+
+	private func createPresentables(from comments: [ImageComment]) -> [PresentableImageComment] {
+		return comments.map {
+			PresentableImageComment(username: $0.author.username, message: $0.message, date: format($0.createdAt))
+		}
+	}
+
+	private func format(_ date: Date) -> String {
+		return dateFormatter.localizedString(for: date, relativeTo: currentDate())
 	}
 }

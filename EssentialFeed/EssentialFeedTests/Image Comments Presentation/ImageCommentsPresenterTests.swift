@@ -50,7 +50,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 		XCTAssertEqual(view.receivedMessages, [
 			.display(isLoading: false),
-			.display(comments: [comment0.presentable, comment1.presentable])
+			.display(presentables: [comment0.presentable, comment1.presentable])
 		])
 	}
 
@@ -91,7 +91,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(isLoading: Bool)
 			case display(errorMessage: String?)
-			case display(comments: [PresentableImageComment])
+			case display(presentables: [PresentableImageComment])
 		}
 
 		var receivedMessages = Set<Message>()
@@ -105,7 +105,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		}
 
 		func display(_ viewModel: ImageCommentsViewModel) {
-			receivedMessages.insert(.display(comments: viewModel.comments))
+			receivedMessages.insert(.display(presentables: viewModel.presentables))
 		}
 	}
 
