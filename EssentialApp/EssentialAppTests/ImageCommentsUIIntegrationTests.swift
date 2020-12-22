@@ -40,8 +40,7 @@ class ImageCommentsViewController: UITableViewController {
 class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	func test_imageCommentsView_hasTitle() {
-		let loader = LoaderSpy()
-		let sut = ImageCommentUIComposer.makeUI(loader: loader)
+		let (sut, _) = makeSUT()
 
 		sut.loadViewIfNeeded()
 
@@ -49,8 +48,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	func test_loadImageCommentsAction_requestsCommentsFromLoader() {
-		let loader = LoaderSpy()
-		let sut = ImageCommentUIComposer.makeUI(loader: loader)
+		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadCount, 0)
 
 		sut.loadViewIfNeeded()
@@ -64,6 +62,14 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	// MARK: - Helpers
+
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+		let loader = LoaderSpy()
+		let sut = ImageCommentUIComposer.makeUI(loader: loader)
+		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		return (sut, loader)
+	}
 
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
