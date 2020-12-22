@@ -12,7 +12,7 @@
         <scene sceneID="nSm-3K-W7v">
             <objects>
                 <tableViewController id="GlZ-Hu-mVY" customClass="ImageCommentsViewController" customModule="EssentialFeediOS" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Z3z-X5-r2s">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Z3z-X5-r2s">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -23,7 +23,7 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99N-lr-Jgh">
                                     <rect key="frame" x="8" y="8" width="398" height="18"/>
                                     <viewLayoutGuide key="safeArea" id="3Xl-Tc-IhW"/>
-                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -46,7 +46,7 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="100" id="Ska-OK-XIH" customClass="ImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="100" id="Ska-OK-XIH" customClass="ImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="62" width="414" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ska-OK-XIH" id="1SW-qC-5Re">
@@ -54,39 +54,39 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="af7-jG-b7Z">
-                                            <rect key="frame" x="8" y="16" width="398" height="68"/>
+                                            <rect key="frame" x="20" y="16" width="374" height="68"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Ol2-xe-pCy">
-                                                    <rect key="frame" x="0.0" y="0.0" width="398" height="20.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Saw-wr-b5T">
-                                                            <rect key="frame" x="0.0" y="0.0" width="213.5" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="201" height="20.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EsL-QV-zT4">
-                                                            <rect key="frame" x="213.5" y="0.0" width="184.5" height="20.5"/>
+                                                            <rect key="frame" x="201" y="0.0" width="173" height="20.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                            <color key="textColor" systemColor="placeholderTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                 </stackView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFd-Ss-Ok3">
-                                                    <rect key="frame" x="0.0" y="28.5" width="398" height="39.5"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <rect key="frame" x="0.0" y="28.5" width="374" height="39.5"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </stackView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="af7-jG-b7Z" firstAttribute="leading" secondItem="1SW-qC-5Re" secondAttribute="leading" constant="8" id="D5I-BZ-oI7"/>
+                                        <constraint firstItem="af7-jG-b7Z" firstAttribute="leading" secondItem="1SW-qC-5Re" secondAttribute="leading" constant="20" id="D5I-BZ-oI7"/>
                                         <constraint firstItem="af7-jG-b7Z" firstAttribute="top" secondItem="1SW-qC-5Re" secondAttribute="top" constant="16" id="LLH-zA-NQD"/>
                                         <constraint firstAttribute="bottom" secondItem="af7-jG-b7Z" secondAttribute="bottom" constant="16" id="MAJ-2Z-Jjt"/>
-                                        <constraint firstAttribute="trailing" secondItem="af7-jG-b7Z" secondAttribute="trailing" constant="8" id="OcH-1m-QOD"/>
+                                        <constraint firstAttribute="trailing" secondItem="af7-jG-b7Z" secondAttribute="trailing" constant="20" id="OcH-1m-QOD"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -118,6 +118,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="placeholderTextColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
