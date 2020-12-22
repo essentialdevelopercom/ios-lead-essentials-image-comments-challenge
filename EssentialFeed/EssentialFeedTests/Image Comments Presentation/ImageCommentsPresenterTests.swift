@@ -33,14 +33,24 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let comments = imageComments()
+		let currentDate = Date()
+		let (sut, view) = makeSUT(currentDate: { currentDate }, locale: Locale.init(identifier: "en_US_POSIX"))
+		let comment0 = imageComment(
+			id: UUID(),
+			message: "some message",
+			date: (date: currentDate.adding(days: -1), string: "1 day ago"),
+			author: "some author")
+		let comment1 = imageComment(
+			id: UUID(),
+			message: "another message",
+			date: (date: currentDate.adding(days: -31), string: "1 month ago"),
+			author: "another author")
 
-		sut.didFinishLoadingComments(with: comments)
+		sut.didFinishLoadingComments(with: [comment0.model, comment1.model])
 
 		XCTAssertEqual(view.receivedMessages, [
 			.display(isLoading: false),
-			.display(comments: comments)
+			.display(comments: [comment0.presentable, comment1.presentable])
 		])
 	}
 
@@ -58,9 +68,9 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	// MARK: - Helpers
 
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, ViewSpy) {
+	private func makeSUT(currentDate: @escaping () -> Date = { Date() }, locale: Locale = Locale.current, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(loadingView: view, errorView: view, commentsView: view)
+		let sut = ImageCommentsPresenter(currentDate: currentDate, locale: locale, loadingView: view, errorView: view, commentsView: view)
 		trackForMemoryLeaks(view)
 		trackForMemoryLeaks(sut)
 		return (sut, view)
@@ -81,7 +91,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(isLoading: Bool)
 			case display(errorMessage: String?)
-			case display(comments: [ImageComment])
+			case display(comments: [PresentableImageComment])
 		}
 
 		var receivedMessages = Set<Message>()
@@ -99,10 +109,20 @@ class ImageCommentsPresenterTests: XCTestCase {
 		}
 	}
 
-	private func imageComments() -> [ImageComment] {
-		return [
-			ImageComment(id: UUID(), message: "Some message", createdAt: Date(), author: ImageCommentAuthor(username: "Some user")),
-			ImageComment(id: UUID(), message: "Another message", createdAt: Date(), author: ImageCommentAuthor(username: "Another user"))
-		]
+	private func imageComments() -> (models: [ImageComment], presentables: [PresentableImageComment]) {
+		let comment0 = imageComment(id: UUID(), message: "Some message", date: (date: Date(), string: "some time ago"), author: "some author")
+		let comment1 = imageComment(id: UUID(), message: "Another message", date: (date: Date(), string: "another time ago"), author: "another authod")
+
+		return (
+			[comment0.model, comment1.model],
+			[comment0.presentable, comment1.presentable]
+		)
+	}
+
+	private func imageComment(id: UUID, message: String, date: (date: Date, string: String), author: String) -> (model: ImageComment, presentable: PresentableImageComment) {
+		return (
+			ImageComment(id: id, message: message, createdAt: date.date, author: ImageCommentAuthor(username: author)),
+			PresentableImageComment(username: author, message: message, date: date.string)
+		)
 	}
 }

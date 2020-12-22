@@ -24,6 +24,9 @@ public class ImageCommentsPresenter {
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
 	private let commentsView: ImageCommentsView
+	private let currentDate: () -> Date
+
+	private let dateFormatter = RelativeDateTimeFormatter()
 
 	private var errorMessage: String {
 		return NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
@@ -33,12 +36,16 @@ public class ImageCommentsPresenter {
 	}
 
 	public init(
+		currentDate: @escaping () -> Date,
+		locale: Locale,
 		loadingView: ImageCommentsLoadingView,
 		errorView: ImageCommentsErrorView,
 		commentsView: ImageCommentsView) {
+		self.currentDate = currentDate
 		self.loadingView = loadingView
 		self.errorView = errorView
 		self.commentsView = commentsView
+		dateFormatter.locale = locale
 	}
 
 	public static var title: String {
@@ -55,7 +62,15 @@ public class ImageCommentsPresenter {
 
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-		commentsView.display(ImageCommentsViewModel(comments: comments))
+
+		let presentables: [PresentableImageComment] = comments.map { comment in
+			let name = comment.author.username
+			let message = comment.message
+			let date = dateFormatter.localizedString(for: comment.createdAt, relativeTo: currentDate())
+			return PresentableImageComment(username: name, message: message, date: date)
+		}
+
+		commentsView.display(ImageCommentsViewModel(comments: presentables))
 	}
 
 	public func didFinishLoadingComments(with error: Error) {
