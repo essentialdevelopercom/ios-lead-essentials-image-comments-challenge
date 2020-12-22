@@ -70,7 +70,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	private func makeSUT(currentDate: @escaping () -> Date = { Date() }, locale: Locale = Locale.current, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(currentDate: currentDate, locale: locale, loadingView: view, errorView: view, commentsView: view)
+		let sut = ImageCommentsPresenter(loadingView: view, errorView: view, commentsView: view, currentDate: currentDate, locale: locale)
 		trackForMemoryLeaks(view)
 		trackForMemoryLeaks(sut)
 		return (sut, view)

@@ -36,11 +36,12 @@ public class ImageCommentsPresenter {
 	}
 
 	public init(
-		currentDate: @escaping () -> Date,
-		locale: Locale,
 		loadingView: ImageCommentsLoadingView,
 		errorView: ImageCommentsErrorView,
-		commentsView: ImageCommentsView) {
+		commentsView: ImageCommentsView,
+		currentDate: @escaping () -> Date = Date.init,
+		locale: Locale = Locale.current
+	) {
 		self.currentDate = currentDate
 		self.loadingView = loadingView
 		self.errorView = errorView
