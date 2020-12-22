@@ -27,13 +27,17 @@ class ImageCommentsViewController: UITableViewController {
 
 	override func viewDidLoad() {
 		refreshControl = UIRefreshControl()
+		refreshControl?.endRefreshing()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
 
-		_ = loader?.load { _ in }
+		refresh()
 	}
 
 	@objc private func refresh() {
-		_ = loader?.load { _ in }
+		refreshControl?.beginRefreshing()
+		_ = loader?.load { [weak self] _ in
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 }
 
@@ -61,6 +65,22 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadCount, 3)
 	}
 
+	func test_loadingCommentsIndicator_whileLoadingComments() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
+
+		loader.completeLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
+
+		sut.simulateUserInitiatedReload()
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
+
+		loader.completeLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -82,15 +102,28 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	private class LoaderSpy: ImageCommentsLoader {
-		var loadCount = 0
+
+		var completions = [(ImageCommentsLoader.Result) -> Void]()
+
+		var loadCount: Int {
+			return completions.count
+		}
 
 		private class Task: ImageCommentsLoaderTask {
 			func cancel() {}
 		}
 
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-			loadCount += 1
+			completions.append(completion)
 			return Task()
+		}
+
+		func completeLoading(at index: Int = 0) {
+			completions[index](.success([]))
+		}
+
+		func completeLoadingWithError(at index: Int = 0) {
+			completions[index](.failure(NSError(domain: "loading error", code: 0)))
 		}
 	}
 }
@@ -98,5 +131,9 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 extension ImageCommentsViewController {
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 }
