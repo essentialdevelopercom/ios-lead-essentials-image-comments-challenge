@@ -25,9 +25,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 
 	public override func viewDidLoad() {
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-
+		super.viewDidLoad()
 		refresh()
 	}
 
@@ -42,7 +40,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 		tableView.sizeTableHeaderToFit()
 	}
 
-	@objc private func refresh() {
+	@IBAction private func refresh() {
 		delegate?.didRequestCommentsRefresh()
 	}
 
