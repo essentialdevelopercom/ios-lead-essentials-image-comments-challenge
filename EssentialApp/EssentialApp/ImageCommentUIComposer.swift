@@ -15,7 +15,7 @@ final class ImageCommentUIComposer {
 	private init() {}
 
 	static func makeUI(
-		loader: ImageCommentsLoader,
+		loader: @escaping () -> ImageCommentsLoader.Publisher,
 		currentDate: @escaping () -> Date = Date.init,
 		locale: Locale = Locale.current
 	) -> ImageCommentsViewController {
