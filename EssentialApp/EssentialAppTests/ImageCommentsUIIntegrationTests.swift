@@ -8,7 +8,6 @@
 
 import XCTest
 import EssentialFeed
-import EssentialApp
 
 final class ImageCommentUIComposer {
 
@@ -48,6 +47,8 @@ struct ExpectedCellContent {
 
 class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
 
+	let errorView = UILabel()
+
 	var loader: ImageCommentsLoader?
 	var presenter: ImageCommentsPresenter?
 	var tableModel = [PresentableImageComment]() {
@@ -82,7 +83,7 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 	}
 
 	func display(_ viewModel: ImageCommentsErrorViewModel) {
-
+		errorView.text = viewModel.message
 	}
 
 	func display(_ viewModel: ImageCommentsLoadingViewModel) {
@@ -179,7 +180,6 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		let comment1 = makeImageComment(message: "message1", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author1")
 		let comment2 = makeImageComment(message: "message2", date: (date: date.adding(days: -31), string: "1 month ago"), author: "author2")
 		let comment3 = makeImageComment(message: "message3", date: (date: date.adding(days: -366), string: "1 year ago"), author: "author3")
-
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
@@ -191,6 +191,19 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedReload()
 		loader.completeLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model], at: 1)
 		assertThat(sut, isRendering: [comment0.expectedContent, comment1.expectedContent, comment2.expectedContent, comment3.expectedContent])
+	}
+
+	func test_loadCommentsCompletion_rendersErrorMessageOnLoaderFailureUntilNextReload() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+
+		loader.completeLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(sut.errorMessage, nil)
 	}
 
 	// MARK: - Helpers
@@ -295,6 +308,10 @@ extension ImageCommentsViewController {
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: commentSection)
 		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+
+	var errorMessage: String? {
+		errorView.text
 	}
 }
 
