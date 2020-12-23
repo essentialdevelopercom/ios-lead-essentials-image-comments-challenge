@@ -13,8 +13,8 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 
 	public let errorView = UILabel()
 
-	var loader: ImageCommentsLoader?
-	var presenter: ImageCommentsPresenter?
+	public var loader: ImageCommentsLoader?
+	public var presenter: ImageCommentsPresenter?
 	var tableModel = [PresentableImageComment]() {
 		didSet {
 			tableView.reloadData()

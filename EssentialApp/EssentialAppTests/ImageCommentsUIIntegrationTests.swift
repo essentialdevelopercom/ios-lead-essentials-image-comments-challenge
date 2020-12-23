@@ -8,62 +8,13 @@
 
 import XCTest
 import EssentialFeed
-@testable import EssentialFeediOS
-
-final class ImageCommentUIComposer {
-
-	private init() {}
-
-	static func makeUI(
-		loader: ImageCommentsLoader,
-		currentDate: @escaping () -> Date = Date.init,
-		locale: Locale = Locale.current
-	) -> ImageCommentsViewController {
-		let controller = ImageCommentsViewController()
-		let presenter = ImageCommentsPresenter(
-			loadingView: WeakRefVirtualProxy(controller),
-			errorView: WeakRefVirtualProxy(controller),
-			commentsView: WeakRefVirtualProxy(controller),
-			currentDate: currentDate,
-			locale: locale
-		)
-		controller.presenter = presenter
-		controller.title = ImageCommentsPresenter.title
-		controller.loader = loader
-		return controller
-	}
-}
+import EssentialFeediOS
+@testable import EssentialApp
 
 struct ExpectedCellContent {
 	let username: String
 	let message: String
 	let date: String
-}
-
-final class WeakRefVirtualProxy<T: AnyObject> {
-	private weak var object: T?
-
-	init(_ object: T) {
-		self.object = object
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
-	func display(_ viewModel: ImageCommentsErrorViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsView where T: ImageCommentsView {
-	func display(_ model: ImageCommentsViewModel) {
-		object?.display(model)
-	}
 }
 
 class ImageCommentsUIIntegrationTests: XCTestCase {
