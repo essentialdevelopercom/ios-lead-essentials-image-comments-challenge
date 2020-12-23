@@ -11,7 +11,7 @@ import EssentialFeed
 
 public class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
 
-	public let errorView = UILabel()
+	@IBOutlet private(set) public var errorView: ErrorView!
 
 	public var loader: ImageCommentsLoader?
 	public var presenter: ImageCommentsPresenter?
@@ -37,6 +37,12 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 		task?.cancel()
 	}
 
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+
+		tableView.sizeTableHeaderToFit()
+	}
+
 	@objc private func refresh() {
 		presenter?.didStartLoadingComments()
 		task = loader?.load { [weak self] result in
@@ -54,7 +60,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		errorView.text = viewModel.message
+		errorView.message = viewModel.message
 	}
 
 	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
