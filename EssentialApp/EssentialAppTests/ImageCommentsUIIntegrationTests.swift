@@ -8,7 +8,7 @@
 
 import XCTest
 import EssentialFeed
-import EssentialFeediOS
+@testable import EssentialFeediOS
 
 final class ImageCommentUIComposer {
 
@@ -38,76 +38,6 @@ struct ExpectedCellContent {
 	let username: String
 	let message: String
 	let date: String
-}
-
-class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
-
-	let errorView = UILabel()
-
-	var loader: ImageCommentsLoader?
-	var presenter: ImageCommentsPresenter?
-	var tableModel = [PresentableImageComment]() {
-		didSet {
-			tableView.reloadData()
-		}
-	}
-	var task: ImageCommentsLoaderTask?
-
-	override func viewDidLoad() {
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-
-		tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageCommentCell")
-
-		refresh()
-	}
-
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-
-		task?.cancel()
-	}
-
-	@objc private func refresh() {
-		presenter?.didStartLoadingComments()
-		task = loader?.load { [weak self] result in
-			switch result {
-			case let .success(comments):
-				self?.presenter?.didFinishLoadingComments(with: comments)
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingComments(with: error)
-			}
-		}
-	}
-
-	func display(_ viewModel: ImageCommentsViewModel) {
-		tableModel = viewModel.presentables
-	}
-
-	func display(_ viewModel: ImageCommentsErrorViewModel) {
-		errorView.text = viewModel.message
-	}
-
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		if viewModel.isLoading {
-			refreshControl?.beginRefreshing()
-		} else {
-			refreshControl?.endRefreshing()
-		}
-	}
-
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return tableModel.count
-	}
-
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let model = tableModel[indexPath.row]
-		let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCommentCell", for: indexPath) as! ImageCommentCell
-		cell.usernameLabel.text = model.username
-		cell.messageLabel.text = model.message
-		cell.dateLabel.text = model.date
-		return cell
-	}
 }
 
 final class WeakRefVirtualProxy<T: AnyObject> {
