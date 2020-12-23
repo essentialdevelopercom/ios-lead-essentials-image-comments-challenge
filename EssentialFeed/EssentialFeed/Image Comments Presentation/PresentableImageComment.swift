@@ -9,9 +9,9 @@
 import Foundation
 
 public struct PresentableImageComment: Hashable {
-	let username: String
-	let message: String
-	let date: String
+	public let username: String
+	public let message: String
+	public let date: String
 
 	public init(username: String, message: String, date: String) {
 		self.username = username

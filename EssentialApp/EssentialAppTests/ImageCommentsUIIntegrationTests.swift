@@ -8,36 +8,128 @@
 
 import XCTest
 import EssentialFeed
+import EssentialApp
 
 final class ImageCommentUIComposer {
 
 	private init() {}
 
-	static func makeUI(loader: ImageCommentsLoader) -> ImageCommentsViewController {
+	static func makeUI(
+		loader: ImageCommentsLoader,
+		currentDate: @escaping () -> Date = Date.init,
+		locale: Locale = Locale.current
+	) -> ImageCommentsViewController {
 		let controller = ImageCommentsViewController()
+		let presenter = ImageCommentsPresenter(
+			loadingView: WeakRefVirtualProxy(controller),
+			errorView: WeakRefVirtualProxy(controller),
+			commentsView: WeakRefVirtualProxy(controller),
+			currentDate: currentDate,
+			locale: locale
+		)
+		controller.presenter = presenter
 		controller.title = ImageCommentsPresenter.title
 		controller.loader = loader
 		return controller
 	}
 }
 
-class ImageCommentsViewController: UITableViewController {
+class ImageCommentCell: UITableViewCell {
+	let dateLabel = UILabel()
+	let messageLabel = UILabel()
+	let usernameLabel = UILabel()
+}
+
+struct ExpectedCellContent {
+	let username: String
+	let message: String
+	let date: String
+}
+
+class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
 
 	var loader: ImageCommentsLoader?
+	var presenter: ImageCommentsPresenter?
+	var tableModel = [PresentableImageComment]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
 
 	override func viewDidLoad() {
 		refreshControl = UIRefreshControl()
-		refreshControl?.endRefreshing()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+
+		tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageCommentCell")
 
 		refresh()
 	}
 
 	@objc private func refresh() {
-		refreshControl?.beginRefreshing()
-		_ = loader?.load { [weak self] _ in
-			self?.refreshControl?.endRefreshing()
+		presenter?.didStartLoadingComments()
+		_ = loader?.load { [weak self] result in
+			switch result {
+			case let .success(comments):
+				self?.presenter?.didFinishLoadingComments(with: comments)
+			case let .failure(error):
+				self?.presenter?.didFinishLoadingComments(with: error)
+			}
 		}
+	}
+
+	func display(_ viewModel: ImageCommentsViewModel) {
+		tableModel = viewModel.presentables
+	}
+
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+
+	}
+
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
+	}
+
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return tableModel.count
+	}
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let model = tableModel[indexPath.row]
+		let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCommentCell", for: indexPath) as! ImageCommentCell
+		cell.usernameLabel.text = model.username
+		cell.messageLabel.text = model.message
+		cell.dateLabel.text = model.date
+		return cell
+	}
+}
+
+final class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentsView where T: ImageCommentsView {
+	func display(_ model: ImageCommentsViewModel) {
+		object?.display(model)
 	}
 }
 
@@ -81,11 +173,31 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator)
 	}
 
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+		let date = Date()
+		let comment0 = makeImageComment(message: "message0", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author0")
+		let comment1 = makeImageComment(message: "message1", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author1")
+		let comment2 = makeImageComment(message: "message2", date: (date: date.adding(days: -31), string: "1 month ago"), author: "author2")
+		let comment3 = makeImageComment(message: "message3", date: (date: date.adding(days: -366), string: "1 year ago"), author: "author3")
+
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+
+		loader.completeLoading(with: [comment0.model], at: 0)
+		assertThat(sut, isRendering: [comment0.expectedContent])
+
+		sut.simulateUserInitiatedReload()
+		loader.completeLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model], at: 1)
+		assertThat(sut, isRendering: [comment0.expectedContent, comment1.expectedContent, comment2.expectedContent, comment3.expectedContent])
+	}
+
 	// MARK: - Helpers
 
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentUIComposer.makeUI(loader: loader)
+		let sut = ImageCommentUIComposer.makeUI(loader: loader, currentDate: currentDate, locale: locale)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
@@ -118,13 +230,44 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			return Task()
 		}
 
-		func completeLoading(at index: Int = 0) {
-			completions[index](.success([]))
+		func completeLoading(with comments: [ImageComment] = [], at index: Int = 0) {
+			completions[index](.success(comments))
 		}
 
 		func completeLoadingWithError(at index: Int = 0) {
 			completions[index](.failure(NSError(domain: "loading error", code: 0)))
 		}
+	}
+
+	private func makeImageComment(message: String, date: (date: Date, string: String), author: String) -> (model: ImageComment, expectedContent: ExpectedCellContent) {
+		return (
+			ImageComment(id: UUID(), message: message, createdAt: date.date, author: ImageCommentAuthor(username: author)),
+			ExpectedCellContent(username: author, message: message, date: date.string)
+		)
+	}
+
+	func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ExpectedCellContent], file: StaticString = #filePath, line: UInt = #line) {
+		guard sut.numberOfRenderedCommentViews() == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedCommentViews()) instead.", file: file, line: line)
+		}
+
+		comments.enumerated().forEach { index, image in
+			assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
+		}
+	}
+
+	func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor expected: ExpectedCellContent, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+		let view = sut.commentView(at: index)
+
+		guard let cell = view as? ImageCommentCell else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+
+		XCTAssertEqual(cell.usernameText, expected.username, "Expected cell at index \(index) to display \(expected.username), but displays \(String(describing: cell.usernameText)) instead", file: file, line: line)
+
+		XCTAssertEqual(cell.messageText, expected.message, "Expected cell at index \(index) to display \(expected.message), but displays \(String(describing: cell.messageText)) instead", file: file, line: line)
+
+		XCTAssertEqual(cell.dateText, expected.date, "Expected cell at index \(index) to display \(expected.date), but displays \(String(describing: cell.dateText)) instead", file: file, line: line)
 	}
 }
 
@@ -135,5 +278,42 @@ extension ImageCommentsViewController {
 
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
+	}
+
+	private var commentSection: Int {
+		return 0
+	}
+
+	func numberOfRenderedCommentViews() -> Int {
+		tableView.numberOfRows(inSection: commentSection)
+	}
+
+	func commentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedCommentViews() > row else {
+			return nil
+		}
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: commentSection)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+}
+
+extension ImageCommentCell {
+	var usernameText: String? {
+		usernameLabel.text
+	}
+
+	var messageText: String? {
+		messageLabel.text
+	}
+
+	var dateText: String? {
+		dateLabel.text
+	}
+}
+
+extension Date {
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }
