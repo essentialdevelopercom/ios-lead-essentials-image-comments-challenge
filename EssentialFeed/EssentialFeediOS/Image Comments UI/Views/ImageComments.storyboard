@@ -41,13 +41,48 @@
                             </connections>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Xur-3l-4AX">
-                                <rect key="frame" x="0.0" y="62" width="414" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageCommentCell" id="Xur-3l-4AX" customClass="ImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="62" width="414" height="71"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Xur-3l-4AX" id="pPj-9A-4kq">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="71"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vj6-aU-HYM">
+                                            <rect key="frame" x="20" y="11" width="43.5" height="20.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hRM-Cq-H1K">
+                                            <rect key="frame" x="352" y="11" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Fy-od-JHh">
+                                            <rect key="frame" x="20" y="39.5" width="374" height="20.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="vj6-aU-HYM" firstAttribute="top" secondItem="pPj-9A-4kq" secondAttribute="topMargin" id="5gN-gQ-0rn"/>
+                                        <constraint firstItem="9Fy-od-JHh" firstAttribute="top" secondItem="vj6-aU-HYM" secondAttribute="bottom" constant="8" symbolic="YES" id="Of0-bc-FM4"/>
+                                        <constraint firstItem="hRM-Cq-H1K" firstAttribute="top" secondItem="pPj-9A-4kq" secondAttribute="topMargin" id="X5A-ia-4de"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="9Fy-od-JHh" secondAttribute="trailing" id="YfG-JQ-zcP"/>
+                                        <constraint firstItem="9Fy-od-JHh" firstAttribute="leading" secondItem="pPj-9A-4kq" secondAttribute="leadingMargin" id="iBt-E7-Wax"/>
+                                        <constraint firstItem="hRM-Cq-H1K" firstAttribute="trailing" secondItem="pPj-9A-4kq" secondAttribute="trailingMargin" id="iSX-lf-Y5R"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="9Fy-od-JHh" secondAttribute="bottom" id="iud-HI-n0M"/>
+                                        <constraint firstItem="vj6-aU-HYM" firstAttribute="leading" secondItem="pPj-9A-4kq" secondAttribute="leadingMargin" id="yS3-gy-Dyy"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dateLabel" destination="hRM-Cq-H1K" id="45P-ez-mKk"/>
+                                    <outlet property="messageLabel" destination="9Fy-od-JHh" id="7Fc-eo-gwK"/>
+                                    <outlet property="usernameLabel" destination="vj6-aU-HYM" id="HSP-DW-7dg"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -61,10 +96,13 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uF6-rK-DWs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="23" y="183"/>
+            <point key="canvasLocation" x="21.739130434782609" y="182.8125"/>
         </scene>
     </scenes>
     <resources>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
