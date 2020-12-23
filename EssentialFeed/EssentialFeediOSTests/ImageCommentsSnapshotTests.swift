@@ -15,7 +15,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	func test_emptyComments() {
 		let sut = makeSUT()
 
-		sut.display(ImageCommentsViewModel(presentables: []))
+		sut.display(noComments())
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_IMAGE_COMMENTS_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENTS_dark")
@@ -24,7 +24,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	func test_commentsWithErrorMessage() {
 		let sut = makeSUT()
 
-		sut.display(ImageCommentsErrorViewModel(message: "This is\na multi-line\nerror message"))
+		sut.display(errorMessage("This is\na multi-line\nerror message"))
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "COMMENTS_WITH_ERROR_MESSAGE_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_ERROR_MESSAGE_dark")
@@ -33,7 +33,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	func test_commentsWithContent() {
 		let sut = makeSUT()
 
-		sut.display(ImageCommentsViewModel(presentables: makeComments()))
+		sut.display(comments())
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "LOADED_COMMENTS_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "LOADED_COMMENTS_dark")
@@ -51,11 +51,19 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		return controller
 	}
 
-	private func makeComments() -> [PresentableImageComment] {
+	private func noComments() -> ImageCommentsViewModel {
+		return ImageCommentsViewModel(presentables: [])
+	}
+
+	private func errorMessage(_ message: String) -> ImageCommentsErrorViewModel {
+		return ImageCommentsErrorViewModel(message: message)
+	}
+
+	private func comments() -> ImageCommentsViewModel {
 		let comment0 = PresentableImageComment(username: "Some User", message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.", date: "1 year ago")
 		let comment1 = PresentableImageComment(username: "A very long long long username", message: "Lorem ipsum!\n.\n.\n.\n.", date: "6 month ago")
 		let comment2 = PresentableImageComment(username: "Another User", message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.", date: "1 day ago")
 		let comment3 = PresentableImageComment(username: "Last User", message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.", date: "Just now")
-		return [comment0, comment1, comment2, comment3]
+		return ImageCommentsViewModel(presentables: [comment0, comment1, comment2, comment3])
 	}
 }
