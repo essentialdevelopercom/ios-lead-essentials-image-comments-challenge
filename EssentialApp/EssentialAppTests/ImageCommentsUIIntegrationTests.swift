@@ -8,6 +8,7 @@
 
 import XCTest
 import EssentialFeed
+import EssentialFeediOS
 
 final class ImageCommentUIComposer {
 
@@ -31,12 +32,6 @@ final class ImageCommentUIComposer {
 		controller.loader = loader
 		return controller
 	}
-}
-
-class ImageCommentCell: UITableViewCell {
-	let dateLabel = UILabel()
-	let messageLabel = UILabel()
-	let usernameLabel = UILabel()
 }
 
 struct ExpectedCellContent {
