@@ -6,8 +6,6 @@
 //  Copyright © 2020 Essential Developer. All rights reserved.
 //
 
-import Foundation
-
 public struct PresentableImageComment: Hashable {
 	public let username: String
 	public let message: String

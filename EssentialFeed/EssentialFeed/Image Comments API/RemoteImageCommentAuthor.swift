@@ -6,8 +6,6 @@
 //  Copyright © 2020 Essential Developer. All rights reserved.
 //
 
-import Foundation
-
 struct RemoteImageCommentAuthorItem: Decodable {
 	let username: String
 }
