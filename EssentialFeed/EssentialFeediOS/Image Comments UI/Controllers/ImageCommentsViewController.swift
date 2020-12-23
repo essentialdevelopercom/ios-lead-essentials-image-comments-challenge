@@ -9,18 +9,20 @@
 import UIKit
 import EssentialFeed
 
+public protocol ImageCommentsViewControllerDelegate {
+	func didRequestCommentsRefresh()
+	func didCancelCommentsRequest()
+}
+
 public class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
+	@IBOutlet private(set) public var errorView: ErrorView?
+	public var delegate: ImageCommentsViewControllerDelegate?
 
-	@IBOutlet private(set) public var errorView: ErrorView!
-
-	public var loader: ImageCommentsLoader?
-	public var presenter: ImageCommentsPresenter?
 	var tableModel = [PresentableImageComment]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
-	var task: ImageCommentsLoaderTask?
 
 	public override func viewDidLoad() {
 		refreshControl = UIRefreshControl()
@@ -31,8 +33,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 
 	public override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-
-		task?.cancel()
+		delegate?.didCancelCommentsRequest()
 	}
 
 	public override func viewDidLayoutSubviews() {
@@ -42,15 +43,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 
 	@objc private func refresh() {
-		presenter?.didStartLoadingComments()
-		task = loader?.load { [weak self] result in
-			switch result {
-			case let .success(comments):
-				self?.presenter?.didFinishLoadingComments(with: comments)
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingComments(with: error)
-			}
-		}
+		delegate?.didRequestCommentsRefresh()
 	}
 
 	public func display(_ viewModel: ImageCommentsViewModel) {
@@ -58,7 +51,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		errorView.message = viewModel.message
+		errorView?.message = viewModel.message
 	}
 
 	public func display(_ viewModel: ImageCommentsLoadingViewModel) {

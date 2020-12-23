@@ -215,7 +215,7 @@ extension ImageCommentsViewController {
 	}
 
 	var errorMessage: String? {
-		errorView.text
+		errorView?.message
 	}
 }
 

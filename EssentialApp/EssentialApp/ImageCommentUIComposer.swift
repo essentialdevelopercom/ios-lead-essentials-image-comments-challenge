@@ -19,7 +19,8 @@ final class ImageCommentUIComposer {
 		currentDate: @escaping () -> Date = Date.init,
 		locale: Locale = Locale.current
 	) -> ImageCommentsViewController {
-		let controller = ImageCommentsViewController()
+		let adapter = ImageCommentsLoaderPresentationAdapter(loader: loader)
+		let controller = makeController(title: ImageCommentsPresenter.title, delegate: adapter)
 		let presenter = ImageCommentsPresenter(
 			loadingView: WeakRefVirtualProxy(controller),
 			errorView: WeakRefVirtualProxy(controller),
@@ -27,9 +28,18 @@ final class ImageCommentUIComposer {
 			currentDate: currentDate,
 			locale: locale
 		)
-		controller.presenter = presenter
-		controller.title = ImageCommentsPresenter.title
-		controller.loader = loader
+
+		adapter.presenter = presenter
+
+		return controller
+	}
+
+	private static func makeController(title: String, delegate: ImageCommentsViewControllerDelegate) -> ImageCommentsViewController {
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let controller = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		controller.title = title
+		controller.delegate = delegate
 		return controller
 	}
 }
