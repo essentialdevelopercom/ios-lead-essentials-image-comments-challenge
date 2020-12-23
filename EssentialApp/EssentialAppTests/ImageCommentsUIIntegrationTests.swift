@@ -56,6 +56,7 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 			tableView.reloadData()
 		}
 	}
+	var task: ImageCommentsLoaderTask?
 
 	override func viewDidLoad() {
 		refreshControl = UIRefreshControl()
@@ -66,9 +67,15 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 		refresh()
 	}
 
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		task?.cancel()
+	}
+
 	@objc private func refresh() {
 		presenter?.didStartLoadingComments()
-		_ = loader?.load { [weak self] result in
+		task = loader?.load { [weak self] result in
 			switch result {
 			case let .success(comments):
 				self?.presenter?.didFinishLoadingComments(with: comments)
@@ -206,6 +213,16 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 
+	func test_cancelCommentsLoading_whenViewWillDisappear() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.cancelCount, 0)
+
+		sut.viewWillDisappear(false)
+		XCTAssertEqual(loader.cancelCount, 1)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -229,18 +246,29 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	private class LoaderSpy: ImageCommentsLoader {
 
 		var completions = [(ImageCommentsLoader.Result) -> Void]()
+		var cancelCount = 0
 
 		var loadCount: Int {
 			return completions.count
 		}
 
 		private class Task: ImageCommentsLoaderTask {
-			func cancel() {}
+			let onCancel: () -> Void
+
+			init(onCancel: @escaping () -> Void) {
+				self.onCancel = onCancel
+			}
+
+			func cancel() {
+				onCancel()
+			}
 		}
 
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			completions.append(completion)
-			return Task()
+			return Task { [weak self] in
+				self?.cancelCount += 1
+			}
 		}
 
 		func completeLoading(with comments: [ImageComment] = [], at index: Int = 0) {
