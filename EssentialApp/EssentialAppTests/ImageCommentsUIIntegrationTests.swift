@@ -11,12 +11,6 @@ import EssentialFeed
 import EssentialFeediOS
 @testable import EssentialApp
 
-struct ExpectedCellContent {
-	let username: String
-	let message: String
-	let date: String
-}
-
 class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	func test_imageCommentsView_hasTitle() {
@@ -154,6 +148,12 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		func completeLoadingWithError(at index: Int = 0) {
 			completions[index](.failure(NSError(domain: "loading error", code: 0)))
 		}
+	}
+
+	struct ExpectedCellContent {
+		let username: String
+		let message: String
+		let date: String
 	}
 
 	private func makeImageComment(message: String, date: (date: Date, string: String), author: String) -> (model: ImageComment, expectedContent: ExpectedCellContent) {
