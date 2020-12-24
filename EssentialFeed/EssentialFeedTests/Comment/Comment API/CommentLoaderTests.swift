@@ -27,16 +27,14 @@ class RemoteCommentLoader {
 
 class CommentLoaderTests: XCTestCase {
 	func test_init_doesNotRequestComment() {
-		let client = ClientSpy()
-		_ = RemoteCommentLoader(url: anyURL(), client: client)
+		let (_, client) = makeSUT()
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty, "Expected no requested url upon creation")
 	}
 	
 	func test_load_requestsFromURL() {
 		let url = anyURL()
-		let client = ClientSpy()
-		let sut = RemoteCommentLoader(url: url, client: client)
+		let (sut, client) = makeSUT(url: url)
 		
 		sut.load()
 		
@@ -44,6 +42,16 @@ class CommentLoaderTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: ClientSpy) {
+		let client = ClientSpy()
+		let sut = RemoteCommentLoader(url: anyURL(), client: client)
+		
+		trackForMemoryLeaks(sut, file: file, line: line)
+		trackForMemoryLeaks(client, file: file, line: line)
+		
+		return (sut, client)
+	}
+	
 	class ClientSpy: HTTPClient {
 		
 		var requestedURLs: [URL] = []
