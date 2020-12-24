@@ -33,16 +33,15 @@ class RemoteCommentLoader {
 	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case .success:
+			case let .success((_, response)) where response.statusCode != 200:
 				completion(.failure(.invalidData))
 			case .failure:
 				completion(.failure(.connectivity))
+			default: break
 			}
 		}
 	}
 }
-
-
 
 class CommentLoaderTests: XCTestCase {
 	func test_init_doesNotRequestComment() {
@@ -85,8 +84,8 @@ class CommentLoaderTests: XCTestCase {
 		
 		codeSamples.enumerated().forEach { (index, code) in
 			expect(sut, toCompleteWith: .failure(.invalidData)) {
-				let response = HTTPURLResponse(url: anyURL(), statusCode: code, httpVersion: nil, headerFields: nil)!
-				client.completeWith(data: anyData(), response: response, at: index)
+				let non200HTTPResponse = hTTPResponse(code: code)
+				client.completeWith(data: anyData(), response: non200HTTPResponse, at: index)
 			}
 		}
 	}
@@ -142,5 +141,9 @@ class CommentLoaderTests: XCTestCase {
 		func completeWith(data: Data, response: HTTPURLResponse, at index: Int = 0) {
 			messages[index].completion(.success((data, response)))
 		}
+	}
+	
+	private func hTTPResponse(code: Int) -> HTTPURLResponse {
+		return HTTPURLResponse(url: anyURL(), statusCode: code, httpVersion: nil, headerFields: nil)!
 	}
 }
