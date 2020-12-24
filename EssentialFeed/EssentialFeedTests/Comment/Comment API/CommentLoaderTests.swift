@@ -27,15 +27,16 @@ class RemoteCommentLoader {
 	
 	enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 	
 	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
+			case .success:
+				completion(.failure(.invalidData))
 			case .failure:
 				completion(.failure(.connectivity))
-			default:
-				break
 			}
 		}
 	}
@@ -74,6 +75,19 @@ class CommentLoaderTests: XCTestCase {
 		
 		expect(sut, toCompleteWith: .failure(.connectivity)) {
 			client.completeWith(error: anyNSError())
+		}
+	}
+	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		
+		let codeSamples = [199, 201, 303, 404, 500]
+		
+		codeSamples.enumerated().forEach { (index, code) in
+			expect(sut, toCompleteWith: .failure(.invalidData)) {
+				let response = HTTPURLResponse(url: anyURL(), statusCode: code, httpVersion: nil, headerFields: nil)!
+				client.completeWith(data: anyData(), response: response, at: index)
+			}
 		}
 	}
 	
@@ -123,6 +137,10 @@ class CommentLoaderTests: XCTestCase {
 		
 		func completeWith(error: Error, at index: Int = 0) {
 			messages[index].completion(.failure(error))
+		}
+		
+		func completeWith(data: Data, response: HTTPURLResponse, at index: Int = 0) {
+			messages[index].completion(.success((data, response)))
 		}
 	}
 }
