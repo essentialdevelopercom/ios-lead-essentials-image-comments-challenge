@@ -9,7 +9,7 @@
 import XCTest
 import EssentialFeed
 
-struct Comment: Equatable {
+struct Comment {
 	
 }
 
@@ -25,7 +25,7 @@ class RemoteCommentLoader {
 	
 	typealias Result = Swift.Result<[Comment], Error>
 	
-	enum Error: Swift.Error, Equatable {
+	enum Error: Swift.Error {
 		case connectivity
 	}
 	
@@ -72,11 +72,9 @@ class CommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		var receivedResult: RemoteCommentLoader.Result?
-		sut.load() { receivedResult = $0 }
-		client.completeWith(error: anyNSError())
-		
-		XCTAssertEqual(receivedResult, .failure(.connectivity))
+		expect(sut, toCompleteWith: .failure(.connectivity)) {
+			client.completeWith(error: anyNSError())
+		}
 	}
 	
 	// MARK: - Helpers
@@ -88,6 +86,21 @@ class CommentLoaderTests: XCTestCase {
 		trackForMemoryLeaks(client, file: file, line: line)
 		
 		return (sut, client)
+	}
+	
+	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: RemoteCommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+		
+		let exp = expectation(description: "Wait for load completion")
+		sut.load() { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.failure(receivedError), .failure(expectedError)):
+				XCTAssertEqual(receivedError, expectedError)
+			default: break
+			}
+			exp.fulfill()
+		}
+		action()
+		wait(for: [exp], timeout: 1.0)
 	}
 	
 	class ClientSpy: HTTPClient {
