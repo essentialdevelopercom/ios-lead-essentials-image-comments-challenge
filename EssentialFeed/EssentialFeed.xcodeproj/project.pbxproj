@@ -261,6 +261,7 @@
 		080EDEFE21B6DA7E00813479 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				0844768D21FCB23900439BE9 /* Helpers */,
 				6A30089E25944C4F0037B48E /* Comment */,
 				6AD063C225944AA100126C05 /* Feed */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
@@ -537,7 +538,6 @@
 		6AD063C225944AA100126C05 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
-				0844768D21FCB23900439BE9 /* Helpers */,
 				08C0880F21E4F53000ACFB30 /* Feed API */,
 				089C40D22216C32600DE552E /* Feed Cache */,
 				087148AA232BDF4B00D6BE1A /* Feed Presentation */,
