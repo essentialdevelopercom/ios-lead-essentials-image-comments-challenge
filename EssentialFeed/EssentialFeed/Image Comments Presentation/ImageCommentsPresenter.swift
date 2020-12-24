@@ -20,7 +20,7 @@ public protocol ImageCommentsView {
 	func display(_ viewModel: ImageCommentsViewModel)
 }
 
-public class ImageCommentsPresenter {
+public final class ImageCommentsPresenter {
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
 	private let commentsView: ImageCommentsView

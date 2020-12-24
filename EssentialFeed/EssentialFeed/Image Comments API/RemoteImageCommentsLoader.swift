@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class RemoteImageCommentsLoader: ImageCommentsLoader {
+public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
 

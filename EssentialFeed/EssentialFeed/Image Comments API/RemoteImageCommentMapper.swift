@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RemoteImageCommentMapper {
+final class RemoteImageCommentMapper {
 
 	static let jsonDecoder: JSONDecoder = {
 		let jsonDecoder = JSONDecoder()
