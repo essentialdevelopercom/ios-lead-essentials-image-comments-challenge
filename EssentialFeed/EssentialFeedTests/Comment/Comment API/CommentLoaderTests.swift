@@ -9,7 +9,7 @@
 import XCTest
 import EssentialFeed
 
-class CommentLoader {
+class RemoteCommentLoader {
 	private let url: URL
 	private let client: HTTPClient
 	
@@ -28,7 +28,7 @@ class CommentLoader {
 class CommentLoaderTests: XCTestCase {
 	func test_init_doesNotRequestComment() {
 		let client = ClientSpy()
-		_ = CommentLoader(url: anyURL(), client: client)
+		_ = RemoteCommentLoader(url: anyURL(), client: client)
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty, "Expected no requested url upon creation")
 	}
@@ -36,7 +36,7 @@ class CommentLoaderTests: XCTestCase {
 	func test_load_requestsFromURL() {
 		let url = anyURL()
 		let client = ClientSpy()
-		let sut = CommentLoader(url: url, client: client)
+		let sut = RemoteCommentLoader(url: url, client: client)
 		
 		sut.load()
 		
