@@ -163,37 +163,6 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 }
 
-extension ImageCommentsViewController {
-	func simulateUserInitiatedReload() {
-		refreshControl?.simulatePullToRefresh()
-	}
-
-	var isShowingLoadingIndicator: Bool {
-		return refreshControl?.isRefreshing == true
-	}
-
-	private var commentSection: Int {
-		return 0
-	}
-
-	func numberOfRenderedCommentViews() -> Int {
-		tableView.numberOfRows(inSection: commentSection)
-	}
-
-	func commentView(at row: Int) -> UITableViewCell? {
-		guard numberOfRenderedCommentViews() > row else {
-			return nil
-		}
-		let ds = tableView.dataSource
-		let index = IndexPath(row: row, section: commentSection)
-		return ds?.tableView(tableView, cellForRowAt: index)
-	}
-
-	var errorMessage: String? {
-		errorView?.message
-	}
-}
-
 extension ImageCommentCell {
 	var usernameText: String? {
 		usernameLabel.text

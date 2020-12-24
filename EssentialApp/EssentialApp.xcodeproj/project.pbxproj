@@ -42,6 +42,7 @@
 		6F78FA872593B4E400121BF8 /* ImageCommentUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FA862593B4E400121BF8 /* ImageCommentUIComposer.swift */; };
 		6F78FAB22593E43600121BF8 /* ImageCommentsLoaderPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FAB12593E43600121BF8 /* ImageCommentsLoaderPresentationAdapter.swift */; };
 		6F78FAD02594AAEE00121BF8 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FACF2594AAEE00121BF8 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */; };
+		6F78FAD32594ABBE00121BF8 /* ImageCommentsViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FAD22594ABBE00121BF8 /* ImageCommentsViewController+TestHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		6F78FA862593B4E400121BF8 /* ImageCommentUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentUIComposer.swift; sourceTree = "<group>"; };
 		6F78FAB12593E43600121BF8 /* ImageCommentsLoaderPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLoaderPresentationAdapter.swift; sourceTree = "<group>"; };
 		6F78FACF2594AAEE00121BF8 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+LoaderSpy.swift"; sourceTree = "<group>"; };
+		6F78FAD22594ABBE00121BF8 /* ImageCommentsViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsViewController+TestHelpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				0851CDAB239AB13100C19B1D /* HTTPClientStub.swift */,
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
 				6F78FACF2594AAEE00121BF8 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */,
+				6F78FAD22594ABBE00121BF8 /* ImageCommentsViewController+TestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
 				08073B5A238D2E1000A75DC6 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
+				6F78FAD32594ABBE00121BF8 /* ImageCommentsViewController+TestHelpers.swift in Sources */,
 				6F78FAD02594AAEE00121BF8 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift in Sources */,
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,
 				08073B5F238D2FF100A75DC6 /* FeedAcceptanceTests.swift in Sources */,
