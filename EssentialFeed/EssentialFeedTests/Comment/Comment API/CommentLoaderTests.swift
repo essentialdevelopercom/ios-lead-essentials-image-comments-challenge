@@ -33,11 +33,13 @@ class RemoteCommentLoader {
 	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .success((_, response)) where response.statusCode != 200:
-				completion(.failure(.invalidData))
+			case let .success((data, response)):
+				guard response.statusCode == 200 && !data.isEmpty else {
+					return completion(.failure(.invalidData))
+				}
+				
 			case .failure:
 				completion(.failure(.connectivity))
-			default: break
 			}
 		}
 	}
@@ -90,6 +92,16 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversErrorOn200HTTPResponseWithEmptyData() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWith: .failure(.invalidData)) {
+			let twoHundredTTPResponse = hTTPResponse(code: 200)
+			let emptyData = Data()
+			client.completeWith(data: emptyData, response: twoHundredTTPResponse)
+		}
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: ClientSpy) {
 		let client = ClientSpy()
@@ -107,7 +119,7 @@ class CommentLoaderTests: XCTestCase {
 		sut.load() { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.failure(receivedError), .failure(expectedError)):
-				XCTAssertEqual(receivedError, expectedError)
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default: break
 			}
 			exp.fulfill()
