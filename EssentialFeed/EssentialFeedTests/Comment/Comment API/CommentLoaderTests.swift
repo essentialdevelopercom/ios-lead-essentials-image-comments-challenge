@@ -9,7 +9,12 @@
 import XCTest
 import EssentialFeed
 
+struct Comment: Equatable {
+	
+}
+
 class RemoteCommentLoader {
+	
 	private let url: URL
 	private let client: HTTPClient
 	
@@ -18,8 +23,21 @@ class RemoteCommentLoader {
 		self.client = client
 	}
 	
-	func load() {
-		client.get(from: url) { _ in }
+	typealias Result = Swift.Result<[Comment], Error>
+	
+	enum Error: Swift.Error, Equatable {
+		case connectivity
+	}
+	
+	func load(completion: @escaping (Result) -> Void) {
+		client.get(from: url) { result in
+			switch result {
+			case .failure:
+				completion(.failure(.connectivity))
+			default:
+				break
+			}
+		}
 	}
 }
 
@@ -36,7 +54,7 @@ class CommentLoaderTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load()
+		sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -45,16 +63,26 @@ class CommentLoaderTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load()
-		sut.load()
+		sut.load() { _ in }
+		sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		
+		var receivedResult: RemoteCommentLoader.Result?
+		sut.load() { receivedResult = $0 }
+		client.completeWith(error: anyNSError())
+		
+		XCTAssertEqual(receivedResult, .failure(.connectivity))
 	}
 	
 	// MARK: - Helpers
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: ClientSpy) {
 		let client = ClientSpy()
-		let sut = RemoteCommentLoader(url: anyURL(), client: client)
+		let sut = RemoteCommentLoader(url: url, client: client)
 		
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
@@ -64,11 +92,10 @@ class CommentLoaderTests: XCTestCase {
 	
 	class ClientSpy: HTTPClient {
 		
-		var requestedURLs: [URL] = []
-		
-		func get(from url: URL) {
-			requestedURLs.append(url)
+		var requestedURLs: [URL] {
+			messages.map { $0.url }
 		}
+		var messages: [(url: URL, completion: (HTTPClient.Result) -> Void)] = []
 		
 		private class Task: HTTPClientTask {
 			func cancel() {
@@ -77,8 +104,12 @@ class CommentLoaderTests: XCTestCase {
 		}
 		
 		func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-			requestedURLs.append(url)
+			messages.append((url, completion))
 			return Task()
+		}
+		
+		func completeWith(error: Error, at index: Int = 0) {
+			messages[index].completion(.failure(error))
 		}
 	}
 }
