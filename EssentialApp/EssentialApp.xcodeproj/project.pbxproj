@@ -148,20 +148,10 @@
 				08073B4C238D2E0E00A75DC6 /* UIButton+TestHelpers.swift */,
 				08073B4F238D2E0F00A75DC6 /* UIControl+TestHelpers.swift */,
 				08367CD72486FB51009CD536 /* UIView+TestHelpers.swift */,
-				08073B51238D2E0F00A75DC6 /* FeedViewController+TestHelpers.swift */,
-				08073B4E238D2E0E00A75DC6 /* FeedImageCell+TestHelpers.swift */,
-				08073B4D238D2E0E00A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift */,
-				08073B52238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift */,
-				08073B4B238D2E0E00A75DC6 /* FeedUIIntegrationTests+Localization.swift */,
 				082C00032359E46C008927D3 /* XCTestCase+MemoryLeakTracking.swift */,
 				082C00052359E4C6008927D3 /* SharedTestHelpers.swift */,
 				0851CDAB239AB13100C19B1D /* HTTPClientStub.swift */,
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
-				6F78FACF2594AAEE00121BF8 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */,
-				6F78FAD22594ABBE00121BF8 /* ImageCommentsViewController+TestHelpers.swift */,
-				6F78FAD52594AC3500121BF8 /* ImageCommentCell+TestHelpers.swift */,
-				6F78FADA2594ACAE00121BF8 /* ImageCommentsUIIntegrationTests+Assertions.swift */,
-				6F78FADD2594B12100121BF8 /* ImageCommentsUIIntegrationTests+Localization.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -209,12 +199,11 @@
 		0895DA9C234B3B980031BB2D /* EssentialAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				0895DA9F234B3B980031BB2D /* Info.plist */,
 				082C00022359E43F008927D3 /* Helpers */,
+				6F78FAE42594B27B00121BF8 /* Image Comments */,
+				6F78FAE12594B24600121BF8 /* Feed */,
+				0895DA9F234B3B980031BB2D /* Info.plist */,
 				0832C9CF238D2811002314C9 /* SceneDelegateTests.swift */,
-				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
-				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
-				6F57342D2592926C00087E44 /* ImageCommentsUIIntegrationTests.swift */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -226,6 +215,49 @@
 				0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6F78FAE12594B24600121BF8 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				6F78FAE22594B25900121BF8 /* Helpers */,
+				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
+				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		6F78FAE22594B25900121BF8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				08073B51238D2E0F00A75DC6 /* FeedViewController+TestHelpers.swift */,
+				08073B4E238D2E0E00A75DC6 /* FeedImageCell+TestHelpers.swift */,
+				08073B4D238D2E0E00A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift */,
+				08073B52238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift */,
+				08073B4B238D2E0E00A75DC6 /* FeedUIIntegrationTests+Localization.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		6F78FAE42594B27B00121BF8 /* Image Comments */ = {
+			isa = PBXGroup;
+			children = (
+				6F78FAE52594B29200121BF8 /* Helpers */,
+				6F57342D2592926C00087E44 /* ImageCommentsUIIntegrationTests.swift */,
+			);
+			path = "Image Comments";
+			sourceTree = "<group>";
+		};
+		6F78FAE52594B29200121BF8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				6F78FACF2594AAEE00121BF8 /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */,
+				6F78FAD22594ABBE00121BF8 /* ImageCommentsViewController+TestHelpers.swift */,
+				6F78FAD52594AC3500121BF8 /* ImageCommentCell+TestHelpers.swift */,
+				6F78FADA2594ACAE00121BF8 /* ImageCommentsUIIntegrationTests+Assertions.swift */,
+				6F78FADD2594B12100121BF8 /* ImageCommentsUIIntegrationTests+Localization.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
