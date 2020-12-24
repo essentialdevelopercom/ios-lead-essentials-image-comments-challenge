@@ -26,29 +26,29 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadCount, 0)
 
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.loadCount, 1)
+		XCTAssertEqual(loader.loadCount, 1, "Expected to load when view did load")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadCount, 2)
+		XCTAssertEqual(loader.loadCount, 2, "Expected to load when the user initiates a reload")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadCount, 3)
+		XCTAssertEqual(loader.loadCount, 3, "Expected to load again when the user initiates a second reload")
 	}
 
 	func test_loadingCommentsIndicator_whileLoadingComments() {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		XCTAssertTrue(sut.isShowingLoadingIndicator)
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected to show the loading indicator when view did load and loader hasn't complete loading yet")
 
 		loader.completeLoading(at: 0)
-		XCTAssertFalse(sut.isShowingLoadingIndicator)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected not to show the loading indicator after the loader did finish loading")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertTrue(sut.isShowingLoadingIndicator)
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected to show the loading indicator when the user initiates a reload")
 
 		loader.completeLoadingWithError(at: 1)
-		XCTAssertFalse(sut.isShowingLoadingIndicator)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected not to show the loading indicator after loading completed with an error")
 	}
 
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
@@ -87,10 +87,10 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.cancelCount, 0)
+		XCTAssertEqual(loader.cancelCount, 0, "Loading should not be cancelled when view just did load")
 
 		sut.viewWillDisappear(false)
-		XCTAssertEqual(loader.cancelCount, 1)
+		XCTAssertEqual(loader.cancelCount, 1, "Loading should be cancelled when view is about to disappear")
 	}
 
 	func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
