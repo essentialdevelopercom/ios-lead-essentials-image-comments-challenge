@@ -10,7 +10,7 @@ import Foundation
 
 final class RemoteImageCommentMapper {
 
-	static let jsonDecoder: JSONDecoder = {
+	private static let jsonDecoder: JSONDecoder = {
 		let jsonDecoder = JSONDecoder()
 		jsonDecoder.dateDecodingStrategy = .iso8601
 		return jsonDecoder
