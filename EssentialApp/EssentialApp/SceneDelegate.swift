@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	private lazy var remoteFeedLoader: RemoteFeedLoader = {
 		RemoteFeedLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
+			url: EssentialFeedEndpoint.feed.url,
 			client: httpClient)
 	}()
 	
@@ -69,12 +69,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	private func navigateToImageComments(for image: FeedImage) {
-		guard let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments") else {
-			return
-		}
-
 		let imageCommentsUI = ImageCommentUIComposer.imageCommentsComposedWith(
-			loader: RemoteImageCommentsLoader(client: httpClient, url: url).loadPublisher)
+			loader: RemoteImageCommentsLoader(
+				client: httpClient,
+				url: EssentialFeedEndpoint.comments(id: image.id).url)
+				.loadPublisher)
 		navigationController.pushViewController(imageCommentsUI, animated: true)
 	}
 	

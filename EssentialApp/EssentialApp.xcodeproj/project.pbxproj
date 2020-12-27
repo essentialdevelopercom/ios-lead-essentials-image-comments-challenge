@@ -46,6 +46,7 @@
 		6F78FAD62594AC3500121BF8 /* ImageCommentCell+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FAD52594AC3500121BF8 /* ImageCommentCell+TestHelpers.swift */; };
 		6F78FADB2594ACAE00121BF8 /* ImageCommentsUIIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FADA2594ACAE00121BF8 /* ImageCommentsUIIntegrationTests+Assertions.swift */; };
 		6F78FADE2594B12100121BF8 /* ImageCommentsUIIntegrationTests+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FADD2594B12100121BF8 /* ImageCommentsUIIntegrationTests+Localization.swift */; };
+		6F78FAF52598F4DD00121BF8 /* EssentialFeedEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F78FAF42598F4DD00121BF8 /* EssentialFeedEndpoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +119,7 @@
 		6F78FAD52594AC3500121BF8 /* ImageCommentCell+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentCell+TestHelpers.swift"; sourceTree = "<group>"; };
 		6F78FADA2594ACAE00121BF8 /* ImageCommentsUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 		6F78FADD2594B12100121BF8 /* ImageCommentsUIIntegrationTests+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+Localization.swift"; sourceTree = "<group>"; };
+		6F78FAF42598F4DD00121BF8 /* EssentialFeedEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedEndpoint.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +194,7 @@
 				0895DA94234B3B970031BB2D /* Info.plist */,
 				6F78FA862593B4E400121BF8 /* ImageCommentUIComposer.swift */,
 				6F78FAB12593E43600121BF8 /* ImageCommentsLoaderPresentationAdapter.swift */,
+				6F78FAF42598F4DD00121BF8 /* EssentialFeedEndpoint.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* FeedLoaderPresentationAdapter.swift in Sources */,
+				6F78FAF52598F4DD00121BF8 /* EssentialFeedEndpoint.swift in Sources */,
 				08073B47238D2DFA00A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				6F78FA872593B4E400121BF8 /* ImageCommentUIComposer.swift in Sources */,
