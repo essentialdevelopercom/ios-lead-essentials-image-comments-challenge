@@ -56,6 +56,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         }
     }
     
+    func test_loadComments_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
 
 		expect(sut: sut, toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData), when: {
