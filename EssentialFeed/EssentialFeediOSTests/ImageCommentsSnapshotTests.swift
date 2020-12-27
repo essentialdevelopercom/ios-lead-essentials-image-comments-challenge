@@ -28,6 +28,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "COMMENTS_WITH_ERROR_MESSAGE_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_ERROR_MESSAGE_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraLarge)), named: "COMMENTS_WITH_ERROR_MESSAGE_extra_large_content_size")
 	}
 
 	func test_commentsWithContent() {
