@@ -109,7 +109,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentUIComposer.makeUI(loader: loader.loadPublisher, currentDate: currentDate, locale: locale)
+		let sut = ImageCommentUIComposer.imageCommentsComposedWith(loader: loader.loadPublisher, currentDate: currentDate, locale: locale)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

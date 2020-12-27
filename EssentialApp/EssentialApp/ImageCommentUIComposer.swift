@@ -14,7 +14,7 @@ final class ImageCommentUIComposer {
 
 	private init() {}
 
-	static func makeUI(
+	static func imageCommentsComposedWith(
 		loader: @escaping () -> ImageCommentsLoader.Publisher,
 		currentDate: @escaping () -> Date = Date.init,
 		locale: Locale = Locale.current
