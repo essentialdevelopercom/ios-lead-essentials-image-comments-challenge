@@ -1,5 +1,5 @@
 //
-//  RemoteImageCommentsLoaderTests.swift
+//  LoadImageCommentsFromRemoteUseCaseTests.swift
 //  EssentialFeedTests
 //
 //  Created by Cronay on 13.12.20.
@@ -9,7 +9,7 @@
 import XCTest
 import EssentialFeed
 
-class RemoteImageCommentsLoaderTests: XCTestCase {
+class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
 	func test_init_doesNotRequestFromURL() {
 		let (_, client) = makeSUT()
