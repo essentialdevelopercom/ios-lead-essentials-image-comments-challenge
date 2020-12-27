@@ -83,13 +83,18 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 
-	func test_cancelCommentsLoading_whenViewWillDisappear() {
-		let (sut, loader) = makeSUT()
+	func test_cancelCommentsLoading_whenViewIsDismissed() {
+		let loader = LoaderSpy()
+		var sut: ImageCommentsViewController?
 
-		sut.loadViewIfNeeded()
+		autoreleasepool {
+			sut = ImageCommentUIComposer.imageCommentsComposedWith(loader: loader.loadPublisher)
+			sut?.loadViewIfNeeded()
+		}
+
 		XCTAssertEqual(loader.cancelCount, 0, "Loading should not be cancelled when view just did load")
 
-		sut.viewWillDisappear(false)
+		sut = nil
 		XCTAssertEqual(loader.cancelCount, 1, "Loading should be cancelled when view is about to disappear")
 	}
 
