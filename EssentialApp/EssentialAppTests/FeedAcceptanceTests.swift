@@ -59,11 +59,11 @@ class FeedAcceptanceTests: XCTestCase {
         RunLoop.current.run(until: Date())
         
         let nav = feed.navigationController
-        let comments = nav?.topViewController as! ImageCommentsViewController
+        let comments = nav?.topViewController as? ImageCommentsViewController
         
         XCTAssertNotNil(comments, "Expected ImageCommentsViewController")
-        XCTAssertEqual(comments.numberOfRenderedImageComments(), 1)
-        XCTAssertEqual(comments.commentMessage(at: 0), makeCommentMessage())
+        XCTAssertEqual(comments?.numberOfRenderedImageComments(), 1)
+        XCTAssertEqual(comments?.commentMessage(at: 0), makeCommentMessage())
     }
 	
 	// MARK: - Helpers
