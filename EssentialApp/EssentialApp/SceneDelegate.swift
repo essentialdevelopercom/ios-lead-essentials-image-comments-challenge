@@ -73,9 +73,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			return
 		}
 
-		let loader = RemoteImageCommentsLoader(client: httpClient, url: url).loadPublisher()
-
-		let imageCommentsUI = ImageCommentUIComposer.makeUI(loader: { loader })
+		let imageCommentsUI = ImageCommentUIComposer.makeUI(
+			loader: RemoteImageCommentsLoader(client: httpClient, url: url).loadPublisher)
 		navigationController.pushViewController(imageCommentsUI, animated: true)
 	}
 	
