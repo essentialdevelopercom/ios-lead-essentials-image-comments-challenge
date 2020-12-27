@@ -21,6 +21,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
 	
+	private lazy var navigationController = UINavigationController(
+		rootViewController: FeedUIComposer.feedComposedWith(
+			feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+			imageLoader: makeLocalImageLoaderWithRemoteFallback,
+			feedSelection: showComments))
+	
 	private lazy var remoteFeedLoader: RemoteFeedLoader = {
 		RemoteFeedLoader(
 			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
@@ -42,7 +48,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var remoteImageCommentsLoader: RemoteImageCommentsLoader = {
         RemoteImageCommentsLoader(client: httpClient)
     }()
-    
         
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
@@ -58,14 +63,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-                feedSelection: showComments))
-        
+		window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
@@ -75,8 +74,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func showComments(for image: FeedImage) {
         let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
 		let comments = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, loader: makeRemoteImageCommentsLoader)
-        let nav = window?.rootViewController as! UINavigationController
-        nav.pushViewController(comments, animated: true)
+        navigationController.pushViewController(comments, animated: true)
     }
     
     private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
