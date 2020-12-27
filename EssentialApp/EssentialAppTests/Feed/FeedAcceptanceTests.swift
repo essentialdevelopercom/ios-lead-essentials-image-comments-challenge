@@ -51,6 +51,17 @@ class FeedAcceptanceTests: XCTestCase {
 		
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
+
+	func test_feedImageSelection_navigatesToImageComments() {
+		let feed = launch(httpClient: .online(response), store: .empty)
+
+		feed.simulateFeedImageSelection(at: 0)
+		RunLoop.current.run(until: Date())
+
+		let comments = feed.navigationController?.topViewController as? ImageCommentsViewController
+		XCTAssertNotNil(comments, "Expected shown view to be the image comments UI")
+		XCTAssertEqual(comments?.numberOfRenderedCommentViews(), 2)
+	}
 	
 	// MARK: - Helpers
 	
@@ -80,9 +91,15 @@ class FeedAcceptanceTests: XCTestCase {
 		switch url.absoluteString {
 		case "http://image.com":
 			return makeImageData()
-			
-		default:
+
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed":
 			return makeFeedData()
+
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/2C6A70A3-FA35-449C-816F-6C6F7C294393/comments":
+			return makeCommentsData()
+
+		default:
+			fatalError("There's no data defined for \(url)")
 		}
 	}
 	
@@ -92,9 +109,15 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
+			["id": "2c6a70a3-fa35-449c-816f-6c6f7c294393", "image": "http://image.com"],
 			["id": UUID().uuidString, "image": "http://image.com"]
 		]])
 	}
-	
+
+	private func makeCommentsData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			["id": UUID().uuidString, "message": "some message", "created_at" : "2008-09-24T02:10:22+00:00", "author": ["username": "some user"]],
+			["id": UUID().uuidString, "message": "another message", "created_at" : "2012-04-02T02:22:13+00:00", "author": ["username": "another user"]]
+		]])
+	}
 }
