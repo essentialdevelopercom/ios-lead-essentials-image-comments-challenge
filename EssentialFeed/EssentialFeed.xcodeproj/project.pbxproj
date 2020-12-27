@@ -506,6 +506,7 @@
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 				6F78FA732593B35500121BF8 /* Image Comments UI */,
+				6F78FAE72598C89100121BF8 /* SharedUI */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";
@@ -535,7 +536,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -605,6 +605,14 @@
 				6F78FA802593B3FD00121BF8 /* ImageCommentsViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		6F78FAE72598C89100121BF8 /* SharedUI */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
+			);
+			path = SharedUI;
 			sourceTree = "<group>";
 		};
 		6FA8BFB0258BD437006EC2BA /* Image Comments Feature */ = {
