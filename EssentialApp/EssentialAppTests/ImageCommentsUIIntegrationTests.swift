@@ -115,12 +115,18 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
     }
     
     func test_viewWillDisappear_cancelsLoadCommentsRequest() {
-        let (sut, loader) = makeSUT()
+		let loader = LoaderSpy()
+		var sut: ImageCommentsViewController?
+		
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(url: anyURL(), loader: loader.loadCommentsPublisher)
+			
+			sut?.loadViewIfNeeded()
+		}
         
-        sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadCallsCount, 1, "Expected a loading request once view is loaded")
         
-        sut.delegate = nil
+        sut = nil
         XCTAssertEqual(loader.cancelledLoadCallsCount, 1, "Expected cancelled requests after task is cancelled")
     }
     
