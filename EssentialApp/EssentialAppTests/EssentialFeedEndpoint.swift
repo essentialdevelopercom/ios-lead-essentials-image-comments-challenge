@@ -16,4 +16,11 @@ class EssentialFeedEndpointTests: XCTestCase {
 
 		XCTAssertEqual(expectedURL, EssentialFeedEndpoint.feed.url)
 	}
+
+	func test_imageCommentEndpoint_isReturnedCorrectly() {
+		let id = UUID(uuidString: "E621E1F8-C36C-495A-93FC-0C247A3E6E5F")!
+		let expectedURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/E621E1F8-C36C-495A-93FC-0C247A3E6E5F/comments")!
+
+		XCTAssertEqual(expectedURL, EssentialFeedEndpoint.comments(id: id).url)
+	}
 }
