@@ -61,6 +61,12 @@ class FeedAcceptanceTests: XCTestCase {
 		let comments = feed.navigationController?.topViewController as? ImageCommentsViewController
 		XCTAssertNotNil(comments, "Expected shown view to be the image comments UI")
 		XCTAssertEqual(comments?.numberOfRenderedCommentViews(), 2)
+
+		XCTAssertNotNil(comments?.commentView(at: 0), "Expected a comment view for the first comment")
+		XCTAssertEqual(comments?.commentMessage(at: 0), "some message")
+
+		XCTAssertNotNil(comments?.commentView(at: 1), "Expected a comment view for the second comment")
+		XCTAssertEqual(comments?.commentMessage(at: 1), "another message")
 	}
 	
 	// MARK: - Helpers
