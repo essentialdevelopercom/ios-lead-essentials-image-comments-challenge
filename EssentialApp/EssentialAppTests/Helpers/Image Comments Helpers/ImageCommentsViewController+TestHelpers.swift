@@ -19,7 +19,7 @@ extension ImageCommentsViewController {
     }
     
     func numberOfRenderedImageComments() -> Int {
-        return tableView.numberOfRows(inSection: 0)
+        return tableView.numberOfRows(inSection: commentsSection)
     }
     
     func comment(at row: Int) -> UITableViewCell? {
@@ -27,7 +27,7 @@ extension ImageCommentsViewController {
             return nil
         }
         let datasource = tableView.dataSource
-        let index = IndexPath(row: row, section: 0)
+        let index = IndexPath(row: row, section: commentsSection)
         return datasource?.tableView(tableView, cellForRowAt: index)
     }
     
@@ -42,4 +42,8 @@ extension ImageCommentsViewController {
     var errorMessage: String? {
         return errorView?.message
     }
+	
+	private var commentsSection: Int {
+		return 0
+	}
 }
