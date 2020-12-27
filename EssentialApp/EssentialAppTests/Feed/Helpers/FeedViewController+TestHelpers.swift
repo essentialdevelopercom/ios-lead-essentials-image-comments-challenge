@@ -41,7 +41,7 @@ extension FeedViewController {
 	}
 
 	func simulateFeedImageSelection(at row: Int) {
-		tableView(tableView, didSelectRowAt: IndexPath(row: 0, section: feedImagesSection))
+		tableView(tableView, didSelectRowAt: IndexPath(row: row, section: feedImagesSection))
 	}
 	
 	func renderedFeedImageData(at index: Int) -> Data? {
