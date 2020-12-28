@@ -9,43 +9,6 @@
 import XCTest
 import EssentialFeed
 
-class RemoteCommentLoader {
-	
-	private let url: URL
-	private let client: HTTPClient
-	
-	init(url: URL, client: HTTPClient) {
-		self.url = url
-		self.client = client
-	}
-	
-	typealias Result = Swift.Result<[Comment], Error>
-	
-	enum Error: Swift.Error {
-		case connectivity
-		case invalidData
-	}
-	
-	func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url) { [weak self] result in
-			guard self != nil else { return }
-			switch result {
-			case let .success((data, response)):
-				guard response.statusCode == 200 && !data.isEmpty else {
-					return completion(.failure(.invalidData))
-				}
-				
-				guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
-					return completion(.failure(.invalidData))
-				}
-				completion(.success(root.items))
-			case .failure:
-				completion(.failure(.connectivity))
-			}
-		}
-	}
-}
-
 class CommentLoaderTests: XCTestCase {
 	func test_init_doesNotRequestComment() {
 		let (_, client) = makeSUT()
