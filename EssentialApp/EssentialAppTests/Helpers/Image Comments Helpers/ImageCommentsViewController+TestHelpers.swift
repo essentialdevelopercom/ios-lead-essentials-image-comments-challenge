@@ -35,10 +35,18 @@ extension ImageCommentsViewController {
         comment(at: row) as? ImageCommentCell
     }
     
+	func commentUsername(at row: Int) -> String? {
+		commentView(at: row)?.author.text
+	}
+	
+	func commentDate(at row: Int) -> String? {
+		commentView(at: row)?.date.text
+	}
+	
     func commentMessage(at row: Int) -> String? {
         commentView(at: row)?.message.text
     }
-    
+
     var errorMessage: String? {
         return errorView?.message
     }
