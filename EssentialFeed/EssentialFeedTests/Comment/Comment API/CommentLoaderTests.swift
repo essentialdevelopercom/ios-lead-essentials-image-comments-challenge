@@ -128,6 +128,16 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversNoItemOn200HTTPRepsonseWithEmptyJSON() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWith: .success([])) {
+			let twoHundredTTPResponse = hTTPResponse(code: 200)
+			let emptyJSON = try! JSONSerialization.data(withJSONObject: [:], options: [])
+			client.completeWith(data: emptyJSON, response: twoHundredTTPResponse)
+		}
+	}
+	
 	func test_load_deliversSuccessOn200HTTPRepsonseWithData() {
 		let (sut, client) = makeSUT()
 		let comment1 = makeComment(id: UUID(), message: "any message", createAt: Date(), userName: "any user name")
