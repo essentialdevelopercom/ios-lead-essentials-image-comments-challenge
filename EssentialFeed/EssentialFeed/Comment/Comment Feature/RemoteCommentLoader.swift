@@ -28,18 +28,25 @@ public class RemoteCommentLoader: CommentLoader {
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
-				guard response.statusCode == 200 && !data.isEmpty else {
-					return completion(.failure(Error.invalidData))
-				}
-				
-				guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
-					return completion(.failure(Error.invalidData))
-				}
-				completion(.success(root.items.toModels()))
+				completion(CommentItemMapper.map(data, response))
 			case .failure:
 				completion(.failure(Error.connectivity))
 			}
 		}
+	}
+}
+
+class CommentItemMapper {
+	static func map(_ data: Data, _ response: HTTPURLResponse) -> CommentLoader.Result {
+		guard response.statusCode == 200 && !data.isEmpty else {
+			return .failure(RemoteCommentLoader.Error.invalidData)
+		}
+		
+		guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
+			return .failure(RemoteCommentLoader.Error.invalidData)
+		}
+		
+		return .success(root.items.toModels())
 	}
 }
 
