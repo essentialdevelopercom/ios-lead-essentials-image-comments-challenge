@@ -91,6 +91,8 @@
 		6A9B90C2259993BE00E38B97 /* CommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90C1259993BE00E38B97 /* CommentAuthor.swift */; };
 		6A9B90CC259993D700E38B97 /* RemoteComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90CB259993D700E38B97 /* RemoteComment.swift */; };
 		6A9B90D6259993F900E38B97 /* RemoteCommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90D5259993F900E38B97 /* RemoteCommentAuthor.swift */; };
+		6AF783F72599D32C00A3864C /* CommentLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */; };
+		6AF783FD2599D37500A3864C /* XCTestCase+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF783FC2599D37500A3864C /* XCTestCase+Localization.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,6 +205,8 @@
 		6A9B90C1259993BE00E38B97 /* CommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentAuthor.swift; sourceTree = "<group>"; };
 		6A9B90CB259993D700E38B97 /* RemoteComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteComment.swift; sourceTree = "<group>"; };
 		6A9B90D5259993F900E38B97 /* RemoteCommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentAuthor.swift; sourceTree = "<group>"; };
+		6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLocalizationTests.swift; sourceTree = "<group>"; };
+		6AF783FC2599D37500A3864C /* XCTestCase+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Localization.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -327,6 +331,7 @@
 				08897BEA233939B60029F5E4 /* HTTPClientSpy.swift */,
 				0844768E21FCB24E00439BE9 /* XCTestCase+MemoryLeakTracking.swift */,
 				081C0DB222491EEF00AC754E /* SharedTestHelpers.swift */,
+				6AF783FC2599D37500A3864C /* XCTestCase+Localization.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -527,6 +532,7 @@
 		6A30089E25944C4F0037B48E /* Comment */ = {
 			isa = PBXGroup;
 			children = (
+				6AF783E22599CE4900A3864C /* Comment Presentation */,
 				6A3008A325944D130037B48E /* Comment API */,
 			);
 			path = Comment;
@@ -560,6 +566,7 @@
 		6A9B908B2599883800E38B97 /* Comment */ = {
 			isa = PBXGroup;
 			children = (
+				6AF783ED2599CFD400A3864C /* Comment Presentation */,
 				6A9B908C2599884900E38B97 /* Comment Feature */,
 				6A9B908D2599886600E38B97 /* Comment API */,
 			);
@@ -606,6 +613,21 @@
 				087148AA232BDF4B00D6BE1A /* Feed Presentation */,
 			);
 			path = Feed;
+			sourceTree = "<group>";
+		};
+		6AF783E22599CE4900A3864C /* Comment Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */,
+			);
+			path = "Comment Presentation";
+			sourceTree = "<group>";
+		};
+		6AF783ED2599CFD400A3864C /* Comment Presentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Comment Presentation";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -847,6 +869,7 @@
 				087148BE232BEDFD00D6BE1A /* FeedLocalizationTests.swift in Sources */,
 				082DB86421F763F900A71F69 /* URLSessionHTTPClientTests.swift in Sources */,
 				08C4E984233E037200D939F8 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */,
+				6AF783F72599D32C00A3864C /* CommentLocalizationTests.swift in Sources */,
 				08897BEB233939B60029F5E4 /* HTTPClientSpy.swift in Sources */,
 				086BE4842232725E004CDC26 /* FeedStoreSpy.swift in Sources */,
 				081C0DB322491EEF00AC754E /* SharedTestHelpers.swift in Sources */,
@@ -857,6 +880,7 @@
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
 				086BE481223270A3004CDC26 /* LoadFeedFromCacheUseCaseTests.swift in Sources */,
+				6AF783FD2599D37500A3864C /* XCTestCase+Localization.swift in Sources */,
 				0875468C2272340500542C32 /* FeedStoreSpecs.swift in Sources */,
 				0844768F21FCB24E00439BE9 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				08285AEF228BF7E3000A8987 /* CoreDataFeedStoreTests.swift in Sources */,
