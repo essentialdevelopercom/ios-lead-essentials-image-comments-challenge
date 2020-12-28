@@ -8,12 +8,6 @@
 
 import Foundation
 
-public protocol CommentLoader {
-	typealias Result = Swift.Result<[Comment], Error>
-	
-	func load(completion: @escaping (Result) -> Void)
-}
-
 public class RemoteCommentLoader: CommentLoader {
 	
 	private let url: URL
