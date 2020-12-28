@@ -86,6 +86,7 @@
 		6A9B908F2599887F00E38B97 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B908E2599887F00E38B97 /* Comment.swift */; };
 		6A9B90992599892000E38B97 /* RemoteCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */; };
 		6A9B909F25998B2200E38B97 /* CommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B909E25998B2200E38B97 /* CommentLoader.swift */; };
+		6A9B90A525998F3E00E38B97 /* CommentItemMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90A425998F3E00E38B97 /* CommentItemMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,6 +194,7 @@
 		6A9B908E2599887F00E38B97 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentLoader.swift; sourceTree = "<group>"; };
 		6A9B909E25998B2200E38B97 /* CommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoader.swift; sourceTree = "<group>"; };
+		6A9B90A425998F3E00E38B97 /* CommentItemMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentItemMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -533,8 +535,8 @@
 		6A9B908B2599883800E38B97 /* Comment */ = {
 			isa = PBXGroup;
 			children = (
-				6A9B908D2599886600E38B97 /* Comment API */,
 				6A9B908C2599884900E38B97 /* Comment Feature */,
+				6A9B908D2599886600E38B97 /* Comment API */,
 			);
 			path = Comment;
 			sourceTree = "<group>";
@@ -552,6 +554,7 @@
 			children = (
 				6A9B908E2599887F00E38B97 /* Comment.swift */,
 				6A9B909E25998B2200E38B97 /* CommentLoader.swift */,
+				6A9B90A425998F3E00E38B97 /* CommentItemMapper.swift */,
 			);
 			path = "Comment API";
 			sourceTree = "<group>";
@@ -769,6 +772,7 @@
 				08897BED23393A2E0029F5E4 /* RemoteFeedImageDataLoader.swift in Sources */,
 				08B42EA421C3F09A00DDA349 /* RemoteFeedLoader.swift in Sources */,
 				08285AF4228BFAFF000A8987 /* FeedStore.xcdatamodeld in Sources */,
+				6A9B90A525998F3E00E38B97 /* CommentItemMapper.swift in Sources */,
 				08604505233E316F005ECD22 /* CoreDataFeedStore+FeedStore.swift in Sources */,
 				0886893A221DAA34007BC3E7 /* LocalFeedImage.swift in Sources */,
 				087148B9232BEBD800D6BE1A /* FeedViewModel.swift in Sources */,

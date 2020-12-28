@@ -51,18 +51,8 @@ class CommentLoaderTests: XCTestCase {
 		codeSamples.enumerated().forEach { (index, code) in
 			expect(sut, toCompleteWith: failure(.invalidData)) {
 				let non200HTTPResponse = hTTPResponse(code: code)
-				client.completeWith(data: anyData(), response: non200HTTPResponse, at: index)
+				client.completeWith(data: makeCommentsJSON(comments: []), response: non200HTTPResponse, at: index)
 			}
-		}
-	}
-	
-	func test_load_deliversErrorOn200HTTPResponseWithEmptyData() {
-		let (sut, client) = makeSUT()
-		
-		expect(sut, toCompleteWith: failure(.invalidData)) {
-			let twoHundredTTPResponse = hTTPResponse(code: 200)
-			let emptyData = Data()
-			client.completeWith(data: emptyData, response: twoHundredTTPResponse)
 		}
 	}
 	
@@ -81,7 +71,7 @@ class CommentLoaderTests: XCTestCase {
 		
 		expect(sut, toCompleteWith: .success([])) {
 			let twoHundredTTPResponse = hTTPResponse(code: 200)
-			let emptyJSON = try! JSONSerialization.data(withJSONObject: [:], options: [])
+			let emptyJSON = makeCommentsJSON(comments: [])
 			client.completeWith(data: emptyJSON, response: twoHundredTTPResponse)
 		}
 	}
