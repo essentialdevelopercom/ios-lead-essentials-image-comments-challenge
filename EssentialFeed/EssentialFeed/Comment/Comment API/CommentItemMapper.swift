@@ -14,7 +14,9 @@ class CommentItemMapper {
 	}
 	
 	static func map(_ data: Data, _ response: HTTPURLResponse) throws-> [RemoteComment] {
-		guard response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) else {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		guard response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteCommentLoader.Error.invalidData
 		}
 		

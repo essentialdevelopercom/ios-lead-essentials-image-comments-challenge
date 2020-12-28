@@ -13,4 +13,11 @@ struct RemoteComment: Decodable {
 	let message: String
 	let createAt: Date
 	let author: RemoteCommentAuthor
+	
+	enum CodingKeys: String, CodingKey {
+		case id = "id"
+		case message = "message"
+		case createAt = "created_at"
+		case author = "author"
+	}
 }

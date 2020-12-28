@@ -39,7 +39,7 @@ class CommentLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		
 		expect(sut, toCompleteWith: failure(.connectivity)) {
-			client.completeWith(error: anyNSError())
+			client.complete(with: anyNSError())
 		}
 	}
 	
@@ -50,8 +50,8 @@ class CommentLoaderTests: XCTestCase {
 		
 		codeSamples.enumerated().forEach { (index, code) in
 			expect(sut, toCompleteWith: failure(.invalidData)) {
-				let non200HTTPResponse = hTTPResponse(code: code)
-				client.completeWith(data: makeCommentsJSON(comments: []), response: non200HTTPResponse, at: index)
+				let data = makeCommentsJSON(comments: [])
+				client.complete(withStatusCode: code, data: data, at: index)
 			}
 		}
 	}
@@ -60,9 +60,8 @@ class CommentLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		
 		expect(sut, toCompleteWith: failure(.invalidData)) {
-			let twoHundredTTPResponse = hTTPResponse(code: 200)
 			let invalidData = Data("invalid-data".utf8)
-			client.completeWith(data: invalidData, response: twoHundredTTPResponse)
+			client.complete(withStatusCode: 200, data: invalidData)
 		}
 	}
 	
@@ -70,9 +69,8 @@ class CommentLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		
 		expect(sut, toCompleteWith: .success([])) {
-			let twoHundredTTPResponse = hTTPResponse(code: 200)
 			let emptyJSON = makeCommentsJSON(comments: [])
-			client.completeWith(data: emptyJSON, response: twoHundredTTPResponse)
+			client.complete(withStatusCode: 200, data: emptyJSON)
 		}
 	}
 	
@@ -83,27 +81,25 @@ class CommentLoaderTests: XCTestCase {
 		let commentJSON = makeCommentsJSON(comments: [comment1.json, comment2.json])
 		
 		expect(sut, toCompleteWith: .success([comment1.model, comment2.model])) {
-			let twoHundredTTPResponse = hTTPResponse(code: 200)
-			
-			client.completeWith(data: commentJSON, response: twoHundredTTPResponse)
+			client.complete(withStatusCode: 200, data: commentJSON)
 		}
 	}
 	
 	func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
-		let client = ClientSpy()
+		let client = HTTPClientSpy()
 		var sut: RemoteCommentLoader? = RemoteCommentLoader(url: anyURL(), client: client)
 		var receivedResult: RemoteCommentLoader.Result?
 		
 		sut?.load { receivedResult = $0 }
 		sut = nil
-		client.completeWith(error: anyNSError())
+		client.complete(with: anyNSError())
 		
 		XCTAssertNil(receivedResult, "Expected to get no result after sut has been deallocated")
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: CommentLoader, client: ClientSpy) {
-		let client = ClientSpy()
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: CommentLoader, client: HTTPClientSpy) {
+		let client = HTTPClientSpy()
 		let sut = RemoteCommentLoader(url: url, client: client)
 		
 		trackForMemoryLeaks(sut, file: file, line: line)
@@ -125,37 +121,6 @@ class CommentLoaderTests: XCTestCase {
 		}
 		action()
 		wait(for: [exp], timeout: 1.0)
-	}
-	
-	class ClientSpy: HTTPClient {
-		
-		var requestedURLs: [URL] {
-			messages.map { $0.url }
-		}
-		var messages: [(url: URL, completion: (HTTPClient.Result) -> Void)] = []
-		
-		private class Task: HTTPClientTask {
-			func cancel() {
-				
-			}
-		}
-		
-		func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-			messages.append((url, completion))
-			return Task()
-		}
-		
-		func completeWith(error: Error, at index: Int = 0) {
-			messages[index].completion(.failure(error))
-		}
-		
-		func completeWith(data: Data, response: HTTPURLResponse, at index: Int = 0) {
-			messages[index].completion(.success((data, response)))
-		}
-	}
-	
-	private func hTTPResponse(code: Int) -> HTTPURLResponse {
-		return HTTPURLResponse(url: anyURL(), statusCode: code, httpVersion: nil, headerFields: nil)!
 	}
 	
 	private func makeCommentsJSON(comments: [[String: Any]]) -> Data {
