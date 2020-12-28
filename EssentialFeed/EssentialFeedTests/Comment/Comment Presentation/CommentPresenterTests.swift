@@ -9,13 +9,29 @@
 import XCTest
 import EssentialFeed
 
-
 class CommentPresenterTests: XCTestCase {
 	func test_title_isLocalized() {
 		XCTAssertEqual(CommentPresenter.title, localized("COMMENT_VIEW_TITLE"))
 	}
 	
+	func test_init_doesNotSentAnyMessageToView() {
+		
+		let view = ViewSpy()
+		let sut = CommentPresenter(view: view)
+
+		XCTAssertTrue(view.messages.isEmpty, "Expected no message upon presenter creation")
+	}
+	
 	// MARK: - Helpers
+	
+	private class ViewSpy {
+		var messages = [Message]()
+		
+		enum Message {
+			
+		}
+	}
+	
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "Comment"
 		let bundle = Bundle(for: CommentPresenter.self)

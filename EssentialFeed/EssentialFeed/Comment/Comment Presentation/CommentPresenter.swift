@@ -9,6 +9,11 @@
 import Foundation
 
 public class CommentPresenter {
+	
+	public init(view: Any) {
+		
+	}
+	
 	public static var title: String {
 		return NSLocalizedString("COMMENT_VIEW_TITLE",
 								 tableName: "Comment",
