@@ -97,8 +97,8 @@
 		1158587A257BA6E7008AA2A6 /* ImageCommentCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11585879257BA6E7008AA2A6 /* ImageCommentCellController.swift */; };
 		115AC3812573A8B700977C17 /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AC3802573A8B700977C17 /* ImageCommentCell.swift */; };
 		115AC3902573CC5A00977C17 /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AC38F2573CC5A00977C17 /* ImageCommentsViewController.swift */; };
-		115AC3A02573CD7F00977C17 /* Date+Relative.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AC39F2573CD7F00977C17 /* Date+Relative.swift */; };
 		116BD0E62557F144006EA0A7 /* LoadImageCommentsFromRemoteUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116BD0E52557F144006EA0A7 /* LoadImageCommentsFromRemoteUseCaseTests.swift */; };
+		11DA7402259A2A600058CEDD /* Date+Relative.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AC39F2573CD7F00977C17 /* Date+Relative.swift */; };
 		11DF903A2556A19E00A10B2C /* ImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DF90392556A19E00A10B2C /* ImageComment.swift */; };
 		11DF90DE2556B46200A10B2C /* ImageCommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DF90DD2556B46200A10B2C /* ImageCommentsLoader.swift */; };
 /* End PBXBuildFile section */
@@ -616,6 +616,7 @@
 		11574BB3257CF30A00E902DF /* Image Comments Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				11DA7401259A2A570058CEDD /* Helpers */,
 				11574BB4257CF37600E902DF /* ImageCommentsPresenter.swift */,
 				11574BBE257CF42F00E902DF /* ImageCommentsViewModel.swift */,
 				11574BC4257CF44B00E902DF /* ImageCommentsLoadingViewModel.swift */,
@@ -637,7 +638,6 @@
 		115AC38E2573CC1600977C17 /* Image Comments UI */ = {
 			isa = PBXGroup;
 			children = (
-				115AC39E2573CD6800977C17 /* Helpers */,
 				115AC3992573CCBE00977C17 /* Controllers */,
 				11585846257B89AC008AA2A6 /* Views */,
 			);
@@ -653,7 +653,7 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		115AC39E2573CD6800977C17 /* Helpers */ = {
+		11DA7401259A2A570058CEDD /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				115AC39F2573CD7F00977C17 /* Date+Relative.swift */,
@@ -878,6 +878,7 @@
 				114E78E42559B2AB0013DD5B /* ImageCommentsMapper.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
+				11DA7402259A2A600058CEDD /* Date+Relative.swift in Sources */,
 				08C4E988233E13CC00D939F8 /* FeedImageDataStore.swift in Sources */,
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
 				11DF903A2556A19E00A10B2C /* ImageComment.swift in Sources */,
@@ -938,7 +939,6 @@
 				086AEFBE23A7E75400EE8933 /* UITableView+HeaderSizing.swift in Sources */,
 				115AC3812573A8B700977C17 /* ImageCommentCell.swift in Sources */,
 				08A3F2B2232AA1C200127C15 /* ErrorView.swift in Sources */,
-				115AC3A02573CD7F00977C17 /* Date+Relative.swift in Sources */,
 				08A3F2BB232BA64700127C15 /* UIRefreshControl+Helpers.swift in Sources */,
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,

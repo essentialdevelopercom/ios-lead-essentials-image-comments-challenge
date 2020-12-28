@@ -71,11 +71,3 @@ public final class ImageCommentsPresenter {
 		})
 	}
 }
-
-private extension Date {
-	func relativeDate(to date: Date = Date()) -> String {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		return formatter.localizedString(for: self, relativeTo: date)
-	}
-}
