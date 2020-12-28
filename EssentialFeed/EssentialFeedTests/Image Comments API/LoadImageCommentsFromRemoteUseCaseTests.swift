@@ -65,7 +65,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
     
-    func test_loadComments_deliversNoItemsOn200HTTPResponseWithEmptyJson() {
+    func test_loadComments_deliversNoItemsOn2xxHTTPResponseWithEmptyJson() {
         let (sut, client) = makeSUT()
         
         expect(sut: sut, toCompleteWith: .success([]), when: {
@@ -74,7 +74,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         })
     }
     
-    func test_loadComments_deliversItemsOn200HTTPResponse() {
+    func test_loadComments_deliversItemsOn2xxHTTPResponse() {
         let (sut, client) = makeSUT()
         
         let comment1 = makeItem(
