@@ -38,7 +38,7 @@ class CommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: .failure(.connectivity)) {
+		expect(sut, toCompleteWith: failure(.connectivity)) {
 			client.completeWith(error: anyNSError())
 		}
 	}
@@ -49,7 +49,7 @@ class CommentLoaderTests: XCTestCase {
 		let codeSamples = [199, 201, 303, 404, 500]
 		
 		codeSamples.enumerated().forEach { (index, code) in
-			expect(sut, toCompleteWith: .failure(.invalidData)) {
+			expect(sut, toCompleteWith: failure(.invalidData)) {
 				let non200HTTPResponse = hTTPResponse(code: code)
 				client.completeWith(data: anyData(), response: non200HTTPResponse, at: index)
 			}
@@ -59,7 +59,7 @@ class CommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOn200HTTPResponseWithEmptyData() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: .failure(.invalidData)) {
+		expect(sut, toCompleteWith: failure(.invalidData)) {
 			let twoHundredTTPResponse = hTTPResponse(code: 200)
 			let emptyData = Data()
 			client.completeWith(data: emptyData, response: twoHundredTTPResponse)
@@ -69,7 +69,7 @@ class CommentLoaderTests: XCTestCase {
 	func test_load_deliverErrorOn200HTTPResponseWithInvalidData() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: .failure(.invalidData)) {
+		expect(sut, toCompleteWith: failure(.invalidData)) {
 			let twoHundredTTPResponse = hTTPResponse(code: 200)
 			let invalidData = Data("invalid-data".utf8)
 			client.completeWith(data: invalidData, response: twoHundredTTPResponse)
@@ -112,7 +112,7 @@ class CommentLoaderTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: ClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: CommentLoader, client: ClientSpy) {
 		let client = ClientSpy()
 		let sut = RemoteCommentLoader(url: url, client: client)
 		
@@ -122,12 +122,12 @@ class CommentLoaderTests: XCTestCase {
 		return (sut, client)
 	}
 	
-	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: RemoteCommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+	private func expect(_ sut: CommentLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 		
 		let exp = expectation(description: "Wait for load completion")
 		sut.load() { receivedResult in
 			switch (receivedResult, expectedResult) {
-			case let (.failure(receivedError), .failure(expectedError)):
+			case let (.failure(receivedError as RemoteCommentLoader.Error), .failure(expectedError as RemoteCommentLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default: break
 			}
@@ -184,5 +184,9 @@ class CommentLoaderTests: XCTestCase {
 		let model = Comment(id: id, message: message, createAt: createAt, author: CommentAuthor(username: userName))
 		
 		return (model, json)
+	}
+	
+	private func failure(_ error: RemoteCommentLoader.Error) -> CommentLoader.Result {
+		return .failure(error)
 	}
 }

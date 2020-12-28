@@ -8,7 +8,13 @@
 
 import Foundation
 
-public class RemoteCommentLoader {
+public protocol CommentLoader {
+	typealias Result = Swift.Result<[Comment], Error>
+	
+	func load(completion: @escaping (Result) -> Void)
+}
+
+public class RemoteCommentLoader: CommentLoader {
 	
 	private let url: URL
 	private let client: HTTPClient
@@ -18,28 +24,26 @@ public class RemoteCommentLoader {
 		self.client = client
 	}
 	
-	public typealias Result = Swift.Result<[Comment], Error>
-	
 	public enum Error: Swift.Error {
 		case connectivity
 		case invalidData
 	}
 	
-	public func load(completion: @escaping (Result) -> Void) {
+	public func load(completion: @escaping (CommentLoader.Result) -> Void) {
 		client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
 				guard response.statusCode == 200 && !data.isEmpty else {
-					return completion(.failure(.invalidData))
+					return completion(.failure(Error.invalidData))
 				}
 				
 				guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
-					return completion(.failure(.invalidData))
+					return completion(.failure(Error.invalidData))
 				}
 				completion(.success(root.items))
 			case .failure:
-				completion(.failure(.connectivity))
+				completion(.failure(Error.connectivity))
 			}
 		}
 	}
