@@ -49,11 +49,11 @@ class RemoteCommentLoader {
 					return completion(.failure(.invalidData))
 				}
 				
-				guard let _ = try? JSONDecoder().decode(Root.self, from: data) else {
+				guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
 					return completion(.failure(.invalidData))
 				}
 				
-				
+				completion(.success(root.items))
 			case .failure:
 				completion(.failure(.connectivity))
 			}
@@ -128,6 +128,19 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversSuccessOn200HTTPRepsonseWithData() {
+		let (sut, client) = makeSUT()
+		let comment1 = makeComment(id: UUID(), message: "any message", createAt: Date(), userName: "any user name")
+		let comment2 = makeComment(id: UUID(), message: "another message", createAt: Date(), userName: "another user name")
+		let commentJSON = makeCommentsJSON(comments: [comment1.json, comment2.json])
+		
+		expect(sut, toCompleteWith: .success([comment1.model, comment2.model])) {
+			let twoHundredTTPResponse = hTTPResponse(code: 200)
+			
+			client.completeWith(data: commentJSON, response: twoHundredTTPResponse)
+		}
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: ClientSpy) {
 		let client = ClientSpy()
@@ -183,5 +196,23 @@ class CommentLoaderTests: XCTestCase {
 	
 	private func hTTPResponse(code: Int) -> HTTPURLResponse {
 		return HTTPURLResponse(url: anyURL(), statusCode: code, httpVersion: nil, headerFields: nil)!
+	}
+	
+	private func makeCommentsJSON(comments: [[String: Any]]) -> Data {
+		let items = ["items": comments]
+		return try! JSONSerialization.data(withJSONObject: items, options: [])
+	}
+	
+	private func makeComment(id: UUID, message: String, createAt: Date, userName: String) -> (model: Comment, json: [String: Any]) {
+		let json: [String: Any] = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": ISO8601DateFormatter().string(from: createAt),
+			"author": ["username": userName]
+		]
+		
+		let model = Comment(id: id, message: message, createAt: createAt, author: CommentAuthor(username: userName))
+		
+		return (model, json)
 	}
 }
