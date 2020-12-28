@@ -12,7 +12,7 @@ import EssentialFeed
 class CommentLocalizationTests: XCTestCase, LocalizationTest {
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
 		let table = "Comment"
-		let presentationBundle = Bundle(for: FeedPresenter.self)
+		let presentationBundle = Bundle(for: CommentPresenter.self)
 		let localizationBundles = allLocalizationBundles(in: presentationBundle)
 		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
 		

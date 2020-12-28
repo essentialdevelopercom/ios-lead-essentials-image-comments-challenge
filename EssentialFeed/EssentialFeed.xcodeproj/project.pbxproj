@@ -94,6 +94,8 @@
 		6AF783F72599D32C00A3864C /* CommentLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */; };
 		6AF783FD2599D37500A3864C /* XCTestCase+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF783FC2599D37500A3864C /* XCTestCase+Localization.swift */; };
 		6AF784232599D70F00A3864C /* Comment.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AF7840A2599D64B00A3864C /* Comment.strings */; };
+		6AF784292599DBD400A3864C /* CommentPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF784282599DBD400A3864C /* CommentPresenterTests.swift */; };
+		6AF7842F2599DCD400A3864C /* CommentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF7842E2599DCD400A3864C /* CommentPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -211,6 +213,8 @@
 		6AF784092599D64B00A3864C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Comment.strings; sourceTree = "<group>"; };
 		6AF7841D2599D68300A3864C /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Comment.strings; sourceTree = "<group>"; };
 		6AF7841E2599D68600A3864C /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Comment.strings"; sourceTree = "<group>"; };
+		6AF784282599DBD400A3864C /* CommentPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentPresenterTests.swift; sourceTree = "<group>"; };
+		6AF7842E2599DCD400A3864C /* CommentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -623,6 +627,7 @@
 			isa = PBXGroup;
 			children = (
 				6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */,
+				6AF784282599DBD400A3864C /* CommentPresenterTests.swift */,
 			);
 			path = "Comment Presentation";
 			sourceTree = "<group>";
@@ -631,6 +636,7 @@
 			isa = PBXGroup;
 			children = (
 				6AF7840A2599D64B00A3864C /* Comment.strings */,
+				6AF7842E2599DCD400A3864C /* CommentPresenter.swift */,
 			);
 			path = "Comment Presentation";
 			sourceTree = "<group>";
@@ -839,6 +845,7 @@
 				08C0880C21E4EED600ACFB30 /* HTTPClient.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
+				6AF7842F2599DCD400A3864C /* CommentPresenter.swift in Sources */,
 				08C4E988233E13CC00D939F8 /* FeedImageDataStore.swift in Sources */,
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
@@ -877,6 +884,7 @@
 				08C4E984233E037200D939F8 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */,
 				6AF783F72599D32C00A3864C /* CommentLocalizationTests.swift in Sources */,
 				08897BEB233939B60029F5E4 /* HTTPClientSpy.swift in Sources */,
+				6AF784292599DBD400A3864C /* CommentPresenterTests.swift in Sources */,
 				086BE4842232725E004CDC26 /* FeedStoreSpy.swift in Sources */,
 				081C0DB322491EEF00AC754E /* SharedTestHelpers.swift in Sources */,
 				089C40D42216C37400DE552E /* CacheFeedUseCaseTests.swift in Sources */,
