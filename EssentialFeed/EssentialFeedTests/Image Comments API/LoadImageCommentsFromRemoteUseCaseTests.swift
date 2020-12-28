@@ -49,27 +49,27 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let samples = [199, 300, 400, 500]
         
         samples.enumerated().forEach { index, code in
-			let emptyJSON = Data("{\"items\": [] }".utf8)
+			let emptyJSON = makeItemsJSON([])
             expect(sut: sut, toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData), when: {
                 client.complete(withStatusCode: code, data: emptyJSON, at: index)
             })
         }
     }
     
-    func test_loadComments_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
+	func test_loadComments_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
-
+		
 		expect(sut: sut, toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData), when: {
-			   let invalidData = Data("invalidData".utf8)
-			   client.complete(withStatusCode: 201, data: invalidData)
-			   })
-    }
+			let invalidData = Data("invalidData".utf8)
+			client.complete(withStatusCode: 201, data: invalidData)
+		})
+	}
     
     func test_loadComments_deliversNoItemsOn200HTTPResponseWithEmptyJson() {
         let (sut, client) = makeSUT()
         
         expect(sut: sut, toCompleteWith: .success([]), when: {
-            let emptyJSON = Data("{\"items\": [] }".utf8)
+            let emptyJSON = makeItemsJSON([])
             client.complete(withStatusCode: 200, data: emptyJSON)
         })
     }
@@ -90,13 +90,10 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
             createdAt: (Date(timeIntervalSince1970: 1604924092), "2020-11-09T13:14:52+0100"),
             username: "username2")
                 
-        let commentsJSON = [
-            "items": [comment1.json, comment2.json]
-        ]
+		let commentsJSON = makeItemsJSON([comment1.json, comment2.json])
         
         expect(sut: sut, toCompleteWith: .success([comment1.comment, comment2.comment])) {
-            let json = try! JSONSerialization.data(withJSONObject: commentsJSON)
-            client.complete(withStatusCode: 200, data: json)
+            client.complete(withStatusCode: 200, data: commentsJSON)
         }
     }
     
@@ -133,7 +130,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         _ = sut?.loadComments(from: anyURL()) { capturedResults.append($0) }
 
         sut = nil
-        let emptyJSON = Data("{\"items\": [] }".utf8)
+        let emptyJSON = makeItemsJSON([])
         client.complete(withStatusCode: 200, data: emptyJSON)
         
         XCTAssertTrue(capturedResults.isEmpty)
@@ -164,6 +161,11 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         return(comment, commentJSON)
         
     }
+	
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
+	}
             
     private func expect(sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         
