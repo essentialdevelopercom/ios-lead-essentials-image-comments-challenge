@@ -42,7 +42,8 @@ class RemoteCommentLoader {
 	}
 	
 	func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url) { result in
+		client.get(from: url) { [weak self] result in
+			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
 				guard response.statusCode == 200 && !data.isEmpty else {
@@ -52,7 +53,6 @@ class RemoteCommentLoader {
 				guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
 					return completion(.failure(.invalidData))
 				}
-				
 				completion(.success(root.items))
 			case .failure:
 				completion(.failure(.connectivity))
@@ -139,6 +139,18 @@ class CommentLoaderTests: XCTestCase {
 			
 			client.completeWith(data: commentJSON, response: twoHundredTTPResponse)
 		}
+	}
+	
+	func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
+		let client = ClientSpy()
+		var sut: RemoteCommentLoader? = RemoteCommentLoader(url: anyURL(), client: client)
+		var receivedResult: RemoteCommentLoader.Result?
+		
+		sut?.load { receivedResult = $0 }
+		sut = nil
+		client.completeWith(error: anyNSError())
+		
+		XCTAssertNil(receivedResult, "Expected to get no result after sut has been deallocated")
 	}
 	
 	// MARK: - Helpers
