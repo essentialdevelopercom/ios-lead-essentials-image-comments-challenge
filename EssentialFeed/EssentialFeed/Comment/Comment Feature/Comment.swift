@@ -22,11 +22,3 @@ public struct Comment {
 		self.author = author
 	}
 }
-
-public struct CommentAuthor {
-	public let username: String
-	
-	public init(username: String) {
-		self.username = username
-	}
-}

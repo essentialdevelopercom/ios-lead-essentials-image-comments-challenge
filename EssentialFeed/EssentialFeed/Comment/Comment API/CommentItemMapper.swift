@@ -25,20 +25,3 @@ class CommentItemMapper {
 		return root.items
 	}
 }
-
-struct RemoteComment: Decodable {
-	let id: UUID
-	let message: String
-	let createAt: Date
-	let author: RemoteCommentAuthor
-}
-
-struct RemoteCommentAuthor: Decodable {
-	let username: String
-	
-	func toModel() -> CommentAuthor {
-		return CommentAuthor(username: username)
-	}
-}
-
-
