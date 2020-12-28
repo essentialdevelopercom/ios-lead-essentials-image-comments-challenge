@@ -17,7 +17,7 @@ final class ImageCommentsViewAdapter: ImageCommentsView {
     }
     
     func display(_ viewModel: ImageCommentsViewModel) {
-        controller?.display(viewModel.comments.map { ImageCommentCellController(model: $0) })
+		controller?.display(viewModel.comments.map { ImageCommentCellController(model: $0) })
     }
 
 }

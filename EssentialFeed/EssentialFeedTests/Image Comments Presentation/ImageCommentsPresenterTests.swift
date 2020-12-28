@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import EssentialFeed
+@testable import EssentialFeed
 
 class ImageCommentsPresenterTests: XCTestCase {
     
@@ -30,12 +30,39 @@ class ImageCommentsPresenterTests: XCTestCase {
     }
     
     func test_didFinishLoadingComments_displaysCommentsAndStopLoading() {
-        let (sut, view) = makeSUT()
+		let date = { Date(timeIntervalSince1970: 1609157640) }
+        let (sut, view) = makeSUT(date: date)
         
-        let comments = [comment(), comment()]
+        let comments = [
+			ImageComment(
+				id: UUID(),
+				message: "message0",
+				createdAt: Date(timeIntervalSince1970: 1609157580),
+				username: "username0"
+			),
+			ImageComment(
+				id: UUID(),
+				message: "message1",
+				createdAt: Date(timeIntervalSince1970: 1609154040),
+				username: "username1"
+			)
+		]
+		
+		let viewModels = [
+			ImageCommentViewModel(
+				message: "message0",
+				date: "1 minute ago",
+				username: "username0"
+			),
+			ImageCommentViewModel(
+				message: "message1",
+				date: "1 hour ago",
+				username: "username1")
+		]
+		
         sut.didFinishLoadingComments(with: comments)
         
-        XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+		XCTAssertEqual(view.messages, [.display(comments: viewModels), .display(isLoading: false)])
     }
     
     func test_didFinishLoadingCommentsWithError_displaysLocalizedErrorMessageAndStopLoading() {
@@ -50,16 +77,12 @@ class ImageCommentsPresenterTests: XCTestCase {
 
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(date: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
         let view = ViewSpy()
-        let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view)
+        let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view, date: date)
         trackForMemoryLeaks(view, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, view)
-    }
-    
-    func comment() -> ImageComment {
-        return ImageComment(id: UUID(), message: "any", createdAt: Date(), username: "any")
     }
     
     private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
@@ -77,7 +100,7 @@ class ImageCommentsPresenterTests: XCTestCase {
         enum Message: Equatable {
             case display(errorMessage: String?)
             case display(isLoading: Bool)
-            case display(comments: [ImageComment])
+            case display(comments: [ImageCommentViewModel])
         }
         
         private(set) var messages = [Message]()

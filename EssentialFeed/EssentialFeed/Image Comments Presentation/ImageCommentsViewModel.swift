@@ -7,5 +7,11 @@
 //
 
 public struct ImageCommentsViewModel {
-    public let comments: [ImageComment]
+    public let comments: [ImageCommentViewModel]
+}
+
+public struct ImageCommentViewModel: Equatable {
+	public let message: String
+	public let date: String
+	public let username: String
 }

@@ -24,6 +24,7 @@ public final class ImageCommentsPresenter {
     private let imageCommentsView: ImageCommentsView
     private let loadingView: ImageCommentsLoadingView
     private let errorView: ImageCommentsErrorView
+	private let currentDate: () -> Date
     
     public static var title: String {
         NSLocalizedString("COMMENTS_VIEW_TITLE",
@@ -39,10 +40,11 @@ public final class ImageCommentsPresenter {
                           comment: "Error message displayed when we can't load the image comments from the server")
     }
     
-    public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, date: @escaping () -> Date = Date.init) {
         self.imageCommentsView = imageCommentsView
         self.loadingView = loadingView
         self.errorView = errorView
+		self.currentDate = date
     }
     
     public func didStartLoadingComments() {
@@ -51,7 +53,7 @@ public final class ImageCommentsPresenter {
     }
     
     public func didFinishLoadingComments(with comments: [ImageComment]) {
-        imageCommentsView.display(ImageCommentsViewModel(comments: comments))
+		imageCommentsView.display(ImageCommentsPresenter.map(comments, date: currentDate))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
     
@@ -59,4 +61,21 @@ public final class ImageCommentsPresenter {
         errorView.display(.error(message: commentsLoadError))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
+	
+	static func map(_ comments: [ImageComment], date: @escaping () -> Date = Date.init) -> ImageCommentsViewModel {
+		ImageCommentsViewModel(comments: comments.map {
+			ImageCommentViewModel(
+				message: $0.message,
+				date: $0.createdAt.relativeDate(to: date()),
+				username: $0.username)
+		})
+	}
+}
+
+private extension Date {
+	func relativeDate(to date: Date = Date()) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		return formatter.localizedString(for: self, relativeTo: date)
+	}
 }

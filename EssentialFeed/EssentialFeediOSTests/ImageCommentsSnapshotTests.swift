@@ -81,7 +81,8 @@ class ImageCommentsSnapshotTests: XCTestCase {
 private extension ImageCommentsViewController {
     func display(_ comments: [ImageComment]) {
         let cells: [ImageCommentCellController] = comments.map { comment in
-            let cellController = ImageCommentCellController(model: comment)
+			let model = ImageCommentViewModel(message: comment.message, date: comment.createdAt.relativeDate(), username: comment.username)
+            let cellController = ImageCommentCellController(model: model)
             return cellController
         }
         

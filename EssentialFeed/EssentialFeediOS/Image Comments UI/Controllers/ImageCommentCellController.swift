@@ -10,17 +10,17 @@ import UIKit
 import EssentialFeed
 
 public final class ImageCommentCellController {
-    private let model: ImageComment
+    private let model: ImageCommentViewModel
     private var cell: ImageCommentCell?
     
-    public init(model: ImageComment) {
+    public init(model: ImageCommentViewModel) {
         self.model = model
     }
     
     func view(in tableView: UITableView) -> UITableViewCell {
         cell = tableView.dequeueReusableCell()
         cell?.author.text = model.username
-        cell?.date.text = model.createdAt.relativeDate()
+        cell?.date.text = model.date
         cell?.message.text = model.message
         return cell!
     }
