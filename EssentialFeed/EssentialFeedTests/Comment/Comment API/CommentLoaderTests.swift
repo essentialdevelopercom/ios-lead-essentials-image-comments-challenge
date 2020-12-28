@@ -9,21 +9,6 @@
 import XCTest
 import EssentialFeed
 
-struct Comment: Decodable {
-	let id: UUID
-	let message: String
-	let createAt: Date
-	let author: CommentAuthor
-}
-
-struct CommentAuthor: Decodable {
-	let username: String
-}
-
-struct Root: Decodable {
-	let items: [Comment]
-}
-
 class RemoteCommentLoader {
 	
 	private let url: URL
