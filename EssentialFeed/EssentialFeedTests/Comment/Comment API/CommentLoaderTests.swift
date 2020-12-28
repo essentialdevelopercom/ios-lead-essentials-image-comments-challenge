@@ -9,8 +9,19 @@
 import XCTest
 import EssentialFeed
 
-struct Comment {
-	
+struct Comment: Decodable {
+	let id: UUID
+	let message: String
+	let createAt: Date
+	let author: CommentAuthor
+}
+
+struct CommentAuthor: Decodable {
+	let username: String
+}
+
+struct Root: Decodable {
+	let items: [Comment]
 }
 
 class RemoteCommentLoader {
@@ -37,6 +48,11 @@ class RemoteCommentLoader {
 				guard response.statusCode == 200 && !data.isEmpty else {
 					return completion(.failure(.invalidData))
 				}
+				
+				guard let _ = try? JSONDecoder().decode(Root.self, from: data) else {
+					return completion(.failure(.invalidData))
+				}
+				
 				
 			case .failure:
 				completion(.failure(.connectivity))
@@ -99,6 +115,16 @@ class CommentLoaderTests: XCTestCase {
 			let twoHundredTTPResponse = hTTPResponse(code: 200)
 			let emptyData = Data()
 			client.completeWith(data: emptyData, response: twoHundredTTPResponse)
+		}
+	}
+	
+	func test_load_deliverErrorOn200HTTPResponseWithInvalidData() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWith: .failure(.invalidData)) {
+			let twoHundredTTPResponse = hTTPResponse(code: 200)
+			let invalidData = Data("invalid-data".utf8)
+			client.completeWith(data: invalidData, response: twoHundredTTPResponse)
 		}
 	}
 	
