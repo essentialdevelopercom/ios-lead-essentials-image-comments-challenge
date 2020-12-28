@@ -15,20 +15,37 @@ class CommentPresenterTests: XCTestCase {
 	}
 	
 	func test_init_doesNotSentAnyMessageToView() {
-		
 		let view = ViewSpy()
-		let sut = CommentPresenter(view: view)
+		_ = CommentPresenter(loadingView: view, errorView: view)
 
 		XCTAssertTrue(view.messages.isEmpty, "Expected no message upon presenter creation")
 	}
 	
+	func test_didStartLoadingComment_displayNoErrorAndStartLoading() {
+		let view = ViewSpy()
+		let sut = CommentPresenter(loadingView: view, errorView: view)
+		
+		sut.didStartLoadingComment()
+		
+		XCTAssertEqual(view.messages, [.display(errorMessage: nil), .display(isLoading: true)])
+	}
+	
 	// MARK: - Helpers
 	
-	private class ViewSpy {
-		var messages = [Message]()
+	private class ViewSpy: CommentLoadingView, CommentErrorView {
+		var messages = Set<Message>()
 		
-		enum Message {
-			
+		enum Message: Hashable {
+			case display(errorMessage: String?)
+			case display(isLoading: Bool)
+		}
+		
+		func display(isLoading: Bool) {
+			messages.insert(.display(isLoading: isLoading))
+		}
+		
+		func display(errorMessage: String?) {
+			messages.insert(.display(errorMessage: errorMessage))
 		}
 	}
 	

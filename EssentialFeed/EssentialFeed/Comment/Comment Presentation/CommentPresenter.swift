@@ -8,10 +8,21 @@
 
 import Foundation
 
+public protocol CommentLoadingView {
+	func display(isLoading: Bool)
+}
+
+public protocol CommentErrorView {
+	func display(errorMessage: String?)
+}
+
 public class CommentPresenter {
+	private let loadingView: CommentLoadingView
+	private let errorView: CommentErrorView
 	
-	public init(view: Any) {
-		
+	public init(loadingView: CommentLoadingView, errorView: CommentErrorView) {
+		self.loadingView = loadingView
+		self.errorView = errorView
 	}
 	
 	public static var title: String {
@@ -19,5 +30,10 @@ public class CommentPresenter {
 								 tableName: "Comment",
 								 bundle: Bundle(for: CommentPresenter.self),
 								 comment: "Title for the comment view")
+	}
+	
+	public func didStartLoadingComment() {
+		loadingView.display(isLoading: true)
+		errorView.display(errorMessage: nil)
 	}
 }
