@@ -93,6 +93,7 @@
 		6A9B90D6259993F900E38B97 /* RemoteCommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90D5259993F900E38B97 /* RemoteCommentAuthor.swift */; };
 		6AF783F72599D32C00A3864C /* CommentLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */; };
 		6AF783FD2599D37500A3864C /* XCTestCase+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF783FC2599D37500A3864C /* XCTestCase+Localization.swift */; };
+		6AF784232599D70F00A3864C /* Comment.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6AF7840A2599D64B00A3864C /* Comment.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -207,6 +208,9 @@
 		6A9B90D5259993F900E38B97 /* RemoteCommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentAuthor.swift; sourceTree = "<group>"; };
 		6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLocalizationTests.swift; sourceTree = "<group>"; };
 		6AF783FC2599D37500A3864C /* XCTestCase+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Localization.swift"; sourceTree = "<group>"; };
+		6AF784092599D64B00A3864C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Comment.strings; sourceTree = "<group>"; };
+		6AF7841D2599D68300A3864C /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Comment.strings; sourceTree = "<group>"; };
+		6AF7841E2599D68600A3864C /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Comment.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -626,6 +630,7 @@
 		6AF783ED2599CFD400A3864C /* Comment Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				6AF7840A2599D64B00A3864C /* Comment.strings */,
 			);
 			path = "Comment Presentation";
 			sourceTree = "<group>";
@@ -778,6 +783,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AF784232599D70F00A3864C /* Comment.strings in Resources */,
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -940,6 +946,16 @@
 				087148B3232BE90D00D6BE1A /* el */,
 			);
 			name = Feed.strings;
+			sourceTree = "<group>";
+		};
+		6AF7840A2599D64B00A3864C /* Comment.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6AF784092599D64B00A3864C /* en */,
+				6AF7841D2599D68300A3864C /* el */,
+				6AF7841E2599D68600A3864C /* pt-BR */,
+			);
+			name = Comment.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
