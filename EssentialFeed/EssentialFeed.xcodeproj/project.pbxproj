@@ -552,7 +552,7 @@
 			children = (
 				6A9B908E2599887F00E38B97 /* Comment.swift */,
 				6A9B90C1259993BE00E38B97 /* CommentAuthor.swift */,
-				6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */,
+				6A9B909E25998B2200E38B97 /* CommentLoader.swift */,
 			);
 			path = "Comment Feature";
 			sourceTree = "<group>";
@@ -560,7 +560,7 @@
 		6A9B908D2599886600E38B97 /* Comment API */ = {
 			isa = PBXGroup;
 			children = (
-				6A9B909E25998B2200E38B97 /* CommentLoader.swift */,
+				6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */,
 				6A9B90A425998F3E00E38B97 /* CommentItemMapper.swift */,
 				6A9B90CB259993D700E38B97 /* RemoteComment.swift */,
 				6A9B90D5259993F900E38B97 /* RemoteCommentAuthor.swift */,
