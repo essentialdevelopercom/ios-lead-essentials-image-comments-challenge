@@ -35,10 +35,37 @@ public class RemoteCommentLoader: CommentLoader {
 				guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
 					return completion(.failure(Error.invalidData))
 				}
-				completion(.success(root.items))
+				completion(.success(root.items.toModels()))
 			case .failure:
 				completion(.failure(Error.connectivity))
 			}
+		}
+	}
+}
+
+public struct Root: Decodable {
+	public let items: [RemoteComment]
+}
+
+public struct RemoteComment: Decodable {
+	let id: UUID
+	let message: String
+	let createAt: Date
+	let author: RemoteCommentAuthor
+}
+
+public struct RemoteCommentAuthor: Decodable {
+	let username: String
+	
+	func toModel() -> CommentAuthor {
+		return CommentAuthor(username: username)
+	}
+}
+
+private extension Array where Element == RemoteComment {
+	func toModels() -> [Comment] {
+		return self.map {
+			Comment(id: $0.id, message: $0.message, createAt: $0.createAt, author: $0.author.toModel())
 		}
 	}
 }

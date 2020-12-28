@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Comment: Decodable {
+public struct Comment {
 	
 	public let id: UUID
 	public let message: String
@@ -23,14 +23,10 @@ public struct Comment: Decodable {
 	}
 }
 
-public struct CommentAuthor: Decodable {
+public struct CommentAuthor {
 	public let username: String
 	
 	public init(username: String) {
 		self.username = username
 	}
-}
-
-public struct Root: Decodable {
-	public let items: [Comment]
 }
