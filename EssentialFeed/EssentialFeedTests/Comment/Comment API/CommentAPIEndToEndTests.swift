@@ -88,18 +88,3 @@ class CommentAPIEndToEndTests: XCTestCase {
 			author: author(at: index))
 	}
 }
-
-extension Comment: Equatable {
-	static public func ==(lhs: Comment, rhs: Comment) -> Bool {
-		return lhs.id == rhs.id
-			&& lhs.message == rhs.message
-			&& lhs.createAt == rhs.createAt
-			&& lhs.author == rhs.author
-	}
-}
-
-extension CommentAuthor: Equatable {
-	static public func ==(lhs: CommentAuthor, rhs: CommentAuthor) -> Bool {
-		return lhs.username == rhs.username
-	}
-}
