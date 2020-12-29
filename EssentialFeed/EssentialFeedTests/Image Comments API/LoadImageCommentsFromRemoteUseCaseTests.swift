@@ -72,10 +72,14 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
     func test_loadComments_deliversNoItemsOn2xxHTTPResponseWithEmptyJson() {
         let (sut, client) = makeSUT()
         
-        expect(sut: sut, toCompleteWith: .success([]), when: {
-            let emptyJSON = makeItemsJSON([])
-            client.complete(withStatusCode: 200, data: emptyJSON)
-        })
+		let samples = [200, 201, 204]
+		
+		samples.enumerated().forEach { index, code in
+			expect(sut: sut, toCompleteWith: .success([]), when: {
+				let emptyJSON = makeItemsJSON([])
+				client.complete(withStatusCode: code, data: emptyJSON, at: index)
+			})
+		}
     }
     
     func test_loadComments_deliversItemsOn2xxHTTPResponse() {
@@ -93,12 +97,15 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
             message: "message2",
             createdAt: (Date(timeIntervalSince1970: 1604924092), "2020-11-09T13:14:52+0100"),
             username: "username2")
-                
-		let commentsJSON = makeItemsJSON([comment1.json, comment2.json])
-        
-        expect(sut: sut, toCompleteWith: .success([comment1.comment, comment2.comment])) {
-            client.complete(withStatusCode: 200, data: commentsJSON)
-        }
+		
+		let samples = [200, 201, 204]
+		
+		samples.enumerated().forEach { index, code in
+			let commentsJSON = makeItemsJSON([comment1.json, comment2.json])
+			expect(sut: sut, toCompleteWith: .success([comment1.comment, comment2.comment])) {
+				client.complete(withStatusCode: code, data: commentsJSON, at: index)
+			}
+		}
     }
     
     func test_cancelLoadCommentsURLTask_cancelsClientURLRequest() {
