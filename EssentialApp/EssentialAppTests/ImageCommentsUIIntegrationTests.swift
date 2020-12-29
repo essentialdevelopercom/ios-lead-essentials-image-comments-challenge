@@ -124,7 +124,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			sut?.loadViewIfNeeded()
 		}
         
-        XCTAssertEqual(loader.loadCallsCount, 1, "Expected a loading request once view is loaded")
+		XCTAssertEqual(loader.cancelledLoadCallsCount, 0, "Expected no cancelled requests before task is cancelled")
         
         sut = nil
         XCTAssertEqual(loader.cancelledLoadCallsCount, 1, "Expected cancelled requests after task is cancelled")
