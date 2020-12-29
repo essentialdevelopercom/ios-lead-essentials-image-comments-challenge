@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct CommentAuthor {
+public struct CommentAuthor: Hashable {
 	public let username: String
 	
 	public init(username: String) {
