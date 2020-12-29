@@ -8,32 +8,12 @@
 
 import Foundation
 
-public struct CommentLoadingViewModel {
-	public let isLoading: Bool
-}
-
 public protocol CommentLoadingView {
 	func display(_ viewModel: CommentLoadingViewModel)
 }
 
-public struct CommentErrorViewModel {
-	public let message: String?
-	
-	static var noError: CommentErrorViewModel {
-		return CommentErrorViewModel(message: nil)
-	}
-	
-	static func error(message: String) -> CommentErrorViewModel {
-		return CommentErrorViewModel(message: message)
-	}
-}
-
 public protocol CommentErrorView {
 	func display(_ viewModel: CommentErrorViewModel)
-}
-
-public struct CommentViewModel {
-	public let comments: [Comment]
 }
 
 public protocol CommentView {
