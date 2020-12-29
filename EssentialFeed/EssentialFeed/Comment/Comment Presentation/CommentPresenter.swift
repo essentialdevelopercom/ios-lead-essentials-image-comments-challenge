@@ -8,16 +8,36 @@
 
 import Foundation
 
+public struct CommentLoadingViewModel {
+	public let isLoading: Bool
+}
+
 public protocol CommentLoadingView {
-	func display(isLoading: Bool)
+	func display(_ viewModel: CommentLoadingViewModel)
+}
+
+public struct CommentErrorViewModel {
+	public let message: String?
+	
+	static var noError: CommentErrorViewModel {
+		return CommentErrorViewModel(message: nil)
+	}
+	
+	static func error(message: String) -> CommentErrorViewModel {
+		return CommentErrorViewModel(message: message)
+	}
 }
 
 public protocol CommentErrorView {
-	func display(errorMessage: String?)
+	func display(_ viewModel: CommentErrorViewModel)
+}
+
+public struct CommentViewModel {
+	public let comments: [Comment]
 }
 
 public protocol CommentView {
-	func display(_ comments: [Comment])
+	func display(_ viewModel: CommentViewModel)
 }
 
 public class CommentPresenter {
@@ -45,17 +65,17 @@ public class CommentPresenter {
 	}
 	
 	public func didStartLoadingComment() {
-		loadingView.display(isLoading: true)
-		errorView.display(errorMessage: nil)
+		loadingView.display(CommentLoadingViewModel(isLoading: true))
+		errorView.display(CommentErrorViewModel.noError)
 	}
 	
 	public func didFinishLoadingComment(with error: Error) {
-		loadingView.display(isLoading: false)
-		errorView.display(errorMessage: commentLoadError)
+		loadingView.display(CommentLoadingViewModel(isLoading: false))
+		errorView.display(CommentErrorViewModel.error(message: commentLoadError))
 	}
 	
 	public func didFinishLoadingComment(with comments: [Comment]) {
-		loadingView.display(isLoading: false)
-		commentView.display(comments)
+		loadingView.display(CommentLoadingViewModel(isLoading: false))
+		commentView.display(CommentViewModel(comments: comments))
 	}
 }

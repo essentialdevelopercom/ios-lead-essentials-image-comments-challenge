@@ -58,6 +58,8 @@ class CommentPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	private class ViewSpy: CommentLoadingView, CommentErrorView, CommentView {
+		
+		
 		var messages = Set<Message>()
 		
 		enum Message: Hashable {
@@ -66,16 +68,16 @@ class CommentPresenterTests: XCTestCase {
 			case display(_ comments: [Comment])
 		}
 		
-		func display(isLoading: Bool) {
-			messages.insert(.display(isLoading: isLoading))
+		func display(_ viewModel: CommentLoadingViewModel) {
+			messages.insert(.display(isLoading: viewModel.isLoading))
 		}
 		
-		func display(errorMessage: String?) {
-			messages.insert(.display(errorMessage: errorMessage))
+		func display(_ viewModel: CommentErrorViewModel) {
+			messages.insert(.display(errorMessage: viewModel.message))
 		}
 		
-		func display(_ comments: [Comment]) {
-			messages.insert(.display(comments))
+		func display(_ viewModel: CommentViewModel) {
+			messages.insert(.display(viewModel.comments))
 		}
 	}
 	
