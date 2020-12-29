@@ -86,6 +86,7 @@
 		6A745249259AEDA4007F32EF /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A745248259AEDA4007F32EF /* CommentLoadingViewModel.swift */; };
 		6A74524F259AEDB6007F32EF /* CommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A74524E259AEDB6007F32EF /* CommentErrorViewModel.swift */; };
 		6A745255259AEDC7007F32EF /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A745254259AEDC7007F32EF /* CommentViewModel.swift */; };
+		6A745263259B0E9B007F32EF /* Comment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A745262259B0E9B007F32EF /* Comment.storyboard */; };
 		6A7876AC2599B90500136487 /* CommentAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7876AB2599B90500136487 /* CommentAPIEndToEndTests.swift */; };
 		6A9B908F2599887F00E38B97 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B908E2599887F00E38B97 /* Comment.swift */; };
 		6A9B90992599892000E38B97 /* RemoteCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */; };
@@ -206,6 +207,7 @@
 		6A745248259AEDA4007F32EF /* CommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoadingViewModel.swift; sourceTree = "<group>"; };
 		6A74524E259AEDB6007F32EF /* CommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentErrorViewModel.swift; sourceTree = "<group>"; };
 		6A745254259AEDC7007F32EF /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
+		6A745262259B0E9B007F32EF /* Comment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Comment.storyboard; sourceTree = "<group>"; };
 		6A7876AB2599B90500136487 /* CommentAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		6A9B908E2599887F00E38B97 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentLoader.swift; sourceTree = "<group>"; };
@@ -497,6 +499,7 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				6A74525F259B0E66007F32EF /* Comment UI */,
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 			);
@@ -559,6 +562,30 @@
 				6A7876AB2599B90500136487 /* CommentAPIEndToEndTests.swift */,
 			);
 			path = "Comment API";
+			sourceTree = "<group>";
+		};
+		6A74525F259B0E66007F32EF /* Comment UI */ = {
+			isa = PBXGroup;
+			children = (
+				6A745261259B0E86007F32EF /* Views */,
+				6A745260259B0E7F007F32EF /* Controllers */,
+			);
+			path = "Comment UI";
+			sourceTree = "<group>";
+		};
+		6A745260259B0E7F007F32EF /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		6A745261259B0E86007F32EF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6A745262259B0E9B007F32EF /* Comment.storyboard */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		6A7876A12599B4AA00136487 /* Shared */ = {
@@ -815,6 +842,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
+				6A745263259B0E9B007F32EF /* Comment.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
