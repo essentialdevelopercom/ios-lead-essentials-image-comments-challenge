@@ -59,10 +59,14 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_loadComments_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut: sut, toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData), when: {
+		let samples = [200, 201, 204]
+		
+		samples.enumerated().forEach { index, code in
 			let invalidData = Data("invalidData".utf8)
-			client.complete(withStatusCode: 201, data: invalidData)
-		})
+			expect(sut: sut, toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData), when: {
+				client.complete(withStatusCode: code, data: invalidData, at: index)
+			})
+		}
 	}
     
     func test_loadComments_deliversNoItemsOn2xxHTTPResponseWithEmptyJson() {
