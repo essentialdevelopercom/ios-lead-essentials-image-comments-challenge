@@ -47,7 +47,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversErrorOnHTTPResponseWithStatusCodeOutsideOf2XXRange() {
 		let (sut, client) = makeSUT()
 
-		let nonAcceptedCodes = [100, 199, 301, 404, 503]
+		let nonAcceptedCodes = [100, 199, 300, 404, 503]
 
 		nonAcceptedCodes.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData), when: {
