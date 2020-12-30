@@ -12,7 +12,7 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
-	let loader: () -> ImageCommentsLoader.Publisher
+	private let loader: () -> ImageCommentsLoader.Publisher
 	private var cancellable: Cancellable?
 	var presenter: ImageCommentsPresenter?
 
