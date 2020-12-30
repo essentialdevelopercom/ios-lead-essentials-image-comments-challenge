@@ -27,10 +27,10 @@ extension ImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 
-		XCTAssertEqual(cell.usernameText, expected.username, "Expected cell at index \(index) to display \(expected.username), but displays \(String(describing: cell.usernameText)) instead", file: file, line: line)
+		XCTAssertEqual(cell.usernameText, expected.username, "username in cell at index \(index)", file: file, line: line)
 
-		XCTAssertEqual(cell.messageText, expected.message, "Expected cell at index \(index) to display \(expected.message), but displays \(String(describing: cell.messageText)) instead", file: file, line: line)
+		XCTAssertEqual(cell.messageText, expected.message, "message in cell at index \(index)", file: file, line: line)
 
-		XCTAssertEqual(cell.dateText, expected.date, "Expected cell at index \(index) to display \(expected.date), but displays \(String(describing: cell.dateText)) instead", file: file, line: line)
+		XCTAssertEqual(cell.dateText, expected.date, "date in cell at index \(index)", file: file, line: line)
 	}
 }

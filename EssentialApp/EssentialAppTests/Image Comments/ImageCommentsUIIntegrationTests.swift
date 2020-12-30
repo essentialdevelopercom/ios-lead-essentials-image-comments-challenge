@@ -57,7 +57,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		let comment1 = makeImageComment(message: "message1", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author1")
 		let comment2 = makeImageComment(message: "message2", date: (date: date.adding(days: -31), string: "1 month ago"), author: "author2")
 		let comment3 = makeImageComment(message: "message3", date: (date: date.adding(days: -366), string: "1 year ago"), author: "author3")
-		let (sut, loader) = makeSUT()
+		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
 
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
