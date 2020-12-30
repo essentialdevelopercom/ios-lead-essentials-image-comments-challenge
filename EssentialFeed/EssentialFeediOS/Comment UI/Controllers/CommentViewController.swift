@@ -7,7 +7,13 @@
 //
 
 import UIKit
+import EssentialFeed
 
-class CommentViewController: UITableViewController {
+public class CommentViewController: UITableViewController {
 	
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		self.title = CommentPresenter.title
+	}
 }
