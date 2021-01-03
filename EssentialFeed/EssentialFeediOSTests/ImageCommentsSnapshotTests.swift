@@ -65,13 +65,13 @@ class ImageCommentsSnapshotTests: XCTestCase {
             ImageComment(
                 id: UUID(),
                 message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor magna, porta at sem vitae, bibendum tincidunt nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; ",
-                createdAt: Date.distantPast,
+                createdAt: Date(timeIntervalSince1970: 1604924092),
                 username: "username0"
             ),
             ImageComment(
                 id: UUID(),
                 message: "Nulla blandit condimentum tempor.",
-                createdAt: Date.distantPast,
+                createdAt: Date(timeIntervalSince1970: 1604924092),
                 username: "username1"
             )
         ]
