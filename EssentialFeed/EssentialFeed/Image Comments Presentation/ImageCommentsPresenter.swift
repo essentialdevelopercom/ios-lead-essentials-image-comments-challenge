@@ -25,6 +25,7 @@ public final class ImageCommentsPresenter {
     private let loadingView: ImageCommentsLoadingView
     private let errorView: ImageCommentsErrorView
 	private let currentDate: () -> Date
+	private let locale: Locale
     
     public static var title: String {
         NSLocalizedString("COMMENTS_VIEW_TITLE",
@@ -40,11 +41,12 @@ public final class ImageCommentsPresenter {
                           comment: "Error message displayed when we can't load the image comments from the server")
     }
     
-	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, date: @escaping () -> Date = Date.init) {
+	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, date: @escaping () -> Date = Date.init, locale: Locale = .current) {
         self.imageCommentsView = imageCommentsView
         self.loadingView = loadingView
         self.errorView = errorView
 		self.currentDate = date
+		self.locale = locale
     }
     
     public func didStartLoadingComments() {
@@ -53,7 +55,7 @@ public final class ImageCommentsPresenter {
     }
     
     public func didFinishLoadingComments(with comments: [ImageComment]) {
-		imageCommentsView.display(ImageCommentsPresenter.map(comments, date: currentDate))
+		imageCommentsView.display(ImageCommentsPresenter.map(comments, date: currentDate, locale: locale))
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
     
@@ -62,11 +64,11 @@ public final class ImageCommentsPresenter {
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
 	
-	static func map(_ comments: [ImageComment], date: @escaping () -> Date = Date.init) -> ImageCommentsViewModel {
+	static func map(_ comments: [ImageComment], date: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewModel {
 		ImageCommentsViewModel(comments: comments.map {
 			ImageCommentViewModel(
 				message: $0.message,
-				date: $0.createdAt.relativeDate(to: date()),
+				date: $0.createdAt.relativeDate(to: date(), locale: locale),
 				username: $0.username)
 		})
 	}
