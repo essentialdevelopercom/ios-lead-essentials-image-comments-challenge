@@ -57,7 +57,7 @@ class CommentViewControllerTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
 	func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
@@ -66,7 +66,7 @@ class CommentViewControllerTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		loader.completeCommentLoading()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
 	}
 	
 	func test_userInitiatedCommentReload_loadComment() {
@@ -87,7 +87,7 @@ class CommentViewControllerTests: XCTestCase {
 		sut.simulateUserInititateCommentReload()
 		loader.completeCommentLoading()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
 	}
 	
 	// MARK: - Helpers
@@ -124,6 +124,10 @@ class CommentViewControllerTests: XCTestCase {
 private extension CommentViewController {
 	func simulateUserInititateCommentReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 }
 
