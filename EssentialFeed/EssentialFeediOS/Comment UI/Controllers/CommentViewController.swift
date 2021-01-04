@@ -29,36 +29,25 @@ public class CommentCell: UITableViewCell {
 	public let timestampLabel = UILabel()
 }
 
+protocol CommentRefreshControllerDelegate {
+	func loadComment()
+}
+
 final class CommentRefreshViewController: NSObject, CommentLoadingView {
+	@IBOutlet private var view: UIRefreshControl?
 	
-	
-	private(set) lazy var view: UIRefreshControl = {
-		let view = UIRefreshControl()
-		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-		return view
-	}()
-	private let loader: CommentLoader
-	
-	init(loader: CommentLoader) {
-		self.loader = loader
-	}
+	var delegate: CommentRefreshControllerDelegate?
 	var onRefresh: (([Comment]) -> Void)?
-	@objc func refresh() {
-		view.beginRefreshing()
-		
-		loader.load { [weak self] result in
-			if let comments = try? result.get() {
-				self?.onRefresh?(comments)
-			}
-			self?.view.endRefreshing()
-		}
+	
+	@IBAction func refresh() {
+		delegate?.loadComment()
 	}
 	
 	func display(_ viewModel: CommentLoadingViewModel) {
 		if viewModel.isLoading {
-			view.beginRefreshing()
+			view?.beginRefreshing()
 		} else {
-			view.endRefreshing()
+			view?.endRefreshing()
 		}
 	}
 }
@@ -84,44 +73,109 @@ public final class CommentUIComposer {
 	private init() {}
 	
 	public static func commentComposeWith(loader: CommentLoader) -> CommentViewController {
-		let refreshController = CommentRefreshViewController(loader: loader)
-		let commentViewController = CommentViewController(refreshViewController: refreshController)
-		refreshController.onRefresh = adaptCommentToCellControllers(forwardingTo: commentViewController)
+		let presentationAdapter = CommentLoaderPresentationAdapter(commentLoader: loader)
+		 
+		let bundle = Bundle(for: CommentViewController.self)
+		let storyBoard = UIStoryboard(name: "Comment", bundle: bundle)
+		let commentViewController = storyBoard.instantiateInitialViewController() as! CommentViewController
+		let refreshController = commentViewController.refreshController!
+		refreshController.delegate = presentationAdapter
+		commentViewController.refreshController = refreshController
+		let presenter = CommentPresenter(
+			loadingView: WeakRefVirtualProxy(refreshController),
+			errorView: WeakRefVirtualProxy(commentViewController),
+			commentView: CommentViewAdapter(controller: commentViewController))
+		presentationAdapter.presenter = presenter
+		
 		return commentViewController
 	}
+}
 
-	private static func adaptCommentToCellControllers(forwardingTo controller: CommentViewController) -> ([Comment]) -> Void {
-		return {[weak controller] comments in
-			controller?.tableModel = comments.map {
-				CommentCellController(model: $0)
+final class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+	
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakRefVirtualProxy: CommentLoadingView where T: CommentLoadingView {
+	func display(_ viewModel: CommentLoadingViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: CommentView where T: CommentView {
+	func display(_ viewModel: CommentViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: CommentErrorView where T: CommentErrorView {
+	func display(_ viewModel: CommentErrorViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+private class CommentViewAdapter: CommentView {
+	private weak var controller: CommentViewController?
+	
+	init(controller: CommentViewController) {
+		self.controller = controller
+	}
+	
+	func display(_ viewModel: CommentViewModel) {
+		controller?.tableModel = viewModel.comments.map {
+			CommentCellController(model: $0)
+		}
+	}
+}
+
+class CommentLoaderPresentationAdapter: CommentRefreshControllerDelegate {
+	private let commentLoader: CommentLoader
+	var presenter: CommentPresenter?
+	
+	init(commentLoader: CommentLoader) {
+		self.commentLoader = commentLoader
+	}
+	
+	func loadComment() {
+		presenter?.didStartLoadingComment()
+		commentLoader.load { [weak self] result in
+			switch result {
+			case let .success(comments):
+				self?.presenter?.didFinishLoadingComment(with: comments)
+			case let .failure(error):
+				self?.presenter?.didFinishLoadingComment(with: error)
 			}
 		}
 	}
 }
 
-public final class CommentViewController: UITableViewController {
+public final class CommentViewController: UITableViewController, CommentView, CommentErrorView {
 	var tableModel = [CommentCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
-	private var refreshController: CommentRefreshViewController?
-	convenience init(refreshViewController: CommentRefreshViewController) {
-		self.init()
-		self.refreshController = refreshViewController
-	}
+	@IBOutlet var refreshController: CommentRefreshViewController?
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		refreshControl = refreshController?.view
 		refreshController?.refresh()
 	}
-
+	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return tableModel.count
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		return tableModel[indexPath.row].view()
+	}
+	
+	public func display(_ viewModel: CommentViewModel) {
+	}
+	
+	public func display(_ viewModel: CommentErrorViewModel) {
 	}
 }
