@@ -25,11 +25,12 @@ public class CommentViewController: UITableViewController {
 		
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		refreshControl?.beginRefreshing()
 		load()
 	}
 	
 	@objc private func load() {
+		refreshControl?.beginRefreshing()
+		
 		loader?.load { [weak self]_ in
 			self?.refreshControl?.endRefreshing()
 		}
@@ -38,56 +39,34 @@ public class CommentViewController: UITableViewController {
 
 class CommentViewControllerTests: XCTestCase {
 	
-	func test_init_doesNotLoadComment() {
-		let (_, loader) = makeSUT()
-		
-		XCTAssertEqual(loader.loadCallCount, 0)
-	}
-	
-	func test_viewDidLoad_loadsComment() {
+	func test_loadCommentAction_requestsCommentFromLoader() {
 		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.loadCallCount, 0, "Expected no loading request before the view is loaded")
 		
 		sut.loadViewIfNeeded()
-		
-		XCTAssertEqual(loader.loadCallCount, 1)
-	}
-	
-	func test_viewDidLoad_showsLoadingIndicator() {
-		let (sut, _) = makeSUT()
-		
-		sut.loadViewIfNeeded()
-		
-		XCTAssertTrue(sut.isShowingLoadingIndicator)
-	}
-	
-	func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
-		let (sut, loader) = makeSUT()
-		
-		sut.loadViewIfNeeded()
-		loader.completeCommentLoading()
-		
-		XCTAssertFalse(sut.isShowingLoadingIndicator)
-	}
-	
-	func test_userInitiatedCommentReload_loadComment() {
-		let (sut, loader) = makeSUT()
-		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.loadCallCount, 1, "Expected a request once the view is loaded")
 		
 		sut.simulateUserInititateCommentReload()
-		XCTAssertEqual(loader.loadCallCount, 2)
+		XCTAssertEqual(loader.loadCallCount, 2, "Expected another request once user initiates a load")
 		
 		sut.simulateUserInititateCommentReload()
-		XCTAssertEqual(loader.loadCallCount, 3)
+		XCTAssertEqual(loader.loadCallCount, 3, "Expected a third request once user initiates another load")
 	}
 	
-	func test_userInitiatedCommentReload_hidesLoadingIndicatorOnLoaderCompletion() {
+	func test_loadingCommentIndicator_isVisibleWhileLoadingComment() {
 		let (sut, loader) = makeSUT()
+		
 		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+	
+		loader.completeCommentLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading is completed")
 		
 		sut.simulateUserInititateCommentReload()
-		loader.completeCommentLoading()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user intiates a reload")
 		
-		XCTAssertFalse(sut.isShowingLoadingIndicator)
+		loader.completeCommentLoading(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user intitiated reload is completed")
 	}
 	
 	// MARK: - Helpers
