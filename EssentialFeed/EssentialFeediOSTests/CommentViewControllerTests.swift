@@ -30,7 +30,9 @@ public class CommentViewController: UITableViewController {
 	}
 	
 	@objc private func load() {
-		loader?.load { _ in }
+		loader?.load { [weak self]_ in
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 }
 
@@ -50,23 +52,42 @@ class CommentViewControllerTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 1)
 	}
 	
-	func test_pullToRefresh_loadComment() {
-		let (sut, loader) = makeSUT()
-		sut.loadViewIfNeeded()
-		
-		sut.refreshControl?.simulatePullToRefresh()
-		XCTAssertEqual(loader.loadCallCount, 2)
-		
-		sut.refreshControl?.simulatePullToRefresh()
-		XCTAssertEqual(loader.loadCallCount, 3)
-	}
-	
 	func test_viewDidLoad_showsLoadingIndicator() {
 		let (sut, _) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+	}
+	
+	func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentLoading()
+		
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+	}
+	
+	func test_userInitiatedCommentReload_loadComment() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		sut.simulateUserInititateCommentReload()
+		XCTAssertEqual(loader.loadCallCount, 2)
+		
+		sut.simulateUserInititateCommentReload()
+		XCTAssertEqual(loader.loadCallCount, 3)
+	}
+	
+	func test_userInitiatedCommentReload_hidesLoadingIndicatorOnLoaderCompletion() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		sut.simulateUserInititateCommentReload()
+		loader.completeCommentLoading()
+		
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
 	}
 	
 	// MARK: - Helpers
@@ -86,11 +107,23 @@ class CommentViewControllerTests: XCTestCase {
 	}
 	
 	class LoaderSpy: CommentLoader {
-		var loadCallCount = 0
-		
-		func load(completion: @escaping (CommentLoader.Result) -> Void) {
-			loadCallCount += 1
+		var loadCallCount: Int {
+			return completions.count
 		}
+		var completions = [(CommentLoader.Result) -> Void]()
+		func load(completion: @escaping (CommentLoader.Result) -> Void) {
+			completions.append(completion)
+		}
+		
+		func completeCommentLoading(at index: Int = 0) {
+			completions[index](.success([]))
+		}
+	}
+}
+
+private extension CommentViewController {
+	func simulateUserInititateCommentReload() {
+		refreshControl?.simulatePullToRefresh()
 	}
 }
 
