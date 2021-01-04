@@ -50,9 +50,10 @@ public class CommentViewController: UITableViewController {
 			case let .success(comments):
 				self?.tableModel = comments
 				self?.tableView.reloadData()
-				self?.refreshControl?.endRefreshing()
+				
 			case .failure: break
 			}
+			self?.refreshControl?.endRefreshing()
 		}
 	}
 
@@ -99,7 +100,7 @@ class CommentViewControllerTests: XCTestCase {
 		sut.simulateUserInititateCommentReload()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user intiates a reload")
 		
-		loader.completeCommentLoading(at: 1)
+		loader.completeCommentLoadingWithError(at: 1)
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user intitiated reload is completed")
 	}
 	
@@ -130,7 +131,7 @@ class CommentViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.presentableModel])
 		
 		sut.simulateUserInititateCommentReload()
-		loader.completeCommentLoadingError(at: 1)
+		loader.completeCommentLoadingWithError(at: 1)
 		assertThat(sut, isRendering: [comment0.presentableModel])
 	}
 	
@@ -163,7 +164,7 @@ class CommentViewControllerTests: XCTestCase {
 			completions[index](.success(comments))
 		}
 		
-		func completeCommentLoadingError(at index: Int = 0) {
+		func completeCommentLoadingWithError(at index: Int = 0) {
 			completions[index](.failure(NSError(domain: "error", code: 0)))
 		}
 	}
