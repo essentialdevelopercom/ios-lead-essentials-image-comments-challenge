@@ -30,15 +30,13 @@ public class CommentViewController: UITableViewController {
 class CommentViewControllerTests: XCTestCase {
 	
 	func test_init_doesNotLoadComment() {
-		let loader = LoaderSpy()
-		_ = CommentViewController(loader: loader)
+		let (_, loader) = makeSUT()
 		
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
 	func test_viewDidLoad_loadsComment() {
-		let loader = LoaderSpy()
-		let sut = CommentViewController(loader: loader)
+		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		
@@ -46,6 +44,15 @@ class CommentViewControllerTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
+	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: CommentViewController, loader: LoaderSpy) {
+		let loader = LoaderSpy()
+		let sut = CommentViewController(loader: loader)
+		
+		trackForMemoryLeaks(sut, file: file, line: line)
+		trackForMemoryLeaks(loader, file: file, line: line)
+		
+		return (sut, loader)
+	}
 	func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
 		addTeardownBlock { [weak instance] in
 			XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
