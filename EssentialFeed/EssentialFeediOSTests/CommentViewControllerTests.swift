@@ -11,39 +11,52 @@ import EssentialFeediOS
 import EssentialFeed
 import UIKit
 
+
+public class CommentViewController: UITableViewController {
+	private var loader: CommentLoader?
+	
+	convenience init(loader: CommentLoader) {
+		self.init()
+		self.loader = loader
+	}
+	
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		loader?.load { _ in }
+	}
+}
+
 class CommentViewControllerTests: XCTestCase {
-	func test_loadView_hasLocalizedTitle() {
-		let sut = makeSUT()
+	
+	func test_init_doesNotLoadComment() {
+		let loader = LoaderSpy()
+		_ = CommentViewController(loader: loader)
+		
+		XCTAssertEqual(loader.loadCallCount, 0)
+	}
+	
+	func test_viewDidLoad_loadsComment() {
+		let loader = LoaderSpy()
+		let sut = CommentViewController(loader: loader)
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(sut.title, localized("COMMENT_VIEW_TITLE"))
+		XCTAssertEqual(loader.loadCallCount, 1)
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CommentViewController {
-		let bundle = Bundle(for: CommentViewController.self)
-		let storyBoard = UIStoryboard(name: "Comment", bundle: bundle)
-		let sut = storyBoard.instantiateInitialViewController() as! CommentViewController
-		
-		trackForMemoryLeaks(sut, file: file, line: line)
-		
-		return sut
-	}
-	
-	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
-		let table = "Comment"
-		let bundle = Bundle(for: CommentPresenter.self)
-		let value = bundle.localizedString(forKey: key, value: nil, table: table)
-		if value == key {
-			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
-		}
-		return value
-	}
-	
 	func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
 		addTeardownBlock { [weak instance] in
 			XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+		}
+	}
+	
+	class LoaderSpy: CommentLoader {
+		var loadCallCount = 0
+		
+		func load(completion: @escaping (CommentLoader.Result) -> Void) {
+			loadCallCount += 1
 		}
 	}
 }

@@ -9,11 +9,3 @@
 import UIKit
 import EssentialFeed
 
-public class CommentViewController: UITableViewController {
-	
-	public override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		self.title = CommentPresenter.title
-	}
-}
