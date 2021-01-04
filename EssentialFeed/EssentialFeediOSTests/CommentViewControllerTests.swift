@@ -77,7 +77,7 @@ class CommentViewControllerTests: XCTestCase {
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: CommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = CommentViewController(loader: loader)
+		let sut = CommentUIComposer.commentComposeWith(loader: loader)
 		
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(loader, file: file, line: line)

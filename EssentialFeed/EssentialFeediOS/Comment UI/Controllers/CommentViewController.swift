@@ -29,33 +29,92 @@ public class CommentCell: UITableViewCell {
 	public let timestampLabel = UILabel()
 }
 
-public class CommentViewController: UITableViewController {
-	private var loader: CommentLoader?
-	private var tableModel = [Comment]()
+final class CommentRefreshViewController: NSObject, CommentLoadingView {
 	
-	public convenience init(loader: CommentLoader) {
-		self.init()
+	
+	private(set) lazy var view: UIRefreshControl = {
+		let view = UIRefreshControl()
+		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+		return view
+	}()
+	private let loader: CommentLoader
+	
+	init(loader: CommentLoader) {
 		self.loader = loader
+	}
+	var onRefresh: (([Comment]) -> Void)?
+	@objc func refresh() {
+		view.beginRefreshing()
+		
+		loader.load { [weak self] result in
+			if let comments = try? result.get() {
+				self?.onRefresh?(comments)
+			}
+			self?.view.endRefreshing()
+		}
+	}
+	
+	func display(_ viewModel: CommentLoadingViewModel) {
+		if viewModel.isLoading {
+			view.beginRefreshing()
+		} else {
+			view.endRefreshing()
+		}
+	}
+}
+
+final class CommentCellController {
+	private let model: Comment
+	
+	init(model: Comment) {
+		self.model = model
+	}
+	
+	func view() -> UITableViewCell {
+		let cell = CommentCell()
+		cell.authorLabel.text = model.author.username
+		cell.timestampLabel.text = "any date"
+		cell.commentLabel.text = model.message
+		
+		return cell
+	}
+}
+
+public final class CommentUIComposer {
+	private init() {}
+	
+	public static func commentComposeWith(loader: CommentLoader) -> CommentViewController {
+		let refreshController = CommentRefreshViewController(loader: loader)
+		let commentViewController = CommentViewController(refreshViewController: refreshController)
+		refreshController.onRefresh = adaptCommentToCellControllers(forwardingTo: commentViewController)
+		return commentViewController
+	}
+
+	private static func adaptCommentToCellControllers(forwardingTo controller: CommentViewController) -> ([Comment]) -> Void {
+		return {[weak controller] comments in
+			controller?.tableModel = comments.map {
+				CommentCellController(model: $0)
+			}
+		}
+	}
+}
+
+public final class CommentViewController: UITableViewController {
+	var tableModel = [CommentCellController]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	private var refreshController: CommentRefreshViewController?
+	convenience init(refreshViewController: CommentRefreshViewController) {
+		self.init()
+		self.refreshController = refreshViewController
 	}
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		load()
-	}
-	
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
-		
-		loader?.load { [weak self] result in
-			if let comments = try? result.get() {
-				self?.tableModel = comments
-				self?.tableView.reloadData()
-			}
-			self?.refreshControl?.endRefreshing()
-		}
+		refreshControl = refreshController?.view
+		refreshController?.refresh()
 	}
 
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -63,12 +122,6 @@ public class CommentViewController: UITableViewController {
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let model = tableModel[indexPath.row]
-		let cell = CommentCell()
-		cell.authorLabel.text = model.author.username
-		cell.timestampLabel.text = "any date"
-		cell.commentLabel.text = model.message
-		
-		return cell
+		return tableModel[indexPath.row].view()
 	}
 }
