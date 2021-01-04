@@ -46,12 +46,9 @@ public class CommentViewController: UITableViewController {
 		refreshControl?.beginRefreshing()
 		
 		loader?.load { [weak self] result in
-			switch result {
-			case let .success(comments):
+			if let comments = try? result.get() {
 				self?.tableModel = comments
 				self?.tableView.reloadData()
-				
-			case .failure: break
 			}
 			self?.refreshControl?.endRefreshing()
 		}
@@ -101,7 +98,7 @@ class CommentViewControllerTests: XCTestCase {
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user intiates a reload")
 		
 		loader.completeCommentLoadingWithError(at: 1)
-		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user intitiated reload is completed")
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user intitiated reload failures")
 	}
 	
 	func test_loadCommentCompletion_rendersSuccessfullyLoadedComment() {
