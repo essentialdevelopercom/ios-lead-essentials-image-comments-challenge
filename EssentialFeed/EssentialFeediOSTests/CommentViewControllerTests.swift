@@ -46,9 +46,13 @@ public class CommentViewController: UITableViewController {
 		refreshControl?.beginRefreshing()
 		
 		loader?.load { [weak self] result in
-			self?.tableModel = (try? result.get()) ?? []
-			self?.tableView.reloadData()
-			self?.refreshControl?.endRefreshing()
+			switch result {
+			case let .success(comments):
+				self?.tableModel = comments
+				self?.tableView.reloadData()
+				self?.refreshControl?.endRefreshing()
+			case .failure: break
+			}
 		}
 	}
 
@@ -117,6 +121,19 @@ class CommentViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.presentableModel, comment1.presentableModel, comment2.presentableModel, comment3.presentableModel])
 	}
 	
+	func test_loadCommentCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let comment0 = makeComment(message: "a messages", createAt: Date(), author: "an author")
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentLoading(with: [comment0.model], at: 0)
+		assertThat(sut, isRendering: [comment0.presentableModel])
+		
+		sut.simulateUserInititateCommentReload()
+		loader.completeCommentLoadingError(at: 1)
+		assertThat(sut, isRendering: [comment0.presentableModel])
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: CommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -144,6 +161,10 @@ class CommentViewControllerTests: XCTestCase {
 		
 		func completeCommentLoading(with comments: [Comment] = [], at index: Int = 0) {
 			completions[index](.success(comments))
+		}
+		
+		func completeCommentLoadingError(at index: Int = 0) {
+			completions[index](.failure(NSError(domain: "error", code: 0)))
 		}
 	}
 	
