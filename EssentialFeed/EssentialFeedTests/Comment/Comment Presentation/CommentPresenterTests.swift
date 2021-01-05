@@ -38,12 +38,13 @@ class CommentPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingWithComment_displayCommentsAndStopLoading() {
 		let (sut, view) = makeSUT()
-		let comments = [uniqueComment(), uniqueComment()]
-		sut.didFinishLoadingComment(with: comments)
+		let comment0 = makeComment(message: "a messages", createAt: Date(), author: "an author")
+		let comment1 = makeComment(message: "another messages", createAt: Date(), author: "another author")
+		sut.didFinishLoadingComment(with: [comment0.model, comment1.model])
 		
 		XCTAssertEqual(view.messages, [
 			.display(isLoading: false),
-			.display(comments)
+			.display([comment0.presentableModel, comment1.presentableModel])
 		])
 	}
 	
@@ -65,7 +66,7 @@ class CommentPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
-			case display(_ comments: [Comment])
+			case display(_ comments: [PresentableComment])
 		}
 		
 		func display(_ viewModel: CommentLoadingViewModel) {
@@ -77,7 +78,7 @@ class CommentPresenterTests: XCTestCase {
 		}
 		
 		func display(_ viewModel: CommentViewModel) {
-			messages.insert(.display(viewModel.comments))
+			messages.insert(.display(viewModel.presentableComments))
 		}
 	}
 	
@@ -91,10 +92,14 @@ class CommentPresenterTests: XCTestCase {
 		return value
 	}
 	
-	private func uniqueComment() -> Comment {
-		return Comment(id: UUID(),
-					   message: "any messages",
-					   createAt: Date(),
-					   author: CommentAuthor(username: "any user name"))
+	private func makeComment(message: String, createAt: Date, author: String) -> (model: Comment, presentableModel: PresentableComment) {
+		let id = UUID()
+		let model = Comment(id: id, message: message, createAt: Date(), author: CommentAuthor(username: author))
+		let presentableModel = makePresentableComment(comment: model)
+		return (model, presentableModel)
+	}
+	
+	private func makePresentableComment(comment: Comment) -> PresentableComment {
+		return CommentViewModel(comments: [comment]).presentableComments[0]
 	}
 }

@@ -9,5 +9,18 @@
 import Foundation
 
 public struct CommentViewModel {
-	public let comments: [Comment]
+	private let comments: [Comment]
+	
+	public var presentableComments: [PresentableComment] {
+		return comments.map {
+			return PresentableComment(
+				id: $0.id,
+				message: $0.message,
+				createAt: RelativeTimestampGenerator.generateTimestamp(with: $0.createAt),
+				author: $0.author.username)
+		}
+	}
+	public init(comments: [Comment]) {
+		self.comments = comments
+	}
 }

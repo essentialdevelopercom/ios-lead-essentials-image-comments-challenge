@@ -8,8 +8,8 @@
 
 import Foundation
 
-public struct PresentableComment {
-	public init(id: UUID, message: String, createAt: String, author: String) {
+public struct PresentableComment: Hashable {
+	init(id: UUID, message: String, createAt: String, author: String) {
 		self.id = id
 		self.message = message
 		self.createAt = createAt

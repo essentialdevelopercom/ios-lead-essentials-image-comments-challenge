@@ -11,16 +11,16 @@ import UIKit
 import EssentialFeed
 
 final class CommentCellController {
-	private let model: Comment
+	private let model: PresentableComment
 	
-	init(model: Comment) {
+	init(model: PresentableComment) {
 		self.model = model
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell") as! CommentCell
-		cell.authorLabel?.text = model.author.username
-		cell.timestampLabel?.text = "any date"
+		cell.authorLabel?.text = model.author
+		cell.timestampLabel?.text = model.createAt
 		cell.commentLabel?.text = model.message
 		
 		return cell
