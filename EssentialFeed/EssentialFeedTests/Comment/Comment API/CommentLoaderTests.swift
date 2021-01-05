@@ -20,7 +20,7 @@ class CommentLoaderTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -29,8 +29,8 @@ class CommentLoaderTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load() { _ in }
-		sut.load() { _ in }
+		_ = sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -90,7 +90,7 @@ class CommentLoaderTests: XCTestCase {
 		var sut: RemoteCommentLoader? = RemoteCommentLoader(url: anyURL(), client: client)
 		var receivedResult: RemoteCommentLoader.Result?
 		
-		sut?.load { receivedResult = $0 }
+		_ = sut?.load { receivedResult = $0 }
 		sut = nil
 		client.complete(with: anyNSError())
 		
@@ -136,7 +136,7 @@ class CommentLoaderTests: XCTestCase {
 	private func expect(_ sut: CommentLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 		
 		let exp = expectation(description: "Wait for load completion")
-		sut.load() { receivedResult in
+		_ = sut.load() { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.failure(receivedError as RemoteCommentLoader.Error), .failure(expectedError as RemoteCommentLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)

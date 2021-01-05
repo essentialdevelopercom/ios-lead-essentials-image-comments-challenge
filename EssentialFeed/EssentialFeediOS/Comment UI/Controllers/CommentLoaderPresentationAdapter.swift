@@ -10,9 +10,10 @@ import Foundation
 import EssentialFeed
 
 class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
+
 	private let commentLoader: CommentLoader
 	var presenter: CommentPresenter?
-	var delegate: CommentViewControllerDelegate?
+	private var task: CommentLoaderTask?
 	
 	init(commentLoader: CommentLoader) {
 		self.commentLoader = commentLoader
@@ -20,7 +21,7 @@ class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
 	
 	func didRequestCommentRefresh() {
 		presenter?.didStartLoadingComment()
-		commentLoader.load { [weak self] result in
+		task = commentLoader.load { [weak self] result in
 			switch result {
 			case let .success(comments):
 				self?.presenter?.didFinishLoadingComment(with: comments)
@@ -28,5 +29,9 @@ class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
 				self?.presenter?.didFinishLoadingComment(with: error)
 			}
 		}
+	}
+	
+	func didCancelCommentRequest() {
+		task?.cancel()
 	}
 }

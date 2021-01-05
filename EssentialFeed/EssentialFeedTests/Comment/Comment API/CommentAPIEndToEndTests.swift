@@ -35,7 +35,7 @@ class CommentAPIEndToEndTests: XCTestCase {
 		
 		let exp = expectation(description: "Wait for load completion")
 		var receivedResult: CommentLoader.Result?
-		loader.load { result in
+		_ = loader.load { result in
 			receivedResult = result
 			exp.fulfill()
 		}

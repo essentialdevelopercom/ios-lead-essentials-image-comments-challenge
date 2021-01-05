@@ -89,6 +89,16 @@ class CommentViewControllerTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingErrorView, "Expected no error when reload completes successfully")
 	}
 	
+	func test_commentLoad_cancelsLoadOnViewDisappearance() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		sut.simulateViewDisappearance()
+		loader.completeCommentLoadingWithError(at: 0)
+		
+		XCTAssertEqual(loader.cancelCallCount, 1)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: CommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -106,12 +116,27 @@ class CommentViewControllerTests: XCTestCase {
 	}
 	
 	class LoaderSpy: CommentLoader {
+		
 		var loadCallCount: Int {
 			return completions.count
 		}
+		
+		var cancelCallCount = 0
+		
 		var completions = [(CommentLoader.Result) -> Void]()
-		func load(completion: @escaping (CommentLoader.Result) -> Void) {
+		
+		private struct Task: CommentLoaderTask {
+			let callback: () -> Void
+			func cancel() {
+				callback()
+			}
+		}
+		
+		func load(completion: @escaping (CommentLoader.Result) -> Void) -> CommentLoaderTask {
 			completions.append(completion)
+			return Task { [weak self] in
+				self?.cancelCallCount += 1
+			}
 		}
 		
 		func completeCommentLoading(with comments: [Comment] = [], at index: Int = 0) {
@@ -174,6 +199,10 @@ private extension CommentViewController {
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: commentSection)
 		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	func simulateViewDisappearance() {
+		self.viewWillDisappear(true)
 	}
 	
 	var isShowingErrorView: Bool {
