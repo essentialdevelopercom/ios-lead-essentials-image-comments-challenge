@@ -23,8 +23,17 @@ public class RemoteCommentLoader: CommentLoader {
 		case invalidData
 	}
 	
-	public func load(completion: @escaping (CommentLoader.Result) -> Void) {
-		client.get(from: url) { [weak self] result in
+	private final class CommentTaskWrapper: CommentLoaderTask {
+		var wrapped: HTTPClientTask?
+		
+		func cancel() {
+			wrapped?.cancel()
+		}
+	}
+	
+	public func load(completion: @escaping (CommentLoader.Result) -> Void) -> CommentLoaderTask {
+		let task = CommentTaskWrapper()
+		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
@@ -33,6 +42,8 @@ public class RemoteCommentLoader: CommentLoader {
 				completion(.failure(Error.connectivity))
 			}
 		}
+		
+		return task
 	}
 	
 	private static func map(_ data: Data, _ response: HTTPURLResponse) -> CommentLoader.Result {
