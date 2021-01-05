@@ -168,15 +168,15 @@ private extension CommentViewController {
 
 extension CommentCell {
 	var authorText: String? {
-		return authorLabel.text
+		return authorLabel?.text
 	}
 	
 	var messageText: String? {
-		return commentLabel.text
+		return commentLabel?.text
 	}
 	
 	var timestampText: String? {
-		return timestampLabel.text
+		return timestampLabel?.text
 	}
 }
 

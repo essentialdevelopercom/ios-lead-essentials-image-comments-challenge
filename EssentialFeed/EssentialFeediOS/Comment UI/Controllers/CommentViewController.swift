@@ -23,29 +23,6 @@ public struct PresentableComment {
 	public let author: String
 }
 
-public class CommentCell: UITableViewCell {
-	public let authorLabel = UILabel()
-	public let commentLabel = UILabel()
-	public let timestampLabel = UILabel()
-}
-
-final class CommentCellController {
-	private let model: Comment
-	
-	init(model: Comment) {
-		self.model = model
-	}
-	
-	func view() -> UITableViewCell {
-		let cell = CommentCell()
-		cell.authorLabel.text = model.author.username
-		cell.timestampLabel.text = "any date"
-		cell.commentLabel.text = model.message
-		
-		return cell
-	}
-}
-
 public final class CommentUIComposer {
 	private init() {}
 	
@@ -155,7 +132,7 @@ public final class CommentViewController: UITableViewController, CommentView, Co
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return tableModel[indexPath.row].view()
+		return tableModel[indexPath.row].view(in: tableView)
 	}
 	
 	public func display(_ viewModel: CommentViewModel) {
