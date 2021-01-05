@@ -84,6 +84,9 @@ class CommentViewControllerTests: XCTestCase {
 		
 		sut.simulateUserInititateCommentReload()
 		XCTAssertFalse(sut.isShowingErrorView, "Expected no error message when user initiates reload")
+		
+		loader.completeCommentLoading(with: [], at: 1)
+		XCTAssertFalse(sut.isShowingErrorView, "Expected no error when reload completes successfully")
 	}
 	
 	// MARK: - Helpers
