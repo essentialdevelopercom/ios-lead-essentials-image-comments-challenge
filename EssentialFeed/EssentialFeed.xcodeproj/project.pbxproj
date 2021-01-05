@@ -87,6 +87,7 @@
 		6A42921A25A3FDA100A63249 /* CommentCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A42921925A3FDA100A63249 /* CommentCellController.swift */; };
 		6A42922325A3FF2400A63249 /* CommentUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A42922225A3FF2400A63249 /* CommentUIComposer.swift */; };
 		6A42922A25A3FF5200A63249 /* CommentViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A42922925A3FF5200A63249 /* CommentViewAdapter.swift */; };
+		6A42923025A3FF9C00A63249 /* CommentLoaderPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A42922F25A3FF9C00A63249 /* CommentLoaderPresentationAdapter.swift */; };
 		6A745249259AEDA4007F32EF /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A745248259AEDA4007F32EF /* CommentLoadingViewModel.swift */; };
 		6A74524F259AEDB6007F32EF /* CommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A74524E259AEDB6007F32EF /* CommentErrorViewModel.swift */; };
 		6A745255259AEDC7007F32EF /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A745254259AEDC7007F32EF /* CommentViewModel.swift */; };
@@ -214,6 +215,7 @@
 		6A42921925A3FDA100A63249 /* CommentCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCellController.swift; sourceTree = "<group>"; };
 		6A42922225A3FF2400A63249 /* CommentUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentUIComposer.swift; sourceTree = "<group>"; };
 		6A42922925A3FF5200A63249 /* CommentViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewAdapter.swift; sourceTree = "<group>"; };
+		6A42922F25A3FF9C00A63249 /* CommentLoaderPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoaderPresentationAdapter.swift; sourceTree = "<group>"; };
 		6A745248259AEDA4007F32EF /* CommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoadingViewModel.swift; sourceTree = "<group>"; };
 		6A74524E259AEDB6007F32EF /* CommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentErrorViewModel.swift; sourceTree = "<group>"; };
 		6A745254259AEDC7007F32EF /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
@@ -593,6 +595,7 @@
 				6A42921925A3FDA100A63249 /* CommentCellController.swift */,
 				6A42922225A3FF2400A63249 /* CommentUIComposer.swift */,
 				6A42922925A3FF5200A63249 /* CommentViewAdapter.swift */,
+				6A42922F25A3FF9C00A63249 /* CommentLoaderPresentationAdapter.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -975,6 +978,7 @@
 				6A42921A25A3FDA100A63249 /* CommentCellController.swift in Sources */,
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
+				6A42923025A3FF9C00A63249 /* CommentLoaderPresentationAdapter.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,

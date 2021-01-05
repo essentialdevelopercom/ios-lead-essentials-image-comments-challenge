@@ -50,28 +50,6 @@ extension WeakRefVirtualProxy: CommentErrorView where T: CommentErrorView {
 		object?.display(viewModel)
 	}
 }
-class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
-	private let commentLoader: CommentLoader
-	var presenter: CommentPresenter?
-	var delegate: CommentViewControllerDelegate?
-	
-	init(commentLoader: CommentLoader) {
-		self.commentLoader = commentLoader
-	}
-	
-	func loadComment() {
-		presenter?.didStartLoadingComment()
-		commentLoader.load { [weak self] result in
-			switch result {
-			case let .success(comments):
-				self?.presenter?.didFinishLoadingComment(with: comments)
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingComment(with: error)
-			}
-		}
-	}
-}
-
 
 protocol CommentViewControllerDelegate {
 	func loadComment()
