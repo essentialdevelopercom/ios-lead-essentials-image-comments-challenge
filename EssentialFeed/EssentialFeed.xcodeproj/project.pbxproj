@@ -548,7 +548,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -585,6 +584,7 @@
 		6A42925325A4028600A63249 /* Shared UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 			);
 			path = "Shared UI Components";
 			sourceTree = "<group>";
