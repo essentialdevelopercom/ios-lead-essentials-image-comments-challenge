@@ -78,6 +78,9 @@ class CommentViewControllerTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
 		XCTAssertFalse(sut.isShowingErrorView, "Expected no error view when view is loaced")
+		
+		loader.completeCommentLoadingWithError(at: 0)
+		XCTAssertTrue(sut.isShowingErrorView, "Expected error view when load failures")
 	}
 	
 	// MARK: - Helpers

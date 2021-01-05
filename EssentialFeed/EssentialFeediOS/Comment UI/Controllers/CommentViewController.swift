@@ -67,6 +67,7 @@ public final class CommentViewController: UITableViewController, CommentErrorVie
 	}
 	
 	public func display(_ viewModel: CommentErrorViewModel) {
+		errorView?.message = viewModel.message
 	}
 	
 	public func display(_ viewModel: CommentLoadingViewModel) {
