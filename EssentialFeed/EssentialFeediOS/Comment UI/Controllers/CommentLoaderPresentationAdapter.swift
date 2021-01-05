@@ -18,7 +18,7 @@ class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
 		self.commentLoader = commentLoader
 	}
 	
-	func loadComment() {
+	func didRequestCommentRefresh() {
 		presenter?.didStartLoadingComment()
 		commentLoader.load { [weak self] result in
 			switch result {

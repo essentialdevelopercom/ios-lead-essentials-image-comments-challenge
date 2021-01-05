@@ -37,7 +37,7 @@ extension WeakRefVirtualProxy: CommentErrorView where T: CommentErrorView {
 }
 
 protocol CommentViewControllerDelegate {
-	func loadComment()
+	func didRequestCommentRefresh()
 }
 
 public final class CommentViewController: UITableViewController, CommentErrorView, CommentLoadingView {
@@ -55,7 +55,7 @@ public final class CommentViewController: UITableViewController, CommentErrorVie
 	}
 	
 	@IBAction private func refresh() {
-		delegate?.loadComment()
+		delegate?.didRequestCommentRefresh()
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
