@@ -515,9 +515,10 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				6A42925325A4028600A63249 /* Shared UI Components */,
 				6A74525F259B0E66007F32EF /* Comment UI */,
-				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
+				08D917A322B92A5D003BC31B /* Info.plist */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";
@@ -579,6 +580,13 @@
 				6A7876AB2599B90500136487 /* CommentAPIEndToEndTests.swift */,
 			);
 			path = "Comment API";
+			sourceTree = "<group>";
+		};
+		6A42925325A4028600A63249 /* Shared UI Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Shared UI Components";
 			sourceTree = "<group>";
 		};
 		6A74525F259B0E66007F32EF /* Comment UI */ = {

@@ -74,6 +74,12 @@ class CommentViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.presentableModel])
 	}
 	
+	func test_errorView_rendersErrorViewOnLoaderFailure() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		XCTAssertFalse(sut.isShowingErrorView, "Expected no error view when view is loaced")
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: CommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -159,6 +165,10 @@ private extension CommentViewController {
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: commentSection)
 		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	var isShowingErrorView: Bool {
+		return errorView?.message != nil
 	}
 	
 	private var commentSection: Int {

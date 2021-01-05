@@ -47,6 +47,7 @@ public final class CommentViewController: UITableViewController, CommentErrorVie
 			tableView.reloadData()
 		}
 	}
+	@IBOutlet private(set) public var errorView: ErrorView?
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
