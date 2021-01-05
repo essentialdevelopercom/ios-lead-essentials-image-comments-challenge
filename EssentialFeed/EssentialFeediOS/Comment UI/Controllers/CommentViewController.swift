@@ -9,21 +9,6 @@
 import UIKit
 import EssentialFeed
 
-public struct PresentableComment {
-	public init(id: UUID, message: String, createAt: String, author: String) {
-		self.id = id
-		self.message = message
-		self.createAt = createAt
-		self.author = author
-	}
-	
-	public let id: UUID
-	public let message: String
-	public let createAt: String
-	public let author: String
-}
-
-
 
 final class WeakRefVirtualProxy<T: AnyObject> {
 	private weak var object: T?
