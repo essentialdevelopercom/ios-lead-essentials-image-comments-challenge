@@ -168,6 +168,7 @@
 		0895DA85234B3B950031BB2D /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
+				6A42922125A3FEE100A63249 /* Comment */,
 				6A42922025A3FE4300A63249 /* Feed */,
 				6A42921F25A3FE2D00A63249 /* Helpers */,
 				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
@@ -218,6 +219,13 @@
 				08073B43238D2DFA00A75DC6 /* FeedViewAdapter.swift */,
 			);
 			path = Feed;
+			sourceTree = "<group>";
+		};
+		6A42922125A3FEE100A63249 /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Comment;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

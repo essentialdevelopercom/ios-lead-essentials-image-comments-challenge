@@ -23,25 +23,7 @@ public struct PresentableComment {
 	public let author: String
 }
 
-public final class CommentUIComposer {
-	private init() {}
-	
-	public static func commentComposeWith(loader: CommentLoader) -> CommentViewController {
-		let presentationAdapter = CommentLoaderPresentationAdapter(commentLoader: loader)
-		 
-		let bundle = Bundle(for: CommentViewController.self)
-		let storyBoard = UIStoryboard(name: "Comment", bundle: bundle)
-		let commentViewController = storyBoard.instantiateInitialViewController() as! CommentViewController
-		commentViewController.delegate = presentationAdapter
-		let presenter = CommentPresenter(
-			loadingView: WeakRefVirtualProxy(commentViewController),
-			errorView: WeakRefVirtualProxy(commentViewController),
-			commentView: CommentViewAdapter(controller: commentViewController))
-		presentationAdapter.presenter = presenter
-		
-		return commentViewController
-	}
-}
+
 
 final class WeakRefVirtualProxy<T: AnyObject> {
 	private weak var object: T?
@@ -68,21 +50,6 @@ extension WeakRefVirtualProxy: CommentErrorView where T: CommentErrorView {
 		object?.display(viewModel)
 	}
 }
-
-private class CommentViewAdapter: CommentView {
-	private weak var controller: CommentViewController?
-	
-	init(controller: CommentViewController) {
-		self.controller = controller
-	}
-	
-	func display(_ viewModel: CommentViewModel) {
-		controller?.tableModel = viewModel.comments.map {
-			CommentCellController(model: $0)
-		}
-	}
-}
-
 class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
 	private let commentLoader: CommentLoader
 	var presenter: CommentPresenter?
