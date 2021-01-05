@@ -6,8 +6,6 @@
 //  Copyright © 2020 Essential Developer. All rights reserved.
 //
 
-import Foundation
-
 public struct CommentErrorViewModel {
 	public let message: String?
 	
@@ -15,7 +13,7 @@ public struct CommentErrorViewModel {
 		return CommentErrorViewModel(message: nil)
 	}
 	
-	static func error(message: String) -> CommentErrorViewModel {
+	public static func error(message: String) -> CommentErrorViewModel {
 		return CommentErrorViewModel(message: message)
 	}
 }

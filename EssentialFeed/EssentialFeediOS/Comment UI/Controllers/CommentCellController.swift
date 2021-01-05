@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 import EssentialFeed
 
-final class CommentCellController {
+public final class CommentCellController {
 	private let model: PresentableComment
 	
-	init(model: PresentableComment) {
+	public init(model: PresentableComment) {
 		self.model = model
 	}
 	

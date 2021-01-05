@@ -104,6 +104,7 @@
 		6ACE4AB925A4328200E7CA04 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACE4AB825A4328200E7CA04 /* Date+Extension.swift */; };
 		6ACE4ABF25A432C800E7CA04 /* RelativeTimeStampGenerateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACE4ABE25A432C800E7CA04 /* RelativeTimeStampGenerateTests.swift */; };
 		6ACE4ADA25A4382D00E7CA04 /* RelativeTimestampGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACE4AD925A4382D00E7CA04 /* RelativeTimestampGenerator.swift */; };
+		6ACE4AE025A43DBF00E7CA04 /* CommentSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ACE4ADF25A43DBF00E7CA04 /* CommentSnapshotTests.swift */; };
 		6AE9E4B0259C5C1E005CD6AA /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9E4AF259C5C1E005CD6AA /* CommentViewController.swift */; };
 		6AE9E4B6259C5CA3005CD6AA /* CommentViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE9E4B5259C5CA3005CD6AA /* CommentViewControllerTests.swift */; };
 		6AF783F72599D32C00A3864C /* CommentLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */; };
@@ -236,6 +237,7 @@
 		6ACE4AB825A4328200E7CA04 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		6ACE4ABE25A432C800E7CA04 /* RelativeTimeStampGenerateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeTimeStampGenerateTests.swift; sourceTree = "<group>"; };
 		6ACE4AD925A4382D00E7CA04 /* RelativeTimestampGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelativeTimestampGenerator.swift; sourceTree = "<group>"; };
+		6ACE4ADF25A43DBF00E7CA04 /* CommentSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentSnapshotTests.swift; sourceTree = "<group>"; };
 		6AE9E4AF259C5C1E005CD6AA /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
 		6AE9E4B5259C5CA3005CD6AA /* CommentViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewControllerTests.swift; sourceTree = "<group>"; };
 		6AF783F62599D32C00A3864C /* CommentLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLocalizationTests.swift; sourceTree = "<group>"; };
@@ -537,6 +539,7 @@
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
 				6AE9E4B5259C5CA3005CD6AA /* CommentViewControllerTests.swift */,
+				6ACE4ADF25A43DBF00E7CA04 /* CommentSnapshotTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -1023,6 +1026,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				086AEFB923A7DFA400EE8933 /* FeedSnapshotTests.swift in Sources */,
+				6ACE4AE025A43DBF00E7CA04 /* CommentSnapshotTests.swift in Sources */,
 				0800314923B6909A00720217 /* XCTestCase+Snapshot.swift in Sources */,
 				0800314723B68FAB00720217 /* UIViewController+Snapshot.swift in Sources */,
 				086AEFBC23A7E5C300EE8933 /* UIImage+TestHelpers.swift in Sources */,

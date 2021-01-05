@@ -17,8 +17,8 @@ class CommentViewAdapter: CommentView {
 	}
 	
 	func display(_ viewModel: CommentViewModel) {
-		controller?.tableModel = viewModel.presentableComments.map {
+		controller?.display(viewModel.presentableComments.map {
 			CommentCellController(model: $0)
-		}
+		})
 	}
 }

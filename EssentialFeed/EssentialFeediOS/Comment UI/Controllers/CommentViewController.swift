@@ -36,18 +36,20 @@ extension WeakRefVirtualProxy: CommentErrorView where T: CommentErrorView {
 	}
 }
 
-protocol CommentViewControllerDelegate {
+public protocol CommentViewControllerDelegate {
 	func didRequestCommentRefresh()
 	func didCancelCommentRequest()
 }
 
 public final class CommentViewController: UITableViewController, CommentErrorView, CommentLoadingView {
 	var delegate: CommentViewControllerDelegate?
-	var tableModel = [CommentCellController]() {
+	
+	private var tableModel = [CommentCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
+	
 	@IBOutlet private(set) public var errorView: ErrorView?
 	
 	public override func viewDidLoad() {
@@ -58,6 +60,12 @@ public final class CommentViewController: UITableViewController, CommentErrorVie
 	public override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		delegate?.didCancelCommentRequest()
+	}
+	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
 	}
 	
 	@IBAction private func refresh() {
@@ -82,5 +90,9 @@ public final class CommentViewController: UITableViewController, CommentErrorVie
 		} else {
 			refreshControl?.endRefreshing()
 		}
+	}
+	
+	public func display(_ cellControllers: [CommentCellController]) {
+		tableModel = cellControllers
 	}
 }
