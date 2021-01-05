@@ -122,7 +122,6 @@ class CommentViewControllerTests: XCTestCase {
 		}
 		
 		var cancelCallCount = 0
-		
 		var completions = [(CommentLoader.Result) -> Void]()
 		
 		private struct Task: CommentLoaderTask {
