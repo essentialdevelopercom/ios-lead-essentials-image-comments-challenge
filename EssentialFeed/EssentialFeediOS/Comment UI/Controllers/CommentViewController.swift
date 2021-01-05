@@ -40,7 +40,7 @@ protocol CommentViewControllerDelegate {
 	func loadComment()
 }
 
-public final class CommentViewController: UITableViewController, CommentView, CommentErrorView, CommentLoadingView {
+public final class CommentViewController: UITableViewController, CommentErrorView, CommentLoadingView {
 	var delegate: CommentViewControllerDelegate?
 	var tableModel = [CommentCellController]() {
 		didSet {
@@ -63,9 +63,6 @@ public final class CommentViewController: UITableViewController, CommentView, Co
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		return tableModel[indexPath.row].view(in: tableView)
-	}
-	
-	public func display(_ viewModel: CommentViewModel) {
 	}
 	
 	public func display(_ viewModel: CommentErrorViewModel) {
