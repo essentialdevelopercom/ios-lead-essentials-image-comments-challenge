@@ -100,6 +100,18 @@ class CommentUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.cancelCallCount, 1)
 	}
 	
+	func test_loadCommentCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		let exp = expectation(description: "Wait for background queue")
+		DispatchQueue.global().async {
+			loader.completeCommentLoading(at: 0)
+			exp.fulfill()
+		}
+		wait(for: [exp], timeout: 1.0)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: CommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()

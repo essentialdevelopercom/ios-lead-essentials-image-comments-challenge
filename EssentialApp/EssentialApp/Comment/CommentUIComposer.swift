@@ -15,7 +15,7 @@ public final class CommentUIComposer {
 	private init() {}
 	
 	public static func commentComposeWith(loader: CommentLoader) -> CommentViewController {
-		let presentationAdapter = CommentLoaderPresentationAdapter(commentLoader: loader)
+		let presentationAdapter = CommentLoaderPresentationAdapter(commentLoader: MainQueueDispatchDecorator(decoratee: loader))
 		 
 		let bundle = Bundle(for: CommentViewController.self)
 		let storyBoard = UIStoryboard(name: "Comment", bundle: bundle)
@@ -28,5 +28,24 @@ public final class CommentUIComposer {
 		presentationAdapter.presenter = presenter
 		
 		return commentViewController
+	}
+}
+
+class MainQueueDispatchDecorator: CommentLoader {
+	private let decoratee: CommentLoader
+	init(decoratee: CommentLoader) {
+		self.decoratee = decoratee
+	}
+	
+	func load(completion: @escaping (CommentLoader.Result) -> Void) -> CommentLoaderTask {
+		decoratee.load { result in
+			if Thread.isMainThread {
+				completion(result)
+			} else {
+				DispatchQueue.main.async {
+					completion(result)
+				}
+			}
+		}
 	}
 }
