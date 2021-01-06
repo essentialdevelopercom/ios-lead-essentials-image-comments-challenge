@@ -8,6 +8,7 @@
 
 import Foundation
 import EssentialFeed
+import EssentialFeediOS
 
 class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
 
