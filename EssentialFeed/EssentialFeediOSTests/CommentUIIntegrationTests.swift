@@ -1,5 +1,5 @@
 //
-//  CommentViewControllerTests.swift
+//  CommentUIIntegrationTests.swift
 //  EssentialFeediOSTests
 //
 //  Created by Khoi Nguyen on 30/12/20.
@@ -11,7 +11,7 @@ import EssentialFeediOS
 import EssentialFeed
 import UIKit
 
-class CommentViewControllerTests: XCTestCase {
+class CommentUIIntegrationTests: XCTestCase {
 	
 	func test_loadCommentAction_requestsCommentFromLoader() {
 		let (sut, loader) = makeSUT()
