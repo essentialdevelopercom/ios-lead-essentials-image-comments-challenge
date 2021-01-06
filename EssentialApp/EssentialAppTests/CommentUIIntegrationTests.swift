@@ -109,11 +109,6 @@ class CommentUIIntegrationTests: XCTestCase {
 		
 		return (sut, loader)
 	}
-	func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
-		addTeardownBlock { [weak instance] in
-			XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
-		}
-	}
 	
 	class LoaderSpy: CommentLoader {
 		
@@ -224,16 +219,6 @@ extension CommentCell {
 	
 	var timestampText: String? {
 		return timestampLabel?.text
-	}
-}
-
-private extension UIRefreshControl {
-	func simulatePullToRefresh() {
-		allTargets.forEach { target in
-			actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
-				(target as NSObject).perform(Selector($0))
-			}
-		}
 	}
 }
 
