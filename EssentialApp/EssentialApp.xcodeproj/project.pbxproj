@@ -42,6 +42,7 @@
 		6AC1551E25A5596D001E2CCC /* CommentUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1551B25A5596D001E2CCC /* CommentUIComposer.swift */; };
 		6AC1551F25A5596D001E2CCC /* CommentViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1551C25A5596D001E2CCC /* CommentViewAdapter.swift */; };
 		6AC1552025A5596D001E2CCC /* CommentLoaderPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1551D25A5596D001E2CCC /* CommentLoaderPresentationAdapter.swift */; };
+		6AC1552725A55CAC001E2CCC /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1552625A55CAC001E2CCC /* MainQueueDispatchDecorator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		6AC1551B25A5596D001E2CCC /* CommentUIComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentUIComposer.swift; sourceTree = "<group>"; };
 		6AC1551C25A5596D001E2CCC /* CommentViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentViewAdapter.swift; sourceTree = "<group>"; };
 		6AC1551D25A5596D001E2CCC /* CommentLoaderPresentationAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentLoaderPresentationAdapter.swift; sourceTree = "<group>"; };
+		6AC1552625A55CAC001E2CCC /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +217,7 @@
 			children = (
 				0835BF6C24850F9800A793D2 /* CombineHelpers.swift */,
 				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
+				6AC1552625A55CAC001E2CCC /* MainQueueDispatchDecorator.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* FeedLoaderPresentationAdapter.swift in Sources */,
 				6AC1552025A5596D001E2CCC /* CommentLoaderPresentationAdapter.swift in Sources */,
+				6AC1552725A55CAC001E2CCC /* MainQueueDispatchDecorator.swift in Sources */,
 				08073B47238D2DFA00A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
