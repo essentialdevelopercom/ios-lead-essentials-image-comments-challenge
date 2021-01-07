@@ -14,6 +14,11 @@ import EssentialApp
 
 class CommentUIIntegrationTests: XCTestCase {
 	
+	func test_loadView_hasLocalizedTitle() {
+		let (sut, _) = makeSUT()
+		XCTAssertEqual(sut.title, localized("COMMENT_VIEW_TITLE"))
+	}
+	
 	func test_loadCommentAction_requestsCommentFromLoader() {
 		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadCallCount, 0, "Expected no loading request before the view is loaded")

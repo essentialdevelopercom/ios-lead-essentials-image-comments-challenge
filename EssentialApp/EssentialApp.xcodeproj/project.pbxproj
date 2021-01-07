@@ -41,6 +41,7 @@
 		6A0DA5B625A6DF4200156AC4 /* CommentUIIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0DA5B525A6DF4200156AC4 /* CommentUIIntegrationTests+Assertions.swift */; };
 		6A0DA5B925A6DFB600156AC4 /* CommentViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0DA5B825A6DFB600156AC4 /* CommentViewController+TestHelpers.swift */; };
 		6A0DA5BC25A6E01300156AC4 /* CommentCell+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0DA5BB25A6E01300156AC4 /* CommentCell+TestHelpers.swift */; };
+		6A0DA5BF25A6F80100156AC4 /* CommentUIIntegrationTests+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0DA5BE25A6F80000156AC4 /* CommentUIIntegrationTests+Localized.swift */; };
 		6AC1551325A558BE001E2CCC /* CommentUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1551225A558BE001E2CCC /* CommentUIIntegrationTests.swift */; };
 		6AC1551E25A5596D001E2CCC /* CommentUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1551B25A5596D001E2CCC /* CommentUIComposer.swift */; };
 		6AC1551F25A5596D001E2CCC /* CommentViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC1551C25A5596D001E2CCC /* CommentViewAdapter.swift */; };
@@ -113,6 +114,7 @@
 		6A0DA5B525A6DF4200156AC4 /* CommentUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 		6A0DA5B825A6DFB600156AC4 /* CommentViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentViewController+TestHelpers.swift"; sourceTree = "<group>"; };
 		6A0DA5BB25A6E01300156AC4 /* CommentCell+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentCell+TestHelpers.swift"; sourceTree = "<group>"; };
+		6A0DA5BE25A6F80000156AC4 /* CommentUIIntegrationTests+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentUIIntegrationTests+Localized.swift"; sourceTree = "<group>"; };
 		6AC1551225A558BE001E2CCC /* CommentUIIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentUIIntegrationTests.swift; sourceTree = "<group>"; };
 		6AC1551B25A5596D001E2CCC /* CommentUIComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentUIComposer.swift; sourceTree = "<group>"; };
 		6AC1551C25A5596D001E2CCC /* CommentViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentViewAdapter.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				6A0DA5B525A6DF4200156AC4 /* CommentUIIntegrationTests+Assertions.swift */,
 				6A0DA5B825A6DFB600156AC4 /* CommentViewController+TestHelpers.swift */,
 				6A0DA5BB25A6E01300156AC4 /* CommentCell+TestHelpers.swift */,
+				6A0DA5BE25A6F80000156AC4 /* CommentUIIntegrationTests+Localized.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -391,6 +394,7 @@
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,
 				6A0DA5B625A6DF4200156AC4 /* CommentUIIntegrationTests+Assertions.swift in Sources */,
+				6A0DA5BF25A6F80100156AC4 /* CommentUIIntegrationTests+Localized.swift in Sources */,
 				6A0DA5BC25A6E01300156AC4 /* CommentCell+TestHelpers.swift in Sources */,
 				08073B5F238D2FF100A75DC6 /* FeedAcceptanceTests.swift in Sources */,
 				08073B5D238D2E2600A75DC6 /* FeedUIIntegrationTests.swift in Sources */,

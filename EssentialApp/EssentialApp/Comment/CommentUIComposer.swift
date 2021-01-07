@@ -21,6 +21,7 @@ public final class CommentUIComposer {
 		let storyBoard = UIStoryboard(name: "Comment", bundle: bundle)
 		let commentViewController = storyBoard.instantiateInitialViewController() as! CommentViewController
 		commentViewController.delegate = presentationAdapter
+		commentViewController.title = CommentPresenter.title
 		let presenter = CommentPresenter(
 			loadingView: WeakRefVirtualProxy(commentViewController),
 			errorView: WeakRefVirtualProxy(commentViewController),
@@ -30,4 +31,3 @@ public final class CommentUIComposer {
 		return commentViewController
 	}
 }
-
