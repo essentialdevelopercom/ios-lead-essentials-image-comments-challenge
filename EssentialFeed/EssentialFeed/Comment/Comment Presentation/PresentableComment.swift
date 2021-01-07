@@ -9,14 +9,12 @@
 import Foundation
 
 public struct PresentableComment: Hashable {
-	public init(id: UUID, message: String, createAt: String, author: String) {
-		self.id = id
+	public init(message: String, createAt: String, author: String) {
 		self.message = message
 		self.createAt = createAt
 		self.author = author
 	}
 	
-	public let id: UUID
 	public let message: String
 	public let createAt: String
 	public let author: String
