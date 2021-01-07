@@ -56,13 +56,11 @@ class CommentSnapshotTests: XCTestCase {
 	private func commentWithContent() -> [PresentableComment] {
 		return [
 			PresentableComment(
-				id: UUID(),
 				message: "The East Side Gallery is an open-air gallery in Berlin. It consists of a series of murals painted directly on a 1,316 m long remnant of the Berlin Wall, located near the centre of Berlin, on Mühlenstraße in Friedrichshain-Kreuzberg. The gallery has official status as a Denkmal, or heritage-protected landmark.",
 				createAt: "2 days ago",
 				author: "Mark"
 			),
 			PresentableComment(
-				id: UUID(),
 				message: "Garth Pier is a Grade II listed structure in Bangor, Gwynedd, North Wales.",
 				createAt: "1 months ago",
 				author: "Jack"

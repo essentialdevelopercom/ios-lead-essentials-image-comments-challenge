@@ -3,6 +3,7 @@
 //
 
 import XCTest
+import EssentialFeed
 import EssentialFeediOS
 @testable import EssentialApp
 
@@ -20,9 +21,7 @@ class SceneDelegateTests: XCTestCase {
 	}
 	
 	func test_configureWindow_configuresRootViewController() {
-		let sut = SceneDelegate()
-		sut.window = UIWindow()
-		
+		let sut = makeSUT()
 		sut.configureWindow()
 		
 		let root = sut.window?.rootViewController
@@ -31,6 +30,31 @@ class SceneDelegateTests: XCTestCase {
 		
 		XCTAssertNotNil(rootNavigation, "Expected a navigation controller as root, got \(String(describing: root)) instead")
 		XCTAssertTrue(topController is FeedViewController, "Expected a feed controller as top view controller, got \(String(describing: topController)) instead")
+	}
+	
+	func test_didSelectFeedImage_navigateToCommentViewController() {
+		let sut = makeSUT()
+		sut.configureWindow()
+		sut.didSelectFeedImage(makeImage())
+		RunLoop.current.run(until: Date())
+		
+		let rootNavigation = sut.window?.rootViewController as? UINavigationController
+		let topViewController = rootNavigation?.topViewController
+		XCTAssertEqual(rootNavigation?.viewControllers.count, 2)
+		XCTAssertTrue(topViewController is CommentViewController, "Expected a comment controller as top view controller, got \(String(describing: topViewController)) instead")
+		
+	}
+	
+	// MARK: - Helpers
+	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> SceneDelegate {
+		let window = UIWindow()
+		let sut = SceneDelegate()
+		sut.window = window
+		
+		return sut
+	}
+	private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
+		return FeedImage(id: UUID(), description: description, location: location, url: url)
 	}
 	
 }
