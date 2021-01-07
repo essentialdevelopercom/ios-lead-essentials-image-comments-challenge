@@ -86,6 +86,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	private func didSelectFeedImage(_ feedImage: FeedImage) {
-		
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImage.id)/comments")!
+		let commentLoader = RemoteCommentLoader(url: url, client: httpClient)
+		navigationController?.pushViewController(
+			CommentUIComposer.commentComposeWith(loader: commentLoader),
+			animated: true)
 	}
 }
