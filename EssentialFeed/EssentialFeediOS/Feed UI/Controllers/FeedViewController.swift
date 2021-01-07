@@ -67,6 +67,10 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 		}
 	}
 	
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		cellController(forRowAt: indexPath).selectCell()
+	}
+	
 	public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
 		indexPaths.forEach(cancelCellControllerLoad)
 	}

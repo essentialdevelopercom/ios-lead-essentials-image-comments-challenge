@@ -317,11 +317,30 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	func test_didSelectFeedImage_notifiesWithSelectedImage() {
+		var selectedFeed = [FeedImage]()
+		let (sut, loader) = makeSUT(didSelectFeed: { selectedFeed.append($0) })
+		let feedImage0 = makeImage()
+		let feedImage1 = makeImage()
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [feedImage0, feedImage1], at: 0)
+		
+		sut.simulateUserSelectFeed(at: 0)
+		XCTAssertEqual(selectedFeed, [feedImage0])
+		
+		sut.simulateUserSelectFeed(at: 1)
+		XCTAssertEqual(selectedFeed, [feedImage0, feedImage1])
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(didSelectFeed: @escaping (FeedImage) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+		let sut = FeedUIComposer.feedComposedWith(
+			feedLoader: loader.loadPublisher,
+			imageLoader: loader.loadImageDataPublisher,
+			didSelectFeedImage: didSelectFeed)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
