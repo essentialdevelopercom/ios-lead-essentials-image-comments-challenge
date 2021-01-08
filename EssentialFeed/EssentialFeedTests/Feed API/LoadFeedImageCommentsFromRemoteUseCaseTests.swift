@@ -5,6 +5,13 @@
 import XCTest
 import EssentialFeed
 
+struct ImageComment: Decodable, Equatable {
+    let id: UUID
+    let message: String
+    let createdAt: Date
+    let author: String
+}
+
 final class RemoteFeedImageCommentsLoader {
     private let url: URL
     private let client: HTTPClient
@@ -19,7 +26,11 @@ final class RemoteFeedImageCommentsLoader {
         case invalidData
     }
     
-    typealias Result = Swift.Result<Data, Error>
+    typealias Result = Swift.Result<[ImageComment], Error>
+    
+    private struct Root: Decodable {
+        let items: [ImageComment]
+    }
     
     func load(from url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
@@ -28,9 +39,10 @@ final class RemoteFeedImageCommentsLoader {
                     if !response.isOK {
                         completion(.failure(.invalidData))
                     } else {
-                        guard let _ = try? JSONSerialization.jsonObject(with: data) else {
+                        guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
                             return completion(.failure(.invalidData))
                         }
+                        completion(.success(root.items))
                     }
                     
                 case .failure:
@@ -104,6 +116,15 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
             let invalidJson = Data("Invalid json".utf8)
             client.complete(withStatusCode: 200, data: invalidJson)
         }
+    }
+    
+    func test_load_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() {
+        let (sut, client) = makeSUT()
+        
+        expect(sut, toCompleteWith: .success([]), when: {
+            let emptyListJSON = Data("{\"items\": [] }".utf8)
+            client.complete(withStatusCode: 200, data: emptyListJSON)
+        })
     }
     
     // MARK: - Helpers
