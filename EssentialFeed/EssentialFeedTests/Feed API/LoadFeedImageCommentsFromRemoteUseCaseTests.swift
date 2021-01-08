@@ -5,11 +5,19 @@
 import XCTest
 import EssentialFeed
 
+private struct Root: Decodable {
+    let items: [ImageComment]
+}
+
 struct ImageComment: Decodable, Equatable {
     let id: UUID
     let message: String
-    let createdAt: Date
-    let author: String
+    let created_at: Date
+    let author: CommentAuthor
+}
+
+struct CommentAuthor: Decodable, Equatable {
+    let username: String
 }
 
 final class RemoteFeedImageCommentsLoader {
@@ -28,21 +36,20 @@ final class RemoteFeedImageCommentsLoader {
     
     typealias Result = Swift.Result<[ImageComment], Error>
     
-    private struct Root: Decodable {
-        let items: [ImageComment]
-    }
-    
-    func load(from url: URL, completion: @escaping (Result) -> Void) {
+    func load(completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             switch result {
                 case let .success((data, response)):
                     if !response.isOK {
                         completion(.failure(.invalidData))
                     } else {
-                        guard let root = try? JSONDecoder().decode(Root.self, from: data) else {
-                            return completion(.failure(.invalidData))
+                        let jsonDecoder = JSONDecoder()
+                        jsonDecoder.dateDecodingStrategy = .iso8601
+                        if let root = try? jsonDecoder.decode(Root.self, from: data) {
+                            completion(.success(root.items))
+                        } else {
+                            completion(.failure(Error.invalidData))
                         }
-                        completion(.success(root.items))
                     }
                     
                 case .failure:
@@ -64,7 +71,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT()
         
-        sut.load(from: url) { _ in }
+        sut.load { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url])
     }
@@ -73,8 +80,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT(url: url)
         
-        sut.load(from: url) { _ in }
-        sut.load(from: url) { _ in }
+        sut.load { _ in }
+        sut.load { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
@@ -90,7 +97,6 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
     
     func test_loadFromURL_deliversInvalidDataErrorOnNon200HTTPResponse() {
         let (sut, client) = makeSUT()
-        
         let samples = [199, 201, 300, 400, 500]
         
         samples.enumerated().forEach { index, code in
@@ -127,6 +133,21 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         })
     }
     
+    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+        let (sut, client) = makeSUT()
+        let date = (Date(timeIntervalSince1970: 1222222222), "2008-09-24T02:10:22+00:00")
+        let item1 = makeItem(id: UUID(), message: "First message", createdAt: date, author: "First author")
+        let item2 = makeItem(id: UUID(), message: "Second message", createdAt: date, author: "Second author")
+
+
+        let items = [item1.model, item2.model]
+
+        expect(sut, toCompleteWith: .success(items), when: {
+            let json = makeItemsJSON([item1.json, item2.json])
+            client.complete(withStatusCode: 200, data: json)
+        })
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(url: URL = anyURL(),file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
@@ -143,11 +164,30 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         return .failure(error)
     }
     
+    private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601: String), author: String) -> (model: ImageComment, json: [String: Any]) {
+        let model = ImageComment( id: id, message: message, created_at: createdAt.date, author: CommentAuthor(username: author))
+        let json: [String: Any] = [
+            "id": id.uuidString,
+            "message": message,
+            "created_at": createdAt.iso8601,
+            "author": [
+                "username": author
+            ]
+        ].compactMapValues { $0 }
+
+        return (model, json)
+    }
+
+    private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+        let json = ["items": items]
+        print(json)
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+    
     private func expect(_ sut: RemoteFeedImageCommentsLoader, toCompleteWith expectedResult: RemoteFeedImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-        let url = anyURL()
         let exp = expectation(description: "Wait for load completion")
 
-        sut.load(from: url) { receivedResult in
+        sut.load { receivedResult in
             switch (receivedResult, expectedResult) {
                 case let (.success(receivedData), .success(expectedData)):
                     XCTAssertEqual(receivedData, expectedData, file: file, line: line)
