@@ -14,15 +14,23 @@ final class RemoteFeedImageCommentsLoader {
         self.url = url
     }
     
-    typealias Result = Swift.Result<[Data], Error>
+    public enum Error: Swift.Error {
+        case connectivity
+        case invalidData
+    }
     
-    func load(completion: @escaping (Result) -> Void) {
+    typealias Result = Swift.Result<Data, Error>
+    
+    func load(from url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                default:
-                    break
+                case let .success((_, response)):
+                    if !response.isOK {
+                        completion(.failure(.invalidData))
+                    }
+                    
+                case .failure:
+                    completion(.failure(.connectivity))
             }
         }
     }
@@ -40,7 +48,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT()
         
-        sut.load { _ in }
+        sut.load(from: url) { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url])
     }
@@ -49,30 +57,33 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT(url: url)
         
-        sut.load { _ in }
-        sut.load { _ in }
+        sut.load(from: url) { _ in }
+        sut.load(from: url) { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
     
-    func test_load_deliversErrorOnClientError() {
-        let expectedError = anyNSError()
+    func test_load_deliversConnectivityErrorOnClientError() {
+        let (sut, client) = makeSUT()
+        let clientError = anyNSError()
+
+        expect(sut, toCompleteWith: failure(.connectivity), when: {
+            client.complete(with: clientError)
+        })
+    }
+    
+    func test_loadFromURL_deliversInvalidDataErrorOnNon200HTTPResponse() {
         let (sut, client) = makeSUT()
         
-        let exp = expectation(description: "Waiting for request completion")
-        sut.load { result in
-            switch result {
-                case let .failure(receivedError):
-                    XCTAssertEqual(expectedError, receivedError as NSError?)
-                default:
-                    XCTFail("Expecting to receive an error, got the \(result) instead.")
-            }
-            exp.fulfill()
-        }
+        let samples = [199, 201, 300, 400, 500]
         
-        client.complete(with: expectedError)
-        wait(for: [exp], timeout: 1.0)
+        samples.enumerated().forEach { index, code in
+            expect(sut, toCompleteWith: failure(.invalidData), when: {
+                client.complete(withStatusCode: code, data: anyData(), at: index)
+            })
+        }
     }
+    
     
     // MARK: - Helpers
     
@@ -84,5 +95,41 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         trackForMemoryLeaks(client, file: file, line: line)
         
         return (sut, client)
+    }
+    
+    private func failure(_ error: RemoteFeedImageCommentsLoader.Error) -> RemoteFeedImageCommentsLoader.Result {
+        return .failure(error)
+    }
+    
+    private func expect(_ sut: RemoteFeedImageCommentsLoader, toCompleteWith expectedResult: RemoteFeedImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let url = anyURL()
+        let exp = expectation(description: "Wait for load completion")
+
+        sut.load(from: url) { receivedResult in
+            switch (receivedResult, expectedResult) {
+                case let (.success(receivedData), .success(expectedData)):
+                    XCTAssertEqual(receivedData, expectedData, file: file, line: line)
+                    
+                case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                    XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+                    
+                default:
+                    XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+}
+
+extension HTTPURLResponse {
+    private static var OK_200: Int { return 200 }
+
+    var isOK: Bool {
+        return statusCode == HTTPURLResponse.OK_200
     }
 }
