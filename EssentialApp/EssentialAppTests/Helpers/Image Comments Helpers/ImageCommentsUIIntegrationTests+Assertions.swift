@@ -8,7 +8,7 @@
 
 import XCTest
 import EssentialFeediOS
-import EssentialFeed
+@testable import EssentialFeed
 
 extension ImageCommentsUIIntegrationTests {
     func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
@@ -18,12 +18,7 @@ extension ImageCommentsUIIntegrationTests {
             return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedImageComments()) instead.", file: file, line: line)
         }
         
-		let viewModel = ImageCommentsViewModel(comments: comments.map {
-			ImageCommentViewModel(
-				message: $0.message,
-				date: $0.createdAt.relativeDate(),
-				username: $0.username)
-		})
+		let viewModel = ImageCommentsPresenter.map(comments)
 		
 		viewModel.comments.enumerated().forEach { index, comment in
             assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)

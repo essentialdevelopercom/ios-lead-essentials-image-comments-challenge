@@ -64,7 +64,7 @@ public final class ImageCommentsPresenter {
         loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
     }
 	
-	private static func map(_ comments: [ImageComment], date: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewModel {
+	static func map(_ comments: [ImageComment], date: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewModel {
 		ImageCommentsViewModel(comments: comments.map {
 			ImageCommentViewModel(
 				message: $0.message,
