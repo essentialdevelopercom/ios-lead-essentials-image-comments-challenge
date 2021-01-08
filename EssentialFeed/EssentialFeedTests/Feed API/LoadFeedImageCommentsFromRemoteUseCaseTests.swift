@@ -97,6 +97,15 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         })
     }
     
+    func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+        let (sut, client) = makeSUT()
+        
+        expect(sut, toCompleteWith: .failure(.invalidData)) {
+            let invalidJson = Data("Invalid json".utf8)
+            client.complete(withStatusCode: 200, data: invalidJson)
+        }
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(url: URL = anyURL(),file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
