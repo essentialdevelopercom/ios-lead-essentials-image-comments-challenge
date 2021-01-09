@@ -8,33 +8,56 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
     private let url: URL
     private let client: HTTPClient
     
-    public enum Error: Swift.Error {
-        case connectivity
-        case invalidData
-    }
-    
-    public typealias Result = FeedImageCommentsLoader.Result
-    
     public init(url: URL, client: HTTPClient) {
         self.client = client
         self.url = url
     }
     
-    public func load(completion: @escaping (Result) -> Void) -> HTTPClientTask {
-        client.get(from: url) { [weak self] result in
+    public enum Error: Swift.Error {
+        case connectivity
+        case invalidData
+    }
+    
+    private final class HTTPClientTaskWrapper: FeedImageCommentsLoaderTask {
+        private var completion: ((FeedImageCommentsLoader.Result) -> Void)?
+        
+        var wrapped: HTTPClientTask?
+        
+        init(_ completion: @escaping (FeedImageCommentsLoader.Result) -> Void) {
+            self.completion = completion
+        }
+        
+        func complete(with result: FeedImageCommentsLoader.Result) {
+            completion?(result)
+        }
+        
+        func cancel() {
+            preventFurtherCompletions()
+            wrapped?.cancel()
+        }
+        
+        private func preventFurtherCompletions() {
+            completion = nil
+        }
+    }
+    
+    public func load(completion: @escaping (RemoteFeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+        let task = HTTPClientTaskWrapper(completion)
+        task.wrapped = client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             
             switch result {
                 case let .success((data, response)):
-                    completion(RemoteFeedImageCommentsLoader.map(data, from: response))
+                    task.complete(with: RemoteFeedImageCommentsLoader.map(data, from: response))
                     
                 case .failure:
-                    completion(.failure(Error.connectivity))
+                    task.complete(with: .failure(Error.connectivity))
             }
         }
+        return task
     }
     
-    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteFeedImageCommentsLoader.Result {
         do {
             let items = try FeedImageCommentsMapper.map(data, from: response)
             return .success(items.toModels())
