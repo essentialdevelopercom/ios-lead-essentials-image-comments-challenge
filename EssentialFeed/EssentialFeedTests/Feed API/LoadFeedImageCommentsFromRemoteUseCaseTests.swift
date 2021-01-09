@@ -5,85 +5,6 @@
 import XCTest
 import EssentialFeed
 
-final class FeedImageCommentMapper {
-    private struct Root: Decodable {
-        let items: [RemoteImageCommentsItem]
-    }
-    
-    static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageCommentsItem] {
-        let jsonDecoder = JSONDecoder()
-        jsonDecoder.dateDecodingStrategy = .iso8601
-        guard response.isOK, let root = try? jsonDecoder.decode(Root.self, from: data) else {
-            throw RemoteFeedImageCommentsLoader.Error.invalidData
-        }
-
-        return root.items
-    }
-}
-
-struct RemoteImageCommentsItem: Codable, Equatable {
-    
-    struct Author: Codable, Equatable {
-        let username: String
-    }
-    
-    let id: UUID
-    let message: String
-    let created_at: Date
-    let author: Author
-}
-
-private extension Array where Element == RemoteImageCommentsItem {
-    func toModels() -> [ImageComment] {
-        map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author.username) }
-    }
-}
-
-struct ImageComment: Decodable, Equatable {
-    let id: UUID
-    let message: String
-    let createdAt: Date
-    let author: String
-}
-
-final class RemoteFeedImageCommentsLoader {
-    private let url: URL
-    private let client: HTTPClient
-    
-    init(url: URL, client: HTTPClient) {
-        self.client = client
-        self.url = url
-    }
-    
-    public enum Error: Swift.Error {
-        case connectivity
-        case invalidData
-    }
-    
-    typealias Result = Swift.Result<[ImageComment], Error>
-    
-    func load(completion: @escaping (Result) -> Void) {
-        client.get(from: url) { result in
-            switch result {
-                case let .success((data, response)):
-                    completion(RemoteFeedImageCommentsLoader.map(data, from: response))
-                    
-                case .failure:
-                    completion(.failure(.connectivity))
-            }
-        }
-    }
-    
-    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
-        do {
-            let items = try FeedImageCommentMapper.map(data, from: response)
-            return .success(items.toModels())
-        } catch {
-            return .failure(.invalidData)
-        }
-    }
-}
-
 class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
     func test_init_doesNotRequestFromURL() {
         let client = HTTPClientSpy()
@@ -143,7 +64,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(.invalidData)) {
+        expect(sut, toCompleteWith: failure(.invalidData)) {
             let invalidJson = Data("Invalid json".utf8)
             client.complete(withStatusCode: 200, data: invalidJson)
         }
@@ -189,8 +110,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         return .failure(error)
     }
     
-    private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601: String), author: String) -> (model: ImageComment, json: [String: Any]) {
-        let model = ImageComment( id: id, message: message, createdAt: createdAt.date, author: author)
+    private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601: String), author: String) -> (model: FeedImageComment, json: [String: Any]) {
+        let model = FeedImageComment( id: id, message: message, createdAt: createdAt.date, author: author)
         let json: [String: Any] = [
             "id": id.uuidString,
             "message": message,
