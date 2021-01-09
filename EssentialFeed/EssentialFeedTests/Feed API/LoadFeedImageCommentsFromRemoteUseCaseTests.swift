@@ -17,7 +17,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT()
         
-        sut.load { _ in }
+        _ = sut.load { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url])
     }
@@ -26,8 +26,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let url = anyURL()
         let (sut, client) = makeSUT(url: url)
         
-        sut.load { _ in }
-        sut.load { _ in }
+        _ = sut.load { _ in }
+        _ = sut.load { _ in }
         
         XCTAssertEqual(client.requestedURLs, [url, url])
     }
@@ -99,12 +99,23 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         var sut: RemoteFeedImageCommentsLoader? = RemoteFeedImageCommentsLoader(url: anyURL(), client: client)
         
         var capturedResults = [RemoteFeedImageCommentsLoader.Result]()
-        sut?.load { capturedResults.append($0) }
+        _ = sut?.load { capturedResults.append($0) }
 
         sut = nil
         client.complete(withStatusCode: 200, data: makeItemsJSON([]))
         
         XCTAssertTrue(capturedResults.isEmpty)
+    }
+    
+    func test_cancelLoadComments_cancelsClientURLRequest() {
+        let url = anyURL()
+        let (sut, client) = makeSUT(url: url)
+        
+        let task = sut.load { _ in }
+        XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
+        
+        task.cancel()
+        XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
     }
     
     // MARK: - Helpers
@@ -146,7 +157,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
     private func expect(_ sut: RemoteFeedImageCommentsLoader, toCompleteWith expectedResult: RemoteFeedImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load completion")
 
-        sut.load { receivedResult in
+        _ = sut.load { receivedResult in
             switch (receivedResult, expectedResult) {
                 case let (.success(receivedData), .success(expectedData)):
                     XCTAssertEqual(receivedData, expectedData, file: file, line: line)

@@ -20,7 +20,7 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
         self.url = url
     }
     
-    public func load(completion: @escaping (Result) -> Void) {
+    public func load(completion: @escaping (Result) -> Void) -> HTTPClientTask {
         client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             
