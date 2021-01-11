@@ -39,7 +39,8 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         let (sut, view) = makeSUT()
         let error = anyNSError()
 
-        sut.didFinishLoading(with: error)
+        sut.didStartLoadingComments(with: error)
+        print(view.messages)
 
         XCTAssertEqual(view.messages, [.display(errorMessage: localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE")), .display(isLoading: false)])
     }
@@ -75,16 +76,16 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         
         private(set) var messages = Set<Message>()
         
-        func display(isLoading: Bool) {
-            messages.insert(.display(isLoading: isLoading))
+        func display(_ viewModel: FeedImageCommentsLoadingViewModel) {
+            messages.insert(.display(isLoading: viewModel.isLoading))
         }
         
-        func display(errorMessage: String?) {
-            messages.insert(.display(errorMessage: errorMessage))
+        func display(_ viewModel: FeedImageCommentsErrorViewModel) {
+            messages.insert(.display(errorMessage: viewModel.errorMessage))
         }
         
-        func display(comments: [FeedImageComment]) {
-            messages.insert(.display(comments: comments))
+        func display(_ viewModel: FeedImageCommentsViewModel) {
+            messages.insert(.display(comments: viewModel.comments))
         }
     }
 }

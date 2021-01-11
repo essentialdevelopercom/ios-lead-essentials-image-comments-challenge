@@ -4,38 +4,47 @@
 
 import Foundation
 
+public struct FeedImageCommentsViewModel {
+    public let comments: [FeedImageComment]
+}
 public protocol FeedImageCommentsView {
-    func display(comments: [FeedImageComment])
+    func display(_ viewModel: FeedImageCommentsViewModel)
+}
+
+public struct FeedImageCommentsLoadingViewModel {
+    public let isLoading: Bool
 }
 
 public protocol FeedImageCommentsLoadingView {
-     func display(isLoading: Bool)
- }
+    func display(_ viewModel: FeedImageCommentsLoadingViewModel)
+}
 
- public protocol FeedImageCommentsErrorView {
-     func display(errorMessage: String?)
- }
+public struct FeedImageCommentsErrorViewModel {
+    public let errorMessage: String?
+}
+
+public protocol FeedImageCommentsErrorView {
+    func display(_ viewModel: FeedImageCommentsErrorViewModel)
+}
 
 public final class FeedImageCommentsPresenter {
     let commentsView: FeedImageCommentsView
     let loadingView: FeedImageCommentsLoadingView
     let errorView: FeedImageCommentsErrorView
-
-     public static var title: String { NSLocalizedString(
-            "FEED_COMMENTS_VIEW_TITLE",
-            tableName: "FeedImageComments",
-            bundle: Bundle(for: FeedImageCommentsPresenter.self),
-            comment: "Title for the image comments view"
-        )
-     }
+    
+    public static var title: String { NSLocalizedString(
+        "FEED_COMMENTS_VIEW_TITLE",
+        tableName: "FeedImageComments",
+        bundle: Bundle(for: FeedImageCommentsPresenter.self),
+        comment: "Title for the image comments view"
+    )}
     
     private var errorMessage: String { NSLocalizedString(
-            "FEED_COMMENTS_VIEW_ERROR_MESSAGE",
-            tableName: "ImageComments",
-            bundle: Bundle(for: FeedImageCommentsPresenter.self),
-            comment: "Error message when loading comments fails"
-        )
-    }
+        "FEED_COMMENTS_VIEW_ERROR_MESSAGE",
+        tableName: "FeedImageComments",
+        bundle: Bundle(for: FeedImageCommentsPresenter.self),
+        comment: "Error message when loading comments fails"
+    )}
     
     public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
         self.commentsView = commentsView
@@ -44,18 +53,18 @@ public final class FeedImageCommentsPresenter {
     }
     
     public func didStartLoadingComments() {
-        loadingView.display(isLoading: true)
-        errorView.display(errorMessage: nil)
+        loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: true))
+        errorView.display(FeedImageCommentsErrorViewModel(errorMessage: nil))
     }
     
     
     public func didFinishLoadingComments(with comments: [FeedImageComment]) {
-        commentsView.display(comments: comments)
-        loadingView.display(isLoading: false)
+        commentsView.display(FeedImageCommentsViewModel(comments: comments))
+        loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
     }
     
-    public func didFinishLoading(with error: Error) {
-        errorView.display(errorMessage: errorMessage)
-        loadingView.display(isLoading: false)
+    public func didStartLoadingComments(with error: Error) {
+        errorView.display(FeedImageCommentsErrorViewModel(errorMessage: errorMessage))
+        loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
     }
- }
+}
