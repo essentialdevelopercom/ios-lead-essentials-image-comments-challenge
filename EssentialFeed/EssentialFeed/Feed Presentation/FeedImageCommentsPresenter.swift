@@ -4,6 +4,10 @@
 
 import Foundation
 
+public protocol FeedImageCommentsView {
+    func display(comments: [FeedImageComment])
+}
+
 public protocol FeedImageCommentsLoadingView {
      func display(isLoading: Bool)
  }
@@ -13,6 +17,7 @@ public protocol FeedImageCommentsLoadingView {
  }
 
 public final class FeedImageCommentsPresenter {
+    let commentsView: FeedImageCommentsView
     let loadingView: FeedImageCommentsLoadingView
     let errorView: FeedImageCommentsErrorView
 
@@ -23,7 +28,8 @@ public final class FeedImageCommentsPresenter {
          comment: "Title for the image comments view"
      ) }
     
-    public init(loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
+    public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
+        self.commentsView = commentsView
         self.loadingView = loadingView
         self.errorView = errorView
     }
@@ -31,5 +37,11 @@ public final class FeedImageCommentsPresenter {
     public func didStartLoadingComments() {
         loadingView.display(isLoading: true)
         errorView.display(errorMessage: nil)
+    }
+    
+    
+    public func didFinishLoadingFeed(with comments: [FeedImageComment]) {
+        commentsView.display(comments: comments)
+        loadingView.display(isLoading: false)
     }
  }

@@ -13,18 +13,29 @@ class FeedImageCommentsPresenterTests: XCTestCase {
     
     func test_init_doesNotSendMessagesToView() {
         let view = ViewSpy()
-        _ = FeedImageCommentsPresenter(loadingView: view, errorView: view)
+        _ = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
 
         XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
     }
     
     func test_didStartLoadingComments_displaysNoErrorMessagesAndStartsLoading() {
         let view = ViewSpy()
-        let sut = FeedImageCommentsPresenter(loadingView: view, errorView: view)
+        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
         
         sut.didStartLoadingComments()
 
         XCTAssertEqual(view.messages, [.display(errorMessage: nil), .display(isLoading: true)])
+    }
+
+    func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
+        let view = ViewSpy()
+        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+        
+        let comments = uniqueImageComments()
+        
+        sut.didFinishLoadingFeed(with: comments)
+        
+        XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
     }
     
     
@@ -40,10 +51,11 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         return value
     }
     
-    private class ViewSpy: FeedImageCommentsLoadingView, FeedImageCommentsErrorView {
+    private class ViewSpy: FeedImageCommentsView, FeedImageCommentsLoadingView, FeedImageCommentsErrorView {
         enum Message: Hashable {
             case display(errorMessage: String?)
             case display(isLoading: Bool)
+            case display(comments: [FeedImageComment])
         }
         
         private(set) var messages = Set<Message>()
@@ -54,6 +66,10 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         
         func display(errorMessage: String?) {
             messages.insert(.display(errorMessage: errorMessage))
+        }
+        
+        func display(comments: [FeedImageComment]) {
+            messages.insert(.display(comments: comments))
         }
     }
 }
