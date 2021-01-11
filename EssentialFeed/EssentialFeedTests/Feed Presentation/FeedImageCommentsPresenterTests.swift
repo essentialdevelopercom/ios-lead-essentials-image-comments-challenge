@@ -11,6 +11,13 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         XCTAssertEqual(FeedImageCommentsPresenter.title, localized("FEED_COMMENTS_VIEW_TITLE"))
     }
     
+    func test_init_doesNotSendMessagesToView() {
+        let view = ViewSpy()
+        _ = FeedImageCommentsPresenter(view: view)
+
+        XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
+    }
+    
     // MARK: - Helpers
     
     private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -21,5 +28,9 @@ class FeedImageCommentsPresenterTests: XCTestCase {
             XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
         }
         return value
+    }
+    
+    private class ViewSpy {
+        private(set) var messages = [Any]()
     }
 }

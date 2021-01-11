@@ -12,4 +12,6 @@ public final class FeedImageCommentsPresenter {
          bundle: Bundle(for: FeedImageCommentsPresenter.self),
          comment: "Title for the image comments view"
      ) }
+    
+    public init(view _: Any) {}
  }
