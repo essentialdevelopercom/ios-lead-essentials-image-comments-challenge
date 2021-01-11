@@ -35,6 +35,14 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
     }
     
+    func test_didFinishLoadingCommentsWithError_displaysErrorAndStopsLoading() {
+        let (sut, view) = makeSUT()
+        let error = anyNSError()
+
+        sut.didFinishLoading(with: error)
+
+        XCTAssertEqual(view.messages, [.display(errorMessage: localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE")), .display(isLoading: false)])
+    }
     
     // MARK: - Helpers
     

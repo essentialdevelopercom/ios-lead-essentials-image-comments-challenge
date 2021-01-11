@@ -22,11 +22,20 @@ public final class FeedImageCommentsPresenter {
     let errorView: FeedImageCommentsErrorView
 
      public static var title: String { NSLocalizedString(
-         "FEED_COMMENTS_VIEW_TITLE",
-         tableName: "FeedImageComments",
-         bundle: Bundle(for: FeedImageCommentsPresenter.self),
-         comment: "Title for the image comments view"
-     ) }
+            "FEED_COMMENTS_VIEW_TITLE",
+            tableName: "FeedImageComments",
+            bundle: Bundle(for: FeedImageCommentsPresenter.self),
+            comment: "Title for the image comments view"
+        )
+     }
+    
+    private var errorMessage: String { NSLocalizedString(
+            "FEED_COMMENTS_VIEW_ERROR_MESSAGE",
+            tableName: "ImageComments",
+            bundle: Bundle(for: FeedImageCommentsPresenter.self),
+            comment: "Error message when loading comments fails"
+        )
+    }
     
     public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
         self.commentsView = commentsView
@@ -42,6 +51,11 @@ public final class FeedImageCommentsPresenter {
     
     public func didFinishLoadingComments(with comments: [FeedImageComment]) {
         commentsView.display(comments: comments)
+        loadingView.display(isLoading: false)
+    }
+    
+    public func didFinishLoading(with error: Error) {
+        errorView.display(errorMessage: errorMessage)
         loadingView.display(isLoading: false)
     }
  }
