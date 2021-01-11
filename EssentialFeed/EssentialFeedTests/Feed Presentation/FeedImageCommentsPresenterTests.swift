@@ -13,10 +13,20 @@ class FeedImageCommentsPresenterTests: XCTestCase {
     
     func test_init_doesNotSendMessagesToView() {
         let view = ViewSpy()
-        _ = FeedImageCommentsPresenter(view: view)
+        _ = FeedImageCommentsPresenter(loadingView: view, errorView: view)
 
         XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
     }
+    
+    func test_didStartLoadingComments_displaysNoErrorMessagesAndStartsLoading() {
+        let view = ViewSpy()
+        let sut = FeedImageCommentsPresenter(loadingView: view, errorView: view)
+        
+        sut.didStartLoadingComments()
+
+        XCTAssertEqual(view.messages, [.display(errorMessage: nil), .display(isLoading: true)])
+    }
+    
     
     // MARK: - Helpers
     
@@ -30,7 +40,20 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         return value
     }
     
-    private class ViewSpy {
-        private(set) var messages = [Any]()
+    private class ViewSpy: FeedImageCommentsLoadingView, FeedImageCommentsErrorView {
+        enum Message: Hashable {
+            case display(errorMessage: String?)
+            case display(isLoading: Bool)
+        }
+        
+        private(set) var messages = Set<Message>()
+        
+        func display(isLoading: Bool) {
+            messages.insert(.display(isLoading: isLoading))
+        }
+        
+        func display(errorMessage: String?) {
+            messages.insert(.display(errorMessage: errorMessage))
+        }
     }
 }
