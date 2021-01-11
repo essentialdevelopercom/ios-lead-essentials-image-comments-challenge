@@ -5,7 +5,7 @@
 import Foundation
 import EssentialFeed
 
-private func uniqueImageComments() -> [FeedImageComment] {
+public func uniqueImageComments() -> [FeedImageComment] {
     return [
         FeedImageComment(id: UUID(), message: "a message", createdAt: anyDate(), author: "a username"),
         FeedImageComment(id: UUID(), message: "another message", createdAt: anyDate(), author: "another username")

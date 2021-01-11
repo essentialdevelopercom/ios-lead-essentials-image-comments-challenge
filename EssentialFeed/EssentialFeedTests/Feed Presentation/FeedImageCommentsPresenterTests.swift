@@ -12,15 +12,13 @@ class FeedImageCommentsPresenterTests: XCTestCase {
     }
     
     func test_init_doesNotSendMessagesToView() {
-        let view = ViewSpy()
-        _ = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+        let (_ , view) = makeSUT()
 
         XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
     }
     
     func test_didStartLoadingComments_displaysNoErrorMessagesAndStartsLoading() {
-        let view = ViewSpy()
-        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+        let (sut, view) = makeSUT()
         
         sut.didStartLoadingComments()
 
@@ -28,18 +26,27 @@ class FeedImageCommentsPresenterTests: XCTestCase {
     }
 
     func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-        let view = ViewSpy()
-        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+        let (sut, view) = makeSUT()
         
         let comments = uniqueImageComments()
         
-        sut.didFinishLoadingFeed(with: comments)
+        sut.didFinishLoadingComments(with: comments)
         
         XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
     }
     
     
     // MARK: - Helpers
+    
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedImageCommentsPresenter, ViewSpy) {
+        let view = ViewSpy()
+        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(view, file: file, line: line)
+        
+        return (sut, view)
+    }
     
     private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
         let table = "FeedImageComments"

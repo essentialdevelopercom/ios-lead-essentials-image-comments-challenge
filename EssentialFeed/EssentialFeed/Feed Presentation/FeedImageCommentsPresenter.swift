@@ -40,7 +40,7 @@ public final class FeedImageCommentsPresenter {
     }
     
     
-    public func didFinishLoadingFeed(with comments: [FeedImageComment]) {
+    public func didFinishLoadingComments(with comments: [FeedImageComment]) {
         commentsView.display(comments: comments)
         loadingView.display(isLoading: false)
     }
