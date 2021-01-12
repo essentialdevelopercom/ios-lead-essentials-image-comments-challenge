@@ -82,7 +82,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         }
         
         func display(_ viewModel: FeedImageCommentsErrorViewModel) {
-            messages.insert(.display(errorMessage: viewModel.errorMessage))
+            messages.insert(.display(errorMessage: viewModel.message))
         }
         
         func display(_ viewModel: FeedImageCommentsViewModel) {

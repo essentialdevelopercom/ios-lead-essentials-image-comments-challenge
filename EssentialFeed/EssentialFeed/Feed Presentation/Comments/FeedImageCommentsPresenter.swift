@@ -4,30 +4,12 @@
 
 import Foundation
 
-public struct FeedImageCommentPresenterModel: Hashable {
-    let username: String
-    let creationTime: String
-    let comment: String
-}
-
-public struct FeedImageCommentsViewModel {
-    public let comments: [FeedImageCommentPresenterModel]
-}
-
 public protocol FeedImageCommentsView {
     func display(_ viewModel: FeedImageCommentsViewModel)
 }
 
-public struct FeedImageCommentsLoadingViewModel {
-    public let isLoading: Bool
-}
-
 public protocol FeedImageCommentsLoadingView {
     func display(_ viewModel: FeedImageCommentsLoadingViewModel)
-}
-
-public struct FeedImageCommentsErrorViewModel {
-    public let errorMessage: String?
 }
 
 public protocol FeedImageCommentsErrorView {
@@ -40,31 +22,30 @@ public final class FeedImageCommentsPresenter {
     let errorView: FeedImageCommentsErrorView
     let currentDate: Date
     
-    public static var title: String { NSLocalizedString(
-        "FEED_COMMENTS_VIEW_TITLE",
+    public static var title: String {
+        return NSLocalizedString("FEED_COMMENTS_VIEW_TITLE",
         tableName: "FeedImageComments",
         bundle: Bundle(for: FeedImageCommentsPresenter.self),
-        comment: "Title for the image comments view"
-    )}
+        comment: "Title for the image comments view")
+    }
     
-    private var errorMessage: String { NSLocalizedString(
-        "FEED_COMMENTS_VIEW_ERROR_MESSAGE",
+    private var errorMessage: String {
+        return NSLocalizedString("FEED_COMMENTS_VIEW_ERROR_MESSAGE",
         tableName: "FeedImageComments",
         bundle: Bundle(for: FeedImageCommentsPresenter.self),
-        comment: "Error message when loading comments fails"
-    )}
+        comment: "Error message when loading comments fails")
+    }
     
     public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView, currentDate: Date) {
         self.commentsView = commentsView
         self.loadingView = loadingView
         self.errorView = errorView
         self.currentDate = currentDate
-        
     }
     
     public func didStartLoadingComments() {
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: true))
-        errorView.display(FeedImageCommentsErrorViewModel(errorMessage: nil))
+        errorView.display(FeedImageCommentsErrorViewModel(message: nil))
     }
     
     
@@ -74,7 +55,7 @@ public final class FeedImageCommentsPresenter {
     }
     
     public func didStartLoadingComments(with error: Error) {
-        errorView.display(FeedImageCommentsErrorViewModel(errorMessage: errorMessage))
+        errorView.display(FeedImageCommentsErrorViewModel(message: errorMessage))
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
     }
 }
