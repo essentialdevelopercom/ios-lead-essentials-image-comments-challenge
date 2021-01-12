@@ -29,10 +29,11 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         let (sut, view) = makeSUT()
         
         let comments = uniqueImageComments()
+        let presentableComments = comments.toModels()
         
         sut.didFinishLoadingComments(with: comments)
         
-        XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+        XCTAssertEqual(view.messages, [.display(comments: presentableComments), .display(isLoading: false)])
     }
     
     func test_didFinishLoadingCommentsWithError_displaysErrorAndStopsLoading() {
@@ -47,9 +48,9 @@ class FeedImageCommentsPresenterTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedImageCommentsPresenter, ViewSpy) {
+    private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (FeedImageCommentsPresenter, ViewSpy) {
         let view = ViewSpy()
-        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view, currentDate: date)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(view, file: file, line: line)
@@ -71,7 +72,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         enum Message: Hashable {
             case display(errorMessage: String?)
             case display(isLoading: Bool)
-            case display(comments: [FeedImageComment])
+            case display(comments: [FeedImageCommentPresenterModel])
         }
         
         private(set) var messages = Set<Message>()

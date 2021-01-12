@@ -4,9 +4,16 @@
 
 import Foundation
 
-public struct FeedImageCommentsViewModel {
-    public let comments: [FeedImageComment]
+public struct FeedImageCommentPresenterModel: Hashable {
+    let username: String
+    let creationTime: String
+    let comment: String
 }
+
+public struct FeedImageCommentsViewModel {
+    public let comments: [FeedImageCommentPresenterModel]
+}
+
 public protocol FeedImageCommentsView {
     func display(_ viewModel: FeedImageCommentsViewModel)
 }
@@ -31,6 +38,7 @@ public final class FeedImageCommentsPresenter {
     let commentsView: FeedImageCommentsView
     let loadingView: FeedImageCommentsLoadingView
     let errorView: FeedImageCommentsErrorView
+    let currentDate: Date
     
     public static var title: String { NSLocalizedString(
         "FEED_COMMENTS_VIEW_TITLE",
@@ -46,10 +54,12 @@ public final class FeedImageCommentsPresenter {
         comment: "Error message when loading comments fails"
     )}
     
-    public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView) {
+    public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView, currentDate: Date) {
         self.commentsView = commentsView
         self.loadingView = loadingView
         self.errorView = errorView
+        self.currentDate = currentDate
+        
     }
     
     public func didStartLoadingComments() {
@@ -59,12 +69,28 @@ public final class FeedImageCommentsPresenter {
     
     
     public func didFinishLoadingComments(with comments: [FeedImageComment]) {
-        commentsView.display(FeedImageCommentsViewModel(comments: comments))
+        commentsView.display(FeedImageCommentsViewModel(comments: comments.toModels()))
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
     }
     
     public func didStartLoadingComments(with error: Error) {
         errorView.display(FeedImageCommentsErrorViewModel(errorMessage: errorMessage))
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
+    }
+}
+
+public extension Array where Element == FeedImageComment {
+    func toModels() -> [FeedImageCommentPresenterModel] {
+        map { FeedImageCommentPresenterModel(username: $0.author, creationTime: $0.createdAt.timeAgoDisplay(), comment: $0.message) }
+    }
+}
+
+extension Date {
+    func timeAgoDisplay() -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        formatter.locale = .current
+        formatter.calendar = Calendar(identifier: .gregorian)
+        return formatter.localizedString(for: self, relativeTo: Date())
     }
 }
