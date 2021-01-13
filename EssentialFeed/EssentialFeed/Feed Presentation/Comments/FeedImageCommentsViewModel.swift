@@ -10,4 +10,8 @@ public struct FeedImageCommentPresenterModel: Hashable {
 
 public struct FeedImageCommentsViewModel {
     public let comments: [FeedImageCommentPresenterModel]
+    
+    public init(comments: [FeedImageCommentPresenterModel]) {
+        self.comments = comments
+    }
 }
