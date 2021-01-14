@@ -3,9 +3,15 @@
 //
 
 public struct FeedImageCommentPresenterModel: Hashable {
-    let username: String
-    let creationTime: String
-    let comment: String
+    public let username: String
+    public let creationTime: String
+    public let comment: String
+    
+    public init(username: String, creationTime: String, comment: String) {
+        self.username = username
+        self.creationTime = creationTime
+        self.comment = comment
+    }
 }
 
 public struct FeedImageCommentsViewModel {
