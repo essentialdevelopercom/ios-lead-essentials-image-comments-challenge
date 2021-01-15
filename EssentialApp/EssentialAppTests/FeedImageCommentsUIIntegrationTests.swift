@@ -7,30 +7,6 @@ import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
-public final class FeedImageCommentsUIComposer {
-    public static func imageCommentsComposeWith(commentsLoader: FeedImageCommentsLoader, url: URL) -> FeedImageCommentsViewController {
-        let bundle = Bundle(for: FeedImageCommentsViewController.self)
-        let storyboard = UIStoryboard(name: "FeedImageComments", bundle: bundle)
-        let viewController = storyboard.instantiateInitialViewController() as! FeedImageCommentsViewController
-        viewController.delegate = FeedImageCommentsPresentationAdapter(loader: commentsLoader, url: url)
-        return viewController
-    }
-}
-
-public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewControllerDelegate {
-    let loader: FeedImageCommentsLoader
-    let url: URL
-    
-    init(loader: FeedImageCommentsLoader, url: URL) {
-        self.loader = loader
-        self.url = url
-    }
-    
-    public func didRequestCommentsRefresh() {
-        _ = loader.load(from: url) { _ in }
-    }
-}
-
 final class FeedImageCommentsUIIntegrationTests: XCTestCase {
     
     func test_loadCommentsAction_requestCommentsFromLoader() {
