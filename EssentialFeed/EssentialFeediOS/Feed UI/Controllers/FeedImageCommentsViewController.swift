@@ -57,6 +57,15 @@ extension FeedImageCommentsViewController: FeedImageCommentsView {
     }
 }
 
+extension FeedImageCommentsViewController: FeedImageCommentsLoadingView {
+    public func display(_ viewModel: FeedImageCommentsLoadingViewModel) {
+        if viewModel.isLoading {
+            refreshControl?.beginRefreshing()
+        } else {
+            refreshControl?.endRefreshing()
+        }
+    }
+}
 extension FeedImageCommentsViewController: FeedImageCommentsErrorView {
     public func display(_ viewModel: FeedImageCommentsErrorViewModel) {
         errorView?.message = viewModel.message

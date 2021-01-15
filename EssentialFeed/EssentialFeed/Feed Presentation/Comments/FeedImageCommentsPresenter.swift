@@ -20,7 +20,7 @@ public final class FeedImageCommentsPresenter {
     let commentsView: FeedImageCommentsView
     let loadingView: FeedImageCommentsLoadingView
     let errorView: FeedImageCommentsErrorView
-    let currentDate: Date
+    let currentDate: () -> Date
     
     public static var title: String {
         return NSLocalizedString("FEED_COMMENTS_VIEW_TITLE",
@@ -36,7 +36,7 @@ public final class FeedImageCommentsPresenter {
         comment: "Error message when loading comments fails")
     }
     
-    public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView, currentDate: Date) {
+    public init(commentsView: FeedImageCommentsView, loadingView: FeedImageCommentsLoadingView, errorView: FeedImageCommentsErrorView, currentDate: @escaping () -> Date = Date.init) {
         self.commentsView = commentsView
         self.loadingView = loadingView
         self.errorView = errorView

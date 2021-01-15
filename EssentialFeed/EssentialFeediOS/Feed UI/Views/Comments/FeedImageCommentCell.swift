@@ -5,7 +5,7 @@
 import UIKit
 
 public final class FeedImageCommentCell: UITableViewCell {
-     @IBOutlet var usernameLabel: UILabel?
-     @IBOutlet var createdAtLabel: UILabel?
-     @IBOutlet var commentLabel: UILabel?
+     @IBOutlet private(set) public var usernameLabel: UILabel?
+     @IBOutlet private(set) public var createdAtLabel: UILabel?
+     @IBOutlet private(set) public var commentLabel: UILabel?
 }
