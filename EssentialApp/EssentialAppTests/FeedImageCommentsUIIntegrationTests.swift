@@ -39,6 +39,27 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
     }
     
+    func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+        let currentDate = Date()
+        let comment0 = FeedImageComment(id: UUID(), message: "First message", createdAt: currentDate.adding(days: -3), author: "Some user name")
+        let comment1 = FeedImageComment(id: UUID(), message: "Second message", createdAt: currentDate.adding(seconds: -305), author: "Another user name")
+        let (sut, loader) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        loader.completeCommentsLoading(with: [comment0, comment1])
+
+        let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? FeedImageCommentCell
+
+        XCTAssertEqual(cell1?.usernameLabel?.text, "Some user name")
+        XCTAssertEqual(cell1?.createdAtLabel?.text, "3 days ago")
+        XCTAssertEqual(cell1?.commentLabel?.text, "First message")
+
+        let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? FeedImageCommentCell
+        XCTAssertEqual(cell2?.usernameLabel?.text, "Another user name")
+        XCTAssertEqual(cell2?.createdAtLabel?.text, "5 minutes ago")
+        XCTAssertEqual(cell2?.commentLabel?.text, "Second message")
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedImageCommentsViewController, LoaderSpy) {
@@ -66,8 +87,8 @@ class LoaderSpy: FeedImageCommentsLoader {
         return Task()
     }
     
-    func completeCommentsLoading(at index: Int = 0) {
-        completions[index](.success([]))
+    func completeCommentsLoading(with comments: [FeedImageComment] = [], at index: Int = 0) {
+        completions[index](.success(comments))
     }
     
     func completeCommentsLoading(with error: Error, at index: Int = 0) {
@@ -85,7 +106,6 @@ extension FeedImageCommentsViewController {
     }
 }
 
-
 extension FeedImageCommentsUIIntegrationTests {
     func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
         let table = "FeedImageComments"
@@ -98,4 +118,12 @@ extension FeedImageCommentsUIIntegrationTests {
     }
 }
 
-
+extension Date {
+    func adding(seconds: TimeInterval) -> Date {
+        return self + seconds
+    }
+    
+    func adding(days: Int) -> Date {
+        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+    }
+}
