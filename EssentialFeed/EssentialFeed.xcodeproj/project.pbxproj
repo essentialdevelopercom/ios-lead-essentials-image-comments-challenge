@@ -540,13 +540,9 @@
 		08EFB82C22D4A60300A46837 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				08A3F2B5232AA67200127C15 /* Helpers */,
-				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				0D73950E25B0C21C00A4534C /* FeedImageCommentCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
-				0822D0F023056FEB004B3345 /* Feed.storyboard */,
-				0822D0F2230570F3004B3345 /* Feed.xcassets */,
-				0D73950325AF808400A4534C /* FeedImageComments.storyboard */,
+				0D73951E25B1FAE000A4534C /* Shared */,
+				0D73951925B1FAC400A4534C /* Feed */,
+				0D73952325B1FB4000A4534C /* Comments */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -554,8 +550,8 @@
 		08FC5AA622D5F33000148E12 /* Feed UI */ = {
 			isa = PBXGroup;
 			children = (
-				08EFB82A22D4A5F600A46837 /* Controllers */,
 				08EFB82C22D4A60300A46837 /* Views */,
+				08EFB82A22D4A5F600A46837 /* Controllers */,
 			);
 			path = "Feed UI";
 			sourceTree = "<group>";
@@ -596,6 +592,34 @@
 				0D7394C525AE3B1800A4534C /* FeedImageCommentsViewModel.swift */,
 				0D7394CC25AE3C0E00A4534C /* FeedImageCommentsLoadingViewModel.swift */,
 				0D7394D225AE3C9A00A4534C /* FeedImageCommentsErrorViewModel.swift */,
+			);
+			path = Comments;
+			sourceTree = "<group>";
+		};
+		0D73951925B1FAC400A4534C /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B5232AA67200127C15 /* Helpers */,
+				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
+				0822D0F023056FEB004B3345 /* Feed.storyboard */,
+				0822D0F2230570F3004B3345 /* Feed.xcassets */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		0D73951E25B1FAE000A4534C /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		0D73952325B1FB4000A4534C /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				0D73950E25B0C21C00A4534C /* FeedImageCommentCell.swift */,
+				0D73950325AF808400A4534C /* FeedImageComments.storyboard */,
 			);
 			path = Comments;
 			sourceTree = "<group>";
