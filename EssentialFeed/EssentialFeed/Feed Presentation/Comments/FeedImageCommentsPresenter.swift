@@ -45,7 +45,7 @@ public final class FeedImageCommentsPresenter {
     
     public func didStartLoadingComments() {
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: true))
-        errorView.display(FeedImageCommentsErrorViewModel(message: nil))
+        errorView.display(.noError)
     }
     
     
@@ -55,7 +55,7 @@ public final class FeedImageCommentsPresenter {
     }
     
     public func didStartLoadingComments(with error: Error) {
-        errorView.display(FeedImageCommentsErrorViewModel(message: errorMessage))
+        errorView.display(.error(message: errorMessage))
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
     }
 }

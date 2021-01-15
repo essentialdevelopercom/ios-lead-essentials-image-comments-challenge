@@ -5,20 +5,25 @@
 import UIKit
 import EssentialFeed
 
-public final class FeedImageCommentCell: UITableViewCell {
-     @IBOutlet var usernameLabel: UILabel?
-     @IBOutlet var createdAtLabel: UILabel?
-     @IBOutlet var commentLabel: UILabel?
-}
-
-public final class FeedImageCommentsViewController: UITableViewController, FeedImageCommentsView {
+public final class FeedImageCommentsViewController: UITableViewController, FeedImageCommentsView, FeedImageCommentsErrorView {
+    @IBOutlet private(set) public var errorView: ErrorView?
     
     private var tableModel = [FeedImageCommentPresenterModel]() {
         didSet { tableView.reloadData() }
     }
     
+    public override func viewDidLayoutSubviews() {
+         super.viewDidLayoutSubviews()
+
+         tableView.sizeTableHeaderToFit()
+     }
+    
     public func display(_ viewModel: FeedImageCommentsViewModel) {
         tableModel = viewModel.comments
+    }
+    
+    public func display(_ viewModel: FeedImageCommentsErrorViewModel) {
+        errorView?.message = viewModel.message
     }
     
     public override func numberOfSections(in tableView: UITableView) -> Int {

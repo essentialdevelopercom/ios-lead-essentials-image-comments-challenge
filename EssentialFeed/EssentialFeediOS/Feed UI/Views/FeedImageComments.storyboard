@@ -15,9 +15,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Q8h-Qc-4VJ" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EGZ-57-lks">
+                                    <rect key="frame" x="0.0" y="8" width="414" height="28"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99726778270000005" green="0.41628897190000003" blue="0.41566538809999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="EGZ-57-lks" secondAttribute="bottom" constant="8" id="0TC-g3-AQA"/>
+                                <constraint firstItem="EGZ-57-lks" firstAttribute="leading" secondItem="Q8h-Qc-4VJ" secondAttribute="leading" id="8SQ-gf-cSG"/>
+                                <constraint firstItem="EGZ-57-lks" firstAttribute="top" secondItem="Q8h-Qc-4VJ" secondAttribute="top" constant="8" id="IUe-cx-hD8"/>
+                                <constraint firstAttribute="trailing" secondItem="EGZ-57-lks" secondAttribute="trailing" id="VcP-4x-CSe"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="label" destination="EGZ-57-lks" id="Seo-J6-xo7"/>
+                            </connections>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedImageCommentCell" rowHeight="290" id="Gpy-n8-zvl" customClass="FeedImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="290"/>
+                                <rect key="frame" x="0.0" y="72" width="414" height="290"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Gpy-n8-zvl" id="FNG-0I-wy0">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="290"/>
@@ -70,10 +92,12 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="I4w-Ry-Is9" id="O7f-8A-X9m"/>
                             <outlet property="delegate" destination="I4w-Ry-Is9" id="aTN-zk-AiJ"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="errorView" destination="Q8h-Qc-4VJ" id="1Kc-JZ-qKo"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ead-XA-HT9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
