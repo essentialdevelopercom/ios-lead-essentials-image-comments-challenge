@@ -27,10 +27,16 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
-        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected loading indicator once view is loaded")
         
         loader.completeCommentsLoading()
-        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once loading completes successfully")
+        
+        sut.simulateUserInitiatedCommentsReload()
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
+        
+        loader.completeCommentsLoading(with: anyNSError())
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
     }
     
     //MARK: - Helpers
@@ -46,21 +52,26 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 }
 
 class LoaderSpy: FeedImageCommentsLoader {
-    var loadCommentsCallCount = 0
     var completions = [(FeedImageCommentsLoader.Result) -> Void]()
+    var loadCommentsCallCount: Int {
+        return completions.count
+    }
     
     private struct Task: FeedImageCommentsLoaderTask {
         func cancel() {}
     }
     
     func load(from url: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-        loadCommentsCallCount += 1
         completions.append(completion)
         return Task()
     }
     
     func completeCommentsLoading(at index: Int = 0) {
         completions[index](.success([]))
+    }
+    
+    func completeCommentsLoading(with error: Error, at index: Int = 0) {
+        completions[index](.failure(error))
     }
 }
 
