@@ -5,25 +5,32 @@
 import UIKit
 import EssentialFeed
 
-public final class FeedImageCommentsViewController: UITableViewController, FeedImageCommentsView, FeedImageCommentsErrorView {
+public protocol FeedImageCommentsViewControllerDelegate {
+    func didRequestCommentsRefresh()
+}
+
+public final class FeedImageCommentsViewController: UITableViewController {
     @IBOutlet private(set) public var errorView: ErrorView?
     
     private var tableModel = [FeedImageCommentPresenterModel]() {
         didSet { tableView.reloadData() }
     }
     
-    public override func viewDidLayoutSubviews() {
-         super.viewDidLayoutSubviews()
-
-         tableView.sizeTableHeaderToFit()
-     }
+    public var delegate: FeedImageCommentsViewControllerDelegate?
     
-    public func display(_ viewModel: FeedImageCommentsViewModel) {
-        tableModel = viewModel.comments
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        refresh()
     }
     
-    public func display(_ viewModel: FeedImageCommentsErrorViewModel) {
-        errorView?.message = viewModel.message
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        tableView.sizeTableHeaderToFit()
+    }
+    
+    @IBAction func refresh() {
+        delegate?.didRequestCommentsRefresh()
     }
     
     public override func numberOfSections(in tableView: UITableView) -> Int {
@@ -41,5 +48,17 @@ public final class FeedImageCommentsViewController: UITableViewController, FeedI
         cell.createdAtLabel?.text = model.creationTime
         cell.commentLabel?.text = model.comment
         return cell
+    }
+}
+
+extension FeedImageCommentsViewController: FeedImageCommentsView {
+    public func display(_ viewModel: FeedImageCommentsViewModel) {
+        tableModel = viewModel.comments
+    }
+}
+
+extension FeedImageCommentsViewController: FeedImageCommentsErrorView {
+    public func display(_ viewModel: FeedImageCommentsErrorViewModel) {
+        errorView?.message = viewModel.message
     }
 }
