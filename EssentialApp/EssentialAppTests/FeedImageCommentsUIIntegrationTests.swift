@@ -40,24 +40,14 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
     }
     
     func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
-        let currentDate = Date()
-        let comment0 = FeedImageComment(id: UUID(), message: "First message", createdAt: currentDate.adding(days: -3), author: "Some user name")
-        let comment1 = FeedImageComment(id: UUID(), message: "Second message", createdAt: currentDate.adding(seconds: -305), author: "Another user name")
+        let comments = makeUniqueComments()
         let (sut, loader) = makeSUT()
 
         sut.loadViewIfNeeded()
-        loader.completeCommentsLoading(with: [comment0, comment1])
-
-        let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? FeedImageCommentCell
-
-        XCTAssertEqual(cell1?.usernameLabel?.text, "Some user name")
-        XCTAssertEqual(cell1?.createdAtLabel?.text, "3 days ago")
-        XCTAssertEqual(cell1?.commentLabel?.text, "First message")
-
-        let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? FeedImageCommentCell
-        XCTAssertEqual(cell2?.usernameLabel?.text, "Another user name")
-        XCTAssertEqual(cell2?.createdAtLabel?.text, "5 minutes ago")
-        XCTAssertEqual(cell2?.commentLabel?.text, "Second message")
+        assertThat(sut, isRendering: [])
+        
+        loader.completeCommentsLoading(with: comments)
+        assertThat(sut, isRendering: comments.toModels())
     }
     
     //MARK: - Helpers
@@ -69,6 +59,14 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
         return (sut, loader)
+    }
+    
+    private func makeUniqueComments() -> [FeedImageComment] {
+        let currentDate = Date()
+        let comment0 = FeedImageComment(id: UUID(), message: "First message", createdAt: currentDate.adding(days: -3), author: "Some user name")
+        let comment1 = FeedImageComment(id: UUID(), message: "Second message", createdAt: currentDate.adding(seconds: -305), author: "Another user name")
+        
+        return [comment0, comment1]
     }
 }
 
@@ -103,6 +101,23 @@ extension FeedImageCommentsViewController {
     
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing == true
+    }
+    
+    func numberOfRenderedCommentsViews() -> Int {
+        return tableView.numberOfRows(inSection: commentsSection)
+    }
+    
+    func commentView(at row: Int) -> UITableViewCell? {
+        guard numberOfRenderedCommentsViews() > row else {
+            return nil
+        }
+        let ds = tableView.dataSource
+        let index = IndexPath(row: row, section: commentsSection)
+        return ds?.tableView(tableView, cellForRowAt: index)
+    }
+    
+    private var commentsSection: Int {
+        return 0
     }
 }
 
