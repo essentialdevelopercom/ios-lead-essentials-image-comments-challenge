@@ -9,6 +9,14 @@ import EssentialFeediOS
 
 final class FeedImageCommentsUIIntegrationTests: XCTestCase {
     
+    func test_commenstView_hasLocalizedTitle() {
+        let (sut, _) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.title, localized("FEED_COMMENTS_VIEW_TITLE"))
+    }
+    
     func test_loadCommentsAction_requestCommentsFromLoader() {
         let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.loadCommentsCallCount, 0, "Expected no loading requests before view is loaded")
