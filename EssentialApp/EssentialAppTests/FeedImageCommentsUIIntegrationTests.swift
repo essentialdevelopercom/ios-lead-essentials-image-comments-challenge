@@ -76,6 +76,19 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: comments.toModels())
     }
     
+    func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.errorMessage, nil)
+        
+        loader.completeCommentsLoading(with: anyNSError())
+        XCTAssertEqual(sut.errorMessage, localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE"))
+        
+        sut.simulateUserInitiatedCommentsReload()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedImageCommentsViewController, LoaderSpy) {
@@ -127,6 +140,10 @@ extension FeedImageCommentsViewController {
     
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing == true
+    }
+    
+    var errorMessage: String? {
+        return errorView?.message
     }
     
     func numberOfRenderedCommentsViews() -> Int {
