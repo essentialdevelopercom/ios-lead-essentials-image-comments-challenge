@@ -44,6 +44,12 @@ extension FeedViewController {
 		return simulateFeedImageViewVisible(at: index)?.renderedImage
 	}
 
+    func simulateTapOnImage(at row: Int) {
+        let delegate = tableView.delegate
+        let index = IndexPath(row: row, section: feedImagesSection)
+        delegate?.tableView?(tableView, didSelectRowAt: index)
+    }
+    
 	var errorMessage: String? {
 		return errorView?.message
 	}

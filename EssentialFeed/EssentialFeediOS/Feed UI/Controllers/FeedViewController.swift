@@ -77,6 +77,10 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         return controller
 	}
 	
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        cellController(forRowAt: indexPath).selected()
+    }
+    
 	private func cancelCellControllerLoad(forRowAt indexPath: IndexPath) {
 		loadingControllers[indexPath]?.cancelLoad()
         loadingControllers[indexPath] = nil
