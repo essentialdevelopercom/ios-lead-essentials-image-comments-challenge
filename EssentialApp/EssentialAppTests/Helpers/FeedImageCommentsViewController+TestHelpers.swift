@@ -31,6 +31,11 @@ extension FeedImageCommentsViewController {
         return ds?.tableView(tableView, cellForRowAt: index)
     }
     
+    func commentMessage(at row: Int) -> String? {
+        let cell = commentView(at: row) as? FeedImageCommentCell
+        return cell?.commentText
+    }
+    
     private var commentsSection: Int {
         return 0
     }
