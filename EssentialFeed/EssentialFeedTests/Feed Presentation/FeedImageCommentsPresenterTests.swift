@@ -40,7 +40,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
         let (sut, view) = makeSUT()
         let error = anyNSError()
 
-        sut.didStartLoadingComments(with: error)
+        sut.didFinishLoadingComments(with: error)
         print(view.messages)
 
         XCTAssertEqual(view.messages, [.display(errorMessage: localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE")), .display(isLoading: false)])
@@ -50,7 +50,7 @@ class FeedImageCommentsPresenterTests: XCTestCase {
     
     private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (FeedImageCommentsPresenter, ViewSpy) {
         let view = ViewSpy()
-        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view, currentDate: date)
+        let sut = FeedImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(view, file: file, line: line)
