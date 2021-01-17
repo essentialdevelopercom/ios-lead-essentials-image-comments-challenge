@@ -35,6 +35,7 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
     var presenter: FeedImageCommentsPresenter?
     let loader: FeedImageCommentsLoader
     let url: URL
+    private var task: FeedImageCommentsLoaderTask?
     
     init(loader: FeedImageCommentsLoader, url: URL) {
         self.loader = loader
@@ -44,7 +45,7 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
     public func didRequestCommentsRefresh() {
         presenter?.didStartLoadingComments()
         
-        _ = loader.load(from: url) { [weak self] result in
+        task = loader.load(from: url) { [weak self] result in
             switch result {
             case let .success(comments):
                 self?.presenter?.didFinishLoadingComments(with: comments)
@@ -53,6 +54,10 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
                     self?.presenter?.didFinishLoadingComments(with: error)
             }
         }
+    }
+    
+    public func didCancelCommentsRequest() {
+        task?.cancel()
     }
 }
 
