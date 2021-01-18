@@ -11,6 +11,7 @@ import EssentialFeed
 
 class MainQueueDispatchDecorator: CommentLoader {
 	private let decoratee: CommentLoader
+	
 	init(decoratee: CommentLoader) {
 		self.decoratee = decoratee
 	}
