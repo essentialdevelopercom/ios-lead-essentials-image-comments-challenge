@@ -38,14 +38,23 @@ class CommentPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingWithComment_displayCommentsAndStopLoading() {
 		let (sut, view) = makeSUT()
-		let comment0 = makeComment(message: "a messages", createAt: Date(), author: "an author")
-		let comment1 = makeComment(message: "another messages", createAt: Date(), author: "another author")
+		let comment0 = makeComment(message: "a messages", createAt: Date(timeIntervalSinceNow: -2), author: "an author")
+		let comment1 = makeComment(message: "another messages", createAt: Date(timeIntervalSinceNow: -86400), author: "another author")
 		sut.didFinishLoadingComment(with: [comment0.model, comment1.model])
 		
 		XCTAssertEqual(view.messages, [
 			.display(isLoading: false),
 			.display([comment0.presentableModel, comment1.presentableModel])
 		])
+		
+		view.messages.forEach { message in
+			switch message {
+			case let .display(presentableComments):
+				validate(presentableComments[0], against: comment0.presentableModel)
+				validate(presentableComments[1], against: comment1.presentableModel)
+			default: break
+			}
+		}
 	}
 	
 	// MARK: - Helpers
@@ -58,9 +67,14 @@ class CommentPresenterTests: XCTestCase {
 		
 		return (sut, view)
 	}
+	
+	private func validate(_ receivedComment: PresentableComment, against expectedComment: PresentableComment, file: StaticString = #file, line: UInt = #line) {
+		XCTAssertEqual(receivedComment.author, expectedComment.author, file: file, line: line)
+		XCTAssertEqual(receivedComment.message, expectedComment.message, file: file, line: line)
+		XCTAssertEqual(receivedComment.createAt, expectedComment.createAt, file: file, line: line)
+	}
+	
 	private class ViewSpy: CommentLoadingView, CommentErrorView, CommentView {
-		
-		
 		var messages = Set<Message>()
 		
 		enum Message: Hashable {
@@ -94,7 +108,7 @@ class CommentPresenterTests: XCTestCase {
 	
 	private func makeComment(message: String, createAt: Date, author: String) -> (model: Comment, presentableModel: PresentableComment) {
 		let id = UUID()
-		let model = Comment(id: id, message: message, createAt: Date(), author: CommentAuthor(username: author))
+		let model = Comment(id: id, message: message, createAt: createAt, author: CommentAuthor(username: author))
 		let presentableModel = makePresentableComment(comment: model)
 		return (model, presentableModel)
 	}
