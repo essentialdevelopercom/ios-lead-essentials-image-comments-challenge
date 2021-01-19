@@ -66,19 +66,9 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		let exp = expectation(description: "Wait for load completion")
-		var receivedError:Error?
-		
-		sut.load { error in
-			receivedError = error
-			exp.fulfill()
+		expect(sut, toCompleteWith: .connectivity) {
+			client.complete(with: anyNSError())
 		}
-		
-		client.complete(with: anyNSError())
-		
-		wait(for: [exp], timeout: 1.0)
-		
-		XCTAssertNotNil(receivedError)
 	}
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
@@ -86,22 +76,14 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		
 		let samples = [199, 201, 300, 400, 500]
 		
-		var receivedError:Error?
 		samples.enumerated().forEach { index, code in
-			let exp = expectation(description: "Wait for load completion")
-			
-			sut.load { (error) in
-				receivedError = error
-				exp.fulfill()
+			expect(sut, toCompleteWith: .invalidData) {
+				client.complete(withStatusCode: code, data: anyData(), at: index)
 			}
-			
-			client.complete(withStatusCode: code, data: anyData(), at: index)
-
-			wait(for: [exp], timeout: 1.0)
-			
-			XCTAssertNotNil(receivedError)
 		}
 	}
+	
+	
 	
 	
 	
@@ -113,6 +95,19 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut)
 		return (sut, client)
+	}
+	
+	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Error, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load completion")
+		
+		sut.load { receivedResult in
+			XCTAssertEqual(receivedResult, expectedResult, file: file, line: line)
+			exp.fulfill()
+		}
+		
+		action()
+		
+		wait(for: [exp], timeout: 1.0)
 	}
 }
 
