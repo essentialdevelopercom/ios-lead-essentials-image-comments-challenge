@@ -76,8 +76,16 @@ class CommentLoaderTests: XCTestCase {
 	
 	func test_load_deliversSuccessOn200HTTPRepsonseWithData() {
 		let (sut, client) = makeSUT()
-		let comment1 = makeComment(id: UUID(), message: "any message", createAt: Date(), userName: "any user name")
-		let comment2 = makeComment(id: UUID(), message: "another message", createAt: Date(), userName: "another user name")
+		let comment1 = makeComment(
+			id: UUID(),
+			message: "any message",
+			createAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
+			userName: "any user name")
+		let comment2 = makeComment(
+			id: UUID(),
+			message: "another message",
+			createAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
+			userName: "another user name")
 		let commentJSON = makeCommentsJSON(comments: [comment1.json, comment2.json])
 		
 		expect(sut, toCompleteWith: .success([comment1.model, comment2.model])) {
@@ -153,15 +161,15 @@ class CommentLoaderTests: XCTestCase {
 		return try! JSONSerialization.data(withJSONObject: items, options: [])
 	}
 	
-	private func makeComment(id: UUID, message: String, createAt: Date, userName: String) -> (model: Comment, json: [String: Any]) {
+	private func makeComment(id: UUID, message: String, createAt: (date: Date, iso8601String: String), userName: String) -> (model: Comment, json: [String: Any]) {
 		let json: [String: Any] = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": ISO8601DateFormatter().string(from: createAt),
+			"created_at": createAt.iso8601String,
 			"author": ["username": userName]
 		]
 		
-		let model = Comment(id: id, message: message, createAt: createAt, author: CommentAuthor(username: userName))
+		let model = Comment(id: id, message: message, createAt: createAt.date, author: CommentAuthor(username: userName))
 		
 		return (model, json)
 	}
