@@ -11,18 +11,34 @@ import EssentialFeed
 
 class RemoteImageCommentsLoader{
 	let client: HTTPClient
+	let url: URL
 	
-	init(client: HTTPClient){
+	init(client: HTTPClient, url: URL){
 		self.client = client
+		self.url = url
+	}
+	
+	func load(){
+		client.get(from: url){ _ in}
 	}
 }
 
 class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 	func test_init_doesNotRequestDataFromURL() {
 		let client = HTTPClientSpy()
-		_ = RemoteImageCommentsLoader(client: client)
+		_ = RemoteImageCommentsLoader(client: client, url: anyURL())
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
+	}
+	
+	func test_load_requestsDataFromURL() {
+		let url = URL(string: "https://comments-url.com")!
+		let client = HTTPClientSpy()
+		let sut = RemoteImageCommentsLoader(client: client, url: url)
+		
+		sut.load()
+		
+		XCTAssertEqual(client.requestedURLs, [url])
 	}
 }
 
