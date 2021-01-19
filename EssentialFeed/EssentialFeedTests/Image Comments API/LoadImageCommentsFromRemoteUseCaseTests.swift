@@ -10,8 +10,12 @@ import XCTest
 import EssentialFeed
 
 
-struct ImageComents: Equatable{
+struct ImageComment: Equatable, Decodable{
 	
+}
+
+private struct Root: Decodable{
+	let items: [ImageComment]
 }
 
 
@@ -19,7 +23,7 @@ class RemoteImageCommentsLoader{
 	let client: HTTPClient
 	let url: URL
 	
-	typealias Result = Swift.Result<[ImageComents], RemoteImageCommentsLoader.Error>
+	typealias Result = Swift.Result<[ImageComment], RemoteImageCommentsLoader.Error>
 	
 	enum Error: Swift.Error {
 		case connectivity
@@ -34,12 +38,17 @@ class RemoteImageCommentsLoader{
 	func load(completion: @escaping (Result) -> Void){
 		client.get(from: url){ result in
 			switch result{
-			case .success((_, let response)):
+			case .success((let data, let response)):
 				if response.statusCode != 200 {
 					completion(.failure(.invalidData))
 				}
 				else{
-					completion(.failure(.invalidData))
+					if let _ = try? JSONDecoder().decode(Root.self, from: data){
+						completion(.success([]))
+					}
+					else{
+						completion(.failure(.invalidData))
+					}
 				}
 			case .failure(_):
 				completion(.failure(.connectivity))
@@ -103,6 +112,15 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		})
 	}
 	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWith: .success([]), when: {
+			let emptyListJSON = makeItemsJSON([])
+			client.complete(withStatusCode: 200, data: emptyListJSON)
+		})
+	}
+	
 	
 	
 	// MARK: Helpers
@@ -113,6 +131,11 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut)
 		return (sut, client)
+	}
+	
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
 	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
