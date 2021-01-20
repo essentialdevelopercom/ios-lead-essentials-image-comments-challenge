@@ -9,10 +9,6 @@
 import Foundation
 
 
-private struct Root: Decodable{
-	let items: [RemoteImageComment]
-}
-
 public final class RemoteImageCommentsLoader{
 	private let client: HTTPClient
 	private let url: URL
@@ -33,25 +29,40 @@ public final class RemoteImageCommentsLoader{
 		client.get(from: url){ result in
 			switch result{
 			case .success((let data, let response)):
-				if response.statusCode != 200 {
-					completion(.failure(.invalidData))
-				}
-				else{
-					let decoder = JSONDecoder()
-					decoder.dateDecodingStrategy = .iso8601
-					if let decodedRoot = try? decoder.decode(Root.self, from: data){
-						completion(.success(decodedRoot.items.toModels()))
-					}
-					else{
-						completion(.failure(.invalidData))
-					}
-				}
+				completion(RemoteImageCommentsLoader.map(data, from: response))
 			case .failure(_):
-				completion(.failure(.connectivity))
+				completion(.failure(RemoteImageCommentsLoader.Error.connectivity))
 			}
 		}
 	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		do {
+			let items = try DataMapper.map(data, from: response)
+			return .success(items.toModels())
+		} catch {
+			return .failure(Error.invalidData)
+		}
+	}
 }
+
+
+private final class DataMapper{
+	struct Root: Decodable{
+		let items: [RemoteImageComment]
+	}
+	
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+			throw RemoteImageCommentsLoader.Error.invalidData
+		}
+		
+		return root.items
+	}
+}
+
 
 private extension Array where Element == RemoteImageComment {
 	func toModels() -> [ImageComment] {
