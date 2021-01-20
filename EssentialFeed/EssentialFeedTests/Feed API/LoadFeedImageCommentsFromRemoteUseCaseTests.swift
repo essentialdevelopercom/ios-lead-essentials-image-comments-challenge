@@ -167,7 +167,6 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
     private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
         let json = ["items": items]
-        print(json)
         return try! JSONSerialization.data(withJSONObject: json)
     }
     
@@ -193,13 +192,5 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-}
-
-extension HTTPURLResponse {
-    private static var OK_200: Int { return 200 }
-
-    var isOK: Bool {
-        return statusCode == HTTPURLResponse.OK_200
     }
 }
