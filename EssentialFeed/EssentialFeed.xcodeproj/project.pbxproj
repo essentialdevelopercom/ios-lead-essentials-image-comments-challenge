@@ -83,6 +83,7 @@
 		08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E5941422523FCC00E2D213 /* FeedCachePolicy.swift */; };
 		08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */; };
 		08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F8822C236499B200CAEE16 /* FeedCache.swift */; };
+		FAF141D325B7B5FA00C9122D /* LoadCommentsFromRemoteUseCasesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF141BE25B7414000C9122D /* LoadCommentsFromRemoteUseCasesTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -186,6 +187,7 @@
 		08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCellController.swift; sourceTree = "<group>"; };
 		08F8822C236499B200CAEE16 /* FeedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCache.swift; sourceTree = "<group>"; };
 		08FC5AA922D5F47900148E12 /* FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoader.swift; sourceTree = "<group>"; };
+		FAF141BE25B7414000C9122D /* LoadCommentsFromRemoteUseCasesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadCommentsFromRemoteUseCasesTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				080EDF0121B6DA7E00813479 /* Info.plist */,
+				FAF141BE25B7414000C9122D /* LoadCommentsFromRemoteUseCasesTests.swift */,
 				0844768D21FCB23900439BE9 /* Helpers */,
 				08C0880F21E4F53000ACFB30 /* Feed API */,
 				089C40D22216C32600DE552E /* Feed Cache */,
@@ -749,6 +752,7 @@
 				086044FC233E1A3B005ECD22 /* FeedImageDataStoreSpy.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
+				FAF141D325B7B5FA00C9122D /* LoadCommentsFromRemoteUseCasesTests.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
 				086BE481223270A3004CDC26 /* LoadFeedFromCacheUseCaseTests.swift in Sources */,
 				0875468C2272340500542C32 /* FeedStoreSpecs.swift in Sources */,
