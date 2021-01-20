@@ -18,7 +18,7 @@ protocol CommentLoader {
 	func load(completion: @escaping (Result) -> Void)
 }
 
-class RemoteFeedCommentsLoader {
+class RemoteCommentLoader {
 	
 	private let url: URL
 	private let client: HTTPClient
@@ -76,7 +76,7 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
-		expect(sut, toCompleteWith: failure(RemoteFeedCommentsLoader.Error.connectivity)) {
+		expect(sut, toCompleteWith: failure(RemoteCommentLoader.Error.connectivity)) {
 			let clientError = anyNSError()
 			client.complete(with: clientError)
 		}
@@ -84,27 +84,27 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
 		let client =  HTTPClientSpy()
-		let sut = RemoteFeedCommentsLoader(client: client, url: url)
+		let sut = RemoteCommentLoader(client: client, url: url)
 		trackForMemoryLeaks(client)
 		trackForMemoryLeaks(sut)
 		
 		return (sut, client)
 	}
 	
-	private func failure(_ error: RemoteFeedCommentsLoader.Error) -> CommentLoader.Result {
+	private func failure(_ error: RemoteCommentLoader.Error) -> CommentLoader.Result {
 		return .failure(error)
 	}
 
-	private func expect(_ sut: RemoteFeedCommentsLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		
 		let exp = expectation(description: "Wait for load completion")
 		sut.load { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
-			case let (.failure(receivedError as RemoteFeedCommentsLoader.Error), .failure(expectedError as RemoteFeedCommentsLoader.Error)):
+			case let (.failure(receivedError as RemoteCommentLoader.Error), .failure(expectedError as RemoteCommentLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default:
 				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
