@@ -4,15 +4,13 @@
 
 import XCTest
 
-protocol XCTestLocalization: XCTestCase {
-     func assertThatLocalizedStringsHaveKeysAndValuesForAllSupportedLocalizations(in table: String, for presentation: AnyClass)
- }
+protocol XCTestLocalization: XCTestCase {}
 
- extension XCTestLocalization {
-     func assertThatLocalizedStringsHaveKeysAndValuesForAllSupportedLocalizations(in table: String, for presentation: AnyClass) {
+extension XCTestLocalization {
+     func assertThatLocalizedStringsHaveKeysAndValuesForAllSupportedLocalizations(in table: String, for presentation: AnyClass, file: StaticString = #filePath, line: UInt = #line) {
          let presentationBundle = Bundle(for: presentation)
-         let localizationBundles = allLocalizationBundles(in: presentationBundle)
-         let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
+         let localizationBundles = allLocalizationBundles(in: presentationBundle, file: file, line: line)
+         let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table, file: file, line: line)
 
          localizationBundles.forEach { bundle, localization in
              localizedStringKeys.forEach { key in
@@ -21,7 +19,7 @@ protocol XCTestLocalization: XCTestCase {
                  if localizedString == key {
                      let language = Locale.current.localizedString(forLanguageCode: localization) ?? ""
 
-                     XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'")
+                     XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'", file: file, line: line)
                  }
              }
          }
