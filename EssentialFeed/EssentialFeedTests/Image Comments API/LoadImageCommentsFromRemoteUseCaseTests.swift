@@ -10,16 +10,7 @@ import XCTest
 import EssentialFeed
 
 
-struct ImageComment: Equatable, Decodable{
-	let id: UUID
-	let message: String
-	let createdAt: Date
-	let author: ImageCommentAuthor
-}
 
-struct ImageCommentAuthor: Equatable, Decodable{
-	let username:String
-}
 
 
 struct RemoteImageComment: Decodable {
