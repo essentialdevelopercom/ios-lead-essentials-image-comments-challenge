@@ -97,19 +97,20 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.errorMessage, nil)
     }
     
-    func test_cancelsCommentsLoading_whenViewIsNotVisible() {
-        let url = anyURL()
-        let (sut, loader) = makeSUT()
+    func test_cancelCommentsLoading_whenViewIsDismissed() {
+        var sut: FeedImageCommentsViewController?
+        let loader = LoaderSpy()
         
-        sut.loadViewIfNeeded()
-        XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests")
+        autoreleasepool {
+            sut = FeedImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: anyURL())
+            sut?.loadViewIfNeeded()
+        }
         
-        loader.completeCommentsLoading()
-        XCTAssertEqual(loader.cancelledRequests, [], "Expected to has not cancelled requests after loading")
+        XCTAssertEqual(loader.cancelledRequests.count, 0, "Expected to has not cancelled requests")
+
+        sut = nil
+        XCTAssertEqual(loader.cancelledRequests.count, 1, "Expected loading to be cancelled when view is about to disappear")
         
-        sut.simulateUserInitiatedCommentsReload()
-        sut.viewWillDisappear(false)
-        XCTAssertEqual(loader.cancelledRequests, [url], "Expected to has cancelled requests")
     }
     
     func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {

@@ -56,7 +56,7 @@ private final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewC
         }
     }
     
-    public func didCancelCommentsRequest() {
+    deinit {
         task?.cancel()
     }
 }
