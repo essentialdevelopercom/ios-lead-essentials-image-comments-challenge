@@ -32,14 +32,9 @@ extension FeedImageCommentsUIIntegrationTests {
             return XCTFail("Expected \(FeedImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
         }
         
-        XCTAssertEqual(cell.usernameText, comment.username,
-            "Expected username text to be \(comment.username), but got \(String(describing: cell.usernameText)) instead", file: file, line: line)
-        
-        XCTAssertEqual(cell.createdAtText, comment.creationTime,
-            "Expected created at text to be \(comment.creationTime), but got \(String(describing: cell.createdAtText)) instead", file: file, line: line)
-        
-        XCTAssertEqual(cell.commentText, comment.comment,
-            "Expected message text to be \(comment.comment), but got \(String(describing: cell.commentText)) instead", file: file, line: line)
+        XCTAssertEqual(cell.usernameText, comment.username, "username at index (\(index))", file: file, line: line)
+        XCTAssertEqual(cell.createdAtText, comment.creationTime, "created at index (\(index))", file: file, line: line)
+        XCTAssertEqual(cell.commentText, comment.comment, "message at index (\(index))", file: file, line: line)
     }
     
     private func executeRunLoopToCleanUpReferences() {
