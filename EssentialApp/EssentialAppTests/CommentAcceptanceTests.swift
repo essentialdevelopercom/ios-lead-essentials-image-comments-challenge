@@ -62,7 +62,7 @@ class CommentAcceptanceTests: XCTestCase {
 	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: PresentableComment, json: [String: Any]) {
 		let item = PresentableComment(
 			message: message,
-			createAt: RelativeTimestampGenerator.generateTimestamp(with: createdAt.date),
+			createAt: RelativeTimestampGenerator.generate(with: createdAt.date, in: Locale(identifier: "en_US_POSIX")),
 			author: username)
 		
 		let json: [String: Any] = [
