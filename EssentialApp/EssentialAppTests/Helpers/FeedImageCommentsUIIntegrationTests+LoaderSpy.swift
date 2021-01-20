@@ -10,7 +10,7 @@ import EssentialFeediOS
 extension FeedImageCommentsUIIntegrationTests {
     
     class LoaderSpy: FeedImageCommentsLoader {
-        var completions = [(FeedImageCommentsLoader.Result) -> Void]()
+        private var completions = [(FeedImageCommentsLoader.Result) -> Void]()
         var loadCommentsCallCount: Int { return completions.count }
         private(set) var cancelledRequests = [URL]()
         
