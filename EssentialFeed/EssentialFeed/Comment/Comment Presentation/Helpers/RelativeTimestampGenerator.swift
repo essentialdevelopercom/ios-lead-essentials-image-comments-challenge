@@ -9,17 +9,14 @@
 import Foundation
 
 public class RelativeTimestampGenerator {
-	static var now: Date {
+	private static var now: Date {
 		return Date()
 	}
 	
-	public static func generateTimestamp(with date: Date) -> String {
-
-		// ask for the full relative date
+	public static func generate(with date: Date, in locale: Locale) -> String {
 		let formatter = RelativeDateTimeFormatter()
 		formatter.unitsStyle = .full
-
-		// get exampleDate relative to the current date
+		formatter.locale = locale
 		return formatter.localizedString(for: date, relativeTo: now)
 	}
 }

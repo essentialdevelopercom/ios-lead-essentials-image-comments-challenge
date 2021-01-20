@@ -15,7 +15,7 @@ public struct CommentViewModel {
 		return comments.map {
 			return PresentableComment(
 				message: $0.message,
-				createAt: RelativeTimestampGenerator.generateTimestamp(with: $0.createAt),
+				createAt: RelativeTimestampGenerator.generate(with: $0.createAt, in: Locale.current),
 				author: $0.author.username)
 		}
 	}
