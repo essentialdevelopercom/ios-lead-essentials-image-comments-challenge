@@ -15,6 +15,18 @@ struct ImageComment: Equatable, Decodable{
 	let message: String
 	let createdAt: Date
 	let author: ImageCommentAuthor
+}
+
+struct ImageCommentAuthor: Equatable, Decodable{
+	let username:String
+}
+
+
+struct RemoteImageComment: Decodable {
+	let id: UUID
+	let message: String
+	let createdAt: Date
+	let author: RemoteImageCommentAuthor
 	
 	enum CodingKeys: String, CodingKey{
 		case id
@@ -24,14 +36,13 @@ struct ImageComment: Equatable, Decodable{
 	}
 }
 
-struct ImageCommentAuthor: Equatable, Decodable{
+struct RemoteImageCommentAuthor: Equatable, Decodable{
 	let username:String
 }
 
 private struct Root: Decodable{
-	let items: [ImageComment]
+	let items: [RemoteImageComment]
 }
-
 
 class RemoteImageCommentsLoader{
 	let client: HTTPClient
@@ -60,7 +71,7 @@ class RemoteImageCommentsLoader{
 					let decoder = JSONDecoder()
 					decoder.dateDecodingStrategy = .iso8601
 					if let decodedRoot = try? decoder.decode(Root.self, from: data){
-						completion(.success(decodedRoot.items))
+						completion(.success(decodedRoot.items.toModels()))
 					}
 					else{
 						completion(.failure(.invalidData))
@@ -72,6 +83,14 @@ class RemoteImageCommentsLoader{
 		}
 	}
 }
+
+private extension Array where Element == RemoteImageComment {
+	func toModels() -> [ImageComment] {
+		return map {ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: ImageCommentAuthor(username: $0.author.username))}
+	}
+}
+
+
 
 class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 	func test_init_doesNotRequestDataFromURL() {
