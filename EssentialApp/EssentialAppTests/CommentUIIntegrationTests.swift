@@ -95,13 +95,16 @@ class CommentUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingErrorView, "Expected no error when reload completes successfully")
 	}
 	
-	func test_commentLoad_cancelsLoadOnViewDisappearance() {
-		let (sut, loader) = makeSUT()
-		sut.loadViewIfNeeded()
+	func test_deinit_cancelsLoadOnViewDisappearance() {
+		let loader = LoaderSpy()
+		var sut: CommentViewController?
+		autoreleasepool {
+			sut = CommentUIComposer.commentComposeWith(loader: loader)
+			sut?.loadViewIfNeeded()
+		}
 		
-		sut.simulateViewDisappearance()
-		loader.completeCommentLoadingWithError(at: 0)
-		
+		XCTAssertEqual(loader.cancelCallCount, 0)
+		sut = nil
 		XCTAssertEqual(loader.cancelCallCount, 1)
 	}
 	

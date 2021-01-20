@@ -32,7 +32,7 @@ class CommentLoaderPresentationAdapter: CommentViewControllerDelegate {
 		}
 	}
 	
-	func didCancelCommentRequest() {
+	deinit {
 		task?.cancel()
 	}
 }

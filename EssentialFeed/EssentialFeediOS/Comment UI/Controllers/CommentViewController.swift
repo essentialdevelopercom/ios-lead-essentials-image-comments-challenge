@@ -11,7 +11,6 @@ import EssentialFeed
 
 public protocol CommentViewControllerDelegate {
 	func didRequestCommentRefresh()
-	func didCancelCommentRequest()
 }
 
 public final class CommentViewController: UITableViewController, CommentErrorView, CommentLoadingView {
@@ -28,11 +27,6 @@ public final class CommentViewController: UITableViewController, CommentErrorVie
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		refresh()
-	}
-	
-	public override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		delegate?.didCancelCommentRequest()
 	}
 	
 	public override func viewDidLayoutSubviews() {

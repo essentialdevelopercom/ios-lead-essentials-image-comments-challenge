@@ -28,10 +28,6 @@ extension CommentViewController {
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 	
-	func simulateViewDisappearance() {
-		self.viewWillDisappear(true)
-	}
-	
 	var isShowingErrorView: Bool {
 		return errorView?.message != nil
 	}
