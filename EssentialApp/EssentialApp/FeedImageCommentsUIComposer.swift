@@ -31,10 +31,10 @@ public final class FeedImageCommentsUIComposer {
     }
 }
 
-public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewControllerDelegate {
+private final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewControllerDelegate {
     var presenter: FeedImageCommentsPresenter?
-    let loader: FeedImageCommentsLoader
-    let url: URL
+    private let loader: FeedImageCommentsLoader
+    private let url: URL
     private var task: FeedImageCommentsLoaderTask?
     
     init(loader: FeedImageCommentsLoader, url: URL) {
@@ -61,7 +61,7 @@ public final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewCo
     }
 }
 
-public final class MainQueueDispatchDecorator: FeedImageCommentsLoader {
+private final class MainQueueDispatchDecorator: FeedImageCommentsLoader {
      let decoratee: FeedImageCommentsLoader
 
      init(decoratee: FeedImageCommentsLoader) {
