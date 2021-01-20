@@ -52,23 +52,20 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
     
-    func test_onSelectImage_displaysImageComments() {
+    func test_onSelectImage_displaysImageComments() throws {
         let feed = launch(httpClient: .online(response), store: .empty)
         
         feed.simulateTapOnImage(at: 0)
         RunLoop.current.run(until: Date())
         
-        XCTAssertNotNil(feed.navigationController?.topViewController as? FeedImageCommentsViewController)
+        let comments = try XCTUnwrap(feed.navigationController?.topViewController as? FeedImageCommentsViewController)
         
-        let comments = feed.navigationController?.topViewController as? FeedImageCommentsViewController
-        XCTAssertNotNil(comments, "Expected comments controller to not be nil")
-        
-        XCTAssertEqual(comments?.numberOfRenderedCommentsViews(), 2)
-        XCTAssertNotNil(comments?.commentView(at: 0), "Expected a comment on view")
-        XCTAssertEqual(comments?.commentMessage(at: 0), "First message")
+        XCTAssertEqual(comments.numberOfRenderedCommentsViews(), 2)
+        XCTAssertNotNil(comments.commentView(at: 0), "Expected a comment on view")
+        XCTAssertEqual(comments.commentMessage(at: 0), "First message")
 
-        XCTAssertNotNil(comments?.commentView(at: 1), "Expected a comment on view")
-        XCTAssertEqual(comments?.commentMessage(at: 1), "Second message")
+        XCTAssertNotNil(comments.commentView(at: 1), "Expected a comment on view")
+        XCTAssertEqual(comments.commentMessage(at: 1), "Second message")
     }
 	
 	// MARK: - Helpers
