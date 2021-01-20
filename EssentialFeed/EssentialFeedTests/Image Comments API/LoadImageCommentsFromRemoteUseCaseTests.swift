@@ -11,78 +11,6 @@ import EssentialFeed
 
 
 
-
-
-struct RemoteImageComment: Decodable {
-	let id: UUID
-	let message: String
-	let createdAt: Date
-	let author: RemoteImageCommentAuthor
-	
-	enum CodingKeys: String, CodingKey{
-		case id
-		case message
-		case createdAt = "created_at"
-		case author
-	}
-}
-
-struct RemoteImageCommentAuthor: Equatable, Decodable{
-	let username:String
-}
-
-private struct Root: Decodable{
-	let items: [RemoteImageComment]
-}
-
-class RemoteImageCommentsLoader{
-	let client: HTTPClient
-	let url: URL
-	
-	typealias Result = Swift.Result<[ImageComment], RemoteImageCommentsLoader.Error>
-	
-	enum Error: Swift.Error {
-		case connectivity
-		case invalidData
-	}
-	
-	init(client: HTTPClient, url: URL){
-		self.client = client
-		self.url = url
-	}
-	
-	func load(completion: @escaping (Result) -> Void){
-		client.get(from: url){ result in
-			switch result{
-			case .success((let data, let response)):
-				if response.statusCode != 200 {
-					completion(.failure(.invalidData))
-				}
-				else{
-					let decoder = JSONDecoder()
-					decoder.dateDecodingStrategy = .iso8601
-					if let decodedRoot = try? decoder.decode(Root.self, from: data){
-						completion(.success(decodedRoot.items.toModels()))
-					}
-					else{
-						completion(.failure(.invalidData))
-					}
-				}
-			case .failure(_):
-				completion(.failure(.connectivity))
-			}
-		}
-	}
-}
-
-private extension Array where Element == RemoteImageComment {
-	func toModels() -> [ImageComment] {
-		return map {ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: ImageCommentAuthor(username: $0.author.username))}
-	}
-}
-
-
-
 class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 	func test_init_doesNotRequestDataFromURL() {
 		let (_, client) = makeSUT()
@@ -162,6 +90,7 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 			client.complete(withStatusCode: 200, data: json)
 		})
 	}
+	
 	
 	
 	// MARK: Helpers
