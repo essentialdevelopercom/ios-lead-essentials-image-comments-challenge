@@ -131,7 +131,7 @@ class CommentUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	class LoaderSpy: CommentLoader {
+	private class LoaderSpy: CommentLoader {
 		
 		var loadCallCount: Int {
 			return completions.count
