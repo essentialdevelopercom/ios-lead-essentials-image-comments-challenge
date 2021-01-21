@@ -27,13 +27,18 @@ class FeedImageCommentsPresenterTests: XCTestCase {
 
     func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
         let (sut, view) = makeSUT()
+        let comments = [
+            FeedImageComment(id: UUID(), message: "a message", createdAt: Date().adding(seconds: -40), author: "a username"),
+            FeedImageComment(id: UUID(), message: "another message", createdAt: Date().adding(seconds: -60 * 60), author: "another username")
+        ]
         
-        let comments = uniqueImageComments()
-        let presentableComments = comments.toModels()
+        let presentedComments = [
+            FeedImageCommentPresenterModel(username: "a username", creationTime: "40 seconds ago", comment: "a message"),
+            FeedImageCommentPresenterModel(username: "another username", creationTime: "1 hour ago", comment: "another message")
+        ]
         
         sut.didFinishLoadingComments(with: comments)
-        
-        XCTAssertEqual(view.messages, [.display(comments: presentableComments), .display(isLoading: false)])
+        XCTAssertEqual(view.messages, [.display(comments: presentedComments), .display(isLoading: false)])
     }
     
     func test_didFinishLoadingCommentsWithError_displaysErrorAndStopsLoading() {
