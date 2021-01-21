@@ -9,11 +9,11 @@
 import Foundation
 
 
-public final class RemoteImageCommentsLoader{
+public final class RemoteImageCommentsLoader: ImageCommentsLoader{
 	private let client: HTTPClient
 	private let url: URL
 	
-	public typealias Result = Swift.Result<[ImageComment], RemoteImageCommentsLoader.Error>
+	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
 	
 	public enum Error: Swift.Error {
 		case connectivity
@@ -40,6 +40,22 @@ public final class RemoteImageCommentsLoader{
 		
 		private func preventFurtherCompletions() {
 			completion = nil
+		}
+	}
+	
+	private final class DataMapper{
+		struct Root: Decodable{
+			let items: [RemoteImageComment]
+		}
+		
+		static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
+			let decoder = JSONDecoder()
+			decoder.dateDecodingStrategy = .iso8601
+			guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+				throw RemoteImageCommentsLoader.Error.invalidData
+			}
+			
+			return root.items
 		}
 	}
 	
@@ -74,23 +90,6 @@ public final class RemoteImageCommentsLoader{
 		} catch {
 			return .failure(Error.invalidData)
 		}
-	}
-}
-
-
-private final class DataMapper{
-	struct Root: Decodable{
-		let items: [RemoteImageComment]
-	}
-	
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
-		let decoder = JSONDecoder()
-		decoder.dateDecodingStrategy = .iso8601
-		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
-			throw RemoteImageCommentsLoader.Error.invalidData
-		}
-		
-		return root.items
 	}
 }
 

@@ -40,7 +40,7 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: .failure(.connectivity)) {
+		expect(sut, toCompleteWith: failure(.connectivity)) {
 			client.complete(with: anyNSError())
 		}
 	}
@@ -51,7 +51,7 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		let samples = [199, 201, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
-			expect(sut, toCompleteWith: .failure(.invalidData)) {
+			expect(sut, toCompleteWith: failure(.invalidData)) {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			}
 		}
@@ -60,7 +60,7 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: .failure(.invalidData), when: {
+		expect(sut, toCompleteWith: failure(.invalidData), when: {
 			let invalidJSON = Data("invalid json".utf8)
 			client.complete(withStatusCode: 200, data: invalidJSON)
 		})
@@ -142,6 +142,10 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		return (sut, client)
 	}
 	
+	private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result{
+		.failure(error)
+	}
+	
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
 		let json = ["items": items]
 		return try! JSONSerialization.data(withJSONObject: json)
@@ -173,14 +177,12 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 			switch (receivedResult, expectedResult){
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
-			case let (.failure(receivedError), .failure(expectedError)):
+			case let (.failure(receivedError as RemoteImageCommentsLoader.Error), .failure(expectedError as RemoteImageCommentsLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default:
 				XCTFail("Expected \(expectedResult) but got \(receivedResult)", file: file, line: line)
 			}
 			
-			
-			XCTAssertEqual(receivedResult, expectedResult, file: file, line: line)
 			exp.fulfill()
 		}
 		
