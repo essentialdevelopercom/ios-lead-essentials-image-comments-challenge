@@ -43,7 +43,7 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOnNon200HTTPResponse() {
+	func test_load_deliversErrorOnNon2xxHTTPResponse() {
 		let (sut, client) = makeSUT()
 		
 		let codeSamples = [199, 300, 303, 404, 500]
@@ -56,7 +56,7 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliverErrorOn2XXHTTPResponseWithInvalidData() {
+	func test_load_deliverErrorOn2xxHTTPResponseWithInvalidData() {
 		let (sut, client) = makeSUT()
 		(200...299).enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData)) {
@@ -66,7 +66,7 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversNoItemOn2XXHTTPRepsonseWithEmptyJSON() {
+	func test_load_deliversNoItemOn2xxHTTPRepsonseWithEmptyJSON() {
 		let (sut, client) = makeSUT()
 		(200...299).enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: .success([])) {
@@ -76,7 +76,7 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversSuccessOn200HTTPRepsonseWithData() {
+	func test_load_deliversSuccessOn2xxHTTPRepsonseWithData() {
 		let (sut, client) = makeSUT()
 		let comment1 = makeComment(
 			id: UUID(),
@@ -90,8 +90,10 @@ class CommentLoaderTests: XCTestCase {
 			userName: "another user name")
 		let commentJSON = makeCommentsJSON(comments: [comment1.json, comment2.json])
 		
-		expect(sut, toCompleteWith: .success([comment1.model, comment2.model])) {
-			client.complete(withStatusCode: 200, data: commentJSON)
+		(200...299).enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([comment1.model, comment2.model])) {
+				client.complete(withStatusCode: code, data: commentJSON, at: index)
+			}
 		}
 	}
 	
