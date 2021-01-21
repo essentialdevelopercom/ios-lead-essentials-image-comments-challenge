@@ -91,6 +91,16 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		})
 	}
 	
+	func test_cancelLoadImageCommentsURLTask_cancelsClientURLRequest() {
+		let url = URL(string: "https://comments-url.com")!
+		let (sut, client) = makeSUT(url: url)
+		
+		let task = sut.load{ _ in }
+		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
+
+		task.cancel()
+		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
+	}
 	
 	
 	// MARK: Helpers
