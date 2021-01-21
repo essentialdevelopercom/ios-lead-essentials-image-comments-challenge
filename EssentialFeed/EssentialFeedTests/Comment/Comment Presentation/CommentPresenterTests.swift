@@ -38,8 +38,10 @@ class CommentPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingWithComment_displayCommentsAndStopLoading() {
 		let (sut, view) = makeSUT()
-		let comment0 = makeComment(message: "a messages", createAt: Date(timeIntervalSinceNow: -2), author: "an author")
-		let comment1 = makeComment(message: "another messages", createAt: Date(timeIntervalSinceNow: -86400), author: "another author")
+		let now = Date()
+		
+		let comment0 = makeComment(message: "a message", createAt: now.adding(seconds: -30), author: "an author")
+		let comment1 = makeComment(message: "another message", createAt: now.adding(days: -2), author: "another author")
 		sut.didFinishLoadingComment(with: [comment0.model, comment1.model])
 		
 		XCTAssertEqual(view.messages, [
@@ -50,8 +52,17 @@ class CommentPresenterTests: XCTestCase {
 		view.messages.forEach { message in
 			switch message {
 			case let .display(presentableComments):
-				validate(presentableComments[0], against: comment0.presentableModel)
-				validate(presentableComments[1], against: comment1.presentableModel)
+				
+				XCTAssertEqual(presentableComments, [
+					PresentableComment(
+						message: "a message",
+						createAt: "30 seconds ago",
+						author: "an author"),
+					PresentableComment(
+						message: "another message",
+						createAt: "2 days ago",
+						author: "another author"),
+				])
 			default: break
 			}
 		}
@@ -66,12 +77,6 @@ class CommentPresenterTests: XCTestCase {
 		trackForMemoryLeaks(view, file: file, line: line)
 		
 		return (sut, view)
-	}
-	
-	private func validate(_ receivedComment: PresentableComment, against expectedComment: PresentableComment, file: StaticString = #file, line: UInt = #line) {
-		XCTAssertEqual(receivedComment.author, expectedComment.author, file: file, line: line)
-		XCTAssertEqual(receivedComment.message, expectedComment.message, file: file, line: line)
-		XCTAssertEqual(receivedComment.createAt, expectedComment.createAt, file: file, line: line)
 	}
 	
 	private class ViewSpy: CommentLoadingView, CommentErrorView, CommentView {
