@@ -19,6 +19,7 @@ public struct CommentViewModel {
 				author: $0.author.username)
 		}
 	}
+	
 	public init(comments: [Comment]) {
 		self.comments = comments
 	}
