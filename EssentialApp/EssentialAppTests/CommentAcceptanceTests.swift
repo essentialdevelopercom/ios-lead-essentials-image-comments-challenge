@@ -16,7 +16,7 @@ class CommentAcceptanceTests: XCTestCase {
 		let comment1 = makeItem(
 			id: UUID(),
 			message: "message 1",
-			createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
+			createdAt: (Date(timeIntervalSince1970: 1550238262), "2019-02-15T13:44:22+00:00"),
 			username: "username 1")
 		let comment2 = makeItem(
 			id: UUID(),

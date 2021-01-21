@@ -86,7 +86,7 @@ class CommentLoaderTests: XCTestCase {
 		let comment2 = makeComment(
 			id: UUID(),
 			message: "another message",
-			createAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
+			createAt: (Date(timeIntervalSince1970: 1610238262), "2021-01-10T00:24:22+00:00"),
 			userName: "another user name")
 		let commentJSON = makeCommentsJSON(comments: [comment1.json, comment2.json])
 		
