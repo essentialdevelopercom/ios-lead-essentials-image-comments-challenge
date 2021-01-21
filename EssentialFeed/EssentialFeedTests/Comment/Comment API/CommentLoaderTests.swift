@@ -46,7 +46,7 @@ class CommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 		
-		let codeSamples = [199, 201, 303, 404, 500]
+		let codeSamples = [199, 300, 303, 404, 500]
 		
 		codeSamples.enumerated().forEach { (index, code) in
 			expect(sut, toCompleteWith: failure(.invalidData)) {
@@ -56,21 +56,23 @@ class CommentLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliverErrorOn200HTTPResponseWithInvalidData() {
+	func test_load_deliverErrorOn2XXHTTPResponseWithInvalidData() {
 		let (sut, client) = makeSUT()
-		
-		expect(sut, toCompleteWith: failure(.invalidData)) {
-			let invalidData = Data("invalid-data".utf8)
-			client.complete(withStatusCode: 200, data: invalidData)
+		(200...299).enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData)) {
+				let invalidData = Data("invalid-data".utf8)
+				client.complete(withStatusCode: code, data: invalidData, at: index)
+			}
 		}
 	}
 	
-	func test_load_deliversNoItemOn200HTTPRepsonseWithEmptyJSON() {
+	func test_load_deliversNoItemOn2XXHTTPRepsonseWithEmptyJSON() {
 		let (sut, client) = makeSUT()
-		
-		expect(sut, toCompleteWith: .success([])) {
-			let emptyJSON = makeCommentsJSON(comments: [])
-			client.complete(withStatusCode: 200, data: emptyJSON)
+		(200...299).enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([])) {
+				let emptyJSON = makeCommentsJSON(comments: [])
+				client.complete(withStatusCode: code, data: emptyJSON, at: index)
+			}
 		}
 	}
 	
@@ -148,7 +150,10 @@ class CommentLoaderTests: XCTestCase {
 			switch (receivedResult, expectedResult) {
 			case let (.failure(receivedError as RemoteCommentLoader.Error), .failure(expectedError as RemoteCommentLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
-			default: break
+			case let (.success(receivedComments), .success(expectedComments)):
+				XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
+			default:
+				XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
 			}
 			exp.fulfill()
 		}
