@@ -45,7 +45,7 @@ private final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewC
     public func didRequestCommentsRefresh() {
         presenter?.didStartLoadingComments()
         
-        task = loader.load(from: url) { [weak self] result in
+        task = loader.load { [weak self] result in
             switch result {
             case let .success(comments):
                 self?.presenter?.didFinishLoadingComments(with: comments)
@@ -75,8 +75,8 @@ private final class MainQueueDispatchDecorator: FeedImageCommentsLoader {
          completion()
      }
 
-     public func load(from url: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-         decoratee.load(from: url) { [weak self] result in
+     public func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+         decoratee.load { [weak self] result in
              self?.dispatch { completion(result) }
          }
      }

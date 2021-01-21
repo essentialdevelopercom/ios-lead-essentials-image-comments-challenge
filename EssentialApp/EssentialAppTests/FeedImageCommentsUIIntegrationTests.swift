@@ -19,16 +19,16 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
     
     func test_loadCommentsAction_requestCommentsFromLoader() {
         let (sut, loader) = makeSUT()
-        XCTAssertEqual(loader.loadCommentsCallCount, 0, "Expected no loading requests before view is loaded")
+        XCTAssertEqual(loader.loadCount, 0, "Expected no loading requests before view is loaded")
         
         sut.loadViewIfNeeded()
-        XCTAssertEqual(loader.loadCommentsCallCount, 1, "Expected a loading request once view is loaded")
+        XCTAssertEqual(loader.loadCount, 1, "Expected a loading request once view is loaded")
         
         sut.simulateUserInitiatedCommentsReload()
-        XCTAssertEqual(loader.loadCommentsCallCount, 2, "Expected a loading request once view is loaded")
+        XCTAssertEqual(loader.loadCount, 2, "Expected a loading request once view is loaded")
         
         sut.simulateUserInitiatedCommentsReload()
-        XCTAssertEqual(loader.loadCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
+        XCTAssertEqual(loader.loadCount, 3, "Expected yet another loading request once user initiates another reload")
     }
     
     func test_loadingCommentsIndicator_isVisibleWhileLoadingComments() {
@@ -106,10 +106,10 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
             sut?.loadViewIfNeeded()
         }
         
-        XCTAssertEqual(loader.cancelledRequests.count, 0, "Expected to has not cancelled requests")
+        XCTAssertEqual(loader.cancelCount, 0, "Expected to has not cancelled requests")
 
         sut = nil
-        XCTAssertEqual(loader.cancelledRequests.count, 1, "Expected loading to be cancelled when view is about to disappear")
+        XCTAssertEqual(loader.cancelCount, 1, "Expected loading to be cancelled when view is about to disappear")
         
     }
     

@@ -6,13 +6,12 @@ import Foundation
 import EssentialFeed
 import EssentialFeediOS
 
-
 extension FeedImageCommentsUIIntegrationTests {
     
     class LoaderSpy: FeedImageCommentsLoader {
         private var completions = [(FeedImageCommentsLoader.Result) -> Void]()
-        var loadCommentsCallCount: Int { return completions.count }
-        private(set) var cancelledRequests = [URL]()
+        var loadCount: Int { return completions.count }
+        private(set) var cancelCount = 0
         
         private struct Task: FeedImageCommentsLoaderTask {
             let cancelCallback: () -> Void
@@ -22,10 +21,10 @@ extension FeedImageCommentsUIIntegrationTests {
             }
         }
         
-        func load(from url: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+        func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
             completions.append(completion)
             return Task { [weak self] in
-                self?.cancelledRequests.append(url)
+                self?.cancelCount += 1
             }
         }
         
