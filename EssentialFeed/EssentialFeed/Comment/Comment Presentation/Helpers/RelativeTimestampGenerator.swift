@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class RelativeTimestampGenerator {
+class RelativeTimestampGenerator {
 	private static var now: Date {
 		return Date()
 	}

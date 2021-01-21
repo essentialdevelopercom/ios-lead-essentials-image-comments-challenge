@@ -60,10 +60,7 @@ class CommentAcceptanceTests: XCTestCase {
 	}
 	
 	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: PresentableComment, json: [String: Any]) {
-		let item = PresentableComment(
-			message: message,
-			createAt: RelativeTimestampGenerator.generate(with: createdAt.date, in: Locale(identifier: "en_US_POSIX")),
-			author: username)
+		let viewModel = CommentViewModel(comments: [Comment(id: id, message: message, createAt: createdAt.date, author: CommentAuthor(username: username))])
 		
 		let json: [String: Any] = [
 			"id": id.uuidString,
@@ -74,7 +71,7 @@ class CommentAcceptanceTests: XCTestCase {
 			]
 		]
 		
-		return (item, json)
+		return (viewModel.presentableComments[0], json)
 	}
 	
 	private func makeCommentsJSON(comments: [[String: Any]]) -> Data {
