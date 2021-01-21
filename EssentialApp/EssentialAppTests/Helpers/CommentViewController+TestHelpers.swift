@@ -14,6 +14,10 @@ extension CommentViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
+	func simulateUserTapOnErrorView() {
+		self.errorView?.button.simulateTap()
+	}
+	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}

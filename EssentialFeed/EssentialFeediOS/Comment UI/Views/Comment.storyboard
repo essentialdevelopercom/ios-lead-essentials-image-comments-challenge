@@ -20,6 +20,12 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zEx-YA-44K">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                    <connections>
+                                        <action selector="hideMessageAnimated" destination="n4a-XB-yYf" eventType="touchUpInside" id="GrK-m5-qyb"/>
+                                    </connections>
+                                </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SST-9L-Fqr">
                                     <rect key="frame" x="8" y="8" width="398" height="18"/>
                                     <viewLayoutGuide key="safeArea" id="03p-yf-HJ1"/>
@@ -33,10 +39,15 @@
                             <constraints>
                                 <constraint firstAttribute="trailingMargin" secondItem="SST-9L-Fqr" secondAttribute="trailing" id="8BA-Xk-aWI"/>
                                 <constraint firstAttribute="bottom" secondItem="SST-9L-Fqr" secondAttribute="bottom" constant="8" id="BkL-5W-68f"/>
+                                <constraint firstItem="zEx-YA-44K" firstAttribute="top" secondItem="n4a-XB-yYf" secondAttribute="top" id="KFc-4V-hv5"/>
+                                <constraint firstAttribute="bottom" secondItem="zEx-YA-44K" secondAttribute="bottom" id="XSN-kp-Ziw"/>
+                                <constraint firstAttribute="trailing" secondItem="zEx-YA-44K" secondAttribute="trailing" id="bvn-M9-yEg"/>
                                 <constraint firstItem="SST-9L-Fqr" firstAttribute="leading" secondItem="n4a-XB-yYf" secondAttribute="leadingMargin" id="f5F-vW-5h8"/>
                                 <constraint firstItem="SST-9L-Fqr" firstAttribute="top" secondItem="n4a-XB-yYf" secondAttribute="top" constant="8" id="keg-Nt-BOe"/>
+                                <constraint firstItem="zEx-YA-44K" firstAttribute="leading" secondItem="n4a-XB-yYf" secondAttribute="leading" id="m6q-6O-Vmk"/>
                             </constraints>
                             <connections>
+                                <outlet property="button" destination="zEx-YA-44K" id="5zu-Td-YgL"/>
                                 <outlet property="label" destination="SST-9L-Fqr" id="LXv-hK-oeA"/>
                             </connections>
                         </view>

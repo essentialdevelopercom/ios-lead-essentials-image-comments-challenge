@@ -93,6 +93,12 @@ class CommentUIIntegrationTests: XCTestCase {
 		
 		loader.completeCommentLoading(with: [], at: 1)
 		XCTAssertFalse(sut.isShowingErrorView, "Expected no error when reload completes successfully")
+		
+		sut.simulateUserInititateCommentReload()
+		loader.completeCommentLoadingWithError(at: 2)
+		XCTAssertTrue(sut.isShowingErrorView, "Expected error view when load failures")
+		sut.simulateUserTapOnErrorView()
+		XCTAssertFalse(sut.isShowingErrorView, "Expected no error when user tap on error view")
 	}
 	
 	func test_deinit_cancelsLoadOnViewDisappearance() {
