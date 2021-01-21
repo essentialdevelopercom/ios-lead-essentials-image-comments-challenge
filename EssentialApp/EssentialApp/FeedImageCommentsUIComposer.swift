@@ -8,8 +8,8 @@ import EssentialFeed
 import EssentialFeediOS
 
 public final class FeedImageCommentsUIComposer {
-    public static func imageCommentsComposeWith(commentsLoader: FeedImageCommentsLoader, url: URL) -> FeedImageCommentsViewController {
-        let presentationAdapter = FeedImageCommentsPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader), url: url)
+    public static func imageCommentsComposeWith(commentsLoader: FeedImageCommentsLoader) -> FeedImageCommentsViewController {
+        let presentationAdapter = FeedImageCommentsPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader))
         let viewController = makeController(delegate: presentationAdapter)
         let presenter = FeedImageCommentsPresenter(
             commentsView: WeakRefVirtualProxy(viewController),
@@ -34,12 +34,10 @@ public final class FeedImageCommentsUIComposer {
 private final class FeedImageCommentsPresentationAdapter: FeedImageCommentsViewControllerDelegate {
     var presenter: FeedImageCommentsPresenter?
     private let loader: FeedImageCommentsLoader
-    private let url: URL
     private var task: FeedImageCommentsLoaderTask?
     
-    init(loader: FeedImageCommentsLoader, url: URL) {
+    init(loader: FeedImageCommentsLoader) {
         self.loader = loader
-        self.url = url
     }
     
     public func didRequestCommentsRefresh() {

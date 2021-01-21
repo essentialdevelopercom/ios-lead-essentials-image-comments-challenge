@@ -102,7 +102,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         let loader = LoaderSpy()
         
         autoreleasepool {
-            sut = FeedImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: anyURL())
+            sut = FeedImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader)
             sut?.loadViewIfNeeded()
         }
         
@@ -130,9 +130,8 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
     //MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedImageCommentsViewController, LoaderSpy) {
-        let url = anyURL()
         let loader = LoaderSpy()
-        let sut = FeedImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader, url: url)
+        let sut = FeedImageCommentsUIComposer.imageCommentsComposeWith(commentsLoader: loader)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
         return (sut, loader)
