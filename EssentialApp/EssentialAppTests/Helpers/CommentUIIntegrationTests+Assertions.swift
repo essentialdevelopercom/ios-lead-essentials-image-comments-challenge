@@ -27,9 +27,9 @@ extension CommentUIIntegrationTests {
 			return XCTFail("Expected to get \(CommentCell.self), got \(String(describing: view)) instead")
 		}
 
-		XCTAssertEqual(cell.authorText, comment.author, "Expected `authorText` to be \(String(describing: cell.authorText)) for cell at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.messageText, comment.message, "Expected `messageText` to be \(String(describing: cell.messageText)) for cell at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.timestampText, comment.createAt, "Expected `timestampText` to be \(String(describing: cell.timestampText)) for cell at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.authorText, comment.author, "authorText at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.messageText, comment.message, "messageText at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.timestampText, comment.createAt, "timestampText at index \(index)", file: file, line: line)
 	}
 }
  
