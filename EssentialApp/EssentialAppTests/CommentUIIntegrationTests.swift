@@ -169,7 +169,7 @@ class CommentUIIntegrationTests: XCTestCase {
 	
 	private func makeComment(message: String, createAt: Date, author: String) -> (model: Comment, presentableModel: PresentableComment) {
 		let id = UUID()
-		let model = Comment(id: id, message: message, createAt: Date(), author: CommentAuthor(username: author))
+		let model = Comment(id: id, message: message, createAt: createAt, author: CommentAuthor(username: author))
 		let presentableModel = makePresentableComment(comment: model)
 		return (model, presentableModel)
 	}
