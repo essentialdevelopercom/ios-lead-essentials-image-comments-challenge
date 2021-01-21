@@ -32,6 +32,11 @@ extension CommentViewController {
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 	
+	func commentMessage(at row: Int) -> String? {
+		let commentCell = commentView(at: row) as! CommentCell
+		return commentCell.messageText
+	}
+	
 	var isShowingErrorView: Bool {
 		return errorView?.message != nil
 	}

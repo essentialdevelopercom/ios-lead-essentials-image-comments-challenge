@@ -52,6 +52,23 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
+	func test_onSelectImage_displayImageComments() {
+		let feed = launch(httpClient: .online(response), store: .empty)
+		feed.simulateUserSelectFeed(at: 0)
+		RunLoop.current.run(until: Date())
+		
+		let comment = feed.navigationController?.topViewController as? CommentViewController
+		
+		XCTAssertNotNil(comment, "Expected CommentViewController is pushed")
+		XCTAssertEqual(comment?.numberOfRenderedComments(), 2)
+		XCTAssertNotNil(comment?.commentView(at: 0), "Expected a comment on view at row 0")
+		XCTAssertEqual(comment?.commentMessage(at: 0), "a message")
+		
+		XCTAssertNotNil(comment?.commentView(at: 1), "Expected a comment on view at row 1")
+		XCTAssertEqual(comment?.commentMessage(at: 1), "another message")
+		
+	}
+	
 	// MARK: - Helpers
 	
 	private func launch(
@@ -80,7 +97,8 @@ class FeedAcceptanceTests: XCTestCase {
 		switch url.absoluteString {
 		case "http://image.com":
 			return makeImageData()
-			
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/855EE89B-3ADC-4C38-BB4C-97A0146C9746/comments":
+			return makeCommentData()
 		default:
 			return makeFeedData()
 		}
@@ -90,10 +108,31 @@ class FeedAcceptanceTests: XCTestCase {
 		return UIImage.make(withColor: .red).pngData()!
 	}
 	
+	private func makeCommentData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString,
+				"message": "a message",
+				"created_at": "1993-12-02T00:00:00+0000",
+				"author": [
+					"username": "a username"
+				]
+			],
+			[
+				"id": UUID().uuidString,
+				"message": "another message",
+				"created_at": "1993-12-02T01:00:00+0000",
+				"author": [
+					"username": "another username"
+				]
+			],
+		]])
+	}
+	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
-			["id": UUID().uuidString, "image": "http://image.com"]
+			["id": "855EE89B-3ADC-4C38-BB4C-97A0146C9746", "image": "http://image.com"],
+			["id": "855EE89B-3ADC-4C38-BB4C-97A0146C9747", "image": "http://image.com"]
 		]])
 	}
 	
