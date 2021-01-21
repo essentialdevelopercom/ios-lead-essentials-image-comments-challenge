@@ -18,7 +18,7 @@ public final class CommentCellController {
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell") as! CommentCell
+		let cell: CommentCell = tableView.dequeueReusableCell()
 		cell.authorLabel?.text = model.author
 		cell.timestampLabel?.text = model.createAt
 		cell.commentLabel?.text = model.message

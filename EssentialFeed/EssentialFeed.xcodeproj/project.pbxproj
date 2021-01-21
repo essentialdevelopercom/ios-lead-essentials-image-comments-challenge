@@ -90,7 +90,6 @@
 		6A74524F259AEDB6007F32EF /* CommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A74524E259AEDB6007F32EF /* CommentErrorViewModel.swift */; };
 		6A745255259AEDC7007F32EF /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A745254259AEDC7007F32EF /* CommentViewModel.swift */; };
 		6A745263259B0E9B007F32EF /* Comment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A745262259B0E9B007F32EF /* Comment.storyboard */; };
-		6A7876AC2599B90500136487 /* CommentAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7876AB2599B90500136487 /* CommentAPIEndToEndTests.swift */; };
 		6A9B908F2599887F00E38B97 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B908E2599887F00E38B97 /* Comment.swift */; };
 		6A9B90992599892000E38B97 /* RemoteCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */; };
 		6A9B909F25998B2200E38B97 /* CommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9B909E25998B2200E38B97 /* CommentLoader.swift */; };
@@ -218,7 +217,6 @@
 		6A74524E259AEDB6007F32EF /* CommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentErrorViewModel.swift; sourceTree = "<group>"; };
 		6A745254259AEDC7007F32EF /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 		6A745262259B0E9B007F32EF /* Comment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Comment.storyboard; sourceTree = "<group>"; };
-		6A7876AB2599B90500136487 /* CommentAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		6A9B908E2599887F00E38B97 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		6A9B90982599892000E38B97 /* RemoteCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentLoader.swift; sourceTree = "<group>"; };
 		6A9B909E25998B2200E38B97 /* CommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoader.swift; sourceTree = "<group>"; };
@@ -575,7 +573,6 @@
 			isa = PBXGroup;
 			children = (
 				6A3008A425944D280037B48E /* CommentLoaderTests.swift */,
-				6A7876AB2599B90500136487 /* CommentAPIEndToEndTests.swift */,
 			);
 			path = "Comment API";
 			sourceTree = "<group>";
@@ -969,7 +966,6 @@
 				081C0DB322491EEF00AC754E /* SharedTestHelpers.swift in Sources */,
 				089C40D42216C37400DE552E /* CacheFeedUseCaseTests.swift in Sources */,
 				086044FC233E1A3B005ECD22 /* FeedImageDataStoreSpy.swift in Sources */,
-				6A7876AC2599B90500136487 /* CommentAPIEndToEndTests.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
