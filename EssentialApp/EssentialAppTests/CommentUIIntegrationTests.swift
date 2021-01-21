@@ -137,8 +137,8 @@ class CommentUIIntegrationTests: XCTestCase {
 			return completions.count
 		}
 		
-		var cancelCallCount = 0
-		var completions = [(CommentLoader.Result) -> Void]()
+		private(set) var cancelCallCount = 0
+		private var completions = [(CommentLoader.Result) -> Void]()
 		
 		private struct Task: CommentLoaderTask {
 			let callback: () -> Void
