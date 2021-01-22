@@ -6,7 +6,7 @@ import UIKit
 import EssentialFeediOS
 
 extension FeedImageCommentsViewController {
-     func simulateUserInitiatedCommentsReload() {
+     func simulateUserInitiatedReload() {
          refreshControl?.simulatePullToRefresh()
      }
     

@@ -24,10 +24,10 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadCount, 1, "Expected a loading request once view is loaded")
         
-        sut.simulateUserInitiatedCommentsReload()
+        sut.simulateUserInitiatedReload()
         XCTAssertEqual(loader.loadCount, 2, "Expected a loading request once view is loaded")
         
-        sut.simulateUserInitiatedCommentsReload()
+        sut.simulateUserInitiatedReload()
         XCTAssertEqual(loader.loadCount, 3, "Expected yet another loading request once user initiates another reload")
     }
     
@@ -40,7 +40,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         loader.completeCommentsLoading()
         XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once loading completes successfully")
         
-        sut.simulateUserInitiatedCommentsReload()
+        sut.simulateUserInitiatedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
         
         loader.completeCommentsLoading(with: anyNSError())
@@ -66,7 +66,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         loader.completeCommentsLoading(with: comments)
         assertThat(sut, isRendering: comments.toModels())
         
-        sut.simulateUserInitiatedCommentsReload()
+        sut.simulateUserInitiatedReload()
         loader.completeCommentsLoading(with: [], at: 1)
         assertThat(sut, isRendering: [])
     }
@@ -79,7 +79,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         loader.completeCommentsLoading(with: comments, at: 0)
         assertThat(sut, isRendering: comments.toModels())
         
-        sut.simulateUserInitiatedCommentsReload()
+        sut.simulateUserInitiatedReload()
         loader.completeCommentsLoading(with: anyNSError(), at: 1)
         assertThat(sut, isRendering: comments.toModels())
     }
@@ -93,7 +93,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         loader.completeCommentsLoading(with: anyNSError())
         XCTAssertEqual(sut.errorMessage, localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE"))
         
-        sut.simulateUserInitiatedCommentsReload()
+        sut.simulateUserInitiatedReload()
         XCTAssertEqual(sut.errorMessage, nil)
     }
     
