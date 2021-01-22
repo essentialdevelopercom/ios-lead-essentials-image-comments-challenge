@@ -38,6 +38,12 @@ class RemoteCommentLoader {
 			switch result {
 			case let .failure(_):
 				completion(.failure(Error.connectivity))
+			case let .success((data, response)):
+				if response.statusCode == 200 {
+					
+				} else {
+					completion(.failure(Error.invalidData))
+				}
 			default:
 				break
 			}
@@ -79,6 +85,17 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		expect(sut, toCompleteWith: failure(RemoteCommentLoader.Error.connectivity)) {
 			let clientError = anyNSError()
 			client.complete(with: clientError)
+		}
+	}
+	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) =  makeSUT()
+		
+		let samples = [199, 201, 300, 400, 500]
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
+				client.complete(withStatusCode: code, data: Data(), at: index)
+			})
 		}
 	}
 	
