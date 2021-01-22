@@ -88,13 +88,16 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
-        XCTAssertEqual(sut.errorMessage, nil)
+        XCTAssertEqual(sut.errorMessage, nil, "Expected no error view when view is loaded")
         
-        loader.completeCommentsLoading(with: anyNSError())
+        loader.completeCommentsLoading(with: anyNSError(), at: 0)
         XCTAssertEqual(sut.errorMessage, localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE"))
         
         sut.simulateUserInitiatedReload()
-        XCTAssertEqual(sut.errorMessage, nil)
+        XCTAssertEqual(sut.errorMessage, nil, "Expected no error message when user initiates reload")
+        
+        loader.completeCommentsLoading(with: [], at: 1)
+        XCTAssertEqual(sut.errorMessage, nil, "Expected no error when reload completes successfully")
     }
     
     func test_cancelCommentsLoading_whenViewIsDismissed() {
