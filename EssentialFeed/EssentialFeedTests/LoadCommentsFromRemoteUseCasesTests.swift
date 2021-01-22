@@ -34,6 +34,10 @@ struct RemoteCommentItem: Decodable {
 
 struct Author: Decodable, Equatable {
 	let username: String
+	
+	public init(username: String) {
+		self.username = username
+	}
 }
 
 
@@ -163,6 +167,22 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		
+		let author = Author(username: "a username")
+		let item1 = makeItem(id: UUID(), author: author)
+		
+		let item2 = makeItem(id: UUID(), author: author)
+		
+		let items = [item1.model, item2.model]
+		
+		expect(sut, toCompleteWith: .success(items), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
@@ -195,5 +215,17 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		
 		action()
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	private func makeItem(id: UUID, message: String? = nil, createdAt: Date? = nil, author: Author) -> (model: Comment, json: [String: Any]) {
+
+		let item = Comment(id: id, message: message, createdAt: createdAt, author: author)
+		let json = [
+			"id": id.uuidString,
+			"message": message,
+			"created": createdAt,
+			"author": ["username": author.username]
+		].compactMapValues { $0 }
+		return (item, json)
 	}
 }
