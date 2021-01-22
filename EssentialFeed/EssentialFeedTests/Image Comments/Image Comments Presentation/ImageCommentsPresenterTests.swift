@@ -9,9 +9,27 @@
 import XCTest
 import EssentialFeed
 
+
+private class ViewSpy: ImageCommentsView{
+	enum Message: Hashable {
+	}
+	
+	private(set) var messages = Set<Message>()
+	
+}
+
+
+
 class ImageCommentsPresenterTests: XCTestCase{
 	func test_title_isLocalized() {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
+	}
+	
+	func test_init_doesNotSendMessagesToView() {
+		let view = ViewSpy()
+		_ = ImageCommentsPresenter(imageCommentsView: view)
+		
+		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
 	// MARK: - Helpers
