@@ -155,6 +155,14 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversNoItemsOn200HTTPReponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		expect(sut, toCompleteWith: .success([]), when: {
+			let emptyListJSON = makeItemsJSON([])
+			client.complete(withStatusCode: 200, data: emptyListJSON)
+		})
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
