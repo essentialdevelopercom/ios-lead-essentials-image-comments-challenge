@@ -13,6 +13,19 @@ struct Comment: Equatable {
 	
 }
 
+
+struct RemoteCommentItem: Decodable {
+	let id: UUID
+	let message: String?
+	let created_at: Date?
+	let author: Author
+	
+	struct Author: Decodable {
+		let username: String
+	}
+}
+
+
 protocol CommentLoader {
 	typealias Result = Swift.Result<[Comment], Error>
 	func load(completion: @escaping (Result) -> Void)
