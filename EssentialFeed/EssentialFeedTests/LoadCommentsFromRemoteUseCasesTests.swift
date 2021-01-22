@@ -88,6 +88,20 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		})
 	}
 	
+	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let client = HTTPClientSpy()
+		let url = URL(string: "http://any-url.com")!
+		var sut: RemoteCommentLoader? = RemoteCommentLoader(client: client, url: url)
+		
+		var capturedResults = [CommentLoader.Result]()
+		sut?.load { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+		
+		XCTAssertTrue(capturedResults.isEmpty)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {

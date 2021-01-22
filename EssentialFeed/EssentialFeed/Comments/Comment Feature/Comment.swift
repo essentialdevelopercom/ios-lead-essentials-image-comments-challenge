@@ -1,0 +1,24 @@
+//
+//  Comment.swift
+//  EssentialFeed
+//
+//  Created by Robert Dates on 1/21/21.
+//  Copyright © 2021 Essential Developer. All rights reserved.
+//
+
+import Foundation
+
+public struct Comment: Equatable {
+	
+	public let id: UUID
+	public let message: String?
+	public let createdAt: Date?
+	public let author: Author?
+	
+	public init(id: UUID, message: String?, createdAt: Date?, author: Author) {
+		self.id = id
+		self.message = message
+		self.createdAt = createdAt
+		self.author = author
+	}
+}
