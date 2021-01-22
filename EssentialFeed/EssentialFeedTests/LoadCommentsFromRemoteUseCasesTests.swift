@@ -11,6 +11,17 @@ import EssentialFeed
 
 struct Comment: Equatable {
 	
+	let id: UUID
+	let message: String?
+	let createdAt: Date?
+	let author: Author?
+	
+	public init(id: UUID, message: String?, createdAt: Date?, author: Author) {
+		self.id = id
+		self.message = message
+		self.createdAt = createdAt
+		self.author = author
+	}
 }
 
 
@@ -19,10 +30,10 @@ struct RemoteCommentItem: Decodable {
 	let message: String?
 	let created_at: Date?
 	let author: Author
-	
-	struct Author: Decodable {
-		let username: String
-	}
+}
+
+struct Author: Decodable, Equatable {
+	let username: String
 }
 
 
@@ -49,19 +60,43 @@ class RemoteCommentLoader {
 	func load(completion: @escaping (CommentLoader.Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .failure(_):
+			case .failure:
 				completion(.failure(Error.connectivity))
 			case let .success((data, response)):
-				if response.statusCode == 200 {
-					
-				} else {
-					completion(.failure(Error.invalidData))
-				}
-			default:
-				break
+				completion(RemoteCommentLoader.map(data, from: response))
 			}
 		}
 	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> CommentLoader.Result {
+		do {
+			let items = try CommentItemMapper.map(data, from: response)
+			return .success(items.toModels())
+		} catch {
+			return .failure(error)
+		}
+	}
+}
+
+private extension Array where Element == RemoteCommentItem {
+	func toModels() -> [Comment] {
+		return map { Comment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author) }
+	}
+}
+
+class CommentItemMapper {
+	private struct Root: Decodable {
+		let items: [RemoteCommentItem]
+	}
+	
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteCommentItem] {
+		guard response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) else {
+			throw RemoteCommentLoader.Error.invalidData
+		}
+		
+		return root.items
+	}
+	
 }
 
 
@@ -110,6 +145,14 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 				client.complete(withStatusCode: code, data: Data(), at: index)
 			})
 		}
+	}
+	
+	func test_load_deliversErrorOn200HTTPResponeWithInvalidJSON() {
+		let (sut, client) =  makeSUT()
+		expect(sut, toCompleteWith: failure(.invalidData), when: {
+			let invalidJSON = Data("invalid json".utf8)
+			client.complete(withStatusCode: 200, data: invalidJSON)
+		})
 	}
 	
 	// MARK: - Helpers
