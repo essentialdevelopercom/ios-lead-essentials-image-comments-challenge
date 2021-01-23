@@ -15,13 +15,16 @@ class CommentPresenterTests: XCTestCase {
 		XCTAssertEqual(CommentsPresenter.title, localized("COMMENTS_VIEW_TITLE"))
 	}
 	
-	
+	func test_init_doesNotSendMessagesToView() {
+		let (_, view) = makeSUT()
+		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
+	}
 	// MARK: - Helpers
 	
 	private func makeSUT(
 		file: StaticString = #file, line: UInt = #line) -> (sut: CommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = CommentsPresenter()
+		let sut = CommentsPresenter(commentView: view, loadingView: view, errorView: view)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)

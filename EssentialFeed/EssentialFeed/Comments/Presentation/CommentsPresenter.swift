@@ -10,6 +10,15 @@ import Foundation
 
 
 public final class CommentsPresenter {
+	private let commentView: CommentView
+	private let errorView: CommentErrorView
+	private let loadingView: CommentLoadingView
+	
+	public init(commentView: CommentView, loadingView: CommentLoadingView, errorView: CommentErrorView) {
+		self.commentView = commentView
+		self.loadingView = loadingView
+		self.errorView = errorView
+	}
 	
 	public static var title: String {
 		return NSLocalizedString("COMMENTS_VIEW_TITLE",
@@ -17,6 +26,4 @@ public final class CommentsPresenter {
 								 bundle: Bundle(for: CommentsPresenter.self),
 								 comment: "Title for Comment View")
 	}
-	
-	public init() {}
 }
