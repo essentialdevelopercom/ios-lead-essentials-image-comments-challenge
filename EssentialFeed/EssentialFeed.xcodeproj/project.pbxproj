@@ -91,6 +91,7 @@
 		FAF141FC25BA7E7600C9122D /* CommentItemMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF141FB25BA7E7600C9122D /* CommentItemMapper.swift */; };
 		FAF1420225BA7E9B00C9122D /* RemoteCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1420125BA7E9B00C9122D /* RemoteCommentLoader.swift */; };
 		FAF1422225BC9CF900C9122D /* CommentPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1422125BC9CF900C9122D /* CommentPresenterTests.swift */; };
+		FAF1422C25BC9D3400C9122D /* CommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1422B25BC9D3400C9122D /* CommentsLocalizationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -202,6 +203,7 @@
 		FAF141FB25BA7E7600C9122D /* CommentItemMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentItemMapper.swift; sourceTree = "<group>"; };
 		FAF1420125BA7E9B00C9122D /* RemoteCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentLoader.swift; sourceTree = "<group>"; };
 		FAF1422125BC9CF900C9122D /* CommentPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentPresenterTests.swift; sourceTree = "<group>"; };
+		FAF1422B25BC9D3400C9122D /* CommentsLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLocalizationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -578,6 +580,7 @@
 			isa = PBXGroup;
 			children = (
 				FAF1422125BC9CF900C9122D /* CommentPresenterTests.swift */,
+				FAF1422B25BC9D3400C9122D /* CommentsLocalizationTests.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -828,6 +831,7 @@
 				086044FC233E1A3B005ECD22 /* FeedImageDataStoreSpy.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
+				FAF1422C25BC9D3400C9122D /* CommentsLocalizationTests.swift in Sources */,
 				FAF141D325B7B5FA00C9122D /* LoadCommentsFromRemoteUseCasesTests.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
 				086BE481223270A3004CDC26 /* LoadFeedFromCacheUseCaseTests.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  CommentPresenterTests.swift
+//  CommentsLocalizationTests.swift
 //  EssentialFeedTests
 //
 //  Created by Robert Dates on 1/23/21.
@@ -8,6 +8,6 @@
 
 import XCTest
 
-class CommentPresenterTests: XCTestCase {
-	
+class CommentsLocalizationTests: XCTestCase {
+        
 }
