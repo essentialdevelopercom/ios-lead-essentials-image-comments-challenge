@@ -48,7 +48,7 @@ public final class FeedImageCommentsPresenter {
     
     
     public func didFinishLoadingComments(with comments: [FeedImageComment]) {
-        commentsView.display(FeedImageCommentsViewModel(comments: comments.toModels()))
+        commentsView.display(FeedImageCommentsPresenter.map(comments))
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
     }
     
@@ -56,20 +56,20 @@ public final class FeedImageCommentsPresenter {
         errorView.display(.error(message: errorMessage))
         loadingView.display(FeedImageCommentsLoadingViewModel(isLoading: false))
     }
-}
-
-public extension Array where Element == FeedImageComment {
-    func toModels() -> [FeedImageCommentPresenterModel] {
-        map { FeedImageCommentPresenterModel(username: $0.author, creationTime: $0.createdAt.timeAgoDisplay(), comment: $0.message) }
-    }
-}
-
-extension Date {
-    func timeAgoDisplay() -> String {
+    
+    public static func map(_ comments: [FeedImageComment],
+        currentDate: Date = Date(), calendar: Calendar = .current, locale: Locale = .current) -> FeedImageCommentsViewModel {
+        
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
-        formatter.locale = .current
-        formatter.calendar = Calendar(identifier: .gregorian)
-        return formatter.localizedString(for: self, relativeTo: Date())
+        formatter.locale = locale
+        formatter.calendar = calendar
+        
+        return FeedImageCommentsViewModel(comments: comments.map { comment in
+            FeedImageCommentPresenterModel(
+                username: comment.author,
+                creationTime: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate),
+                comment: comment.message)
+        })
     }
 }

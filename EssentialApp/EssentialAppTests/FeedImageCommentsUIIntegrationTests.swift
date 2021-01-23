@@ -55,7 +55,8 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: [])
         
         loader.completeCommentsLoading(with: comments)
-        assertThat(sut, isRendering: comments.toModels())
+        let viewModels = FeedImageCommentsPresenter.map(comments).comments
+        assertThat(sut, isRendering: viewModels)
     }
     
     func test_loadCommentsCompletion_rendersSuccessfullyLoadedCommentsAfterNonEmptyComments() {
@@ -64,7 +65,8 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeCommentsLoading(with: comments)
-        assertThat(sut, isRendering: comments.toModels())
+        let viewModels = FeedImageCommentsPresenter.map(comments).comments
+        assertThat(sut, isRendering: viewModels)
         
         sut.simulateUserInitiatedReload()
         loader.completeCommentsLoading(with: [], at: 1)
@@ -77,11 +79,12 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeCommentsLoading(with: comments, at: 0)
-        assertThat(sut, isRendering: comments.toModels())
+        let viewModels = FeedImageCommentsPresenter.map(comments).comments
+        assertThat(sut, isRendering: viewModels)
         
         sut.simulateUserInitiatedReload()
         loader.completeCommentsLoading(with: anyNSError(), at: 1)
-        assertThat(sut, isRendering: comments.toModels())
+        assertThat(sut, isRendering: viewModels)
     }
     
     func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
@@ -141,9 +144,13 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
     }
     
     private func makeUniqueComments() -> [FeedImageComment] {
-        let currentDate = Date()
-        let comment0 = FeedImageComment(id: UUID(), message: "First message", createdAt: currentDate.adding(days: -3), author: "Some user name")
-        let comment1 = FeedImageComment(id: UUID(), message: "Second message", createdAt: currentDate.adding(seconds: -305), author: "Another user name")
+        let now = Date()
+        let calendar = Calendar(identifier: .gregorian)
+        let comment0 = FeedImageComment(id: UUID(), message: "First message",
+                                        createdAt: now.adding(days: -3, calendar: calendar),
+                                        author: "Some user name")
+        let comment1 = FeedImageComment(id: UUID(), message: "Second message",
+                                        createdAt: now.adding(minutes: -5, calendar: calendar), author: "Another user name")
         
         return [comment0, comment1]
     }
