@@ -26,4 +26,9 @@ public final class CommentsPresenter {
 								 bundle: Bundle(for: CommentsPresenter.self),
 								 comment: "Title for Comment View")
 	}
+	
+	public func didStartLoadingFeed() {
+		errorView.display(.noError)
+		loadingView.display(CommentLoadingViewModel(isLoading: true))
+	}
 }

@@ -19,6 +19,15 @@ class CommentPresenterTests: XCTestCase {
 		let (_, view) = makeSUT()
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
+	
+	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didStartLoadingFeed()
+		
+		XCTAssertEqual(view.messages, [.display(errorMessage: .none),.display(isLoading: true) ])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(
