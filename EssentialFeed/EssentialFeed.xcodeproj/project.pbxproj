@@ -90,6 +90,7 @@
 		FAF141F625BA7C1400C9122D /* RemoteCommentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF141F525BA7C1400C9122D /* RemoteCommentItem.swift */; };
 		FAF141FC25BA7E7600C9122D /* CommentItemMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF141FB25BA7E7600C9122D /* CommentItemMapper.swift */; };
 		FAF1420225BA7E9B00C9122D /* RemoteCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1420125BA7E9B00C9122D /* RemoteCommentLoader.swift */; };
+		FAF1420825BC8AA300C9122D /* CommentAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1420725BC8AA300C9122D /* CommentAcceptanceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +201,7 @@
 		FAF141F525BA7C1400C9122D /* RemoteCommentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentItem.swift; sourceTree = "<group>"; };
 		FAF141FB25BA7E7600C9122D /* CommentItemMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentItemMapper.swift; sourceTree = "<group>"; };
 		FAF1420125BA7E9B00C9122D /* RemoteCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentLoader.swift; sourceTree = "<group>"; };
+		FAF1420725BC8AA300C9122D /* CommentAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentAcceptanceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -492,6 +494,7 @@
 				08D917AF22B92A5D003BC31B /* Info.plist */,
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
+				FAF1420725BC8AA300C9122D /* CommentAcceptanceTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -830,6 +833,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAF1420825BC8AA300C9122D /* CommentAcceptanceTests.swift in Sources */,
 				08BB7EA922C138AC00F8B83C /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				086AEFB923A7DFA400EE8933 /* FeedSnapshotTests.swift in Sources */,
 				0800314923B6909A00720217 /* XCTestCase+Snapshot.swift in Sources */,
