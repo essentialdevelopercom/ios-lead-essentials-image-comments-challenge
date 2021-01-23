@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public final class CommentsPresenter {
 	
 	public static var title: String {
@@ -16,4 +17,6 @@ public final class CommentsPresenter {
 								 bundle: Bundle(for: CommentsPresenter.self),
 								 comment: "Title for Comment View")
 	}
+	
+	public init() {}
 }

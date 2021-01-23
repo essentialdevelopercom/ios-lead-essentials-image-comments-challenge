@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Comment: Equatable {
+public struct Comment: Hashable {
 	
 	public let id: UUID
 	public let message: String?

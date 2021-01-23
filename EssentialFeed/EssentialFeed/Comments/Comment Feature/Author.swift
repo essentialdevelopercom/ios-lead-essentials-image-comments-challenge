@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Author: Decodable, Equatable {
+public struct Author: Decodable, Hashable {
 	public let username: String
 	
 	public init(username: String) {
