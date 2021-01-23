@@ -13,6 +13,6 @@ class CommentsLocalizationTests: XCTestCase {
 	func test_localizedStrings_haveKeyAndValueForAllSupportedLocalizations() {
 		let table = "Comments"
 		let bundle = Bundle(for: CommentsPresenter.self)
-		
+		checkStringshaveKeysAndValuesForAllSupportedLocalizations(in: table, for: bundle)
 	}
 }

@@ -93,6 +93,7 @@
 		FAF1422225BC9CF900C9122D /* CommentPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1422125BC9CF900C9122D /* CommentPresenterTests.swift */; };
 		FAF1422C25BC9D3400C9122D /* CommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1422B25BC9D3400C9122D /* CommentsLocalizationTests.swift */; };
 		FAF1423325BC9E0B00C9122D /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1423225BC9E0B00C9122D /* CommentsPresenter.swift */; };
+		FAF1425D25BCA95700C9122D /* Comments.strings in Resources */ = {isa = PBXBuildFile; fileRef = FAF1424425BCA27900C9122D /* Comments.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -748,6 +749,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAF1425D25BCA95700C9122D /* Comments.strings in Resources */,
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
