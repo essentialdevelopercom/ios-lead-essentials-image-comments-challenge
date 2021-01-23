@@ -27,8 +27,25 @@ public final class CommentsPresenter {
 								 comment: "Title for Comment View")
 	}
 	
-	public func didStartLoadingFeed() {
+	private var commentLoadError: String {
+		return NSLocalizedString("COMMENTS_VIEW_CONNECTION_ERROR",
+			 tableName: "Comments",
+			 bundle: Bundle(for: CommentsPresenter.self),
+			 comment: "Error message displayed when we can't load the comments from the server")
+	}
+	
+	public func didStartLoadingComments() {
 		errorView.display(.noError)
 		loadingView.display(CommentLoadingViewModel(isLoading: true))
+	}
+	
+	public func didFinishLoadingComments(with comments: [Comment]) {
+		commentView.display(CommentViewModel(comments: comments))
+		loadingView.display(CommentLoadingViewModel(isLoading: false))
+	}
+	
+	public func didFinishLoadingComments(with error: Error) {
+		errorView.display(.error(message: commentLoadError))
+		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
 }

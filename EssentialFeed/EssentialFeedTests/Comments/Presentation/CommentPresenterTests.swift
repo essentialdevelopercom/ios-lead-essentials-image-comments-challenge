@@ -23,9 +23,21 @@ class CommentPresenterTests: XCTestCase {
 	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
 		let (sut, view) = makeSUT()
 		
-		sut.didStartLoadingFeed()
+		sut.didStartLoadingComments()
 		
 		XCTAssertEqual(view.messages, [.display(errorMessage: .none),.display(isLoading: true) ])
+	}
+	
+	func test_didFinishLoadingFeed_displaysFeedAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let comments = makeComments()
+		
+		sut.didFinishLoadingComments(with: comments)
+		
+		XCTAssertEqual(view.messages, [
+			.display(comments: comments),
+			.display(isLoading: false)
+		])
 	}
 	
 	// MARK: - Helpers
@@ -69,5 +81,16 @@ class CommentPresenterTests: XCTestCase {
 			
 		}
 		private(set) var messages = Set<Message>()
+	}
+	
+	private func makeComments() -> [Comment] {
+		let comment0 = makeComment(id: UUID(), message: "Some message", date: Date(), author: "some author")
+		let comment1 = makeComment(id: UUID(), message: "Another message", date: Date(), author: "another authod")
+
+		return [comment0, comment1]
+	}
+
+	private func makeComment(id: UUID, message: String, date: Date, author: String) -> Comment {
+		return Comment(id: id, message: message, createdAt: date, author: Author(username: author))
 	}
 }
