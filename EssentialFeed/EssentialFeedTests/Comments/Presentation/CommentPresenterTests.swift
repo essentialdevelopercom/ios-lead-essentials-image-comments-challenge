@@ -20,7 +20,7 @@ class CommentPresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
-	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+	func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
 		let (sut, view) = makeSUT()
 		
 		sut.didStartLoadingComments()
@@ -28,7 +28,7 @@ class CommentPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [.display(errorMessage: .none),.display(isLoading: true) ])
 	}
 	
-	func test_didFinishLoadingFeed_displaysFeedAndStopsLoading() {
+	func test_didFinishLoadingComments_displaysFeedAndStopsLoading() {
 		let (sut, view) = makeSUT()
 		let comments = makeComments()
 		
@@ -36,6 +36,17 @@ class CommentPresenterTests: XCTestCase {
 		
 		XCTAssertEqual(view.messages, [
 			.display(comments: comments),
+			.display(isLoading: false)
+		])
+	}
+	
+	func test_didFinishLoadingCommentsWithError_displaysLocalizedErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingComments(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: localized("COMMENTS_VIEW_CONNECTION_ERROR")),
 			.display(isLoading: false)
 		])
 	}
