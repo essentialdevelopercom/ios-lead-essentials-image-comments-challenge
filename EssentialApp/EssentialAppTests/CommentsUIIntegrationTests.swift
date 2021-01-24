@@ -15,6 +15,10 @@ class CommentsUIIntegrationTests: XCTestCase {
 	
 	func test_commentsView_hasTitle() {
 		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.title, localized("COMMENTS_VIEW_TITLE"))
 	}
 	
 	// MARK: - Helpers
@@ -25,6 +29,16 @@ class CommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "Comments"
+		let bundle = Bundle(for: CommentsPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
 	}
 	
 	class LoaderSpy: CommentLoader {
@@ -66,5 +80,3 @@ class CommentsUIIntegrationTests: XCTestCase {
 		}
 	}
 }
-
-
