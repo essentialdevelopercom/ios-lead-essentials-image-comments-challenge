@@ -118,3 +118,19 @@ extension DispatchQueue {
 		}
 	}
 }
+
+public extension CommentLoader {
+	typealias Publisher = AnyPublisher<[Comment], Error>
+
+	func loadPublisher() -> Publisher {
+		var task: CommentsLoaderTask?
+
+		return Deferred {
+			Future { completion in
+				task = self.load(completion: completion)
+			}
+		}
+		.handleEvents(receiveCancel: { task?.cancel() })
+		.eraseToAnyPublisher()
+	}
+}

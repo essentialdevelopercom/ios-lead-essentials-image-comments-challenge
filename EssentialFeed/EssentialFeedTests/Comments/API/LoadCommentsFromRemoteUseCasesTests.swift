@@ -141,8 +141,8 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		let item = Comment(id: id, message: message, createdAt: createdAt, author: author)
 		let json = [
 			"id": id.uuidString,
-			"message": message,
-			"created": createdAt,
+			"message": message ?? nil,
+			"created": createdAt ?? Date(),
 			"author": ["username": author.username]
 		].compactMapValues { $0 }
 		return (item, json)

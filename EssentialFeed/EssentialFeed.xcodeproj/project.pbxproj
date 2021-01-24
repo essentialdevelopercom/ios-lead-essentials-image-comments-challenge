@@ -97,6 +97,9 @@
 		FAF1426325BCBCF500C9122D /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1426225BCBCF500C9122D /* CommentViewModel.swift */; };
 		FAF1426925BCBD6E00C9122D /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1426825BCBD6D00C9122D /* CommentLoadingViewModel.swift */; };
 		FAF1426F25BCBFC200C9122D /* CommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1426E25BCBFC200C9122D /* CommentErrorViewModel.swift */; };
+		FAF1429325BCD89600C9122D /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1429225BCD89600C9122D /* CommentsViewController.swift */; };
+		FAF1429925BCD8A800C9122D /* Comments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAF1429825BCD8A800C9122D /* Comments.storyboard */; };
+		FAF1429F25BCD8FB00C9122D /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1429E25BCD8FB00C9122D /* CommentCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -216,6 +219,9 @@
 		FAF1426225BCBCF500C9122D /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 		FAF1426825BCBD6D00C9122D /* CommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoadingViewModel.swift; sourceTree = "<group>"; };
 		FAF1426E25BCBFC200C9122D /* CommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentErrorViewModel.swift; sourceTree = "<group>"; };
+		FAF1429225BCD89600C9122D /* CommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
+		FAF1429825BCD8A800C9122D /* Comments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Comments.storyboard; sourceTree = "<group>"; };
+		FAF1429E25BCD8FB00C9122D /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -496,6 +502,8 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				FAF1427F25BCD08500C9122D /* Shared UI */,
+				FAF1427825BCD06200C9122D /* Comment UI */,
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 			);
@@ -526,7 +534,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -608,6 +615,40 @@
 				FAF1424425BCA27900C9122D /* Comments.strings */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		FAF1427825BCD06200C9122D /* Comment UI */ = {
+			isa = PBXGroup;
+			children = (
+				FAF1427A25BCD07400C9122D /* Views */,
+				FAF1427925BCD06F00C9122D /* Controllers */,
+			);
+			path = "Comment UI";
+			sourceTree = "<group>";
+		};
+		FAF1427925BCD06F00C9122D /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FAF1429225BCD89600C9122D /* CommentsViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		FAF1427A25BCD07400C9122D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FAF1429825BCD8A800C9122D /* Comments.storyboard */,
+				FAF1429E25BCD8FB00C9122D /* CommentCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FAF1427F25BCD08500C9122D /* Shared UI */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
+			);
+			path = "Shared UI";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -774,6 +815,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAF1429925BCD8A800C9122D /* Comments.storyboard in Resources */,
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
@@ -879,11 +921,13 @@
 				086AEFBE23A7E75400EE8933 /* UITableView+HeaderSizing.swift in Sources */,
 				08A3F2B2232AA1C200127C15 /* ErrorView.swift in Sources */,
 				08A3F2BB232BA64700127C15 /* UIRefreshControl+Helpers.swift in Sources */,
+				FAF1429F25BCD8FB00C9122D /* CommentCell.swift in Sources */,
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
+				FAF1429325BCD89600C9122D /* CommentsViewController.swift in Sources */,
 				08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

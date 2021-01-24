@@ -14,10 +14,15 @@ public final class CommentsPresenter {
 	private let errorView: CommentErrorView
 	private let loadingView: CommentLoadingView
 	
-	public init(commentView: CommentView, loadingView: CommentLoadingView, errorView: CommentErrorView) {
+	private let dateFormatter = RelativeDateTimeFormatter()
+
+	public init(commentView: CommentView, loadingView: CommentLoadingView, errorView: CommentErrorView,
+				currentDate: @escaping () -> Date = Date.init,
+		  locale: Locale = Locale.current) {
 		self.commentView = commentView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		dateFormatter.locale = locale
 	}
 	
 	public static var title: String {
