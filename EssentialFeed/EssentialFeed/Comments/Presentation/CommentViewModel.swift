@@ -13,5 +13,5 @@ public protocol CommentView {
 }
 
 public struct CommentViewModel {
-	public let comments: [Comment]
+	public let comments: [PresentableComment]
 }

@@ -42,6 +42,7 @@
 		FAF1428125BCD44D00C9122D /* CommentUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1428025BCD44D00C9122D /* CommentUIComposer.swift */; };
 		FAF142A525BCE3DA00C9122D /* CommentsLoaderPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF142A425BCE3DA00C9122D /* CommentsLoaderPresentationAdapter.swift */; };
 		FAF142A825BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF142A725BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift */; };
+		FAF142AB25BD070100C9122D /* CommentUIIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF142AA25BD070100C9122D /* CommentUIIntegrationTests+Assertions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		FAF1428025BCD44D00C9122D /* CommentUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentUIComposer.swift; sourceTree = "<group>"; };
 		FAF142A425BCE3DA00C9122D /* CommentsLoaderPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLoaderPresentationAdapter.swift; sourceTree = "<group>"; };
 		FAF142A725BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentsViewControllers+TestHelpers.swift"; sourceTree = "<group>"; };
+		FAF142AA25BD070100C9122D /* CommentUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				0851CDAB239AB13100C19B1D /* HTTPClientStub.swift */,
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
 				FAF142A725BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift */,
+				FAF142AA25BD070100C9122D /* CommentUIIntegrationTests+Assertions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				08073B56238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift in Sources */,
 				0832C9D0238D2811002314C9 /* SceneDelegateTests.swift in Sources */,
 				08073B5B238D2E1000A75DC6 /* FeedViewController+TestHelpers.swift in Sources */,
+				FAF142AB25BD070100C9122D /* CommentUIIntegrationTests+Assertions.swift in Sources */,
 				08073B58238D2E1000A75DC6 /* FeedUIIntegrationTests+Localization.swift in Sources */,
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,

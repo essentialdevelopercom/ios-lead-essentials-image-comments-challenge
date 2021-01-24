@@ -13,6 +13,7 @@ public final class CommentsPresenter {
 	private let commentView: CommentView
 	private let errorView: CommentErrorView
 	private let loadingView: CommentLoadingView
+	private let currentDate: () -> Date
 	
 	private let dateFormatter = RelativeDateTimeFormatter()
 
@@ -22,6 +23,7 @@ public final class CommentsPresenter {
 		self.commentView = commentView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.currentDate = currentDate
 		dateFormatter.locale = locale
 	}
 	
@@ -45,12 +47,22 @@ public final class CommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [Comment]) {
-		commentView.display(CommentViewModel(comments: comments))
+		commentView.display(CommentViewModel(comments: createPresentables(from: comments)))
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
 		errorView.display(.error(message: commentLoadError))
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
+	}
+	
+	private func createPresentables(from comments: [Comment]) -> [PresentableComment] {
+		return comments.compactMap {
+			PresentableComment(username: $0.author.username, message: $0.message, date: format($0.createdAt))
+		}
+	}
+	
+	private func format(_ date: Date) -> String {
+		return dateFormatter.localizedString(for: date, relativeTo: currentDate())
 	}
 }

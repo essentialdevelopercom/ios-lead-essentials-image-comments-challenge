@@ -28,14 +28,14 @@ class CommentPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [.display(errorMessage: .none),.display(isLoading: true) ])
 	}
 	
-	func test_didFinishLoadingComments_displaysFeedAndStopsLoading() {
+	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
 		let (sut, view) = makeSUT()
 		let comments = makeComments()
 		
-		sut.didFinishLoadingComments(with: comments)
+		sut.didFinishLoadingComments(with: comments.models)
 		
 		XCTAssertEqual(view.messages, [
-			.display(comments: comments),
+			.display(comments: comments.presentable),
 			.display(isLoading: false)
 		])
 	}
@@ -88,20 +88,20 @@ class CommentPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
-			case display(comments: [Comment])
+			case display(comments: [PresentableComment])
 			
 		}
 		private(set) var messages = Set<Message>()
 	}
 	
-	private func makeComments() -> [Comment] {
-		let comment0 = makeComment(id: UUID(), message: "Some message", date: Date(), author: "some author")
-		let comment1 = makeComment(id: UUID(), message: "Another message", date: Date(), author: "another authod")
+	private func makeComments() -> (models: [Comment], presentable: [PresentableComment]) {
+		let comment0 = makeComment(id: UUID(), message: "Some message", date: (date: Date(), string: "in 0 seconds"), author: "some author")
+		let comment1 = makeComment(id: UUID(), message: "Another message", date: (date: Date(), string: "in 0 seconds"), author: "another author")
 
-		return [comment0, comment1]
+		return ([comment0.model, comment1.model], [comment0.presentable, comment1.presentable])
 	}
 
-	private func makeComment(id: UUID, message: String, date: Date, author: String) -> Comment {
-		return Comment(id: id, message: message, createdAt: date, author: Author(username: author))
+	private func makeComment(id: UUID, message: String, date: (date: Date,string: String), author: String) -> (model: Comment, presentable: PresentableComment) {
+		return (Comment(id: id, message: message, createdAt: date.date, author: Author(username: author)), PresentableComment(username: author, message: message, date: date.string))
 	}
 }

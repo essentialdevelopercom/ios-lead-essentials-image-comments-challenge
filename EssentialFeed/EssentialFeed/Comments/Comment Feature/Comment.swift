@@ -11,11 +11,11 @@ import Foundation
 public struct Comment: Hashable {
 	
 	public let id: UUID
-	public let message: String?
-	public let createdAt: Date?
-	public let author: Author?
+	public let message: String
+	public let createdAt: Date
+	public let author: Author
 	
-	public init(id: UUID, message: String?, createdAt: Date?, author: Author) {
+	public init(id: UUID, message: String, createdAt: Date, author: Author) {
 		self.id = id
 		self.message = message
 		self.createdAt = createdAt

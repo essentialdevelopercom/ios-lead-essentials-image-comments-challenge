@@ -53,6 +53,25 @@ class CommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected not to show the loading indicator after loading completed with an error")
 	}
 	
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+		let date = Date()
+		let comment0 = makeComment(id: UUID(), message: "message0", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author0")
+		let comment1 = makeComment(id: UUID(), message: "message1", date: (date: date.adding(days: -3), string: "3 days ago"), author: "author1")
+		let comment2 =  makeComment(id: UUID(), message: "message2", date: (date: date.adding(days: -31), string: "1 month ago"), author: "author2")
+		let comment3 = makeComment(id: UUID(), message: "message3", date: (date: date.adding(days: -366), string: "1 year ago"), author: "author3")
+		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
+
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+
+		loader.completeLoading(with: [comment0.model], at: 0)
+		assertThat(sut, isRendering: [comment0.expected])
+
+		sut.simulateUserInitiatedReload()
+		loader.completeLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model], at: 1)
+		assertThat(sut, isRendering: [comment0.expected, comment1.expected, comment2.expected, comment3.expected])
+	}
+	
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: CommentsViewController, loader: LoaderSpy) {
@@ -71,6 +90,17 @@ class CommentsUIIntegrationTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+	
+	struct ExpectedCellContent {
+		let username: String
+		let message: String
+		let date: String
+	}
+	
+
+	private func makeComment(id: UUID, message: String, date: (date: Date, string: String), author: String) -> (model: Comment, expected: ExpectedCellContent) {
+		return (Comment(id: id, message: message, createdAt: date.date, author: Author(username: author)), ExpectedCellContent(username: author, message: message, date: date.string))
 	}
 	
 	class LoaderSpy: CommentLoader {
@@ -99,6 +129,7 @@ class CommentsUIIntegrationTests: XCTestCase {
 		func load(completion: @escaping (CommentLoader.Result) -> Void) -> CommentsLoaderTask {
 			completions.append(completion)
 			return Task { [weak self] in
+				//guard self != nil else { return }
 				self?.cancelCount += 1
 			}
 		}
@@ -110,5 +141,11 @@ class CommentsUIIntegrationTests: XCTestCase {
 		func completeLoadingWithError(at index: Int = 0) {
 			completions[index](.failure(NSError(domain: "loading error", code: 0)))
 		}
+	}
+}
+
+extension Date {
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }

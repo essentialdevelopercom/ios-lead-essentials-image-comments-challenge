@@ -19,7 +19,7 @@ public class CommentsViewController: UITableViewController, CommentView, Comment
 	
 	public var delegate: CommentsViewControllerDelegate?
 	
-	var tableModel = [Comment]() {
+	var tableModel = [PresentableComment]() {
 		didSet {
 			tableView.reloadData()
 		}
@@ -38,14 +38,22 @@ public class CommentsViewController: UITableViewController, CommentView, Comment
     // MARK: - Table view data source
 
 	public override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-		return tableModel.count
+		return 1
     }
 
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+		return tableModel.count
     }
+	
+	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let model = tableModel[indexPath.row]
+		let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell", for: indexPath) as! CommentCell
+		cell.dateLabel.text = model.date
+		cell.usernameLabel.text = model.username
+		cell.messageLabel.text = model.message
+		return cell
+	}
 	
 	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()

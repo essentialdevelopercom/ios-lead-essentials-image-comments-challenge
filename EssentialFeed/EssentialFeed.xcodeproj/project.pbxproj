@@ -100,6 +100,7 @@
 		FAF1429325BCD89600C9122D /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1429225BCD89600C9122D /* CommentsViewController.swift */; };
 		FAF1429925BCD8A800C9122D /* Comments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAF1429825BCD8A800C9122D /* Comments.storyboard */; };
 		FAF1429F25BCD8FB00C9122D /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1429E25BCD8FB00C9122D /* CommentCell.swift */; };
+		FAF142B025BD383B00C9122D /* PresentableComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF142AF25BD383B00C9122D /* PresentableComment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -222,6 +223,7 @@
 		FAF1429225BCD89600C9122D /* CommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
 		FAF1429825BCD8A800C9122D /* Comments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Comments.storyboard; sourceTree = "<group>"; };
 		FAF1429E25BCD8FB00C9122D /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		FAF142AF25BD383B00C9122D /* PresentableComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentableComment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -391,6 +393,7 @@
 				087148BC232BEC6700D6BE1A /* FeedErrorViewModel.swift */,
 				087148C1232BFC7100D6BE1A /* FeedImagePresenter.swift */,
 				087148C3232BFCF100D6BE1A /* FeedImageViewModel.swift */,
+				FAF142AF25BD383B00C9122D /* PresentableComment.swift */,
 				087148B1232BE90A00D6BE1A /* Feed.strings */,
 			);
 			path = "Feed Presentation";
@@ -874,6 +877,7 @@
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
 				FAF1420225BA7E9B00C9122D /* RemoteCommentLoader.swift in Sources */,
 				08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */,
+				FAF142B025BD383B00C9122D /* PresentableComment.swift in Sources */,
 				FAF141F025BA7BEE00C9122D /* CommentLoader.swift in Sources */,
 				08285AFF228C1874000A8987 /* ManagedFeedImage.swift in Sources */,
 			);

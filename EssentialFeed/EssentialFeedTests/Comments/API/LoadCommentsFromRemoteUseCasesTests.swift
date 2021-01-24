@@ -136,9 +136,9 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
-	private func makeItem(id: UUID, message: String? = nil, createdAt: Date? = nil, author: Author) -> (model: Comment, json: [String: Any]) {
+	private func makeItem(id: UUID, message: String? = "", createdAt: Date? = Date(), author: Author) -> (model: Comment, json: [String: Any]) {
 
-		let item = Comment(id: id, message: message, createdAt: createdAt, author: author)
+		let item = Comment(id: id, message: message!, createdAt: createdAt!, author: author)
 		let json = [
 			"id": id.uuidString,
 			"message": message ?? "",
