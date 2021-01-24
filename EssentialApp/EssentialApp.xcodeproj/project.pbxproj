@@ -41,6 +41,7 @@
 		FAF1421725BC951000C9122D /* CommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1421625BC951000C9122D /* CommentsUIIntegrationTests.swift */; };
 		FAF1428125BCD44D00C9122D /* CommentUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF1428025BCD44D00C9122D /* CommentUIComposer.swift */; };
 		FAF142A525BCE3DA00C9122D /* CommentsLoaderPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF142A425BCE3DA00C9122D /* CommentsLoaderPresentationAdapter.swift */; };
+		FAF142A825BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF142A725BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 		FAF1421625BC951000C9122D /* CommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		FAF1428025BCD44D00C9122D /* CommentUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentUIComposer.swift; sourceTree = "<group>"; };
 		FAF142A425BCE3DA00C9122D /* CommentsLoaderPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLoaderPresentationAdapter.swift; sourceTree = "<group>"; };
+		FAF142A725BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommentsViewControllers+TestHelpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 				082C00052359E4C6008927D3 /* SharedTestHelpers.swift */,
 				0851CDAB239AB13100C19B1D /* HTTPClientStub.swift */,
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
+				FAF142A725BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
 				08073B5A238D2E1000A75DC6 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
+				FAF142A825BCFC5500C9122D /* CommentsViewControllers+TestHelpers.swift in Sources */,
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,
 				08073B5F238D2FF100A75DC6 /* FeedAcceptanceTests.swift in Sources */,
 				08073B5D238D2E2600A75DC6 /* FeedUIIntegrationTests.swift in Sources */,

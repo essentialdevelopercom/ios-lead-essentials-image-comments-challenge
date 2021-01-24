@@ -21,6 +21,22 @@ class CommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.title, localized("COMMENTS_VIEW_TITLE"))
 	}
 	
+	func test_loadCommentActions_requestCommentsFromLoader() {
+		let (sut, loader) = makeSUT()
+		
+		XCTAssertEqual(loader.loadCount, 0, "Expected no loading requests before view is loaded")
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(loader.loadCount, 1, "Expected a loading request once view is loaded")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.loadCount, 2, "Expected another loading request once user initiates a load")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.loadCount, 3, "Expected a third loading request once user initiates another load")
+	}
+	
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: CommentsViewController, loader: LoaderSpy) {

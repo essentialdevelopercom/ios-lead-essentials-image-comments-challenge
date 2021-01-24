@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CommentCell: UITableViewCell {
+public class CommentCell: UITableViewCell {
 	@IBOutlet public var dateLabel: UILabel!
 	@IBOutlet public var messageLabel: UILabel!
 	@IBOutlet public var usernameLabel: UILabel!
