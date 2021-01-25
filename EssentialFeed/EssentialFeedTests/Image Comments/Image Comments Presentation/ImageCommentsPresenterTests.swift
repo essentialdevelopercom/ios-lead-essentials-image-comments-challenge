@@ -69,6 +69,16 @@ class ImageCommentsPresenterTests: XCTestCase{
 		])
 	}
 	
+	func test_didFinishLoadingImageCommentsdWithError_displaysErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingImageComments(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: "error"),
+			.display(isLoading: false)
+		])
+	}
 	
 	
 	// MARK: - Helpers
