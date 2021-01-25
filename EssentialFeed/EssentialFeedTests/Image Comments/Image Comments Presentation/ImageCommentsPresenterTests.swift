@@ -69,13 +69,13 @@ class ImageCommentsPresenterTests: XCTestCase{
 		])
 	}
 	
-	func test_didFinishLoadingImageCommentsdWithError_displaysErrorMessageAndStopsLoading() {
+	func test_didFinishLoadingImageCommentsdWithError_displaysLocalizedErrorMessageAndStopsLoading() {
 		let (sut, view) = makeSUT()
 		
 		sut.didFinishLoadingImageComments(with: anyNSError())
 		
 		XCTAssertEqual(view.messages, [
-			.display(errorMessage: "error"),
+			.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")),
 			.display(isLoading: false)
 		])
 	}

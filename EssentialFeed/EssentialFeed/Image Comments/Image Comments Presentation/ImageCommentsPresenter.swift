@@ -66,7 +66,14 @@ public final class ImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingImageComments(with error: Error) {
-		errorView.display(ImageCommentsErrorViewModel(message: "error"))
+		
+		let errorMessage = NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
+											 tableName: "ImageComments",
+					 bundle: Bundle(for: FeedPresenter.self),
+					 comment: "Error message displayed when we can't load the image comments from the server")
+		
+		
+		errorView.display(ImageCommentsErrorViewModel(message: errorMessage))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 }
