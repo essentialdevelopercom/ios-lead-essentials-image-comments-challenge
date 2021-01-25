@@ -9,6 +9,10 @@
 import Foundation
 
 
+public struct ImageCommentsViewModel{
+	public let imageComments: [ImageComment]
+}
+
 public struct ImageCommentsLoadingViewModel{
 	public let isLoading: Bool
 }
@@ -22,7 +26,7 @@ public struct ImageCommentsErrorViewModel{
 }
 
 public protocol ImageCommentsView {
-	
+	func display(_ viewModel: ImageCommentsViewModel)
 }
 
 public protocol ImageCommentsLoadingView {
@@ -54,5 +58,10 @@ public final class ImageCommentsPresenter {
 	public func didStartLoadingImageComments(){
 		errorView.display(.noError)
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
+	}
+	
+	public func didFinishLoadingImageComments(with imageComments: [ImageComment]) {
+		imageCommentsView.display(ImageCommentsViewModel(imageComments: imageComments))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 }

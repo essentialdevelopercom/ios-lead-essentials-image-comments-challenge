@@ -15,6 +15,7 @@ private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageComment
 	enum Message: Hashable {
 		case display(errorMessage: String?)
 		case display(isLoading: Bool)
+		case display(imageComments: [ImageComment])
 	}
 	
 	private(set) var messages = Set<Message>()
@@ -25,6 +26,10 @@ private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageComment
 	
 	func display(_ viewModel: ImageCommentsErrorViewModel) {
 		messages.insert(.display(errorMessage: viewModel.message))
+	}
+	
+	func display(_ viewModel: ImageCommentsViewModel) {
+		messages.insert(.display(imageComments: viewModel.imageComments))
 	}
 }
 
@@ -52,6 +57,19 @@ class ImageCommentsPresenterTests: XCTestCase{
 		])
 	}
 	
+	func test_didFinishLoadingImageComments_displaysImageCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let imageComments = uniqueImageComments()
+		
+		sut.didFinishLoadingImageComments(with: imageComments)
+		
+		XCTAssertEqual(view.messages, [
+			.display(isLoading: false),
+			.display(imageComments: imageComments)
+		])
+	}
+	
+	
 	
 	// MARK: - Helpers
 	
@@ -71,5 +89,13 @@ class ImageCommentsPresenterTests: XCTestCase{
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+	
+	func uniqueImageComment() -> ImageComment {
+		return ImageComment(id: UUID(), message: "any", createdAt: Date(), author: ImageCommentAuthor(username: "any-username"))
+	}
+
+	func uniqueImageComments() -> [ImageComment] {
+		return ([uniqueImageComment(), uniqueImageComment()])
 	}
 }
