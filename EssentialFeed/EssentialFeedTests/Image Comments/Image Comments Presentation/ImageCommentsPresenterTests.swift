@@ -118,9 +118,4 @@ class ImageCommentsPresenterTests: XCTestCase{
 		return value
 	}
 	
-	func uniqueImageComment(date: Date? = nil) -> ImageComment {
-		return ImageComment(id: UUID(), message: "any", createdAt: date ?? Date(), author: ImageCommentAuthor(username: "any-username"))
-	}
-
-	
 }
