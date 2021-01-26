@@ -15,7 +15,7 @@ private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageComment
 	enum Message: Hashable {
 		case display(errorMessage: String?)
 		case display(isLoading: Bool)
-		case display(imageComments: [ImageComment])
+		case display(imageComments: [PresentableImageComment])
 	}
 	
 	private(set) var messages = Set<Message>()
@@ -58,14 +58,31 @@ class ImageCommentsPresenterTests: XCTestCase{
 	}
 	
 	func test_didFinishLoadingImageComments_displaysImageCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let imageComments = uniqueImageComments()
+		let fixedDate = Date(timeIntervalSince1970: 0).adding(days: 5)
+	
+		let (sut, view) = makeSUT(currentDate: {fixedDate}, locale: Locale(identifier: "en_US"))
+		
+		let imageComments = [
+			ImageComment(id: UUID(), message: "m1", createdAt: fixedDate.adding(seconds: -30), author: ImageCommentAuthor(username: "a1")),
+			ImageComment(id: UUID(), message: "m2", createdAt: fixedDate.adding(seconds: -30 * 60), author: ImageCommentAuthor(username: "a2")),
+			ImageComment(id: UUID(), message: "m3", createdAt: fixedDate.adding(days: -1), author: ImageCommentAuthor(username: "a3")),
+			ImageComment(id: UUID(), message: "m4", createdAt: fixedDate.adding(days: -2), author: ImageCommentAuthor(username: "a4")),
+			ImageComment(id: UUID(), message: "m5", createdAt: fixedDate.adding(days: -7), author: ImageCommentAuthor(username: "a5"))
+		]
+		
+		let presentableImageComments = [
+			PresentableImageComment(message: "m1", createdAt: "30 seconds ago", username: "a1"),
+			PresentableImageComment(message: "m2", createdAt: "30 minutes ago", username: "a2"),
+			PresentableImageComment(message: "m3", createdAt: "1 day ago", username: "a3"),
+			PresentableImageComment(message: "m4", createdAt: "2 days ago", username: "a4"),
+			PresentableImageComment(message: "m5", createdAt: "1 week ago", username: "a5")
+		]
 		
 		sut.didFinishLoadingImageComments(with: imageComments)
 		
 		XCTAssertEqual(view.messages, [
 			.display(isLoading: false),
-			.display(imageComments: imageComments)
+			.display(imageComments: presentableImageComments)
 		])
 	}
 	
@@ -83,9 +100,9 @@ class ImageCommentsPresenterTests: XCTestCase{
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view)
+		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view, currentDate: currentDate, locale: locale)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -101,11 +118,9 @@ class ImageCommentsPresenterTests: XCTestCase{
 		return value
 	}
 	
-	func uniqueImageComment() -> ImageComment {
-		return ImageComment(id: UUID(), message: "any", createdAt: Date(), author: ImageCommentAuthor(username: "any-username"))
+	func uniqueImageComment(date: Date? = nil) -> ImageComment {
+		return ImageComment(id: UUID(), message: "any", createdAt: date ?? Date(), author: ImageCommentAuthor(username: "any-username"))
 	}
 
-	func uniqueImageComments() -> [ImageComment] {
-		return ([uniqueImageComment(), uniqueImageComment()])
-	}
+	
 }

@@ -9,22 +9,6 @@
 import Foundation
 
 
-public struct ImageCommentsViewModel{
-	public let imageComments: [ImageComment]
-}
-
-public struct ImageCommentsLoadingViewModel{
-	public let isLoading: Bool
-}
-
-public struct ImageCommentsErrorViewModel{
-	public let message: String?
-	
-	static var noError: ImageCommentsErrorViewModel {
-		return ImageCommentsErrorViewModel(message: nil)
-	}
-}
-
 public protocol ImageCommentsView {
 	func display(_ viewModel: ImageCommentsViewModel)
 }
@@ -42,6 +26,10 @@ public final class ImageCommentsPresenter {
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
 	
+	private let currentDate: () -> Date
+	private let locale: Locale
+	private let calendar = Calendar(identifier: .gregorian)
+	
 	public static var title: String {
 		return NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE",
 			 tableName: "ImageComments",
@@ -49,10 +37,12 @@ public final class ImageCommentsPresenter {
 			 comment: "Title for the image comments view")
 	}
 	
-	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView){
+	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current){
 		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.currentDate = currentDate
+		self.locale = locale
 	}
 	
 	public func didStartLoadingImageComments(){
@@ -61,12 +51,14 @@ public final class ImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingImageComments(with imageComments: [ImageComment]) {
-		imageCommentsView.display(ImageCommentsViewModel(imageComments: imageComments))
+		let presentableImageComments = imageComments.map{
+			PresentableImageComment(message: $0.message, createdAt: formatDate(since: $0.createdAt), username: $0.author.username)
+		}
+		imageCommentsView.display(ImageCommentsViewModel(imageComments: presentableImageComments))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingImageComments(with error: Error) {
-		
 		let errorMessage = NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
 											 tableName: "ImageComments",
 					 bundle: Bundle(for: FeedPresenter.self),
@@ -76,4 +68,12 @@ public final class ImageCommentsPresenter {
 		errorView.display(ImageCommentsErrorViewModel(message: errorMessage))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
+	
+	private func formatDate(since date: Date) -> String {
+			let formatter = RelativeDateTimeFormatter()
+			formatter.unitsStyle = .full
+			formatter.locale = locale
+			formatter.calendar = calendar
+			return formatter.localizedString(for: date, relativeTo: currentDate())
+		}
 }
