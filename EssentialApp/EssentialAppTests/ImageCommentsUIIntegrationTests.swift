@@ -10,7 +10,8 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-class ImageCommentsViewController: UITableViewController{
+class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingView{
+	
 	var loader: ImageCommentsLoader?
 	
 	override func viewDidLoad() {
@@ -18,12 +19,17 @@ class ImageCommentsViewController: UITableViewController{
 		
 		self.refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+		self.refreshControl?.beginRefreshing()
 		
 		refresh()
 	}
 	
 	@objc private func refresh() {
 		loader?.load{_ in}
+	}
+	
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		
 	}
 }
 
@@ -56,6 +62,14 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.simulateUserInitiatedImageCommentsReload()
 		XCTAssertEqual(loader.loadImageComentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
+	}
+	
+	func test_loadingImageCommentsIndicator_isVisibleWhileLoadingImageComments() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+		
 	}
 	
 	// MARK: - Helpers
@@ -109,5 +123,9 @@ extension ImageCommentsUIIntegrationTests{
 extension ImageCommentsViewController {
 	func simulateUserInitiatedImageCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 }
