@@ -53,6 +53,9 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.simulateUserInitiatedImageCommentsReload()
 		XCTAssertEqual(loader.loadImageComentsCallCount, 2, "Expected another loading request once user initiates a reload")
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		XCTAssertEqual(loader.loadImageComentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 	
 	// MARK: - Helpers
