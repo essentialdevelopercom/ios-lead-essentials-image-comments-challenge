@@ -11,7 +11,13 @@ import UIKit
 import EssentialFeed
 
 class ImageCommentsViewController: UITableViewController{
+	var loader: ImageCommentsLoader?
 	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		loader?.load{_ in}
+	}
 }
 
 class ImageCommentsUIComposer{
@@ -24,19 +30,29 @@ class ImageCommentsUIComposer{
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_imageCommentsView_hasTitle() {
-		let sut = makeSUT()
+		let (sut,_) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		
 		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
 	
+	func test_loadFeedActions_requestImageCommentsFromLoader() {
+		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.loadImageComentsCallCount, 0, "Expected no loading requests before view is loaded")
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.loadImageComentsCallCount, 1, "Expected a loading request once view is loaded")
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> ImageCommentsViewController {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsViewController, LoaderSpy) {
+		let loader = LoaderSpy()
 		let sut = ImageCommentsUIComposer.imageComments()
+		sut.loader = loader
 		trackForMemoryLeaks(sut, file: file, line: line)
-		return sut
+		return (sut, loader)
 	}
 	
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -47,5 +63,31 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+}
+
+
+extension ImageCommentsUIIntegrationTests{
+	class LoaderSpy: ImageCommentsLoader{
+		
+		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
+		
+		var loadImageComentsCallCount: Int {
+			return imageCommentsRequests.count
+		}
+		
+		private struct TaskSpy: ImageCommentsLoaderTask {
+			let cancelCallback: () -> Void
+			func cancel() {
+				cancelCallback()
+			}
+		}
+		
+		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+			imageCommentsRequests.append(completion)
+			return TaskSpy{}
+		}
+		
+		
 	}
 }
