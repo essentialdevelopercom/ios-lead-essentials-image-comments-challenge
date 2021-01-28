@@ -16,6 +16,13 @@ class ImageCommentsViewController: UITableViewController{
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		self.refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+		
+		refresh()
+	}
+	
+	@objc private func refresh() {
 		loader?.load{_ in}
 	}
 }
@@ -43,6 +50,9 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.loadImageComentsCallCount, 1, "Expected a loading request once view is loaded")
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		XCTAssertEqual(loader.loadImageComentsCallCount, 2, "Expected another loading request once user initiates a reload")
 	}
 	
 	// MARK: - Helpers
@@ -89,5 +99,12 @@ extension ImageCommentsUIIntegrationTests{
 		}
 		
 		
+	}
+}
+
+
+extension ImageCommentsViewController {
+	func simulateUserInitiatedImageCommentsReload() {
+		refreshControl?.simulatePullToRefresh()
 	}
 }
