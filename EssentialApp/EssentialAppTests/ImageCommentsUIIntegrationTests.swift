@@ -143,12 +143,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		let currentDate = Date()
 		let (comment0, presentable0) = makeImageComment(message: "message0", username: "username0", createdAt: (currentDate.adding(days: -1), "1 day ago"))
+		let (comment1, presentable1) = makeImageComment(message: "message1", username: "username1", createdAt: (currentDate.adding(days: -2), "2 days ago"))
+		let (comment2, presentable2) = makeImageComment(message: "message2", username: "username2", createdAt: (currentDate.adding(days: -7), "1 week ago"))
+		let (comment3, presentable3) = makeImageComment(message: "message3", username: "username3", createdAt: (currentDate.adding(days: -31), "1 month ago"))
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
 		loader.completeImageCommentsLoading(with: [comment0], at: 0)
 		assertThat(sut, isRendering: [presentable0])
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		loader.completeImageCommentsLoading(with: [comment0, comment1, comment2, comment3], at: 1)
+		assertThat(sut, isRendering: [presentable0, presentable1, presentable2, presentable3])
 	}
 	
 	// MARK: - Helpers
