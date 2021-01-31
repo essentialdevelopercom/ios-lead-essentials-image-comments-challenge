@@ -14,9 +14,9 @@ public struct ImageCommentsViewModel{
 
 
 public struct PresentableImageComment: Hashable{
-	let message: String
-	let createdAt: String
-	let username: String
+	public let message: String
+	public let createdAt: String
+	public let username: String
 	
 	public init(message: String, createdAt: String, username: String) {
 		self.message = message
