@@ -10,15 +10,24 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-class ImageCommentsViewController: UITableViewController{
+class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
 	
 	var loader: ImageCommentsLoader?
+	var presenter: ImageCommentsPresenter?
+	
+	private var imageComments = [PresentableImageComment]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		self.refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+		
+		tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "ImageComment")
 		
 		refresh()
 	}
@@ -27,7 +36,39 @@ class ImageCommentsViewController: UITableViewController{
 		self.refreshControl?.beginRefreshing()
 		loader?.load{ [weak self] result in
 			self?.refreshControl?.endRefreshing()
+			
+			switch result{
+			case .success(let comments):
+				self?.presenter?.didFinishLoadingImageComments(with: comments)
+			case .failure(_):
+				break
+			}
 		}
+	}
+	
+	func display(_ viewModel: ImageCommentsViewModel) {
+		imageComments = viewModel.imageComments
+	}
+	
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		
+	}
+	
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+		
+	}
+	
+	// MARK: - Table View
+	
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return imageComments.count
+	}
+	
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "ImageComment", for: indexPath) as! ImageCommentCell
+		cell.configure(imageComment: imageComments[indexPath.row])
+		
+		return cell
 	}
 }
 
@@ -35,12 +76,25 @@ class ImageCommentCell: UITableViewCell{
 	let message = UILabel()
 	let createdAt = UILabel()
 	let username = UILabel()
+	
+	
+	func configure(imageComment: PresentableImageComment){
+		message.text = imageComment.message
+		createdAt.text = imageComment.createdAt
+		username.text = imageComment.username
+	}
 }
 
 class ImageCommentsUIComposer{
 	static func imageComments() -> ImageCommentsViewController{
 		let controller = ImageCommentsViewController()
 		controller.title = ImageCommentsPresenter.title
+		
+		let presenter = ImageCommentsPresenter(imageCommentsView: WeakRefVirtualProxy(controller), loadingView: WeakRefVirtualProxy(controller), errorView: WeakRefVirtualProxy(controller))
+		
+		controller.presenter = presenter
+		
+		
 		return controller
 	}
 }
@@ -87,9 +141,14 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedImageComments() {
 		let (sut, loader) = makeSUT()
+		let currentDate = Date()
+		let (comment0, presentable0) = makeImageComment(message: "message0", username: "username0", createdAt: (currentDate.adding(days: -1), "1 day ago"))
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
+		
+		loader.completeImageCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [presentable0])
 	}
 	
 	// MARK: - Helpers
@@ -103,6 +162,15 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	private func makeImageComment(message: String, username: String, createdAt: (date: Date, presentable: String)) -> (ImageComment, PresentableImageComment) {
+		
+		let imageComment = ImageComment(id: UUID(), message: message, createdAt: createdAt.date, author: ImageCommentAuthor(username: username))
+		
+		let presentableImageComment = PresentableImageComment(message: message, createdAt: createdAt.presentable, username: username)
+		
+		return (imageComment, presentableImageComment)
 	}
 	
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -146,6 +214,7 @@ extension ImageCommentsUIIntegrationTests{
 			let error = NSError(domain: "an error", code: 0)
 			imageCommentsRequests[index](.failure(error))
 		}
+		
 		
 		
 	}
@@ -225,3 +294,45 @@ extension ImageCommentCell{
 	var createdAtText: String?{ createdAt.text }
 	var usernameText: String?{ username.text }
 }
+
+
+
+private extension Date {
+	func adding(seconds: TimeInterval) -> Date {
+		return self + seconds
+	}
+	
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+	}
+}
+
+
+
+// MARK: - WeakRefVirtualProxy
+
+final class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+
+	init(_ object: T) {
+		self.object = object
+	}
+ }
+
+ extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+		object?.display(viewModel)
+	}
+ }
+
+ extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		object?.display(viewModel)
+	}
+ }
+
+ extension WeakRefVirtualProxy: ImageCommentsView where T: ImageCommentsView {
+	func display(_ model: ImageCommentsViewModel) {
+		object?.display(model)
+	}
+ }
