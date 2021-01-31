@@ -10,7 +10,7 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingView{
+class ImageCommentsViewController: UITableViewController{
 	
 	var loader: ImageCommentsLoader?
 	
@@ -19,18 +19,17 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingVi
 		
 		self.refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
-		self.refreshControl?.beginRefreshing()
 		
 		refresh()
 	}
 	
 	@objc private func refresh() {
-		loader?.load{_ in}
+		self.refreshControl?.beginRefreshing()
+		loader?.load{ [weak self] result in
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 	
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		
-	}
 }
 
 class ImageCommentsUIComposer{
@@ -50,7 +49,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
 	
-	func test_loadFeedActions_requestImageCommentsFromLoader() {
+	func test_loadImageCommentsActions_requestImageCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadImageComentsCallCount, 0, "Expected no loading requests before view is loaded")
 		
@@ -70,6 +69,15 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
 		
+		loader.completeImageCommentsLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
+		
+		loader.completeImageCommentsLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
+		
 	}
 	
 	// MARK: - Helpers
@@ -77,7 +85,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsViewController, LoaderSpy) {
 		let loader = LoaderSpy()
 		let sut = ImageCommentsUIComposer.imageComments()
+		
 		sut.loader = loader
+		
+		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
@@ -113,6 +124,15 @@ extension ImageCommentsUIIntegrationTests{
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			imageCommentsRequests.append(completion)
 			return TaskSpy{}
+		}
+		
+		func completeImageCommentsLoading(with imageComments: [ImageComment] = [], at index: Int = 0) {
+			imageCommentsRequests[index](.success(imageComments))
+		}
+		
+		func completeImageCommentsLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			imageCommentsRequests[index](.failure(error))
 		}
 		
 		
