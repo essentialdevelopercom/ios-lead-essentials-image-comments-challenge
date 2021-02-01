@@ -61,11 +61,9 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		sut.load() { error in
-			XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .connectivity)
-		}
-		
-		client.complete(with: NSError())
+		expect(sut: sut, toCompleteWithError: .connectivity, when: {
+			client.complete(with: NSError())
+		})
 	}
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
@@ -73,11 +71,9 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let statusCodes = [111,222,300,400,500]
 		
 		statusCodes.enumerated().forEach { index, code in
-			sut.load() { error in
-				XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .invalidData)
-			}
-			
-			client.complete(withStatusCode: code, at: index)
+			expect(sut: sut, toCompleteWithError: .invalidData, when: {
+				client.complete(withStatusCode: code, at: index)
+			})
 		}
 	}
 	
@@ -85,11 +81,9 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let invalidJSON = Data("invalid json".utf8)
 		
-		sut.load() { error in
-			XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .invalidData)
-		}
-
-		client.complete(withStatusCode: 200, data: invalidJSON)
+		expect(sut: sut, toCompleteWithError: .invalidData, when: {
+			client.complete(withStatusCode: 200, data: invalidJSON)
+		})
 	}
 	
 	//MARK: Helpers
@@ -100,6 +94,14 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut,client)
+	}
+	
+	private func expect(sut: RemoteImageCommentsLoader, toCompleteWithError expectedError: RemoteImageCommentsLoader.Error, when action: () -> Void) {
+		sut.load() { recievedError in
+			XCTAssertEqual(recievedError as RemoteImageCommentsLoader.Error, expectedError)
+		}
+		
+		action()
 	}
 	
 	private class HTTPImageClientSpy: HTTPImageClient {
