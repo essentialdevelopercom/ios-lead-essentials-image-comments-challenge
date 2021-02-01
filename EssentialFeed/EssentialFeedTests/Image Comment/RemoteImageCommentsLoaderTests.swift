@@ -68,12 +68,15 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
+		let statusCodes = [111,222,300,400,500]
 		
-		sut.load() { error in
-			XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .invalidData)
+		statusCodes.enumerated().forEach { index, code in
+			sut.load() { error in
+				XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .invalidData)
+			}
+			
+			client.complete(withStatusCode: code, at: index)
 		}
-		
-		client.complete(withStatusCode: 300)
 	}
 	
 	//MARK: Helpers
