@@ -12,7 +12,7 @@ struct ImageCommentModel {
 }
 
 extension ImageCommentModel {
-    var testComments: [ImageCommentModel] {
+    static var testComments: [ImageCommentModel] {
         return [
             ImageCommentModel(username: "Jen",
                               date: "2 weaks ago",
