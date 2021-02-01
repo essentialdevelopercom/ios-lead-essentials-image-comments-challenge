@@ -8,6 +8,10 @@
 
 import XCTest
 
+protocol HTTPImageClient{
+	func get(from url: URL)
+}
+
 class RemoteImageCommentsLoader {
 	private let client: HTTPImageClient
 	private let url: URL
@@ -22,7 +26,7 @@ class RemoteImageCommentsLoader {
 	}
 }
 
-class HTTPImageClient {
+class HTTPImageClientSpy: HTTPImageClient {
 	var requestedUrls = [URL]()
 	
 	func get(from url: URL) {
@@ -51,8 +55,8 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	
 	//MARK: Helpers
 	
-	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClient){
-		let client = HTTPImageClient()
+	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClientSpy){
+		let client = HTTPImageClientSpy()
 		let sut = RemoteImageCommentsLoader(client: client, url: url)
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
