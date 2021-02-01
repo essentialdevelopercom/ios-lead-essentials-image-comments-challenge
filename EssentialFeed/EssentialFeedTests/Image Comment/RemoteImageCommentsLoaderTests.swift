@@ -10,21 +10,23 @@ import XCTest
 
 class RemoteImageCommentsLoader {
 	private let client: HTTPImageClient
+	private let url: URL
 	
-	init(client: HTTPImageClient) {
+	init(client: HTTPImageClient, url: URL) {
 		self.client = client
+		self.url = url
 	}
 	
 	func load() {
-		client.get()
+		client.get(from: url)
 	}
 }
 
 class HTTPImageClient {
-	var requestCallCount = 0
+	var requestedUrls = [URL]()
 	
-	func get() {
-		requestCallCount += 1
+	func get(from url: URL) {
+		requestedUrls.append(url)
 	}
 }
 
@@ -32,25 +34,26 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_init_doesNotRequestDataFromUrl() {
 		let (_, client) = makeSUT()
 		
-		XCTAssertEqual(client.requestCallCount, 0)
+		XCTAssertEqual(client.requestedUrls, [])
 	}
 	
 	func test_everyTimeloadIsCalled_requestsDataFromUrl() {
 		let (sut, client) = makeSUT()
+		let url = URL(string: "https://a-url.com")!
 		
 		sut.load()
-		XCTAssertEqual(client.requestCallCount, 1)
+		XCTAssertEqual(client.requestedUrls, [url])
 		
 		sut.load()
 		sut.load()
-		XCTAssertEqual(client.requestCallCount, 3)
+		XCTAssertEqual(client.requestedUrls, [url,url,url])
 	}
 	
 	//MARK: Helpers
 	
-	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClient){
+	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClient){
 		let client = HTTPImageClient()
-		let sut = RemoteImageCommentsLoader(client: client)
+		let sut = RemoteImageCommentsLoader(client: client, url: url)
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut,client)
