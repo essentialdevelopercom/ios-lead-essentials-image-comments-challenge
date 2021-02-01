@@ -30,15 +30,13 @@ class HTTPImageClient {
 
 class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_init_doesNotRequestDataFromUrl() {
-		let client = HTTPImageClient()
-		let _ = RemoteImageCommentsLoader(client: client)
+		let (_, client) = makeSUT()
 		
 		XCTAssertEqual(client.requestCallCount, 0)
 	}
 	
 	func test_everyTimeloadIsCalled_requestsDataFromUrl() {
-		let client = HTTPImageClient()
-		let sut = RemoteImageCommentsLoader(client: client)
+		let (sut, client) = makeSUT()
 		
 		sut.load()
 		XCTAssertEqual(client.requestCallCount, 1)
@@ -46,5 +44,14 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		sut.load()
 		sut.load()
 		XCTAssertEqual(client.requestCallCount, 3)
+	}
+	
+	//MARK: Helpers
+	
+	private func makeSUT() -> (sut: RemoteImageCommentsLoader, client: HTTPImageClient){
+		let client = HTTPImageClient()
+		let sut = RemoteImageCommentsLoader(client: client)
+		
+		return (sut,client)
 	}
 }
