@@ -26,7 +26,7 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="130" id="Y4G-1y-0KZ">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="130" id="Y4G-1y-0KZ" customClass="ImageCommentCell" customModule="FeedCommentMVP" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="36" width="414" height="130"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Y4G-1y-0KZ" id="RA4-38-2LO">
@@ -70,6 +70,11 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="7cH-OA-SfQ" secondAttribute="trailing" id="wVL-RQ-RMy"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="commentLabel" destination="PbF-GA-1vP" id="kvS-CT-ldt"/>
+                                    <outlet property="dateLabel" destination="dGg-ro-s6t" id="KhH-7v-ggr"/>
+                                    <outlet property="usernameLabel" destination="PhR-p5-PaS" id="h37-g6-i2G"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
