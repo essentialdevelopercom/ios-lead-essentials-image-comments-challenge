@@ -8,7 +8,16 @@
 
 import XCTest
 
-struct ImageComment: Equatable, Decodable {}
+struct ImageComment: Equatable, Decodable {
+	let id: UUID
+	let message: String
+	let createdDate: Date
+	let auther: CommentAuthor
+}
+
+struct CommentAuthor: Equatable, Decodable{
+	let username: String
+}
 
 protocol HTTPImageClient{
 	typealias Result = Swift.Result<(Data, HTTPURLResponse),Error>
@@ -18,6 +27,10 @@ protocol HTTPImageClient{
 
 class RemoteImageCommentsLoader {
 	typealias Result = Swift.Result<[ImageComment], Error>
+	
+	private struct Root: Decodable {
+		let items: [ImageComment]
+	}
 	
 	private let client: HTTPImageClient
 	private let url: URL
@@ -37,7 +50,7 @@ class RemoteImageCommentsLoader {
 			switch result {
 			case let .success((data, response)):
 				if response.statusCode == 200 {
-					if (try? JSONDecoder().decode(ImageComment.self, from: data)) != nil {
+					if (try? JSONDecoder().decode(Root.self, from: data)) != nil {
 						completion(.success([]))
 					} else {
 						completion(.failure(.invalidData))
