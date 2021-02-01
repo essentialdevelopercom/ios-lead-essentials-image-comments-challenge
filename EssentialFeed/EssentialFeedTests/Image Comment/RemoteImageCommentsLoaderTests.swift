@@ -8,6 +8,8 @@
 
 import XCTest
 
+struct ImageComment: Equatable {}
+
 protocol HTTPImageClient{
 	typealias Result = Swift.Result<(Data, HTTPURLResponse),Error>
 	
@@ -15,6 +17,8 @@ protocol HTTPImageClient{
 }
 
 class RemoteImageCommentsLoader {
+	typealias Result = Swift.Result<[ImageComment], Error>
+	
 	private let client: HTTPImageClient
 	private let url: URL
 	
@@ -28,12 +32,12 @@ class RemoteImageCommentsLoader {
 		case invalidData
 	}
 	
-	func load(completion: @escaping (Error) -> Void) {
+	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result  in
 			if let _ = try? result.get() {
-				completion(.invalidData)
+				completion(.failure(.invalidData))
 			} else {
-				completion(.connectivity)
+				completion(.failure(.connectivity))
 			}
 		}
 	}
@@ -61,7 +65,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut: sut, toCompleteWithError: .connectivity, when: {
+		expect(sut: sut, toCompleteWith: .failure(.connectivity), when: {
 			client.complete(with: NSError())
 		})
 	}
@@ -71,7 +75,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let statusCodes = [111,222,300,400,500]
 		
 		statusCodes.enumerated().forEach { index, code in
-			expect(sut: sut, toCompleteWithError: .invalidData, when: {
+			expect(sut: sut, toCompleteWith: .failure(.invalidData), when: {
 				client.complete(withStatusCode: code, at: index)
 			})
 		}
@@ -81,7 +85,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let invalidJSON = Data("invalid json".utf8)
 		
-		expect(sut: sut, toCompleteWithError: .invalidData, when: {
+		expect(sut: sut, toCompleteWith: .failure(.invalidData), when: {
 			client.complete(withStatusCode: 200, data: invalidJSON)
 		})
 	}
@@ -96,9 +100,16 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		return (sut,client)
 	}
 	
-	private func expect(sut: RemoteImageCommentsLoader, toCompleteWithError expectedError: RemoteImageCommentsLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-		sut.load() { recievedError in
-			XCTAssertEqual(recievedError as RemoteImageCommentsLoader.Error, expectedError, file: file, line: line)
+	private func expect(sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+		sut.load() { recievedResult in
+			switch (recievedResult, expectedResult) {
+			case let (.failure(recievedError), .failure(expectedError)):
+				XCTAssertEqual(recievedError, expectedError, file: file, line: line)
+			case let (.success(recievedComments), .success(expectedComments)):
+				XCTAssertEqual(recievedComments, expectedComments, file: file, line: line)
+			default:
+				XCTFail("Expected result: \(expectedResult), got: \(recievedResult) instead", file: file, line: line)
+			}
 		}
 		
 		action()
