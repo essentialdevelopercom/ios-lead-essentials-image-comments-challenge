@@ -16,6 +16,11 @@ extension ImageCommentCell{
 
 
 extension ImageCommentsViewController {
+	
+	func errorMessage() -> String? {
+		errorView.text
+	}
+	
 	func simulateUserInitiatedImageCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
 	}

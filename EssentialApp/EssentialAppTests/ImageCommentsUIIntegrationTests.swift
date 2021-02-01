@@ -14,6 +14,7 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 	
 	var loader: ImageCommentsLoader?
 	var presenter: ImageCommentsPresenter?
+	var errorView = UILabel()
 	
 	private var imageComments = [PresentableImageComment]() {
 		didSet {
@@ -33,14 +34,16 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 	}
 	
 	@objc private func refresh() {
-		self.refreshControl?.beginRefreshing()
+		self.presenter?.didStartLoadingImageComments()
+		
 		loader?.load{ [weak self] result in
 			self?.refreshControl?.endRefreshing()
 			
 			switch result{
 			case .success(let comments):
 				self?.presenter?.didFinishLoadingImageComments(with: comments)
-			case .failure(_):
+			case .failure(let error):
+				self?.presenter?.didFinishLoadingImageComments(with: error)
 				break
 			}
 		}
@@ -51,11 +54,16 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 	}
 	
 	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		
+		if viewModel.isLoading{
+			self.refreshControl?.beginRefreshing()
+		}
+		else{
+			self.refreshControl?.endRefreshing()
+		}
 	}
 	
 	func display(_ viewModel: ImageCommentsErrorViewModel) {
-		
+		errorView.text = viewModel.message
 	}
 	
 	// MARK: - Table View
@@ -185,6 +193,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedImageCommentsReload()
 		loader.completeImageCommentsLoadingWithError(at: 1)
 		assertThat(sut, isRendering: [presentable0])
+	}
+	
+	func test_loadImageCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage(), nil)
+		
+		loader.completeImageCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage(), localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		XCTAssertEqual(sut.errorMessage(), nil)
 	}
 	
 	
