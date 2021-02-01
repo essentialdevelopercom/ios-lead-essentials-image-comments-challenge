@@ -48,10 +48,11 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	
 	//MARK: Helpers
 	
-	private func makeSUT() -> (sut: RemoteImageCommentsLoader, client: HTTPImageClient){
+	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClient){
 		let client = HTTPImageClient()
 		let sut = RemoteImageCommentsLoader(client: client)
-		
+		trackForMemoryLeaks(client, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut,client)
 	}
 }
