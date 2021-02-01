@@ -9,13 +9,23 @@
 import XCTest
 
 class RemoteImageCommentsLoader {
+	private let client: HTTPImageClient
+	
 	init(client: HTTPImageClient) {
-		
+		self.client = client
+	}
+	
+	func load() {
+		client.get()
 	}
 }
 
 class HTTPImageClient {
 	var requestCallCount = 0
+	
+	func get() {
+		requestCallCount += 1
+	}
 }
 
 class RemoteImageCommentsLoaderTests: XCTestCase {
@@ -24,5 +34,14 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let _ = RemoteImageCommentsLoader(client: client)
 		
 		XCTAssertEqual(client.requestCallCount, 0)
+	}
+	
+	func test_load_requestsDataFromUrl() {
+		let client = HTTPImageClient()
+		let sut = RemoteImageCommentsLoader(client: client)
+		
+		sut.load()
+		
+		XCTAssertEqual(client.requestCallCount, 1)
 	}
 }
