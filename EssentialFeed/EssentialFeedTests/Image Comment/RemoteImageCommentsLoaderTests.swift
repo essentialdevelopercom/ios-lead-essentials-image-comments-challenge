@@ -9,7 +9,9 @@
 import XCTest
 
 protocol HTTPImageClient{
-	func get(from url: URL, completion: @escaping (Error?, HTTPURLResponse?) -> Void)
+	typealias Result = Swift.Result<HTTPURLResponse,Error>
+	
+	func get(from url: URL, completion: @escaping (Result) -> Void)
 }
 
 class RemoteImageCommentsLoader {
@@ -27,11 +29,11 @@ class RemoteImageCommentsLoader {
 	}
 	
 	func load(completion: @escaping (Error) -> Void) {
-		client.get(from: url) { error, _  in
-			if error != nil {
-				completion(.connectivity)
-			} else {
+		client.get(from: url) { result  in
+			if let _ = try? result.get() {
 				completion(.invalidData)
+			} else {
+				completion(.connectivity)
 			}
 		}
 	}
@@ -90,24 +92,24 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	}
 	
 	private class HTTPImageClientSpy: HTTPImageClient {
-		var completions = [(Error?, HTTPURLResponse?) -> Void]()
+		var completions = [(HTTPImageClient.Result) -> Void]()
 		var requestedUrls = [URL]()
 		
-		func get(from url: URL, completion: @escaping (Error?, HTTPURLResponse?) -> Void) {
+		func get(from url: URL, completion: @escaping (HTTPImageClient.Result) -> Void) {
 			requestedUrls.append(url)
 			completions.append(completion)
 		}
 		
 		func complete(with error: NSError, at index: Int = 0) {
-			completions[index](error, nil)
+			completions[index](.failure(error))
 		}
 		
 		func complete(withStatusCode code: Int, at index: Int = 0) {
 			let response = HTTPURLResponse(url: requestedUrls[index],
 										   statusCode: code,
 										   httpVersion: nil,
-										   headerFields: nil)
-			completions[index](nil, response)
+										   headerFields: nil)!
+			completions[index](.success(response))
 		}
 	}
 }
