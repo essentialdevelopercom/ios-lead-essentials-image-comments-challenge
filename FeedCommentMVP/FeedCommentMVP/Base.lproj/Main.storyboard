@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Comments-->
         <scene sceneID="65f-kb-oeo">
             <objects>
                 <tableViewController id="Rmb-tB-H9I" customClass="ViewController" customModule="FeedCommentMVP" customModuleProvider="target" sceneMemberID="viewController">
@@ -30,10 +30,29 @@
                             <outlet property="delegate" destination="Rmb-tB-H9I" id="KAl-cc-CE3"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Comments" id="2YR-FD-ESL"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1vQ-FO-zGn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-76" y="75"/>
+            <point key="canvasLocation" x="833.33333333333337" y="75"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="5UN-FV-zdt">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="tsm-Zp-qh7" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CYA-jG-fkD">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Rmb-tB-H9I" kind="relationship" relationship="rootViewController" id="Eli-CI-3Fy"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tfQ-6Z-r99" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-76.811594202898561" y="75"/>
         </scene>
     </scenes>
     <resources>
