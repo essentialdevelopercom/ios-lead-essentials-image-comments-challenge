@@ -173,6 +173,20 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [])
 	}
 	
+	func test_loadImageCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let currentDate = Date()
+		let (comment0, presentable0) = makeImageComment(message: "message0", username: "username0", createdAt: (currentDate.adding(days: -1), "1 day ago"))
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeImageCommentsLoading(with: [comment0], at: 0	)
+		assertThat(sut, isRendering: [presentable0])
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		loader.completeImageCommentsLoadingWithError(at: 1)
+		assertThat(sut, isRendering: [presentable0])
+	}
+	
 	
 	
 	// MARK: - Helpers
