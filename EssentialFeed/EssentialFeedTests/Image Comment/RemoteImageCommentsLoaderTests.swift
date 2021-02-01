@@ -12,7 +12,7 @@ struct ImageComment: Equatable, Decodable {
 	let id: UUID
 	let message: String
 	let createdDate: Date
-	let auther: CommentAuthor
+	let author: CommentAuthor
 }
 
 struct CommentAuthor: Equatable, Decodable{
