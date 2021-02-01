@@ -9,7 +9,7 @@
 import XCTest
 
 protocol HTTPImageClient{
-	func get(from url: URL)
+	func get(from url: URL, completion: @escaping (Error) -> Void)
 }
 
 class RemoteImageCommentsLoader {
@@ -21,8 +21,14 @@ class RemoteImageCommentsLoader {
 		self.url = url
 	}
 	
-	func load() {
-		client.get(from: url)
+	public enum Error: Swift.Error {
+		case connectivity
+	}
+	
+	func load(completion: @escaping (Error) -> Void) {
+		client.get(from: url) { _ in
+			completion(.connectivity)
+		}
 	}
 }
 
@@ -37,12 +43,21 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let url = URL(string: "https://a-url.com")!
 		
-		sut.load()
+		sut.load { _ in }
 		XCTAssertEqual(client.requestedUrls, [url])
 		
-		sut.load()
-		sut.load()
+		sut.load { _ in }
+		sut.load { _ in }
 		XCTAssertEqual(client.requestedUrls, [url,url,url])
+	}
+	
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		client.completeWithError = true
+		
+		sut.load() { error in
+			XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .connectivity)
+		}
 	}
 	
 	//MARK: Helpers
@@ -56,10 +71,14 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	}
 	
 	private class HTTPImageClientSpy: HTTPImageClient {
+		var completeWithError = false
 		var requestedUrls = [URL]()
 		
-		func get(from url: URL) {
+		func get(from url: URL, completion: @escaping (Error) -> Void) {
 			requestedUrls.append(url)
+			if completeWithError {
+				completion(NSError())
+			}
 		}
 	}
 }
