@@ -26,14 +26,6 @@ class RemoteImageCommentsLoader {
 	}
 }
 
-class HTTPImageClientSpy: HTTPImageClient {
-	var requestedUrls = [URL]()
-	
-	func get(from url: URL) {
-		requestedUrls.append(url)
-	}
-}
-
 class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_init_doesNotRequestDataFromUrl() {
 		let (_, client) = makeSUT()
@@ -61,5 +53,13 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut,client)
+	}
+	
+	private class HTTPImageClientSpy: HTTPImageClient {
+		var requestedUrls = [URL]()
+		
+		func get(from url: URL) {
+			requestedUrls.append(url)
+		}
 	}
 }
