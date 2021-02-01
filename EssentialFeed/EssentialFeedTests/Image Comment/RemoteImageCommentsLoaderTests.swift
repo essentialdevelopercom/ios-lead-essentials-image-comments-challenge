@@ -8,7 +8,7 @@
 
 import XCTest
 
-struct ImageComment: Equatable {}
+struct ImageComment: Equatable, Decodable {}
 
 protocol HTTPImageClient{
 	typealias Result = Swift.Result<(Data, HTTPURLResponse),Error>
@@ -34,9 +34,18 @@ class RemoteImageCommentsLoader {
 	
 	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result  in
-			if let _ = try? result.get() {
-				completion(.failure(.invalidData))
-			} else {
+			switch result {
+			case let .success((data, response)):
+				if response.statusCode == 200 {
+					if (try? JSONDecoder().decode(ImageComment.self, from: data)) != nil {
+						completion(.success([]))
+					} else {
+						completion(.failure(.invalidData))
+					}
+				} else {
+					completion(.failure(.invalidData))
+				}
+			case .failure:
 				completion(.failure(.connectivity))
 			}
 		}
@@ -88,6 +97,17 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		expect(sut: sut, toCompleteWith: .failure(.invalidData), when: {
 			client.complete(withStatusCode: 200, data: invalidJSON)
 		})
+	}
+	
+	func test_load_deliversEmptyCommentsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		let emptyJSON = Data("{\"items\":[]}".utf8)
+		
+		sut.load() { recievedResult in
+			XCTAssertEqual(recievedResult as RemoteImageCommentsLoader.Result, .success([]))
+		}
+		
+		client.complete(withStatusCode: 200, data: emptyJSON)
 	}
 	
 	//MARK: Helpers
