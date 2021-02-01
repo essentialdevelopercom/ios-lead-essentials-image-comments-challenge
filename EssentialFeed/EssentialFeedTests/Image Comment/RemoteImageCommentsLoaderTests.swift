@@ -53,11 +53,12 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
-		client.completeWithError = true
 		
 		sut.load() { error in
 			XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .connectivity)
 		}
+		
+		client.complete(with: NSError())
 	}
 	
 	//MARK: Helpers
@@ -71,14 +72,16 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	}
 	
 	private class HTTPImageClientSpy: HTTPImageClient {
-		var completeWithError = false
+		var completions = [(Error) -> Void]()
 		var requestedUrls = [URL]()
 		
 		func get(from url: URL, completion: @escaping (Error) -> Void) {
 			requestedUrls.append(url)
-			if completeWithError {
-				completion(NSError())
-			}
+			completions.append(completion)
+		}
+		
+		func complete(with error: NSError) {
+			completions[0](error)
 		}
 	}
 }
