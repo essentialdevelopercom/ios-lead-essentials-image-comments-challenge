@@ -94,7 +94,6 @@ class ImageCommentsUIComposer{
 		
 		controller.presenter = presenter
 		
-		
 		return controller
 	}
 }
@@ -157,6 +156,24 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeImageCommentsLoading(with: [comment0, comment1, comment2, comment3], at: 1)
 		assertThat(sut, isRendering: [presentable0, presentable1, presentable2, presentable3])
 	}
+	
+	
+	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedEmptyListAfterNonEmptyImageCommentsList() {
+		let currentDate = Date()
+		let (comment0, presentable0) = makeImageComment(message: "message0", username: "username0", createdAt: (currentDate.adding(days: -1), "1 day ago"))
+		let (comment1, presentable1) = makeImageComment(message: "message1", username: "username1", createdAt: (currentDate.adding(days: -2), "2 days ago"))
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeImageCommentsLoading(with: [comment0, comment1], at: 0)
+		assertThat(sut, isRendering: [presentable0, presentable1])
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		loader.completeImageCommentsLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
+	}
+	
+	
 	
 	// MARK: - Helpers
 	
