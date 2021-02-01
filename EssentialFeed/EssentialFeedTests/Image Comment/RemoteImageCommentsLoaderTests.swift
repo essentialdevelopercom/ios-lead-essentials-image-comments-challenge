@@ -9,7 +9,7 @@
 import XCTest
 
 protocol HTTPImageClient{
-	func get(from url: URL, completion: @escaping (Error) -> Void)
+	func get(from url: URL, completion: @escaping (Error?, HTTPURLResponse?) -> Void)
 }
 
 class RemoteImageCommentsLoader {
@@ -23,11 +23,16 @@ class RemoteImageCommentsLoader {
 	
 	public enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 	
 	func load(completion: @escaping (Error) -> Void) {
-		client.get(from: url) { _ in
-			completion(.connectivity)
+		client.get(from: url) { error, _  in
+			if error != nil {
+				completion(.connectivity)
+			} else {
+				completion(.invalidData)
+			}
 		}
 	}
 }
@@ -61,6 +66,16 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		client.complete(with: NSError())
 	}
 	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		
+		sut.load() { error in
+			XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .invalidData)
+		}
+		
+		client.complete(withStatusCode: 300)
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClientSpy){
@@ -72,16 +87,24 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	}
 	
 	private class HTTPImageClientSpy: HTTPImageClient {
-		var completions = [(Error) -> Void]()
+		var completions = [(Error?, HTTPURLResponse?) -> Void]()
 		var requestedUrls = [URL]()
 		
-		func get(from url: URL, completion: @escaping (Error) -> Void) {
+		func get(from url: URL, completion: @escaping (Error?, HTTPURLResponse?) -> Void) {
 			requestedUrls.append(url)
 			completions.append(completion)
 		}
 		
 		func complete(with error: NSError) {
-			completions[0](error)
+			completions[0](error, nil)
+		}
+		
+		func complete(withStatusCode code: Int) {
+			let response = HTTPURLResponse(url: requestedUrls[0],
+										   statusCode: code,
+										   httpVersion: nil,
+										   headerFields: nil)
+			completions[0](nil, response)
 		}
 	}
 }
