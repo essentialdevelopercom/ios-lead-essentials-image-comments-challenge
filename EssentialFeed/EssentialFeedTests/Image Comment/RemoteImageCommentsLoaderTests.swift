@@ -95,16 +95,16 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 			completions.append(completion)
 		}
 		
-		func complete(with error: NSError) {
-			completions[0](error, nil)
+		func complete(with error: NSError, at index: Int = 0) {
+			completions[index](error, nil)
 		}
 		
-		func complete(withStatusCode code: Int) {
-			let response = HTTPURLResponse(url: requestedUrls[0],
+		func complete(withStatusCode code: Int, at index: Int = 0) {
+			let response = HTTPURLResponse(url: requestedUrls[index],
 										   statusCode: code,
 										   httpVersion: nil,
 										   headerFields: nil)
-			completions[0](nil, response)
+			completions[index](nil, response)
 		}
 	}
 }
