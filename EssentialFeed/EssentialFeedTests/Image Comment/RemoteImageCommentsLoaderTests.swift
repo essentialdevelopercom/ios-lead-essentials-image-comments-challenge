@@ -96,9 +96,9 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		return (sut,client)
 	}
 	
-	private func expect(sut: RemoteImageCommentsLoader, toCompleteWithError expectedError: RemoteImageCommentsLoader.Error, when action: () -> Void) {
+	private func expect(sut: RemoteImageCommentsLoader, toCompleteWithError expectedError: RemoteImageCommentsLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 		sut.load() { recievedError in
-			XCTAssertEqual(recievedError as RemoteImageCommentsLoader.Error, expectedError)
+			XCTAssertEqual(recievedError as RemoteImageCommentsLoader.Error, expectedError, file: file, line: line)
 		}
 		
 		action()
