@@ -9,7 +9,7 @@
 import XCTest
 
 protocol HTTPImageClient{
-	typealias Result = Swift.Result<HTTPURLResponse,Error>
+	typealias Result = Swift.Result<(Data, HTTPURLResponse),Error>
 	
 	func get(from url: URL, completion: @escaping (Result) -> Void)
 }
@@ -81,6 +81,17 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+		let invalidJSON = Data("invalid json".utf8)
+		
+		sut.load() { error in
+			XCTAssertEqual(error as RemoteImageCommentsLoader.Error, .invalidData)
+		}
+
+		client.complete(withStatusCode: 200, data: invalidJSON)
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClientSpy){
@@ -104,12 +115,12 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 			completions[index](.failure(error))
 		}
 		
-		func complete(withStatusCode code: Int, at index: Int = 0) {
+		func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
 			let response = HTTPURLResponse(url: requestedUrls[index],
 										   statusCode: code,
 										   httpVersion: nil,
 										   headerFields: nil)!
-			completions[index](.success(response))
+			completions[index](.success((data, response)))
 		}
 	}
 }
