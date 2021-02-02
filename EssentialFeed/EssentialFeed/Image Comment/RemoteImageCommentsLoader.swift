@@ -8,9 +8,7 @@
 
 import Foundation
 
-public class RemoteImageCommentsLoader {
-	public typealias Result = Swift.Result<[ImageComment], Error>
-	
+public class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
 	
@@ -24,19 +22,19 @@ public class RemoteImageCommentsLoader {
 		case invalidData
 	}
 	
-	public func load(completion: @escaping (Result) -> Void) {
+	public func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
 		client.get(from: url) { [weak self] result  in
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
 				completion(RemoteImageCommentsLoader.map(data, from: response))
 			case .failure:
-				completion(.failure(.connectivity))
+				completion(.failure(Error.connectivity))
 			}
 		}
 	}
 	
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> ImageCommentsLoader.Result {
 		do {
 			let comments = try ImageCommentsMapper.map(data: data, from: response)
 			return .success(comments)
