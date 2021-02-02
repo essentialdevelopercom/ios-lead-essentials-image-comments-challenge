@@ -29,11 +29,7 @@ class ImageCommentAPIEndToEndTests: XCTestCase {
 	//MARK: Helpers
 	
 	private func getImageCommentsResultFromServer() -> ImageCommentsLoader.Result? {
-		let imageId = "31768993-1A2E-4B65-BD2A-D8AF06416730"
-		
-		let serverUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
-		let serverClient = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
-		let loader = RemoteImageCommentsLoader(client: serverClient, url: serverUrl)
+		let loader = makeLoader()
 		
 		let exp = expectation(description: "Wait for load to complete")
 		
@@ -46,6 +42,18 @@ class ImageCommentAPIEndToEndTests: XCTestCase {
 		wait(for: [exp], timeout: 5.0)
 		
 		return receivedResult
+	}
+	
+	private func makeLoader(file: StaticString = #filePath, line: UInt = #line) -> RemoteImageCommentsLoader {
+		let imageId = "31768993-1A2E-4B65-BD2A-D8AF06416730"
+		let serverUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
+		let serverClient = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+		let loader = RemoteImageCommentsLoader(client: serverClient, url: serverUrl)
+
+		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(serverClient, file: file, line: line)
+		
+		return loader
 	}
 	
 	private func expectedComment(at index: Int) -> ImageComment {
