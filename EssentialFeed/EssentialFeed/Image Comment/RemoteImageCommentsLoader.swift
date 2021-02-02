@@ -29,15 +29,19 @@ public class RemoteImageCommentsLoader {
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
-				do {
-					let comments = try ImageCommentsMapper.map(data: data, from: response)
-					completion(.success(comments))
-				} catch {
-					completion(.failure(error as! RemoteImageCommentsLoader.Error))
-				}
+				completion(RemoteImageCommentsLoader.map(data, from: response))
 			case .failure:
 				completion(.failure(.connectivity))
 			}
+		}
+	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		do {
+			let comments = try ImageCommentsMapper.map(data: data, from: response)
+			return .success(comments)
+		} catch {
+			return.failure(error as! RemoteImageCommentsLoader.Error)
 		}
 	}
 }
