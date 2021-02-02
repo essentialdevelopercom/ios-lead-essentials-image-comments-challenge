@@ -9,17 +9,6 @@
 import XCTest
 import EssentialFeed
 
-struct ImageComment: Equatable {
-	let id: UUID
-	let message: String
-	let createdDate: Date
-	let author: CommentAuthor
-}
-
-struct CommentAuthor: Equatable{
-	let username: String
-}
-
 class RemoteImageCommentsLoader {
 	typealias Result = Swift.Result<[ImageComment], Error>
 	
