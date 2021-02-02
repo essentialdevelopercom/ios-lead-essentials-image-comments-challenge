@@ -12,6 +12,23 @@ import EssentialFeed
 class ImageCommentAPIEndToEndTests: XCTestCase {
 	
 	func test_endToEndServerGETImageCommentResult_matchesServerData() {
+		switch getImageCommentsResultFromServer() {
+		case let .success(recievedComments)?:
+			XCTAssertEqual(recievedComments.count, 3, "Expected 3 images in the test account image feed")
+			
+			XCTAssertEqual(recievedComments[0], self.expectedComment(at: 0))
+			XCTAssertEqual(recievedComments[1], self.expectedComment(at: 1))
+			XCTAssertEqual(recievedComments[2], self.expectedComment(at: 2))
+		case let .failure(error)?:
+			XCTFail("Expected successful Image Comments, got \(error) instead")
+		default:
+			XCTFail("Expected successful Image Comments Result, got nothing")
+		}
+	}
+	
+	//MARK: Helpers
+	
+	private func getImageCommentsResultFromServer() -> ImageCommentsLoader.Result? {
 		let imageId = "31768993-1A2E-4B65-BD2A-D8AF06416730"
 		
 		let serverUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
@@ -20,24 +37,16 @@ class ImageCommentAPIEndToEndTests: XCTestCase {
 		
 		let exp = expectation(description: "Wait for load to complete")
 		
+		var receivedResult: ImageCommentsLoader.Result?
 		loader.load { result in
-			switch result {
-			case let .success(recievedComments):
-				XCTAssertEqual(recievedComments.count, 3, "Expected 3 images in the test account image feed")
-				
-				XCTAssertEqual(recievedComments[0], self.expectedComment(at: 0))
-				XCTAssertEqual(recievedComments[1], self.expectedComment(at: 1))
-				XCTAssertEqual(recievedComments[2], self.expectedComment(at: 2))
-			case let .failure(error):
-				XCTFail("Expected successful Image Comments, got \(error) instead")
-			}
+			receivedResult = result
 			exp.fulfill()
 		}
 		
 		wait(for: [exp], timeout: 5.0)
+		
+		return receivedResult
 	}
-	
-	//MARK: Helpers
 	
 	private func expectedComment(at index: Int) -> ImageComment {
 		return ImageComment(id: id(at: index), message: message(at: index), createdDate: createdDate(at: index), author: author(at: index))
