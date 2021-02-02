@@ -25,9 +25,9 @@ class ImageCommentAPIEndToEndTests: XCTestCase {
 			case let .success(recievedComments):
 				XCTAssertEqual(recievedComments.count, 3, "Expected 3 images in the test account image feed")
 				
-				recievedComments.enumerated().forEach { index, comment in
-					XCTAssertEqual(comment, self.expectedComment(at: index))
-				}
+				XCTAssertEqual(recievedComments[0], self.expectedComment(at: 0))
+				XCTAssertEqual(recievedComments[1], self.expectedComment(at: 1))
+				XCTAssertEqual(recievedComments[2], self.expectedComment(at: 2))
 			case let .failure(error):
 				XCTFail("Expected successful Image Comments, got \(error) instead")
 			}
