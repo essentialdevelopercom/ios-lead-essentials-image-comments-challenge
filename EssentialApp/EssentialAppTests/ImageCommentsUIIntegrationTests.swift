@@ -102,13 +102,14 @@ class ImageCommentCell: UITableViewCell{
 }
 
 class ImageCommentsUIComposer{
-	static func imageComments() -> ImageCommentsViewController{
+	static func imageCommentsComposedWith(loader: ImageCommentsLoader, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewController{
 		let controller = ImageCommentsViewController()
+		
+		let presenter = ImageCommentsPresenter(imageCommentsView: WeakRefVirtualProxy(controller), loadingView: WeakRefVirtualProxy(controller), errorView: WeakRefVirtualProxy(controller), currentDate: currentDate, locale: locale)
+		
 		controller.title = ImageCommentsPresenter.title
-		
-		let presenter = ImageCommentsPresenter(imageCommentsView: WeakRefVirtualProxy(controller), loadingView: WeakRefVirtualProxy(controller), errorView: WeakRefVirtualProxy(controller))
-		
 		controller.presenter = presenter
+		controller.loader = loader
 		
 		return controller
 	}
@@ -232,9 +233,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (ImageCommentsViewController, LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsUIComposer.imageComments()
-		
-		sut.loader = loader
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader, currentDate: Date.init, locale: Locale(identifier: "en_us"))
 		
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
