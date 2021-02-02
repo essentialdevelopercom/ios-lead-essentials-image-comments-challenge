@@ -135,11 +135,9 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let emptyJSON = Data("{\"items\":[]}".utf8)
 		
-		sut.load() { recievedResult in
-			XCTAssertEqual(recievedResult as RemoteImageCommentsLoader.Result, .success([]))
-		}
-		
-		client.complete(withStatusCode: 200, data: emptyJSON)
+		expect(sut: sut, toCompleteWith: .success([]), when: {
+			client.complete(withStatusCode: 200, data: emptyJSON)
+		})
 	}
 	
 	func test_load_deliversCommentsOn200ResponseWithValidJSONList() {
