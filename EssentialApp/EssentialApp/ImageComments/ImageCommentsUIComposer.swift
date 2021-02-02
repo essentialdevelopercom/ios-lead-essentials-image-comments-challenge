@@ -25,7 +25,7 @@ class ImageCommentsUIComposer{
 	}
 	
 	private static func makeImageCommentsViewController(delegate: ImageCommentsControllerDelegate, title: String) -> ImageCommentsViewController {
-		let bundle = Bundle(for: FeedViewController.self)
+		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let controller = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
 		controller.delegate = delegate
@@ -36,7 +36,6 @@ class ImageCommentsUIComposer{
 
 
 final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDelegate{
-	
 	let loader: ImageCommentsLoader
 	var presenter: ImageCommentsPresenter?
 	
