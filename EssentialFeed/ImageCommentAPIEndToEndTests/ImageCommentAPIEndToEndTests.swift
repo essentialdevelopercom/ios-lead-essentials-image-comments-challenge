@@ -32,7 +32,7 @@ class ImageCommentAPIEndToEndTests: XCTestCase {
 		let imageId = "31768993-1A2E-4B65-BD2A-D8AF06416730"
 		
 		let serverUrl = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
-		let serverClient = URLSessionHTTPClient(session: .shared)
+		let serverClient = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
 		let loader = RemoteImageCommentsLoader(client: serverClient, url: serverUrl)
 		
 		let exp = expectation(description: "Wait for load to complete")
