@@ -144,16 +144,18 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_load_deliversCommentsOn200ResponseWithValidJSONList() {
 		let (sut, client) = makeSUT()
 		
-		let (comment, commentJSON) = makeImageItem(id: UUID(),
+		let (comment1, commentJSON1) = makeImageItem(id: UUID(),
 												   message: "a message",
 												   created_at: Date(timeIntervalSince1970: 1000000),
 												   username: "user")
+		let (comment2, commentJSON2) = makeImageItem(id: UUID(),
+												   message: "another message",
+												   created_at: Date(timeIntervalSince1970: 500000),
+												   username: "another user")
 		
-		let jsonItem = ["items": [commentJSON]]
+		let validJSON = makeItemsJSON([commentJSON1, commentJSON2])
 		
-		let validJSON = try! JSONSerialization.data(withJSONObject: jsonItem)
-		
-		expect(sut: sut, toCompleteWith: .success([comment]), when: {
+		expect(sut: sut, toCompleteWith: .success([comment1,comment2]), when: {
 				client.complete(withStatusCode: 200, data: validJSON)
 		})
 	}
@@ -201,6 +203,11 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		] as [String: Any]
 		
 		return (comment, commentJSON)
+	}
+	
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
 	private class HTTPImageClientSpy: HTTPImageClient {
