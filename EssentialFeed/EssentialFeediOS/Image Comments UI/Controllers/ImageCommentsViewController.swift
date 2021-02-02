@@ -17,9 +17,9 @@ public protocol ImageCommentsControllerDelegate {
 
 public class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
 	
-	public var delegate: ImageCommentsControllerDelegate?
+	@IBOutlet private(set) public var errorView: ErrorView!
 	
-	public var errorView = UILabel()
+	public var delegate: ImageCommentsControllerDelegate?
 	
 	var loaderTask:ImageCommentsLoaderTask?
 	
@@ -64,7 +64,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		errorView.text = viewModel.message
+		errorView.message = viewModel.message
 	}
 	
 	// MARK: - Table View

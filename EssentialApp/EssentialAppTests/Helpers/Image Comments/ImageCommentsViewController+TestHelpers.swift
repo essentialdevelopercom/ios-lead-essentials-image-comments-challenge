@@ -19,7 +19,7 @@ extension ImageCommentCell{
 extension ImageCommentsViewController {
 	
 	func errorMessage() -> String? {
-		errorView.text
+		errorView.message
 	}
 	
 	func simulateUserInitiatedImageCommentsReload() {

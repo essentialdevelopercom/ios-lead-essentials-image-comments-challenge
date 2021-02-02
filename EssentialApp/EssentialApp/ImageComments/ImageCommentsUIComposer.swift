@@ -6,23 +6,30 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
 class ImageCommentsUIComposer{
 	static func imageCommentsComposedWith(loader: ImageCommentsLoader, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewController{
-		let controller = ImageCommentsViewController()
 		
 		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader)
 		
-		let presenter = ImageCommentsPresenter(imageCommentsView: WeakRefVirtualProxy(controller), loadingView: WeakRefVirtualProxy(controller), errorView: WeakRefVirtualProxy(controller), currentDate: currentDate, locale: locale)
+		let controller = makeImageCommentsViewController(delegate: presentationAdapter, title: ImageCommentsPresenter.title)
 		
-		controller.title = ImageCommentsPresenter.title
-		controller.delegate = presentationAdapter
+		let presenter = ImageCommentsPresenter(imageCommentsView: WeakRefVirtualProxy(controller), loadingView: WeakRefVirtualProxy(controller), errorView: WeakRefVirtualProxy(controller), currentDate: currentDate, locale: locale)
 		
 		presentationAdapter.presenter = presenter
 		
+		return controller
+	}
+	
+	private static func makeImageCommentsViewController(delegate: ImageCommentsControllerDelegate, title: String) -> ImageCommentsViewController {
+		let bundle = Bundle(for: FeedViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let controller = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		controller.delegate = delegate
+		controller.title = title
 		return controller
 	}
 }
