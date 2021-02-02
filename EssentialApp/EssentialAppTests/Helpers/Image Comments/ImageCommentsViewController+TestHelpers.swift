@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import EssentialFeediOS
 
 extension ImageCommentCell{
 	var messageText: String?{ message.text }

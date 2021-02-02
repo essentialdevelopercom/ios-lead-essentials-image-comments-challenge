@@ -98,6 +98,8 @@
 		DADA861525C0710B002A1714 /* ImageCommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADA861425C0710B002A1714 /* ImageCommentsLocalizationTests.swift */; };
 		DADA861B25C0719F002A1714 /* XCTestCase+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADA861A25C0719F002A1714 /* XCTestCase+Localization.swift */; };
 		DADA862025C073B0002A1714 /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = DADA862225C073B0002A1714 /* ImageComments.strings */; };
+		DAF3EDEF25C9A37F008938FE /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3EDEE25C9A37F008938FE /* ImageCommentsViewController.swift */; };
+		DAF3EDF625C9A3E7008938FE /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3EDF525C9A3E7008938FE /* ImageCommentCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,6 +220,8 @@
 		DADA862125C073B0002A1714 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		DADA862725C073B6002A1714 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		DADA862825C073B8002A1714 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
+		DAF3EDEE25C9A37F008938FE /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
+		DAF3EDF525C9A3E7008938FE /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -490,6 +494,7 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				DAF3EDEC25C9A363008938FE /* Image Comments */,
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 			);
@@ -659,6 +664,31 @@
 				DA389CEC25B71E13007B57D3 /* Image Comments API */,
 			);
 			path = "Image Comments";
+			sourceTree = "<group>";
+		};
+		DAF3EDEC25C9A363008938FE /* Image Comments */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3EDED25C9A36D008938FE /* Controllers */,
+				DAF3EDF425C9A3CC008938FE /* Views */,
+			);
+			path = "Image Comments";
+			sourceTree = "<group>";
+		};
+		DAF3EDED25C9A36D008938FE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3EDEE25C9A37F008938FE /* ImageCommentsViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		DAF3EDF425C9A3CC008938FE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3EDF525C9A3E7008938FE /* ImageCommentCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -934,9 +964,11 @@
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
+				DAF3EDEF25C9A37F008938FE /* ImageCommentsViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
 				08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */,
+				DAF3EDF625C9A3E7008938FE /* ImageCommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
