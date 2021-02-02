@@ -14,9 +14,11 @@ extension ImageCommentsUIIntegrationTests{
 		
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		
-		var loadImageComentsCallCount: Int {
+		var loadImageCommentsCallCount: Int {
 			return imageCommentsRequests.count
 		}
+		
+		private(set) var cancelCount = 0
 		
 		private struct TaskSpy: ImageCommentsLoaderTask {
 			let cancelCallback: () -> Void
@@ -27,7 +29,9 @@ extension ImageCommentsUIIntegrationTests{
 		
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			imageCommentsRequests.append(completion)
-			return TaskSpy{}
+			return TaskSpy{ [weak self] in
+				self?.cancelCount += 1
+			}
 		}
 		
 		func completeImageCommentsLoading(with imageComments: [ImageComment] = [], at index: Int = 0) {

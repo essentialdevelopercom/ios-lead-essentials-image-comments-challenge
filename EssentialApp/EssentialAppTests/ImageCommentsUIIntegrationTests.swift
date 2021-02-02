@@ -16,6 +16,8 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 	var presenter: ImageCommentsPresenter?
 	var errorView = UILabel()
 	
+	var loaderTask:ImageCommentsLoaderTask?
+	
 	private var imageComments = [PresentableImageComment]() {
 		didSet {
 			tableView.reloadData()
@@ -33,10 +35,16 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 		refresh()
 	}
 	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		
+		loaderTask?.cancel()
+	}
+	
 	@objc private func refresh() {
 		self.presenter?.didStartLoadingImageComments()
 		
-		loader?.load{ [weak self] result in
+		loaderTask = loader?.load{ [weak self] result in
 			self?.refreshControl?.endRefreshing()
 			
 			switch result{
@@ -117,16 +125,16 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	func test_loadImageCommentsActions_requestImageCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
-		XCTAssertEqual(loader.loadImageComentsCallCount, 0, "Expected no loading requests before view is loaded")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 0, "Expected no loading requests before view is loaded")
 		
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.loadImageComentsCallCount, 1, "Expected a loading request once view is loaded")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 1, "Expected a loading request once view is loaded")
 		
 		sut.simulateUserInitiatedImageCommentsReload()
-		XCTAssertEqual(loader.loadImageComentsCallCount, 2, "Expected another loading request once user initiates a reload")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
 		
 		sut.simulateUserInitiatedImageCommentsReload()
-		XCTAssertEqual(loader.loadImageComentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 	
 	func test_loadingImageCommentsIndicator_isVisibleWhileLoadingImageComments() {
@@ -208,6 +216,16 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage(), nil)
 	}
 	
+	
+	func test_cancelCommentsLoading_whenViewWillDisappear() {
+			let (sut, loader) = makeSUT()
+
+			sut.loadViewIfNeeded()
+			XCTAssertEqual(loader.cancelCount, 0)
+
+			sut.viewWillDisappear(false)
+			XCTAssertEqual(loader.cancelCount, 1)
+		}
 	
 	
 	// MARK: - Helpers
