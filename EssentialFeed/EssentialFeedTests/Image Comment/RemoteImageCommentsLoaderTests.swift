@@ -61,7 +61,8 @@ class RemoteImageCommentsLoader {
 	}
 	
 	func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url) { result  in
+		client.get(from: url) { [weak self] result  in
+			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
 				if response.statusCode == 200 {
@@ -158,6 +159,20 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		expect(sut: sut, toCompleteWith: .success([comment1,comment2]), when: {
 				client.complete(withStatusCode: 200, data: validJSON)
 		})
+	}
+	
+	func test_load_shouldNotDeliverResultOnDeallocation() {
+		let url = URL(string: "https://a-url.com")!
+		let client = HTTPImageClientSpy()
+		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client, url: url)
+		
+		var capturedResults = [RemoteImageCommentsLoader.Result]()
+		sut?.load { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(with: NSError())
+		
+		XCTAssertEqual(capturedResults, [])
 	}
 	
 	//MARK: Helpers
