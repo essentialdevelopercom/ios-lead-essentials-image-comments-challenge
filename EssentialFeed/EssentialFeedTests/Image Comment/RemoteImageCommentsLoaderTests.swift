@@ -8,14 +8,14 @@
 
 import XCTest
 
-struct ImageComment: Equatable, Decodable {
+struct ImageComment: Equatable {
 	let id: UUID
 	let message: String
 	let createdDate: Date
 	let author: CommentAuthor
 }
 
-struct CommentAuthor: Equatable, Decodable{
+struct CommentAuthor: Equatable{
 	let username: String
 }
 
@@ -29,7 +29,22 @@ class RemoteImageCommentsLoader {
 	typealias Result = Swift.Result<[ImageComment], Error>
 	
 	private struct Root: Decodable {
-		let items: [ImageComment]
+		let items: [RemoteImageComment]
+		
+		var imageComments: [ImageComment] {
+			return items.map { ImageComment(id: $0.id, message: $0.message, createdDate: $0.created_at, author: CommentAuthor(username: $0.author.username))}
+		}
+	}
+	
+	private struct RemoteImageComment: Decodable {
+		let id: UUID
+		let message: String
+		let created_at: Date
+		let author: RemoteCommentAuthor
+	}
+	
+	struct RemoteCommentAuthor: Decodable {
+		let username: String
 	}
 	
 	private let client: HTTPImageClient
@@ -50,9 +65,12 @@ class RemoteImageCommentsLoader {
 			switch result {
 			case let .success((data, response)):
 				if response.statusCode == 200 {
-					if (try? JSONDecoder().decode(Root.self, from: data)) != nil {
-						completion(.success([]))
-					} else {
+					let jsonDecoder = JSONDecoder()
+					jsonDecoder.dateDecodingStrategy = .iso8601
+					do {
+					let root = try jsonDecoder.decode(Root.self, from: data)
+						completion(.success(root.imageComments))
+					} catch {
 						completion(.failure(.invalidData))
 					}
 				} else {
@@ -121,6 +139,33 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		}
 		
 		client.complete(withStatusCode: 200, data: emptyJSON)
+	}
+	
+	func test_load_deliversCommentsOn200ResponseWithValidJSONList() {
+		let (sut, client) = makeSUT()
+		
+		let author = CommentAuthor(username: "user")
+		let comment = ImageComment(id: UUID(), message: "a message", createdDate: Date(timeIntervalSince1970: 100), author: author)
+		
+		let iso8601DateFormatter = ISO8601DateFormatter()
+		let dateString = iso8601DateFormatter.string(from: comment.createdDate)
+		
+		let authorJSON = [
+			"username": author.username
+		]
+		let commentJSON = [
+			"id": comment.id.uuidString,
+			"message": comment.message,
+			"created_at": dateString,
+			"author": authorJSON
+		] as [String: Any]
+		let jsonItem = ["items": [commentJSON]]
+		
+		let validJSON = try! JSONSerialization.data(withJSONObject: jsonItem)
+		
+		expect(sut: sut, toCompleteWith: .success([comment]), when: {
+				client.complete(withStatusCode: 200, data: validJSON)
+		})
 	}
 	
 	//MARK: Helpers
