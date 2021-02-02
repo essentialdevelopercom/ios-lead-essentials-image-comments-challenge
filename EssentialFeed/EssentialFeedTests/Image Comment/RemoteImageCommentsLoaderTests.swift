@@ -144,21 +144,11 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_load_deliversCommentsOn200ResponseWithValidJSONList() {
 		let (sut, client) = makeSUT()
 		
-		let author = CommentAuthor(username: "user")
-		let comment = ImageComment(id: UUID(), message: "a message", createdDate: Date(timeIntervalSince1970: 100), author: author)
+		let (comment, commentJSON) = makeImageItem(id: UUID(),
+												   message: "a message",
+												   created_at: Date(timeIntervalSince1970: 1000000),
+												   username: "user")
 		
-		let iso8601DateFormatter = ISO8601DateFormatter()
-		let dateString = iso8601DateFormatter.string(from: comment.createdDate)
-		
-		let authorJSON = [
-			"username": author.username
-		]
-		let commentJSON = [
-			"id": comment.id.uuidString,
-			"message": comment.message,
-			"created_at": dateString,
-			"author": authorJSON
-		] as [String: Any]
 		let jsonItem = ["items": [commentJSON]]
 		
 		let validJSON = try! JSONSerialization.data(withJSONObject: jsonItem)
@@ -191,6 +181,26 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		}
 		
 		action()
+	}
+	
+	private func makeImageItem(id: UUID, message: String, created_at: Date, username: String) -> (model: ImageComment, json: [String: Any]) {
+		let author = CommentAuthor(username: username)
+		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
+		
+		let iso8601DateFormatter = ISO8601DateFormatter()
+		let dateString = iso8601DateFormatter.string(from: comment.createdDate)
+		
+		let authorJSON = [
+			"username": author.username
+		]
+		let commentJSON = [
+			"id": comment.id.uuidString,
+			"message": comment.message,
+			"created_at": dateString,
+			"author": authorJSON
+		] as [String: Any]
+		
+		return (comment, commentJSON)
 	}
 	
 	private class HTTPImageClientSpy: HTTPImageClient {
