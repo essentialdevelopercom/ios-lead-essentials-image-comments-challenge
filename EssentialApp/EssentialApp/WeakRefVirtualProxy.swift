@@ -13,6 +13,8 @@ final class WeakRefVirtualProxy<T: AnyObject> {
 	}
 }
 
+// MARK: - Feed
+
 extension WeakRefVirtualProxy: FeedErrorView where T: FeedErrorView {
 	func display(_ viewModel: FeedErrorViewModel) {
 		object?.display(viewModel)
@@ -30,3 +32,24 @@ extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == 
 		object?.display(model)
 	}
 }
+
+
+// MARK: - Image Comments
+
+ extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+		object?.display(viewModel)
+	}
+ }
+
+ extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		object?.display(viewModel)
+	}
+ }
+
+ extension WeakRefVirtualProxy: ImageCommentsView where T: ImageCommentsView {
+	func display(_ model: ImageCommentsViewModel) {
+		object?.display(model)
+	}
+ }

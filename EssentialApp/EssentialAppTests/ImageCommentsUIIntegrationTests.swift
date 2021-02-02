@@ -10,21 +10,8 @@ import XCTest
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+@testable import EssentialApp
 
-
-class ImageCommentsUIComposer{
-	static func imageCommentsComposedWith(loader: ImageCommentsLoader, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewController{
-		let controller = ImageCommentsViewController()
-		
-		let presenter = ImageCommentsPresenter(imageCommentsView: WeakRefVirtualProxy(controller), loadingView: WeakRefVirtualProxy(controller), errorView: WeakRefVirtualProxy(controller), currentDate: currentDate, locale: locale)
-		
-		controller.title = ImageCommentsPresenter.title
-		controller.presenter = presenter
-		controller.loader = loader
-		
-		return controller
-	}
-}
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_imageCommentsView_hasTitle() {
@@ -175,42 +162,5 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 
 
-private extension Date {
-	func adding(seconds: TimeInterval) -> Date {
-		return self + seconds
-	}
-	
-	func adding(days: Int) -> Date {
-		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-	}
-}
 
 
-
-// MARK: - WeakRefVirtualProxy
-
-final class WeakRefVirtualProxy<T: AnyObject> {
-	private weak var object: T?
-
-	init(_ object: T) {
-		self.object = object
-	}
- }
-
- extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
-	func display(_ viewModel: ImageCommentsErrorViewModel) {
-		object?.display(viewModel)
-	}
- }
-
- extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		object?.display(viewModel)
-	}
- }
-
- extension WeakRefVirtualProxy: ImageCommentsView where T: ImageCommentsView {
-	func display(_ model: ImageCommentsViewModel) {
-		object?.display(model)
-	}
- }
