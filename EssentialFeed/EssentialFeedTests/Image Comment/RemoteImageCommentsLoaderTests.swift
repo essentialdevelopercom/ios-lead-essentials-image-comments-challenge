@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import EssentialFeed
 
 struct ImageComment: Equatable {
 	let id: UUID
@@ -17,12 +18,6 @@ struct ImageComment: Equatable {
 
 struct CommentAuthor: Equatable{
 	let username: String
-}
-
-protocol HTTPImageClient{
-	typealias Result = Swift.Result<(Data, HTTPURLResponse),Error>
-	
-	func get(from url: URL, completion: @escaping (Result) -> Void)
 }
 
 class RemoteImageCommentsLoader {
@@ -47,10 +42,10 @@ class RemoteImageCommentsLoader {
 		let username: String
 	}
 	
-	private let client: HTTPImageClient
+	private let client: HTTPClient
 	private let url: URL
 	
-	init(client: HTTPImageClient, url: URL) {
+	init(client: HTTPClient, url: URL) {
 		self.client = client
 		self.url = url
 	}
@@ -88,7 +83,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	func test_init_doesNotRequestDataFromUrl() {
 		let (_, client) = makeSUT()
 		
-		XCTAssertEqual(client.requestedUrls, [])
+		XCTAssertEqual(client.requestedURLs, [])
 	}
 	
 	func test_everyTimeloadIsCalled_requestsDataFromUrl() {
@@ -96,11 +91,11 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let url = URL(string: "https://a-url.com")!
 		
 		sut.load { _ in }
-		XCTAssertEqual(client.requestedUrls, [url])
+		XCTAssertEqual(client.requestedURLs, [url])
 		
 		sut.load { _ in }
 		sut.load { _ in }
-		XCTAssertEqual(client.requestedUrls, [url,url,url])
+		XCTAssertEqual(client.requestedURLs, [url,url,url])
 	}
 	
 	func test_load_deliversErrorOnClientError() {
@@ -117,7 +112,8 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		
 		statusCodes.enumerated().forEach { index, code in
 			expect(sut: sut, toCompleteWith: .failure(.invalidData), when: {
-				client.complete(withStatusCode: code, at: index)
+				let json = makeItemsJSON([])
+				client.complete(withStatusCode: code, data: json, at: index)
 			})
 		}
 	}
@@ -161,7 +157,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	
 	func test_load_shouldNotDeliverResultOnDeallocation() {
 		let url = URL(string: "https://a-url.com")!
-		let client = HTTPImageClientSpy()
+		let client = HTTPClientSpy()
 		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client, url: url)
 		
 		var capturedResults = [RemoteImageCommentsLoader.Result]()
@@ -175,8 +171,8 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	
 	//MARK: Helpers
 	
-	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPImageClientSpy){
-		let client = HTTPImageClientSpy()
+	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy){
+		let client = HTTPClientSpy()
 		let sut = RemoteImageCommentsLoader(client: client, url: url)
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
@@ -221,27 +217,5 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
 		let json = ["items": items]
 		return try! JSONSerialization.data(withJSONObject: json)
-	}
-	
-	private class HTTPImageClientSpy: HTTPImageClient {
-		var completions = [(HTTPImageClient.Result) -> Void]()
-		var requestedUrls = [URL]()
-		
-		func get(from url: URL, completion: @escaping (HTTPImageClient.Result) -> Void) {
-			requestedUrls.append(url)
-			completions.append(completion)
-		}
-		
-		func complete(with error: NSError, at index: Int = 0) {
-			completions[index](.failure(error))
-		}
-		
-		func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
-			let response = HTTPURLResponse(url: requestedUrls[index],
-										   statusCode: code,
-										   httpVersion: nil,
-										   headerFields: nil)!
-			completions[index](.success((data, response)))
-		}
 	}
 }
