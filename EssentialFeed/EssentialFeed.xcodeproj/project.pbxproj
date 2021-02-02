@@ -535,13 +535,29 @@
 		5CCE0B1425C91D5E00EC0BA9 /* Image Comment */ = {
 			isa = PBXGroup;
 			children = (
-				5CCE0B1525C91D9800EC0BA9 /* ImageComment.swift */,
-				5CCE0B1B25C91DD500EC0BA9 /* CommentAuthor.swift */,
-				5CCE0B2125C91EB500EC0BA9 /* RemoteImageCommentsLoader.swift */,
-				5CCE0B2725C9241200EC0BA9 /* ImageCommentsMapper.swift */,
-				5CCE0B3125C9276B00EC0BA9 /* ImageCommentsLoader.swift */,
+				5CCE0B3C25C9295600EC0BA9 /* Image Comment Feature */,
+				5CCE0B3D25C9296700EC0BA9 /* Image Comment API */,
 			);
 			path = "Image Comment";
+			sourceTree = "<group>";
+		};
+		5CCE0B3C25C9295600EC0BA9 /* Image Comment Feature */ = {
+			isa = PBXGroup;
+			children = (
+				5CCE0B1525C91D9800EC0BA9 /* ImageComment.swift */,
+				5CCE0B1B25C91DD500EC0BA9 /* CommentAuthor.swift */,
+				5CCE0B3125C9276B00EC0BA9 /* ImageCommentsLoader.swift */,
+			);
+			path = "Image Comment Feature";
+			sourceTree = "<group>";
+		};
+		5CCE0B3D25C9296700EC0BA9 /* Image Comment API */ = {
+			isa = PBXGroup;
+			children = (
+				5CCE0B2125C91EB500EC0BA9 /* RemoteImageCommentsLoader.swift */,
+				5CCE0B2725C9241200EC0BA9 /* ImageCommentsMapper.swift */,
+			);
+			path = "Image Comment API";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
