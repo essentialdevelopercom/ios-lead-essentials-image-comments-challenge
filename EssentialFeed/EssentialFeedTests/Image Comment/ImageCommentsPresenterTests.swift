@@ -25,10 +25,21 @@ protocol ImageCommentsErrorView {
 	func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
+struct ImageCommentsViewModel {
+	let comments: [ImageComment]
+}
+
+protocol ImageCommentsView {
+	func display(_ viewModel: ImageCommentsViewModel)
+}
+
 class ImageCommentsPresenter {
 	let loadingView: ImageCommentsLoadingView
 	let errorView: ImageCommentsErrorView
-	init(loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+	let imageCommentsView: ImageCommentsView
+	
+	init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
 	}
@@ -40,6 +51,7 @@ class ImageCommentsPresenter {
 	
 	func didFinishLoadingImageComments(with comments: [ImageComment]) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+		imageCommentsView.display(ImageCommentsViewModel(comments: comments))
 	}
 }
 
@@ -59,20 +71,20 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(view.receivedMessages, [.display(isLoading: true), .display(errorMessage: nil)])
 	}
 	
-	func test_didFinishLoadingImageComments_stopsLoading() {
+	func test_didFinishLoadingImageComments_stopsLoadingAndDisplaysImageComments() {
 		let (sut, view) = makeSUT()
 		let comment = makeComment(id: UUID(), message: "a message", created_at: Date(), username: "user")
 
-		sut.didFinishLoadingImageComments(with: [comment,comment])
+		sut.didFinishLoadingImageComments(with: [comment, comment])
 		
-		XCTAssertEqual(view.receivedMessages, [.display(isLoading: false)])
+		XCTAssertEqual(view.receivedMessages, [.display(isLoading: false), .display(comments: [comment, comment])])
 	}
 	
 	//MARK: Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(loadingView: view, errorView: view)
+		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view)
 		
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
@@ -87,10 +99,11 @@ class ImageCommentsPresenterTests: XCTestCase {
 		return comment
 	}
 	
-	class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView {
+	class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView, ImageCommentsView {
 		enum Message: Equatable {
 			case display(isLoading: Bool)
 			case display(errorMessage: String?)
+			case display(comments: [ImageComment])
 		}
 		var receivedMessages = [Message]()
 		
@@ -100,6 +113,10 @@ class ImageCommentsPresenterTests: XCTestCase {
 		
 		func display(_ viewModel: ImageCommentsErrorViewModel) {
 			receivedMessages.append(.display(errorMessage: viewModel.message))
+		}
+		
+		func display(_ viewModel: ImageCommentsViewModel) {
+			receivedMessages.append(.display(comments: viewModel.comments))
 		}
 	}
 }
