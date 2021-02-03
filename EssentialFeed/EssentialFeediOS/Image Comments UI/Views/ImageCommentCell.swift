@@ -10,14 +10,14 @@ import UIKit
 import EssentialFeed
 
 public class ImageCommentCell: UITableViewCell{
-	public let message = UILabel()
-	public let createdAt = UILabel()
-	public let username = UILabel()
+	@IBOutlet private(set) public var messageLabel:UILabel!
+	@IBOutlet private(set) public var createdAtLabel:UILabel!
+	@IBOutlet private(set) public var usernameLabel:UILabel!
 	
 	
 	func configure(imageComment: PresentableImageComment){
-		message.text = imageComment.message
-		createdAt.text = imageComment.createdAt
-		username.text = imageComment.username
+		messageLabel.text = imageComment.message
+		createdAtLabel.text = imageComment.createdAt
+		usernameLabel.text = imageComment.username
 	}
 }

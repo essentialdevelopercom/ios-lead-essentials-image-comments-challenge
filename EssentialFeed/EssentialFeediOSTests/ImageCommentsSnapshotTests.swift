@@ -29,6 +29,21 @@ class ImageCommentsSnapshotTests: XCTestCase{
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_ERROR_MESSAGE_dark")
 	}
 	
+	func test_feedWithContent() {
+		let sut = makeSUT()
+		
+		let comments: [PresentableImageComment] = [
+			PresentableImageComment(message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took", createdAt: "2 weeks ago", username: "Jen"),
+			PresentableImageComment(message: "This is a comment", createdAt: "1 week ago", username: "Megan"),
+			PresentableImageComment(message: "Other comment 😊", createdAt: "1 day ago", username: "Jim")
+		]
+		
+		sut.display(ImageCommentsViewModel(imageComments: comments))
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_CONTENT_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_CONTENT_dark")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT() -> ImageCommentsViewController {

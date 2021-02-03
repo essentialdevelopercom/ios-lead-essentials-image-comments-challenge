@@ -10,9 +10,9 @@ import UIKit
 import EssentialFeediOS
 
 extension ImageCommentCell{
-	var messageText: String?{ message.text }
-	var createdAtText: String?{ createdAt.text }
-	var usernameText: String?{ username.text }
+	var messageText: String?{ messageLabel.text }
+	var createdAtText: String?{ createdAtLabel.text }
+	var usernameText: String?{ usernameLabel.text }
 }
 
 
