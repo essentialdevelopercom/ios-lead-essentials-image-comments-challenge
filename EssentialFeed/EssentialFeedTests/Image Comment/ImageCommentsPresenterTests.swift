@@ -30,14 +30,14 @@ class ImageCommentsPresenter {
 class ImageCommentsPresenterTests: XCTestCase {
 
 	func test_init_doesNotSendMessageToView() {
-		let view = SomeView()
+		let view = ViewSpy()
 		let _ = ImageCommentsPresenter(view: view)
 		
 		XCTAssertEqual(view.receivedMessages.isEmpty, true)
 	}
 	
 	func test_didStartLoadingImageComments_startsLoading() {
-		let view = SomeView()
+		let view = ViewSpy()
 		let sut = ImageCommentsPresenter(view: view)
 		
 		sut.didStartLoadingImageComments()
@@ -47,7 +47,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 	
 	//MARK: Helpers
 	
-	class SomeView: ImageCommentsLoadingView {
+	class ViewSpy: ImageCommentsLoadingView {
 		enum Message: Equatable {
 			case display(isLoading: Bool)
 		}
