@@ -27,17 +27,6 @@ class ImageCommentsPresenter {
 	}
 }
 
-class SomeView: ImageCommentsLoadingView {
-	enum Message: Equatable {
-		case display(isLoading: Bool)
-	}
-	var receivedMessages = [Message]()
-	
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		receivedMessages.append(.display(isLoading: viewModel.isLoading))
-	}
-}
-
 class ImageCommentsPresenterTests: XCTestCase {
 
 	func test_init_doesNotSendMessageToView() {
@@ -54,5 +43,18 @@ class ImageCommentsPresenterTests: XCTestCase {
 		sut.didStartLoadingImageComments()
 		
 		XCTAssertEqual(view.receivedMessages, [.display(isLoading: true)])
+	}
+	
+	//MARK: Helpers
+	
+	class SomeView: ImageCommentsLoadingView {
+		enum Message: Equatable {
+			case display(isLoading: Bool)
+		}
+		var receivedMessages = [Message]()
+		
+		func display(_ viewModel: ImageCommentsLoadingViewModel) {
+			receivedMessages.append(.display(isLoading: viewModel.isLoading))
+		}
 	}
 }
