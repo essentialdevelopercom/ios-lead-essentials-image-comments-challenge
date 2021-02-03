@@ -9,64 +9,6 @@
 import XCTest
 import EssentialFeed
 
-struct ImageCommentsLoadingViewModel {
-	let isLoading: Bool
-}
-
-protocol ImageCommentsLoadingView {
-	func display(_ viewModel: ImageCommentsLoadingViewModel)
-}
-
-struct ImageCommentsErrorViewModel {
-	let message: String?
-}
-
-protocol ImageCommentsErrorView {
-	func display(_ viewModel: ImageCommentsErrorViewModel)
-}
-
-struct ImageCommentsViewModel {
-	let comments: [ImageComment]
-}
-
-protocol ImageCommentsView {
-	func display(_ viewModel: ImageCommentsViewModel)
-}
-
-class ImageCommentsPresenter {
-	let loadingView: ImageCommentsLoadingView
-	let errorView: ImageCommentsErrorView
-	let imageCommentsView: ImageCommentsView
-	
-	init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
-		self.imageCommentsView = imageCommentsView
-		self.loadingView = loadingView
-		self.errorView = errorView
-	}
-	
-	private var localizedErrorMessage: String {
-		return NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
-								 tableName: "ImageComments",
-								 bundle: Bundle(for: FeedPresenter.self),
-								 comment: "Error message displayed when we can't load the image comments from the server")
-	}
-	
-	func didStartLoadingImageComments() {
-		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
-		errorView.display(ImageCommentsErrorViewModel(message: nil))
-	}
-	
-	func didFinishLoadingImageComments(with comments: [ImageComment]) {
-		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-		imageCommentsView.display(ImageCommentsViewModel(comments: comments))
-	}
-	
-	func didFinishLoadingImageComments(with error: Error) {
-		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-		errorView.display(ImageCommentsErrorViewModel(message: localizedErrorMessage))
-	}
-}
-
 class ImageCommentsPresenterTests: XCTestCase {
 
 	func test_init_doesNotSendMessageToView() {
