@@ -460,9 +460,7 @@
 			isa = PBXGroup;
 			children = (
 				08B5EB4F22CE328100FE8683 /* UIView+Shimmering.swift */,
-				0822D0F423058078004B3345 /* UITableView+Dequeueing.swift */,
 				0822D0F6230581D2004B3345 /* UIImageView+Animations.swift */,
-				08A3F2BA232BA64700127C15 /* UIRefreshControl+Helpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -497,7 +495,7 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
-				DAF3EE1825C9C164008938FE /* Helpers */,
+				DA84642725CAF9EC000E99FA /* Shared */,
 				DAF3EDEC25C9A363008938FE /* Image Comments UI */,
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
@@ -530,7 +528,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -572,6 +569,23 @@
 				DA660E6725B89C6B0047091A /* RemoteImageCommentAuthor.swift */,
 			);
 			path = "Image Comments API";
+			sourceTree = "<group>";
+		};
+		DA84642725CAF9EC000E99FA /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				DAF3EE1825C9C164008938FE /* Helpers */,
+				DA84642825CAF9F2000E99FA /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		DA84642825CAF9F2000E99FA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		DA8ED2C625BB089400ED3809 /* Image Comments Presentation */ = {
@@ -700,6 +714,8 @@
 		DAF3EE1825C9C164008938FE /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0822D0F423058078004B3345 /* UITableView+Dequeueing.swift */,
+				08A3F2BA232BA64700127C15 /* UIRefreshControl+Helpers.swift */,
 				086AEFBD23A7E75400EE8933 /* UITableView+HeaderSizing.swift */,
 			);
 			path = Helpers;

@@ -59,12 +59,8 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 	
 	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		if viewModel.isLoading{
-			self.refreshControl?.beginRefreshing()
-		}
-		else{
-			self.refreshControl?.endRefreshing()
-		}
+		
+		self.refreshControl?.update(isRefreshing: viewModel.isLoading)
 	}
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
