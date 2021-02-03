@@ -30,22 +30,30 @@ class ImageCommentsPresenter {
 class ImageCommentsPresenterTests: XCTestCase {
 
 	func test_init_doesNotSendMessageToView() {
-		let view = ViewSpy()
-		let _ = ImageCommentsPresenter(view: view)
+		let (_, view) = makeSUT()
 		
 		XCTAssertEqual(view.receivedMessages.isEmpty, true)
 	}
 	
 	func test_didStartLoadingImageComments_startsLoading() {
-		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(view: view)
-		
+		let (sut, view) = makeSUT()
+
 		sut.didStartLoadingImageComments()
 		
 		XCTAssertEqual(view.receivedMessages, [.display(isLoading: true)])
 	}
 	
 	//MARK: Helpers
+	
+	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+		let view = ViewSpy()
+		let sut = ImageCommentsPresenter(view: view)
+		
+		trackForMemoryLeaks(view, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		
+		return (sut, view)
+	}
 	
 	class ViewSpy: ImageCommentsLoadingView {
 		enum Message: Equatable {
