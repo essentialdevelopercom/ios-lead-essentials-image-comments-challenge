@@ -561,7 +561,6 @@
 			children = (
 				5CCE0AA125C7D65100EC0BA9 /* RemoteImageCommentsLoaderTests.swift */,
 				5CCE0B7925CA4DC300EC0BA9 /* ImageCommentsPresenterTests.swift */,
-				5CCE0B8925CAABFF00EC0BA9 /* ImageComments.strings */,
 			);
 			path = "Image Comment";
 			sourceTree = "<group>";
@@ -632,6 +631,7 @@
 				5CCE0B9E25CAB47400EC0BA9 /* ImageCommentsLoadingViewModel.swift */,
 				5CCE0BB125CAB49A00EC0BA9 /* ImageCommentsErrorViewModel.swift */,
 				5CCE0BB825CAB4B600EC0BA9 /* ImageCommentsViewModel.swift */,
+				5CCE0B8925CAABFF00EC0BA9 /* ImageComments.strings */,
 			);
 			path = "Image Comment Presentation";
 			sourceTree = "<group>";
