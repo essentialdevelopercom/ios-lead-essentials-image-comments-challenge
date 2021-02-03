@@ -44,6 +44,13 @@ class ImageCommentsPresenter {
 		self.errorView = errorView
 	}
 	
+	private var localizedErrorMessage: String {
+		return NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
+								 tableName: "ImageComments",
+								 bundle: Bundle(for: FeedPresenter.self),
+								 comment: "Error message displayed when we can't load the image comments from the server")
+	}
+	
 	func didStartLoadingImageComments() {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 		errorView.display(ImageCommentsErrorViewModel(message: nil))
@@ -56,7 +63,7 @@ class ImageCommentsPresenter {
 	
 	func didFinishLoadingImageComments(with error: Error) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-		errorView.display(ImageCommentsErrorViewModel(message: "error loading"))
+		errorView.display(ImageCommentsErrorViewModel(message: localizedErrorMessage))
 	}
 }
 
@@ -87,10 +94,14 @@ class ImageCommentsPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingImageCommentsWithError_stopsLoadingAndDisplaysError() {
 		let (sut, view) = makeSUT()
+		let errorMessage = NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
+											 tableName: "ImageComments",
+											 bundle: Bundle(for: FeedPresenter.self),
+											 comment: "Error message displayed when we can't load the image comments from the server")
 
 		sut.didFinishLoadingImageComments(with: NSError())
 		
-		XCTAssertEqual(view.receivedMessages, [.display(isLoading: false), .display(errorMessage: "error loading")])
+		XCTAssertEqual(view.receivedMessages, [.display(isLoading: false), .display(errorMessage: errorMessage)])
 	}
 	
 	//MARK: Helpers
