@@ -52,6 +52,16 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
+	func test_onFeedImageCellSelect_navigatesToImageCommentsScreen() {
+		let feed = launch(httpClient: .online(response), store: .empty)
+		
+		feed.simulateFeedImageSelection(at: 0)
+		RunLoop.current.run(until: Date())
+		
+		let comments = feed.navigationController?.topViewController as? ImageCommentsViewController
+		XCTAssertNotNil(comments, "Expected top view to be the image comments UI")
+	}
+	
 	// MARK: - Helpers
 	
 	private func launch(

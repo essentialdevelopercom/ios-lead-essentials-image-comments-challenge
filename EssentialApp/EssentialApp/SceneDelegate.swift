@@ -9,6 +9,7 @@ import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
+	var navigationController: UINavigationController?
 	
 	private lazy var httpClient: HTTPClient = {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
@@ -53,15 +54,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
+		navigationController = UINavigationController(
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				didSelectImage: { (image) in
-					
+				didSelectImage: { [weak self] image in
+					self?.navigateToImageComments(feedImage: image)
 				}
 				))
 		
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 	}
 	
@@ -84,5 +86,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					.loadImageDataPublisher(from: url)
 					.caching(to: localImageLoader, using: url)
 			})
+	}
+	
+	private func navigateToImageComments(feedImage: FeedImage){
+		let loader = RemoteImageCommentsLoader(client: httpClient, url: URL(string: "https://commets-url.com")!)
+		let controller = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
+		navigationController?.pushViewController(controller, animated: true)
 	}
 }
