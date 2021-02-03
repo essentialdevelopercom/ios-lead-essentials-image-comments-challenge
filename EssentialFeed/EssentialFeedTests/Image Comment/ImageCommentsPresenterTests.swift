@@ -8,22 +8,51 @@
 
 import XCTest
 
+struct ImageCommentsLoadingViewModel {
+	let isLoading: Bool
+}
+
+protocol ImageCommentsLoadingView {
+	func display(_ viewModel: ImageCommentsLoadingViewModel)
+}
+
 class ImageCommentsPresenter {
-	init() {
-		
+	let view: ImageCommentsLoadingView
+	init(view: ImageCommentsLoadingView) {
+		self.view = view
+	}
+	
+	func didStartLoadingImageComments() {
+		view.display(ImageCommentsLoadingViewModel(isLoading: true))
 	}
 }
 
-class SomeView {
-	var receivedMessagesCount = 0
+class SomeView: ImageCommentsLoadingView {
+	enum Message: Equatable {
+		case display(isLoading: Bool)
+	}
+	var receivedMessages = [Message]()
+	
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		receivedMessages.append(.display(isLoading: viewModel.isLoading))
+	}
 }
 
 class ImageCommentsPresenterTests: XCTestCase {
 
 	func test_init_doesNotSendMessageToView() {
-		let _ = ImageCommentsPresenter()
 		let view = SomeView()
+		let _ = ImageCommentsPresenter(view: view)
 		
-		XCTAssertEqual(view.receivedMessagesCount, 0)
+		XCTAssertEqual(view.receivedMessages.isEmpty, true)
+	}
+	
+	func test_didStartLoadingImageComments_startsLoading() {
+		let view = SomeView()
+		let sut = ImageCommentsPresenter(view: view)
+		
+		sut.didStartLoadingImageComments()
+		
+		XCTAssertEqual(view.receivedMessages, [.display(isLoading: true)])
 	}
 }
