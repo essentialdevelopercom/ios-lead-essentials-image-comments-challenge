@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import EssentialFeed
 
 struct ImageCommentsLoadingViewModel {
 	let isLoading: Bool
@@ -36,6 +37,10 @@ class ImageCommentsPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 		errorView.display(ImageCommentsErrorViewModel(message: nil))
 	}
+	
+	func didFinishLoadingImageComments(with comments: [ImageComment]) {
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+	}
 }
 
 class ImageCommentsPresenterTests: XCTestCase {
@@ -54,6 +59,15 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(view.receivedMessages, [.display(isLoading: true), .display(errorMessage: nil)])
 	}
 	
+	func test_didFinishLoadingImageComments_stopsLoading() {
+		let (sut, view) = makeSUT()
+		let comment = makeComment(id: UUID(), message: "a message", created_at: Date(), username: "user")
+
+		sut.didFinishLoadingImageComments(with: [comment,comment])
+		
+		XCTAssertEqual(view.receivedMessages, [.display(isLoading: false)])
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
@@ -64,6 +78,13 @@ class ImageCommentsPresenterTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		
 		return (sut, view)
+	}
+	
+	private func makeComment(id: UUID, message: String, created_at: Date, username: String) -> ImageComment {
+		let author = CommentAuthor(username: username)
+		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
+		
+		return comment
 	}
 	
 	class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView {
