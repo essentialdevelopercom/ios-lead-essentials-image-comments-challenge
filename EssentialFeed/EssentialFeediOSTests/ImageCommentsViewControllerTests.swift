@@ -28,7 +28,10 @@ class ImageCommentsViewController: UITableViewController {
 	}
 	
 	@objc func load() {
-		loader?.load() { _ in }
+		self.refreshControl?.beginRefreshing()
+		loader?.load() { [weak self] _ in
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 }
 
@@ -53,6 +56,22 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
+	func test_loadingIndicator_isVisibleWhileLoadingImageComments() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
+		
+		loader.completeLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
+		
+		loader.completeLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -66,11 +85,28 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	}
 	
 	class LoaderSpy: ImageCommentsLoader {
-		var loadCallCount = 0
+		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
+		var loadCallCount: Int {
+			return imageCommentsRequests.count
+		}
 		
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
-			loadCallCount += 1
+			imageCommentsRequests.append((completion))
 		}
+		
+		func completeLoading(at index: Int) {
+			imageCommentsRequests[index](.success([]))
+		}
+		
+		func completeLoadingWithError(at index: Int) {
+			imageCommentsRequests[index](.failure(NSError()))
+		}
+	}
+}
+
+private extension ImageCommentsViewController {
+	var isShowingLoadingIndicator: Bool {
+		return self.refreshControl?.isRefreshing == true
 	}
 }
 
