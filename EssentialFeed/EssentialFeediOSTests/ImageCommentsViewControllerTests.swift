@@ -34,24 +34,17 @@ class ImageCommentsViewController: UITableViewController {
 
 class ImageCommentsViewControllerTests: XCTestCase {
 
-	func test_init_doesNotLoadImageComments() {
+	func test_init_doesNotRequestLoadImageComments() {
 		let (_, loader) = makeSUT()
 		
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
-	func test_viewDidLoad_loadsImageComments() {
+	func test_loadImmageCommentsAction_requestsToLoadImageComments() {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		
 		XCTAssertEqual(loader.loadCallCount, 1)
-	}
-	
-	func test_userInitiatedReload_loadsImageComments() {
-		let (sut, loader) = makeSUT()
-		
-		sut.loadViewIfNeeded()
 		
 		sut.refreshControl?.simulatePullToRefresh()
 		XCTAssertEqual(loader.loadCallCount, 2)
