@@ -142,7 +142,7 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		let json = [
 			"id": id.uuidString,
 			"message": message ?? "",
-			"created": createdAt ?? Date(),
+			"created_at": createdAt!,
 			"author": ["username": author.username]
 		].compactMapValues { $0 }
 		return (item, json)

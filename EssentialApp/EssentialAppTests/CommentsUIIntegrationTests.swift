@@ -72,6 +72,35 @@ class CommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.expected, comment1.expected, comment2.expected, comment3.expected])
 	}
 	
+	func test_loadCommentsCompletion_rendersErrorMessageOnLoaderFailureUntilNextReload() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+
+		loader.completeLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("COMMENTS_VIEW_CONNECTION_ERROR"))
+
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
+	func test_cancelCommentsLoading_whenViewIsDismissed() {
+		let loader = LoaderSpy()
+		var sut: CommentsViewController?
+
+		autoreleasepool {
+			sut = CommentUIComposer.commentsComposedWith(loader: loader.loadPublisher)
+			sut?.loadViewIfNeeded()
+		}
+
+		XCTAssertEqual(loader.cancelCount, 0, "Loading should not be cancelled when view just did load")
+
+		sut = nil
+		XCTAssertEqual(loader.cancelCount, 1, "Loading should be cancelled when view is about to disappear")
+	}
+	
+	
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: CommentsViewController, loader: LoaderSpy) {
