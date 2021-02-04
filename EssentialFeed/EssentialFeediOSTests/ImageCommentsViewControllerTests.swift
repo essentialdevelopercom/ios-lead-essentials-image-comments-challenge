@@ -28,7 +28,7 @@ class ImageCommentsViewController: UITableViewController {
 	}
 	
 	@objc func load() {
-		loader?.load()
+		loader?.load() { _ in }
 	}
 }
 
@@ -65,10 +65,10 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	class LoaderSpy {
+	class LoaderSpy: ImageCommentsLoader {
 		var loadCallCount = 0
 		
-		func load() {
+		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
 			loadCallCount += 1
 		}
 	}
