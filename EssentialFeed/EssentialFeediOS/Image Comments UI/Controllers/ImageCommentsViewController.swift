@@ -15,7 +15,7 @@ public protocol ImageCommentsControllerDelegate {
 }
 
 
-public class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
 	
 	@IBOutlet private(set) public var errorView: ErrorView!
 	

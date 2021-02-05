@@ -9,7 +9,7 @@
 import UIKit
 import EssentialFeed
 
-public class ImageCommentCell: UITableViewCell{
+public final class ImageCommentCell: UITableViewCell{
 	@IBOutlet private(set) public var messageLabel:UILabel!
 	@IBOutlet private(set) public var createdAtLabel:UILabel!
 	@IBOutlet private(set) public var usernameLabel:UILabel!
