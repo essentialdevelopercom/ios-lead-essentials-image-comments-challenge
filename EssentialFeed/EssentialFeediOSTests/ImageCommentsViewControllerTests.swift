@@ -10,12 +10,16 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-class ImageCommentsViewController: UITableViewController {
-	private var loader: ImageCommentsViewControllerTests.LoaderSpy?
+protocol ImageCommentsViewControllerDelegate {
+	func didRequestImageCommentsRefresh()
+}
+
+class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
+	private var delegate: ImageCommentsViewControllerDelegate?
 	
-	convenience init(loader: ImageCommentsViewControllerTests.LoaderSpy) {
+	convenience init(delegate: ImageCommentsViewControllerDelegate) {
 		self.init()
-		self.loader = loader
+		self.delegate = delegate
 	}
 	
 	override func viewDidLoad() {
@@ -28,12 +32,92 @@ class ImageCommentsViewController: UITableViewController {
 	}
 	
 	@objc func load() {
-		self.refreshControl?.beginRefreshing()
-		loader?.load() { [weak self] _ in
-			self?.refreshControl?.endRefreshing()
+		delegate?.didRequestImageCommentsRefresh()
+	}
+	
+	func display(_ viewModel: ImageCommentsViewModel) {
+		self.refreshControl?.endRefreshing()
+	}
+	
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		if viewModel.isLoading {
+			self.refreshControl?.beginRefreshing()
+		} else {
+			self.refreshControl?.endRefreshing()
+		}
+	}
+	
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+		if viewModel.message != nil {
+			self.refreshControl?.endRefreshing()
 		}
 	}
 }
+
+class ImageCommentsUIComposer {
+	static func imageCommentsComposedWith(loader: ImageCommentsLoader) -> ImageCommentsViewController {
+		let presentationAdapter = ImageCommentsPresentationAdapter(loader: loader)
+		
+		let imageCommentsViewController = ImageCommentsViewController(delegate: presentationAdapter)
+		
+		presentationAdapter.presenter = ImageCommentsPresenter(
+			imageCommentsView: WeakRefVirtualProxy(imageCommentsViewController),
+			loadingView: WeakRefVirtualProxy(imageCommentsViewController),
+			errorView: WeakRefVirtualProxy(imageCommentsViewController)
+		)
+		
+		return imageCommentsViewController
+	}
+}
+
+class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
+	private let loader: ImageCommentsLoader
+	var presenter: ImageCommentsPresenter?
+	
+	init(loader: ImageCommentsLoader) {
+		self.loader = loader
+	}
+	
+	func didRequestImageCommentsRefresh() {
+		presenter?.didStartLoadingImageComments()
+		loader.load { [weak self] result in
+			switch result {
+			case let .success(imageComments):
+				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
+				
+			case let .failure(error):
+				self?.presenter?.didFinishLoadingImageComments(with: error)
+			}
+		}
+	}
+}
+
+class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+	
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentsView where T: ImageCommentsView {
+	func display(_ viewModel: ImageCommentsViewModel) {
+		object?.display(viewModel)
+	}
+}
+
 
 class ImageCommentsViewControllerTests: XCTestCase {
 
@@ -76,7 +160,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsViewController(loader: loader)
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
 		
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(loader, file: file, line: line)
