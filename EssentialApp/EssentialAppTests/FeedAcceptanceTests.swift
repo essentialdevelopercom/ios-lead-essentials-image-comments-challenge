@@ -60,6 +60,8 @@ class FeedAcceptanceTests: XCTestCase {
 		
 		let comments = feed.navigationController?.topViewController as? ImageCommentsViewController
 		XCTAssertNotNil(comments, "Expected top view to be the image comments UI")
+		XCTAssertEqual(comments?.numberOfRenderedImageCommentViews(), 3)
+		XCTAssertEqual((comments?.imageCommentView(at: 0) as? ImageCommentCell)?.messageText, "comment message 0")
 	}
 	
 	// MARK: - Helpers
@@ -90,9 +92,12 @@ class FeedAcceptanceTests: XCTestCase {
 		switch url.absoluteString {
 		case "http://image.com":
 			return makeImageData()
-			
-		default:
+		case feedURLString():
 			return makeFeedData()
+		case imageCommentsURLString(for: "86BD7116-DC42-453C-BF95-9058B79AF8BF"):
+			return makeImageCommentsData()
+		default:
+			fatalError("No response data for url: \(url)")
 		}
 	}
 	
@@ -102,9 +107,27 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
+			["id": "86BD7116-DC42-453C-BF95-9058B79AF8BF", "image": "http://image.com"],
 			["id": UUID().uuidString, "image": "http://image.com"]
 		]])
 	}
 	
+	private func makeImageCommentsData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			["id":UUID().uuidString, "message": "comment message 0", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 0"]],
+			["id":UUID().uuidString, "message": "comment message 1", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 1"]],
+			["id":UUID().uuidString, "message": "comment message 2", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 2"]]
+		]])
+	}
+	
+	private func feedURLString() -> String{
+		EssentialFeedEndpoint.feed.url.absoluteString
+	}
+	
+	private func imageCommentsURLString(for uuidString: String) -> String{
+		EssentialFeedEndpoint.imageComments(id: UUID(uuidString: uuidString)!).url.absoluteString
+	}
+	
 }
+
+
