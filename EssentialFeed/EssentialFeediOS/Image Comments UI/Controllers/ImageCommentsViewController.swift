@@ -50,6 +50,10 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 		self.delegate?.didRequestImageCommentsCancel()
 	}
 	
+	deinit {
+		self.delegate?.didRequestImageCommentsCancel()
+	}
+	
 	@objc private func refresh() {
 		self.delegate?.didRequestImageCommentsRefresh()
 	}

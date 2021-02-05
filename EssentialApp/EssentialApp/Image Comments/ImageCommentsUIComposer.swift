@@ -9,9 +9,10 @@
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 class ImageCommentsUIComposer{
-	static func imageCommentsComposedWith(loader: ImageCommentsLoader, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewController{
+	static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewController{
 		
 		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader)
 		
@@ -36,30 +37,40 @@ class ImageCommentsUIComposer{
 
 
 final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDelegate{
-	let loader: ImageCommentsLoader
+	let loader: () -> ImageCommentsLoader.Publisher
 	var presenter: ImageCommentsPresenter?
+	
+	private var cancellable: Cancellable?
 	
 	private var loaderTask:ImageCommentsLoaderTask?
 	
-	init(imageCommentsLoader: ImageCommentsLoader){
+	init(imageCommentsLoader: @escaping () -> ImageCommentsLoader.Publisher){
 		self.loader = imageCommentsLoader
+	}
+	
+	deinit {
+		cancellable?.cancel()
 	}
 	
 	func didRequestImageCommentsRefresh() {
 		self.presenter?.didStartLoadingImageComments()
-				
-		loaderTask = loader.load{ [weak self] result in
-			switch result{
-			case .success(let comments):
-				self?.presenter?.didFinishLoadingImageComments(with: comments)
-			case .failure(let error):
+		
+		cancellable = loader()
+			.dispatchOnMainQueue()
+			.sink(receiveCompletion: { [weak self] completion in
+				switch completion {
+				case .finished: break
+				case let .failure(error):
 				self?.presenter?.didFinishLoadingImageComments(with: error)
-				break
-			}
-		}
+				}
+			}, receiveValue: { [weak self] imageComments in
+				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
+			})
 	}
 	
 	func didRequestImageCommentsCancel() {
-		loaderTask?.cancel()
+		cancellable?.cancel()
 	}
+	
+	
 }
