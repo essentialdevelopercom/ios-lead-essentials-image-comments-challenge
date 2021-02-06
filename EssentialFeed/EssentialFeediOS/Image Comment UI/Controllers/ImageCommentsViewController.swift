@@ -22,6 +22,11 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 		}
 	}
 	
+	private lazy var errorLabel: UILabel = {
+		let label = UILabel()
+		return label
+	}()
+	
 	convenience public init(delegate: ImageCommentsViewControllerDelegate) {
 		self.init()
 		self.delegate = delegate
@@ -29,6 +34,8 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		tableView.tableHeaderView = errorLabel
 		
 		self.refreshControl = UIRefreshControl()
 		self.refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
@@ -54,8 +61,11 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		if viewModel.message != nil {
+		if let errorMessage = viewModel.message {
 			self.refreshControl?.endRefreshing()
+			self.errorLabel.text = errorMessage
+		} else {
+			self.errorLabel.text = nil
 		}
 	}
 	

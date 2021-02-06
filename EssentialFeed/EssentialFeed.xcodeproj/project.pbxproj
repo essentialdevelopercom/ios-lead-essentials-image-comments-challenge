@@ -86,6 +86,7 @@
 		5C66A6DC25CEC63600E582CE /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C66A6DB25CEC63600E582CE /* ImageCommentsViewController.swift */; };
 		5C66A6E925CEC73C00E582CE /* ImageCommentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C66A6E825CEC73C00E582CE /* ImageCommentsCell.swift */; };
 		5C66A6F025CEC79300E582CE /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C66A6EF25CEC79300E582CE /* ImageCommentsUIComposer.swift */; };
+		5C66A71E25CEF8ED00E582CE /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5CCE0B8925CAABFF00EC0BA9 /* ImageComments.strings */; };
 		5CC6412425CBE7CE00954644 /* ImageCommentsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC6412325CBE7CE00954644 /* ImageCommentsViewControllerTests.swift */; };
 		5CCE0AA225C7D65100EC0BA9 /* RemoteImageCommentsLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCE0AA125C7D65100EC0BA9 /* RemoteImageCommentsLoaderTests.swift */; };
 		5CCE0B1625C91D9900EC0BA9 /* ImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCE0B1525C91D9800EC0BA9 /* ImageComment.swift */; };
@@ -874,6 +875,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C66A71E25CEF8ED00E582CE /* ImageComments.strings in Resources */,
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -93,6 +93,19 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [imageComment0])
 	}
 	
+	func test_loadImageCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -130,6 +143,16 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		}
 	}
 	
+	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "ImageComments"
+		let bundle = Bundle(for: ImageCommentsPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
+	}
+	
 	class LoaderSpy: ImageCommentsLoader {
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		var loadCallCount: Int {
@@ -151,6 +174,14 @@ class ImageCommentsViewControllerTests: XCTestCase {
 }
 
 private extension ImageCommentsViewController {
+	private var errorView: UILabel? {
+		return tableView.tableHeaderView as? UILabel
+	}
+	
+	var errorMessage: String? {
+		return errorView?.text
+	}
+	
 	func renderedCell(at row: Int) -> ImageCommentsCell? {
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: imageCommentsSection)
