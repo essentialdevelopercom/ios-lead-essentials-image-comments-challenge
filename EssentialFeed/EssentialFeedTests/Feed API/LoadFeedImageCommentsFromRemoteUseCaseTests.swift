@@ -9,9 +9,16 @@
 import XCTest
 import EssentialFeed
 
-class RemoteFeedImageCommentLoader {	
+class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
+	
+	private let client: HTTPClient
+	
 	init(client: HTTPClient) {
-		
+		self.client = client
+	}
+	
+	func loadImageCommentData(from url: URL, completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
+		client.get(from: url) { _ in }
 	}
 }
 
@@ -22,9 +29,18 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
+	func test_loadImageCommentDataFromURL_requestsDataFromURL() {
+		let url = anyURL()
+		let (sut, client) = makeSUT(url: url)
+		
+		sut.loadImageCommentData(from: url) { _ in }
+		
+		XCTAssertEqual(client.requestedURLs, [url])
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteFeedImageCommentLoader(client: client)
 		

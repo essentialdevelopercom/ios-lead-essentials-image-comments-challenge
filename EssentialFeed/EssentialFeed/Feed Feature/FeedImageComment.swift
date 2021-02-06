@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct FeedImageComment {
+public struct FeedImageComment {
 	let id: UUID
 	let message: String
 	let creationDate: Date
 	let author: CommentAuthor
-}
-
-struct CommentAuthor {
-	let username: String
+	
+	struct CommentAuthor {
+		let username: String
+	}
 }
