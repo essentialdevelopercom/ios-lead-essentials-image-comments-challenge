@@ -17,12 +17,21 @@ class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 		self.client = client
 	}
 	
+	enum Error: Swift.Error {
+		case connectivity
+	}
+	
 	func loadImageCommentData(from url: URL, completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
-		client.get(from: url) { _ in }
+		client.get(from: url) { result in
+			if case .failure = result {
+				completion(.failure(Error.connectivity))
+			}
+		}
 	}
 }
 
 class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
+	
 	func test_init_doesNotRequestDataFromURL() {
 		let (_, client) = makeSUT()
 		
@@ -48,6 +57,15 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
 	
+	func test_loadImageDataFromURL_deliversConnectivityErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		let clientError = anyNSError()
+
+		expect(sut, toCompleteWith: failure(.connectivity), when: {
+			client.complete(with: clientError)
+		})
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentLoader, client: HTTPClientSpy) {
@@ -57,5 +75,36 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func failure(_ error: RemoteFeedImageCommentLoader.Error) -> FeedImageCommentLoader.Result {
+		return .failure(error)
+	}
+	
+	private func expect(_ sut: RemoteFeedImageCommentLoader, toCompleteWith expectedResult: FeedImageCommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+		let url = URL(string: "https://a-given-url.com")!
+		let exp = expectation(description: "Wait for load completion")
+
+		sut.loadImageCommentData(from: url) { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.success(receivedData), .success(expectedData)):
+				XCTAssertEqual(receivedData, expectedData, file: file, line: line)
+				
+			case let (.failure(receivedError as RemoteFeedImageCommentLoader.Error), .failure(expectedError as RemoteFeedImageCommentLoader.Error)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+
+			case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+
+			default:
+				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+			}
+
+			exp.fulfill()
+		}
+
+		action()
+
+		wait(for: [exp], timeout: 1.0)
 	}
 }

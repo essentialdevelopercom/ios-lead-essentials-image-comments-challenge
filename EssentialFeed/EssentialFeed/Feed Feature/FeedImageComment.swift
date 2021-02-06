@@ -8,13 +8,13 @@
 
 import Foundation
 
-public struct FeedImageComment {
+public struct FeedImageComment: Equatable {
 	let id: UUID
 	let message: String
 	let creationDate: Date
 	let author: CommentAuthor
 	
-	struct CommentAuthor {
+	struct CommentAuthor: Equatable {
 		let username: String
 	}
 }
