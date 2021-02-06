@@ -66,6 +66,20 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [imageComment0, imageComment1, imageComment2, imageComment3])
 	}
 	
+	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedEmptyImageCommentsAfterNonEmptyImageComments() {
+		let imageComment0 = makeComment(id: UUID(), message: "message", created_at: Date(), username: "user")
+		let imageComment1 = makeComment(id: UUID(), message: "another message", created_at: Date(), username: "another user")
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeLoading(with: [imageComment0, imageComment1], at: 0)
+		assertThat(sut, isRendering: [imageComment0, imageComment1])
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		loader.completeLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
