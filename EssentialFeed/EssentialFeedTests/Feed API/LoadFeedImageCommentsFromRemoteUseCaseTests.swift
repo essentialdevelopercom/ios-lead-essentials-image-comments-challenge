@@ -57,7 +57,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
 	
-	func test_loadImageDataFromURL_deliversConnectivityErrorOnClientError() {
+	func test_loadImageCommentDataFromURL_deliversConnectivityErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		let clientError = anyNSError()
 
