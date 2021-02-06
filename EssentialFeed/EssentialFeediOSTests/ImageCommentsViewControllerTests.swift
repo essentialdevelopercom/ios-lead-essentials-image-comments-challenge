@@ -10,12 +10,23 @@ import XCTest
 import UIKit
 import EssentialFeed
 
+class ImageCommentsCell: UITableViewCell {
+	var usernameLabel: UILabel!
+	var createdTimeLabel: UILabel!
+	var message: UILabel!
+}
+
 protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
 }
 
 class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 	private var delegate: ImageCommentsViewControllerDelegate?
+	private var imageComments = [ImageComment]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
 	
 	convenience init(delegate: ImageCommentsViewControllerDelegate) {
 		self.init()
@@ -37,6 +48,7 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 	
 	func display(_ viewModel: ImageCommentsViewModel) {
 		self.refreshControl?.endRefreshing()
+		self.imageComments = viewModel.comments
 	}
 	
 	func display(_ viewModel: ImageCommentsLoadingViewModel) {
@@ -51,6 +63,27 @@ class ImageCommentsViewController: UITableViewController, ImageCommentsView, Ima
 		if viewModel.message != nil {
 			self.refreshControl?.endRefreshing()
 		}
+	}
+	
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return imageComments.count
+	}
+	
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let model = imageComments[indexPath.row]
+		let cell = ImageCommentsCell()
+		cell.usernameLabel.text = model.author.username
+		cell.createdTimeLabel.text = relativeDateStringFromNow(to: model.createdDate)
+		cell.message.text = model.message
+		
+		return cell
+	}
+	
+	private func relativeDateStringFromNow(to date: Date) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		let relativeDateString = formatter.localizedString(for: date, relativeTo: Date())
+		return relativeDateString
 	}
 }
 
@@ -156,6 +189,21 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator)
 	}
 	
+	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedImageComments() {
+		let imageComment0 = makeComment(id: UUID(), message: "message", created_at: Date(), username: "user")
+		let imageComment1 = makeComment(id: UUID(), message: "another message", created_at: Date(), username: "another user")
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		loader.completeLoading(with: [imageComment0], at: 0)
+		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews, 1)
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		loader.completeLoading(with: [imageComment0, imageComment1], at: 1)
+		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews, 2)
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -168,6 +216,13 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		return (sut, loader)
 	}
 	
+	private func makeComment(id: UUID, message: String, created_at: Date, username: String) -> ImageComment {
+		let author = CommentAuthor(username: username)
+		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
+		
+		return comment
+	}
+	
 	class LoaderSpy: ImageCommentsLoader {
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		var loadCallCount: Int {
@@ -178,8 +233,8 @@ class ImageCommentsViewControllerTests: XCTestCase {
 			imageCommentsRequests.append((completion))
 		}
 		
-		func completeLoading(at index: Int) {
-			imageCommentsRequests[index](.success([]))
+		func completeLoading(with comments: [ImageComment] = [], at index: Int) {
+			imageCommentsRequests[index](.success(comments))
 		}
 		
 		func completeLoadingWithError(at index: Int) {
@@ -192,6 +247,12 @@ private extension ImageCommentsViewController {
 	var isShowingLoadingIndicator: Bool {
 		return self.refreshControl?.isRefreshing == true
 	}
+	
+	var numberOfRenderedImageCommentsViews: Int {
+		return tableView.numberOfRows(inSection: imageCommentsSection)
+	}
+	
+	private var imageCommentsSection: Int { 0 }
 }
 
 private extension UIRefreshControl {
