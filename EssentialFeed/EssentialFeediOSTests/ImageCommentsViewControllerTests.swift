@@ -11,9 +11,9 @@ import UIKit
 import EssentialFeed
 
 class ImageCommentsCell: UITableViewCell {
-	var usernameLabel: UILabel!
-	var createdTimeLabel: UILabel!
-	var message: UILabel!
+	var usernameLabel = UILabel()
+	var createdTimeLabel = UILabel()
+	var message = UILabel()
 }
 
 protocol ImageCommentsViewControllerDelegate {
@@ -192,16 +192,19 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedImageComments() {
 		let imageComment0 = makeComment(id: UUID(), message: "message", created_at: Date(), username: "user")
 		let imageComment1 = makeComment(id: UUID(), message: "another message", created_at: Date(), username: "another user")
+		let imageComment2 = makeComment(id: UUID(), message: "third message", created_at: Date(), username: "third user")
+		let imageComment3 = makeComment(id: UUID(), message: "fourth message", created_at: Date(), username: "fourth user")
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
 		
 		loader.completeLoading(with: [imageComment0], at: 0)
-		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews, 1)
+		assertThat(sut, isRendering: [imageComment0])
 		
 		sut.refreshControl?.simulatePullToRefresh()
-		loader.completeLoading(with: [imageComment0, imageComment1], at: 1)
-		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews, 2)
+		loader.completeLoading(with: [imageComment0, imageComment1, imageComment2, imageComment3], at: 1)
+		assertThat(sut, isRendering: [imageComment0, imageComment1, imageComment2, imageComment3])
 	}
 	
 	//MARK: Helpers
@@ -221,6 +224,24 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
 		
 		return comment
+	}
+	
+	private func relativeDateStringFromNow(to date: Date) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		let relativeDateString = formatter.localizedString(for: date, relativeTo: Date())
+		return relativeDateString
+	}
+	
+	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
+		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews, imageComments.count, file: file, line: line)
+		
+		imageComments.enumerated().forEach { index, comment in
+			let cell = sut.renderedCell(at: index)
+			XCTAssertEqual(cell?.usernameText, comment.author.username, file: file, line: line)
+			XCTAssertEqual(cell?.createdTimetext, relativeDateStringFromNow(to: comment.createdDate), file: file, line: line)
+			XCTAssertEqual(cell?.messageText, comment.message, file: file, line: line)
+		}
 	}
 	
 	class LoaderSpy: ImageCommentsLoader {
@@ -244,6 +265,12 @@ class ImageCommentsViewControllerTests: XCTestCase {
 }
 
 private extension ImageCommentsViewController {
+	func renderedCell(at row: Int) -> ImageCommentsCell? {
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: imageCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index) as? ImageCommentsCell
+	}
+	
 	var isShowingLoadingIndicator: Bool {
 		return self.refreshControl?.isRefreshing == true
 	}
@@ -262,5 +289,19 @@ private extension UIRefreshControl {
 				(target as NSObject).perform(Selector($0))
 			}
 		}
+	}
+}
+
+private extension ImageCommentsCell {
+	var usernameText: String? {
+		return usernameLabel.text
+	}
+	
+	var messageText: String? {
+		return message.text
+	}
+	
+	var createdTimetext: String? {
+		return createdTimeLabel.text
 	}
 }
