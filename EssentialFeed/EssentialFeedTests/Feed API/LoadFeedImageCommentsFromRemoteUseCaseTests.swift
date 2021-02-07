@@ -45,7 +45,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_loadImageCommentDataFromUR_deliversInvalidDataErrorOnNon200HTTPResponse() {
+	func test_loadImageCommentDataFromURL_deliversInvalidDataErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 
 		let samples = [199, 201, 300, 400, 500]
@@ -55,6 +55,15 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			})
 		}
+	}
+	
+	func test_loadImageCommentDataFromURL_deliversInvalidDataErrorOn200HTTPResponseWithEmptyData() {
+		let (sut, client) = makeSUT()
+
+		expect(sut, toCompleteWith: failure(.invalidData), when: {
+			let emptyData = Data()
+			client.complete(withStatusCode: 200, data: emptyData)
+		})
 	}
 	
 	// MARK: - Helpers
