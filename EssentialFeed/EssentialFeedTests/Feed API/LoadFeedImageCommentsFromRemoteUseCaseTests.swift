@@ -140,11 +140,11 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
-	private func failure(_ error: RemoteFeedImageCommentLoader.Error) -> FeedImageCommentLoader.Result {
+	private func failure(_ error: RemoteFeedImageCommentLoader.Error) -> RemoteFeedImageCommentLoader.Result {
 		return .failure(error)
 	}
 	
-	private func expect(_ sut: RemoteFeedImageCommentLoader, toCompleteWith expectedResult: FeedImageCommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+	private func expect(_ sut: RemoteFeedImageCommentLoader, toCompleteWith expectedResult: RemoteFeedImageCommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 		let url = URL(string: "https://a-given-url.com")!
 		let exp = expectation(description: "Wait for load completion")
 
