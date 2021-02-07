@@ -17,12 +17,15 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 	
 	public enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 	
 	public func loadImageCommentData(from url: URL, completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
 		client.get(from: url) { result in
 			if case .failure = result {
 				completion(.failure(Error.connectivity))
+			} else {
+				completion(.failure(Error.invalidData))
 			}
 		}
 	}
