@@ -7,6 +7,8 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
+import Foundation
 
 public class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(loader: ImageCommentsLoader) -> ImageCommentsViewController {
@@ -33,42 +35,28 @@ class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 	}
 	
 	func didRequestImageCommentsRefresh() {
-		presenter?.didStartLoadingImageComments()
-		loader.load { [weak self] result in
-			switch result {
-			case let .success(imageComments):
-				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
-				
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingImageComments(with: error)
+		dispatchInMainQueue {
+			self.presenter?.didStartLoadingImageComments()
+			self.loader.load { [weak self] result in
+				switch result {
+				case let .success(imageComments):
+					self?.presenter?.didFinishLoadingImageComments(with: imageComments)
+					
+				case let .failure(error):
+					self?.presenter?.didFinishLoadingImageComments(with: error)
+				}
 			}
+		}
+		
+	}
+}
+
+func dispatchInMainQueue(_ call: @escaping () -> Void) {
+	if Thread.isMainThread {
+		call()
+	} else {
+		DispatchQueue.main.async {
+			call()
 		}
 	}
 }
-
-class WeakRefVirtualProxy<T: AnyObject> {
-	private weak var object: T?
-	
-	init(_ object: T) {
-		self.object = object
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
-	func display(_ viewModel: ImageCommentsErrorViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsView where T: ImageCommentsView {
-	func display(_ viewModel: ImageCommentsViewModel) {
-		object?.display(viewModel)
-	}
-}
-
