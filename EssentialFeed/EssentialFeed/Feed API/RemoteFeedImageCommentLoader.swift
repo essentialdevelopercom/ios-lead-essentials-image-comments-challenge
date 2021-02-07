@@ -22,10 +22,16 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 	
 	public func loadImageCommentData(from url: URL, completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
 		client.get(from: url) { result in
-			if case .failure = result {
+			switch result {
+			case let .success((data, _)):
+				if let _ = try? JSONSerialization.jsonObject(with: data) {
+					completion(.success([]))
+				} else {
+					completion(.failure(Error.invalidData))
+				}
+				
+			case .failure:
 				completion(.failure(Error.connectivity))
-			} else {
-				completion(.failure(Error.invalidData))
 			}
 		}
 	}
