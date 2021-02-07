@@ -107,6 +107,19 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
+	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let client = HTTPClientSpy()
+		var sut: RemoteFeedImageCommentLoader? = RemoteFeedImageCommentLoader(client: client)
+
+		var capturedResults = [RemoteFeedImageCommentLoader.Result]()
+		sut?.loadImageCommentData(from: anyURL()) { capturedResults.append($0) }
+
+		sut = nil
+		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+
+		XCTAssertTrue(capturedResults.isEmpty)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentLoader, client: HTTPClientSpy) {
