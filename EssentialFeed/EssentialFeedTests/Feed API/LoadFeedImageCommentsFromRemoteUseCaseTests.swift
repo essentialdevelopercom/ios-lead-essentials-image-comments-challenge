@@ -75,12 +75,35 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+	func test_loadImageCommentDataFromURL_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
 		let (sut, client) = makeSUT()
 		
 		expect(sut, toCompleteWith: .success([]), when: {
 			let emptyListJSON = makeItemsJSON([])
 			client.complete(withStatusCode: 200, data: emptyListJSON)
+		})
+	}
+	
+	func test_loadImageCommentDataFromURL_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		
+		let item1 = makeCommentItem(
+			id: UUID(),
+			message: "mesage",
+			createdAt: (Date(timeIntervalSince1970: 754833685), "1993-12-02T12:01:25+0000"),
+			authorUsername: "username")
+		
+		let item2 = makeCommentItem(
+			id: UUID(),
+			message: "another mesage",
+			createdAt: (Date(timeIntervalSince1970: 694958485), "1992-01-09T12:01:25+0000"),
+			authorUsername: "another username")
+		
+		let items = [item1.model, item2.model]
+		
+		expect(sut, toCompleteWith: .success(items), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
 		})
 	}
 	
@@ -95,8 +118,25 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return (sut, client)
 	}
 	
+	private func makeCommentItem(
+		id: UUID, 
+		message: String = "", 
+		createdAt: (date: Date, iso8601Representation: String), 
+		authorUsername: String = "") -> (model: FeedImageComment, json: [String: Any]) {
+		let item = FeedImageComment(id: id, message: message, creationDate: createdAt.date, authorUsername: authorUsername)
+		
+		let json = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.iso8601Representation,
+			"author": ["username": authorUsername]
+			].compactMapValues { $0 }
+		return (item, json)
+	}
+	
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
 		let json = ["items": items]
+		
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	

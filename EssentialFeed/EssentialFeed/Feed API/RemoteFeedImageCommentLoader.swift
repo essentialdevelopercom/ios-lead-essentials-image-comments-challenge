@@ -20,19 +20,51 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 		case invalidData
 	}
 	
-	public func loadImageCommentData(from url: URL, completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
-		client.get(from: url) { result in
+	public typealias Result = FeedImageCommentLoader.Result
+	
+	public func loadImageCommentData(from url: URL, completion: @escaping (Result) -> Void) {
+		client.get(from: url) { [weak self] result in
+			guard self != nil else { return }
+			
 			switch result {
-			case let .success((data, _)):
-				if let _ = try? JSONSerialization.jsonObject(with: data) {
-					completion(.success([]))
-				} else {
-					completion(.failure(Error.invalidData))
-				}
+			case let .success((data, response)):
+				completion(RemoteFeedImageCommentLoader.map(data, from: response))
 				
 			case .failure:
 				completion(.failure(Error.connectivity))
 			}
 		}
+	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		do {
+			let items = try FeedImageCommentMapper.map(data, from: response)
+			return .success(items.toModels())
+		} catch {
+			return .failure(error)
+		}
+	}
+}
+
+private extension Array where Element == RemoteFeedImageComment {
+	func toModels() -> [FeedImageComment] {
+		return map { FeedImageComment(id: $0.id, message: $0.message, creationDate: $0.created_at, authorUsername: $0.author.username)}
+	}
+}
+
+internal class FeedImageCommentMapper {
+	private struct Root: Decodable {
+		let items: [RemoteFeedImageComment]
+	}
+		
+	internal static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedImageComment] {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		
+		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+			throw RemoteFeedImageCommentLoader.Error.invalidData
+		}
+		
+		return root.items
 	}
 }

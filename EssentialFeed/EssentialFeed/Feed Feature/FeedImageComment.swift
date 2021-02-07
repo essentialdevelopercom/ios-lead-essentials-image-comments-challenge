@@ -9,12 +9,15 @@
 import Foundation
 
 public struct FeedImageComment: Equatable {
-	let id: UUID
-	let message: String
-	let creationDate: Date
-	let author: CommentAuthor
+	public let id: UUID
+	public let message: String
+	public let creationDate: Date
+	public let author: String
 	
-	struct CommentAuthor: Equatable {
-		let username: String
+	public init(id: UUID, message: String, creationDate: Date, authorUsername: String) {
+		self.id = id
+		self.message = message
+		self.creationDate = creationDate
+		self.author = authorUsername
 	}
 }
