@@ -15,6 +15,9 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 		switch getFeedCommentResult() {
 		case let .success(imageCommentFeed)?:
 			XCTAssertEqual(imageCommentFeed.count, 3, "Expected 3 images in the test account image comment feed")
+			XCTAssertEqual(imageCommentFeed[0], expectedComment(at: 0))
+			XCTAssertEqual(imageCommentFeed[1], expectedComment(at: 1))
+			XCTAssertEqual(imageCommentFeed[2], expectedComment(at: 2))
 			
 		case let .failure(error)?:
 			XCTFail("Expected succesful feed result, got \(error) instead")
@@ -52,5 +55,51 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 		let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
 		trackForMemoryLeaks(client, file: file, line: line)
 		return client
+	}
+	
+	private func expectedComment(at index: Int) -> FeedImageComment {
+		return FeedImageComment(id: id(at: index), 
+								message: message(at: index), 
+								creationDate: creationDate(at: index).toISO8601Date(), 
+								authorUsername: authorUsername(at: index))
+	}
+	
+	private func id(at index: Int) -> UUID {
+		return UUID(uuidString: [
+			"7019D8A7-0B35-4057-B7F9-8C5471961ED0",
+			"1F4A3B22-9E6E-46FC-BB6C-48B33269951B",
+			"00D0CD9A-452C-4812-B264-1B73823C94CA",
+		][index])!
+	}
+	
+	private func message(at index: Int) -> String {
+		return [
+			"The gallery was seen in Wolfgang Becker's movie Goodbye, Lenin!",
+			"It was also featured in English indie/rock band Bloc Party's single Kreuzberg taken from the album A Weekend in the City.",
+			"The restoration process has been marked by major conflict. Eight of the artists of 1990 refused to paint their own images again after they were completely destroyed by the renovation. In order to defend the copyright, they founded Founder Initiative East Side with other artists whose images were copied without permission.",
+		][index]
+	}
+	
+	private func creationDate(at index: Int) -> String {
+		return [
+			"2020-10-09T11:24:59+0000",
+			"2020-10-01T04:23:53+0000",
+			"2020-09-26T11:22:59+0000",
+		][index]
+	}
+	
+	private func authorUsername(at index: Int) -> String {
+		return [
+			"Joe",
+			"Megan",
+			"Dwight",
+		][index]
+	}
+}
+
+private extension String {
+	func toISO8601Date()-> Date {
+		let dateFormatter = ISO8601DateFormatter()
+		return dateFormatter.date(from:self)!
 	}
 }
