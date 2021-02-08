@@ -23,7 +23,7 @@ public final class RemoteImageCommentsLoader {
 
 final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
-	func test_init_doesNotPerformURLRequest() {
+	func test_init_doesNotRequestDataFromURL() {
 		let (_, client) = makeSUT()
 
 		XCTAssertTrue(client.requestedURLs.isEmpty)
