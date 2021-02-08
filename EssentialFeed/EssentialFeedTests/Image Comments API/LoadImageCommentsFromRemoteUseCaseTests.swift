@@ -15,6 +15,7 @@ public final class RemoteImageCommentsLoader {
 
 	public enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 
 	private let client: HTTPClient
@@ -27,8 +28,17 @@ public final class RemoteImageCommentsLoader {
 		from url: URL,
 		completion: @escaping (Result) -> Void
 	) {
-		client.get(from: url) { _ in
-			completion(.failure(.connectivity))
+		client.get(from: url) { result in
+			switch result {
+			case let .success((_, response)):
+				guard response.isOK else {
+					return completion(.failure(.invalidData))
+				}
+			break
+			case .failure:
+				completion(.failure(.connectivity))
+			}
+
 		}
 	}
 }
@@ -81,6 +91,30 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
+	func test_load_deliversErrorOnNon2xxHTTPResponse() {
+		let (sut, client) = makeSUT()
+		let url = URL(string: "https://a-given-url.com")!
+		let expectedError = RemoteImageCommentsLoader.Error.invalidData
+
+		let samples = [199, 300, 400, 401, 500]
+
+		samples.enumerated().forEach { index, code in
+			let exp = expectation(description: "Wait completion loader")
+			sut.load(from: url) { result in
+				switch result {
+				case let .failure(receivedError):
+					XCTAssertEqual(receivedError, expectedError)
+				default:
+					XCTFail("Expected failure, but got \(result) instead.")
+				}
+				exp.fulfill()
+			}
+
+			client.complete(withStatusCode: code, data: anyData(), at: index)
+			wait(for: [exp], timeout: 1.0)
+		}
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
@@ -95,3 +129,9 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return (sut, client)
 	}
 }
+
+extension HTTPURLResponse {
+	var isOK: Bool {
+		(200...299).contains(statusCode)
+	}
+ }
