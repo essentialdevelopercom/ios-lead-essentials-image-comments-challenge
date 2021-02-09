@@ -9,9 +9,75 @@
 import EssentialFeed
 import XCTest
 
+public struct ImageComment: Equatable {
+	public let id: UUID
+	public let message: String
+	public let createdAt: Date
+	public let username: String
+
+	public init(
+		id: UUID,
+		message: String,
+		createdAt: Date,
+		username: String
+	) {
+		self.id = id
+		self.message = message
+		self.createdAt = createdAt
+		self.username = username
+	}
+}
+
+public enum ImageCommentsMapper {
+	private struct Root: Decodable {
+
+		private struct Item: Decodable {
+			let id: UUID
+			let message: String
+			let created_at: Date
+			let author: Author
+		}
+
+		private struct Author: Decodable {
+			let username: String
+		}
+
+		private let items: [Item]
+
+		var comments: [ImageComment] {
+			items.map {
+				ImageComment(
+					id: $0.id,
+					message: $0.message,
+					createdAt: $0.created_at,
+					username: $0.author.username
+				)
+			}
+		}
+	}
+
+	static func map(
+		_ data: Data,
+		from response: HTTPURLResponse
+	) throws -> [ImageComment] {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+
+		guard isOK(response), let root = try? decoder.decode(Root.self, from: data) else {
+			throw RemoteImageCommentsLoader.Error.invalidData
+		}
+
+		return root.comments
+	}
+
+	private static func isOK(_ response: HTTPURLResponse) -> Bool {
+		(200...299).contains(response.statusCode)
+	}
+}
+
 public final class RemoteImageCommentsLoader {
 
-	public typealias Result = Swift.Result<[String], Error>
+	public typealias Result = Swift.Result<[ImageComment], Error>
 
 	public enum Error: Swift.Error {
 		case connectivity
@@ -31,13 +97,11 @@ public final class RemoteImageCommentsLoader {
 		client.get(from: url) { result in
 			switch result {
 			case let .success((data, response)):
-				guard response.isOK,
-					  let _ = try? JSONSerialization.jsonObject(with: data)
-				else {
+				guard let comments = try? ImageCommentsMapper.map(data, from: response) else {
 					return completion(.failure(.invalidData))
 				}
 
-				completion(.success([]))
+				completion(.success(comments))
 			case .failure:
 				completion(.failure(.connectivity))
 			}
@@ -129,9 +193,41 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			sut: sut,
 			toCompleteWith: .success([]),
 			when: {
-				let json = ["items": []]
-				let emptyListJSON = try! JSONSerialization.data(withJSONObject: json)
+				let emptyListJSON = makeItemsJSON([])
 				client.complete(withStatusCode: 200, data: emptyListJSON)
+			}
+		)
+	}
+
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+
+		let item1 = makeItem(
+			message: "a message",
+			createdAt: (
+				Date(timeIntervalSince1970: 1610000000),
+				"2021-01-07T06:13:20+00:00"
+			),
+			username: "a username"
+		)
+
+		let item2 = makeItem(
+			message: "another message",
+			createdAt: (
+				Date(timeIntervalSince1970: 1612907740),
+				"2021-02-09T21:55:40+00:00"
+			),
+			username: "another username"
+		)
+
+		let items = [item1.model, item2.model]
+
+		expect(
+			sut: sut,
+			toCompleteWith: .success(items),
+			when: {
+				let json = makeItemsJSON([item1.json, item2.json])
+				client.complete(withStatusCode: 200, data: json)
 			}
 		)
 	}
@@ -178,10 +274,34 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
 		wait(for: [exp], timeout: 1.0)
 	}
-}
 
-extension HTTPURLResponse {
-	var isOK: Bool {
-		(200...299).contains(statusCode)
+	private func makeItem(
+		id: UUID = UUID(),
+		message: String,
+		createdAt: (date: Date, iso8601String: String),
+		username: String
+	) -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(
+			id: id,
+			message: message,
+			createdAt: createdAt.date,
+			username: username
+		)
+
+		let json = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.iso8601String,
+			"author": [
+				"username": username
+			]
+		].compactMapValues { $0 }
+
+		return (item, json)
 	}
- }
+
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
+	}
+}
