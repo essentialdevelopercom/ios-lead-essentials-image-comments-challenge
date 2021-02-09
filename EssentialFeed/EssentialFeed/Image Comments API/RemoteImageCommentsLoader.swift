@@ -8,9 +8,9 @@
 
 import Foundation
 
-public final class RemoteImageCommentsLoader {
+public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 
-	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
+	public typealias Result = ImageCommentsLoader.Result
 
 	public enum Error: Swift.Error {
 		case connectivity
