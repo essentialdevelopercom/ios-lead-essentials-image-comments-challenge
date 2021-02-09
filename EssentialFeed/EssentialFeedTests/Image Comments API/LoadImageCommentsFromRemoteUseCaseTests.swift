@@ -30,11 +30,12 @@ public final class RemoteImageCommentsLoader {
 	) {
 		client.get(from: url) { result in
 			switch result {
-			case let .success((_, response)):
-				guard response.isOK else {
+			case let .success((data, response)):
+				guard response.isOK,
+					  let _ = try? JSONSerialization.jsonObject(with: data)
+				else {
 					return completion(.failure(.invalidData))
 				}
-			break
 			case .failure:
 				completion(.failure(.connectivity))
 			}
@@ -101,6 +102,22 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 				}
 			)
 		}
+	}
+
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+
+		expect(
+			sut: sut,
+			toCompleteWith: .failure(.invalidData),
+			when: {
+				let invalidJSON = Data("invalid json".utf8)
+				client.complete(
+					withStatusCode: 200,
+					data: invalidJSON
+				)
+			}
+		)
 	}
 
 	// MARK: - Helpers
