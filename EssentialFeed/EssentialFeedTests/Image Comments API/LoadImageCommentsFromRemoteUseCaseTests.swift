@@ -11,7 +11,7 @@ import XCTest
 
 public final class RemoteImageCommentsLoader {
 
-	public typealias Result = Swift.Result<Any, Error>
+	public typealias Result = Swift.Result<[String], Error>
 
 	public enum Error: Swift.Error {
 		case connectivity
@@ -36,6 +36,8 @@ public final class RemoteImageCommentsLoader {
 				else {
 					return completion(.failure(.invalidData))
 				}
+
+				completion(.success([]))
 			case .failure:
 				completion(.failure(.connectivity))
 			}
@@ -120,6 +122,20 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		)
 	}
 
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+
+		expect(
+			sut: sut,
+			toCompleteWith: .success([]),
+			when: {
+				let json = ["items": []]
+				let emptyListJSON = try! JSONSerialization.data(withJSONObject: json)
+				client.complete(withStatusCode: 200, data: emptyListJSON)
+			}
+		)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
@@ -146,10 +162,13 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
 		sut.load(from: url) { receivedResult in
 			switch (receivedResult, expectedResult) {
+			case let (.success(receivedItems), .success(expectedItems)):
+				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
+
 			case let (.failure(receivedError), .failure(expectedError)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default:
-				XCTFail("Expected failure, but got \(receivedResult) instead.")
+				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
 			}
 
 			exp.fulfill()
