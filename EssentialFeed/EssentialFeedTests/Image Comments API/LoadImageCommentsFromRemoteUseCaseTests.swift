@@ -90,10 +90,11 @@ public final class RemoteImageCommentsLoader {
 		self.client = client
 	}
 
+	@discardableResult
 	public func load(
 		from url: URL,
 		completion: @escaping (Result) -> Void
-	) {
+	) -> HTTPClientTask {
 		client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			switch result {
@@ -106,7 +107,6 @@ public final class RemoteImageCommentsLoader {
 			case .failure:
 				completion(.failure(.connectivity))
 			}
-
 		}
 	}
 }
@@ -245,6 +245,26 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
 
 		XCTAssertTrue(capturedResults.isEmpty)
+	}
+
+	func test_cancelLoadComments_cancelsClientURLRequest() {
+		let url = anyURL()
+		let (sut, client) = makeSUT(url: anyURL())
+
+		let task = sut.load(from: url) { _ in }
+
+		XCTAssertTrue(
+			client.cancelledURLs.isEmpty,
+			"Expected no cancelled URL request until task is cancelled"
+		)
+
+		task.cancel()
+
+		XCTAssertEqual(
+			client.cancelledURLs,
+			[url],
+			"Expected cancelled URL request after task is cancelled"
+		)
 	}
 
 	// MARK: - Helpers
