@@ -84,6 +84,28 @@ public final class RemoteImageCommentsLoader {
 		case invalidData
 	}
 
+	private final class HTTPClientTaskWrapper: HTTPClientTask {
+		private var completion: ((Result) -> Void)?
+		var wrapped: HTTPClientTask?
+
+		init(completion: @escaping (Result) -> Void) {
+			self.completion = completion
+		}
+
+		func cancel() {
+			wrapped?.cancel()
+			preventFurtherCompletions()
+		}
+
+		func complete(with result: Result) {
+			completion?(result)
+		}
+
+		private func preventFurtherCompletions() {
+			completion = nil
+		}
+	}
+
 	private let client: HTTPClient
 
 	public init(client: HTTPClient) {
@@ -95,16 +117,19 @@ public final class RemoteImageCommentsLoader {
 		from url: URL,
 		completion: @escaping (Result) -> Void
 	) -> HTTPClientTask {
-		client.get(from: url) { [weak self] result in
+		let task = HTTPClientTaskWrapper(completion: completion)
+		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
-				completion(RemoteImageCommentsLoader.map(data, from: response))
+				task.complete(with: RemoteImageCommentsLoader.map(data, from: response))
 				
 			case .failure:
-				completion(.failure(RemoteImageCommentsLoader.Error.connectivity))
+				task.complete(with: .failure(RemoteImageCommentsLoader.Error.connectivity))
 			}
 		}
+
+		return task
 	}
 
 	private static func map(
@@ -273,6 +298,25 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			client.cancelledURLs,
 			[url],
 			"Expected cancelled URL request after task is cancelled"
+		)
+	}
+
+	func test_cancelLoadComments_doesNotDeliverResultAfterCancellingTask() {
+		let (sut, client) = makeSUT()
+		let nonEmptyData = Data("non-empty data".utf8)
+
+		var received = [RemoteImageCommentsLoader.Result]()
+		let task = sut.load(from: anyURL()) { received.append($0) }
+
+		task.cancel()
+
+		client.complete(withStatusCode: 404, data: anyData())
+		client.complete(withStatusCode: 200, data: nonEmptyData)
+		client.complete(with: anyNSError())
+
+		XCTAssertTrue(
+			received.isEmpty,
+			"Expected no received results after cancelling task but got \(received)"
 		)
 	}
 
