@@ -22,25 +22,40 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 	
 	public typealias Result = FeedImageCommentLoader.Result
 	
-	private final class HTTPClientTaskWrapper: FeedImageCommentLoaderTask {		
+	private final class HTTPClientTaskWrapper: FeedImageCommentLoaderTask {
+		private var completion: ((Result) -> Void)?
+		
 		var wrapped: HTTPClientTask?
+		
+		init(_ completion: @escaping (Result) -> Void) {
+			self.completion = completion
+		}
+		
+		func complete(with result: Result) {
+			completion?(result)
+		}
 
 		func cancel() {
+			preventFurtherCompletions()
 			wrapped?.cancel()
+		}
+		
+		private func preventFurtherCompletions() {
+			completion = nil
 		}
 	}
 	
 	public func loadImageCommentData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageCommentLoaderTask {
-		let task = HTTPClientTaskWrapper()
+		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
-			
+						
 			switch result {
 			case let .success((data, response)):
-				completion(RemoteFeedImageCommentLoader.map(data, from: response))
+				task.complete(with: RemoteFeedImageCommentLoader.map(data, from: response))
 				
 			case .failure:
-				completion(.failure(Error.connectivity))
+				task.complete(with: .failure(Error.connectivity))
 			}
 		}
 		return task
