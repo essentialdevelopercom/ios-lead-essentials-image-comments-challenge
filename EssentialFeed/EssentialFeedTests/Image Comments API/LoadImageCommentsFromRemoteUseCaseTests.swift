@@ -94,7 +94,8 @@ public final class RemoteImageCommentsLoader {
 		from url: URL,
 		completion: @escaping (Result) -> Void
 	) {
-		client.get(from: url) { result in
+		client.get(from: url) { [weak self] result in
+			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
 				guard let comments = try? ImageCommentsMapper.map(data, from: response) else {
@@ -230,6 +231,20 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 				client.complete(withStatusCode: 200, data: json)
 			}
 		)
+	}
+
+	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let url = URL(string: "http://any-url.com")!
+		let client = HTTPClientSpy()
+		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client)
+
+		var capturedResults = [RemoteImageCommentsLoader.Result]()
+		sut?.load(from: url) { capturedResults.append($0) }
+
+		sut = nil
+		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+
+		XCTAssertTrue(capturedResults.isEmpty)
 	}
 
 	// MARK: - Helpers
