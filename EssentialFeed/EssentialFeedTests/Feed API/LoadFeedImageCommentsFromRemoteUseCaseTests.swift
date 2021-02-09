@@ -21,7 +21,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.loadImageCommentData(from: url) { _ in }
+		let _ = sut.loadImageCommentData(from: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -30,8 +30,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 
-		sut.loadImageCommentData(from: url) { _ in }
-		sut.loadImageCommentData(from: url) { _ in }
+		let _ = sut.loadImageCommentData(from: url) { _ in }
+		let _ = sut.loadImageCommentData(from: url) { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -112,12 +112,23 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		var sut: RemoteFeedImageCommentLoader? = RemoteFeedImageCommentLoader(client: client)
 
 		var capturedResults = [RemoteFeedImageCommentLoader.Result]()
-		sut?.loadImageCommentData(from: anyURL()) { capturedResults.append($0) }
+		let _ = sut?.loadImageCommentData(from: anyURL()) { capturedResults.append($0) }
 
 		sut = nil
 		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
 
 		XCTAssertTrue(capturedResults.isEmpty)
+	}
+	
+	func test_cancelLoadImageCommentDataFromURL_cancelsClientURLRequest() {
+		let (sut, client) = makeSUT()
+		let url = URL(string: "https://a-given-url.com")!
+
+		let task = sut.loadImageCommentData(from: url) { _ in }
+		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
+
+		task.cancel()
+		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
 	}
 	
 	// MARK: - Helpers
@@ -161,7 +172,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let exp = expectation(description: "Wait for load completion")
 
-		sut.loadImageCommentData(from: url) { receivedResult in
+		let _ = sut.loadImageCommentData(from: url) { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedData), .success(expectedData)):
 				XCTAssertEqual(receivedData, expectedData, file: file, line: line)

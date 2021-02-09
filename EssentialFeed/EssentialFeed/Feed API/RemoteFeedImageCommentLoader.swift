@@ -22,8 +22,17 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 	
 	public typealias Result = FeedImageCommentLoader.Result
 	
-	public func loadImageCommentData(from url: URL, completion: @escaping (Result) -> Void) {
-		client.get(from: url) { [weak self] result in
+	private final class HTTPClientTaskWrapper: FeedImageCommentLoaderTask {		
+		var wrapped: HTTPClientTask?
+
+		func cancel() {
+			wrapped?.cancel()
+		}
+	}
+	
+	public func loadImageCommentData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageCommentLoaderTask {
+		let task = HTTPClientTaskWrapper()
+		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			
 			switch result {
@@ -34,6 +43,7 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 				completion(.failure(Error.connectivity))
 			}
 		}
+		return task
 	}
 	
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
