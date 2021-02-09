@@ -77,7 +77,7 @@ public enum ImageCommentsMapper {
 
 public final class RemoteImageCommentsLoader {
 
-	public typealias Result = Swift.Result<[ImageComment], Error>
+	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
 
 	public enum Error: Swift.Error {
 		case connectivity
@@ -99,14 +99,23 @@ public final class RemoteImageCommentsLoader {
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
-				guard let comments = try? ImageCommentsMapper.map(data, from: response) else {
-					return completion(.failure(.invalidData))
-				}
-
-				completion(.success(comments))
+				completion(RemoteImageCommentsLoader.map(data, from: response))
+				
 			case .failure:
-				completion(.failure(.connectivity))
+				completion(.failure(RemoteImageCommentsLoader.Error.connectivity))
 			}
+		}
+	}
+
+	private static func map(
+		_ data: Data,
+		from response: HTTPURLResponse
+	) -> Result {
+		do {
+			let items = try ImageCommentsMapper.map(data, from: response)
+			return .success(items)
+		} catch {
+			return .failure(error)
 		}
 	}
 }
@@ -159,7 +168,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		samples.enumerated().forEach { index, code in
 			expect(
 				sut: sut,
-				toCompleteWith: .failure(.invalidData),
+				toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData),
 				when: {
 					client.complete(
 						withStatusCode: code,
@@ -176,7 +185,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
 		expect(
 			sut: sut,
-			toCompleteWith: .failure(.invalidData),
+			toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData),
 			when: {
 				let invalidJSON = Data("invalid json".utf8)
 				client.complete(
@@ -296,7 +305,10 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
 
-			case let (.failure(receivedError), .failure(expectedError)):
+			case let (
+				.failure(receivedError as RemoteImageCommentsLoader.Error),
+				.failure(expectedError as RemoteImageCommentsLoader.Error)
+			):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default:
 				XCTFail(
