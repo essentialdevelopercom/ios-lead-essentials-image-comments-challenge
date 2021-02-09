@@ -264,7 +264,11 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			case let (.failure(receivedError), .failure(expectedError)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default:
-				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+				XCTFail(
+					"Expected result \(expectedResult) but got \(receivedResult) instead",
+					file: file,
+					line: line
+				)
 			}
 
 			exp.fulfill()
