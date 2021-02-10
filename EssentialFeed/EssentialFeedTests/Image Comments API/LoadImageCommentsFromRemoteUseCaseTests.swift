@@ -42,7 +42,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
 		expect(
 			sut: sut,
-			toCompleteWith: .failure(expectedError),
+			toCompleteWith: failure(expectedError),
 			when: {
 				client.complete(with: expectedError)
 			}
@@ -57,7 +57,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		samples.enumerated().forEach { index, code in
 			expect(
 				sut: sut,
-				toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData),
+				toCompleteWith: failure(.invalidData),
 				when: {
 					client.complete(
 						withStatusCode: code,
@@ -74,7 +74,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
 		expect(
 			sut: sut,
-			toCompleteWith: .failure(RemoteImageCommentsLoader.Error.invalidData),
+			toCompleteWith: failure(.invalidData),
 			when: {
 				let invalidJSON = Data("invalid json".utf8)
 				client.complete(
@@ -262,5 +262,11 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
 		let json = ["items": items]
 		return try! JSONSerialization.data(withJSONObject: json)
+	}
+
+	private func failure(
+		_ error: RemoteImageCommentsLoader.Error
+	) -> RemoteImageCommentsLoader.Result {
+		.failure(error)
 	}
 }
