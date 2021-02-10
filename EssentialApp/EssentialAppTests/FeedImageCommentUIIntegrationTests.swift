@@ -10,7 +10,7 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-final class FeedImageCommentViewController: UIViewController {
+final class FeedImageCommentViewController: UITableViewController {
 	private var loader: FeedImageCommentLoader?
 	private var url: URL?
 	
@@ -22,6 +22,13 @@ final class FeedImageCommentViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+		load()
+	}
+	
+	@objc private func load() {
 		_ = loader?.loadImageCommentData(from: url!) { _ in }
 	}
 }
@@ -40,6 +47,15 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		
 		XCTAssertEqual(loader.loadedImageCommentURLs, [anyURL()])
+	}
+	
+	func test_pullToRefresh_loadsComments() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+
+		sut.simulateUserInitiatedFeedReload()
+
+		XCTAssertEqual(loader.loadedImageCommentURLs, [anyURL(), anyURL()])
 	}
 	
 	// MARK: - Helpers
@@ -73,5 +89,12 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 			imageCommentRequests.append((url, completion))
 			return TaskSpy { }
 		}
+	}
+}
+
+
+private extension FeedImageCommentViewController {
+	func simulateUserInitiatedFeedReload() {
+		refreshControl?.simulatePullToRefresh()
 	}
 }
