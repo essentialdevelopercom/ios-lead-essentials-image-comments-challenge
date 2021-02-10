@@ -30,7 +30,9 @@ final class FeedImageCommentViewController: UITableViewController {
 	}
 	
 	@objc private func load() {
-		_ = loader?.loadImageCommentData(from: url!) { _ in }
+		_ = loader?.loadImageCommentData(from: url!) { [weak self] _ in 
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 }
 
@@ -67,6 +69,15 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 	}
 	
+	func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		loader.completeFeedCommentLoading()
+
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentViewController, loader: LoaderSpy) {
@@ -93,10 +104,14 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		var loadedImageCommentURLs: [URL] {
 			return imageCommentRequests.map { $0.url }
 		}
-		
+				
 		func loadImageCommentData(from url: URL, completion: @escaping (Result<[FeedImageComment], Error>) -> Void) -> FeedImageCommentLoaderTask {
 			imageCommentRequests.append((url, completion))
 			return TaskSpy { }
+		}
+		
+		func completeFeedCommentLoading(with feedComments: [FeedImageComment] = [], at index: Int = 0) {
+			imageCommentRequests[index].completion(.success(feedComments))
 		}
 	}
 }
