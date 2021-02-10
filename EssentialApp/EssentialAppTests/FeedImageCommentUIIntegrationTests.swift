@@ -9,32 +9,7 @@
 import XCTest
 import UIKit
 import EssentialFeed
-
-final class FeedImageCommentViewController: UITableViewController {
-	private var loader: FeedImageCommentLoader?
-	private var url: URL?
-	
-	convenience init(loader: FeedImageCommentLoader, url: URL) {
-		self.init()
-		self.loader = loader
-		self.url = url
-	}
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		load()
-	}
-	
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
-		_ = loader?.loadImageCommentData(from: url!) { [weak self] _ in 
-			self?.refreshControl?.endRefreshing()
-		}
-	}
-}
+import EssentialFeediOS
 
 class FeedImageCommentUIIntegrationTests: XCTestCase {
 	
