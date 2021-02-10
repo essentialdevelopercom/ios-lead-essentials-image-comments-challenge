@@ -7,11 +7,22 @@
 //
 
 import XCTest
+import UIKit
 import EssentialFeed
 
-final class FeedImageCommentViewController {
-	init(loader: FeedImageCommentLoader) {
-		
+final class FeedImageCommentViewController: UIViewController {
+	private var loader: FeedImageCommentLoader?
+	private var url: URL?
+	
+	convenience init(loader: FeedImageCommentLoader, url: URL) {
+		self.init()
+		self.loader = loader
+		self.url = url
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		_ = loader?.loadImageCommentData(from: url!) { _ in }
 	}
 }
 
@@ -19,9 +30,18 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	
 	func test_init_doesNotLoadFeedImageComments() {
 		let loader = LoaderSpy()
-		let _ = FeedImageCommentViewController(loader: loader)
+		let _ = FeedImageCommentViewController(loader: loader, url: anyURL())
 		
 		XCTAssertEqual(loader.loadedImageCommentURLs.count, 0)
+	}
+	
+	func test_viewDidLoad_loadsComments() {
+		let loader = LoaderSpy()
+		let sut = FeedImageCommentViewController(loader: loader, url: anyURL())
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(loader.loadedImageCommentURLs, [anyURL()])
 	}
 	
 	// MARK: - Helpers
@@ -44,6 +64,7 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		}
 		
 		func loadImageCommentData(from url: URL, completion: @escaping (Result<[FeedImageComment], Error>) -> Void) -> FeedImageCommentLoaderTask {
+			imageCommentRequests.append((url, completion))
 			return TaskSpy { }
 		}
 	}
