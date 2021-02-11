@@ -13,6 +13,8 @@ final public class FeedImageCommentViewController: UITableViewController {
 	private var loader: FeedImageCommentLoader?
 	private var url: URL?
 	
+	private var tableModel = [FeedImageComment]()
+	
 	public convenience init(loader: FeedImageCommentLoader, url: URL) {
 		self.init()
 		self.loader = loader
@@ -29,8 +31,22 @@ final public class FeedImageCommentViewController: UITableViewController {
 	
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
-		_ = loader?.loadImageCommentData(from: url!) { [weak self] _ in 
+		_ = loader?.loadImageCommentData(from: url!) { [weak self] result in
+			self?.tableModel = (try? result.get()) ?? []
+			self?.tableView.reloadData()
 			self?.refreshControl?.endRefreshing()
 		}
+	}
+	
+	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return tableModel.count
+	}
+	
+	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cellModel = tableModel[indexPath.row]
+		let cell = FeedImageCommentCell()
+		cell.messageLabel.text = cellModel.message
+		cell.authorNameLabel.text = cellModel.author
+		return cell
 	}
 }
