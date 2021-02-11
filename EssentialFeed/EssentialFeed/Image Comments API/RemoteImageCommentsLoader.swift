@@ -39,30 +39,28 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 		}
 	}
 
+	private let url: URL
 	private let client: HTTPClient
 
-	public init(client: HTTPClient) {
+	public init(
+		url: URL,
+		client: HTTPClient
+	) {
+		self.url = url
 		self.client = client
 	}
 
-	@discardableResult
-	public func load(
-		from url: URL,
-		completion: @escaping (Result) -> Void
-	) -> HTTPClientTask {
-		let task = HTTPClientTaskWrapper(completion: completion)
-		task.wrapped = client.get(from: url) { [weak self] result in
+	public func load(completion: @escaping (Result) -> Void) {
+		client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			switch result {
 			case let .success((data, response)):
-				task.complete(with: RemoteImageCommentsLoader.map(data, from: response))
+				completion(RemoteImageCommentsLoader.map(data, from: response))
 
 			case .failure:
-				task.complete(with: .failure(RemoteImageCommentsLoader.Error.connectivity))
+				completion(.failure(RemoteImageCommentsLoader.Error.connectivity))
 			}
 		}
-
-		return task
 	}
 
 	private static func map(

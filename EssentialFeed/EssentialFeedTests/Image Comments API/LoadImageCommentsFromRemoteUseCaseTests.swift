@@ -21,7 +21,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 
-		sut.load(from: url) { _ in }
+		sut.load { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -30,8 +30,8 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 
-		sut.load(from: url) { _ in }
-		sut.load(from: url) { _ in }
+		sut.load { _ in }
+		sut.load { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -134,54 +134,15 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
 		let url = URL(string: "http://any-url.com")!
 		let client = HTTPClientSpy()
-		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client)
+		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(url: url, client: client)
 
 		var capturedResults = [RemoteImageCommentsLoader.Result]()
-		sut?.load(from: url) { capturedResults.append($0) }
+		sut?.load { capturedResults.append($0) }
 
 		sut = nil
 		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
 
 		XCTAssertTrue(capturedResults.isEmpty)
-	}
-
-	func test_cancelLoadComments_cancelsClientURLRequest() {
-		let url = anyURL()
-		let (sut, client) = makeSUT(url: anyURL())
-
-		let task = sut.load(from: url) { _ in }
-
-		XCTAssertTrue(
-			client.cancelledURLs.isEmpty,
-			"Expected no cancelled URL request until task is cancelled"
-		)
-
-		task.cancel()
-
-		XCTAssertEqual(
-			client.cancelledURLs,
-			[url],
-			"Expected cancelled URL request after task is cancelled"
-		)
-	}
-
-	func test_cancelLoadComments_doesNotDeliverResultAfterCancellingTask() {
-		let (sut, client) = makeSUT()
-		let nonEmptyData = Data("non-empty data".utf8)
-
-		var received = [RemoteImageCommentsLoader.Result]()
-		let task = sut.load(from: anyURL()) { received.append($0) }
-
-		task.cancel()
-
-		client.complete(withStatusCode: 404, data: anyData())
-		client.complete(withStatusCode: 200, data: nonEmptyData)
-		client.complete(with: anyNSError())
-
-		XCTAssertTrue(
-			received.isEmpty,
-			"Expected no received results after cancelling task but got \(received)"
-		)
 	}
 
 	// MARK: - Helpers
@@ -192,7 +153,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		line: UInt = #line
 	) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let sut = RemoteImageCommentsLoader(client: client)
+		let sut = RemoteImageCommentsLoader(url: url, client: client)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
@@ -206,9 +167,8 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		line: UInt = #line
 	) {
 		let exp = expectation(description: "Wait completion loader")
-		let url = URL(string: "https://a-given-url.com")!
 
-		sut.load(from: url) { receivedResult in
+		sut.load { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)

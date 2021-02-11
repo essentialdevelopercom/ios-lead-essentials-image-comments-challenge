@@ -11,6 +11,5 @@ import Foundation
 public protocol ImageCommentsLoader {
 	typealias Result = Swift.Result<[ImageComment], Swift.Error>
 
-	@discardableResult
-	func load(from url: URL, completion: @escaping (Result) -> Void) -> HTTPClientTask
+	func load(completion: @escaping (Result) -> Void)
 }
