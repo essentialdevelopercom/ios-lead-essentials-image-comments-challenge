@@ -58,7 +58,7 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 				completion(RemoteImageCommentsLoader.map(data, from: response))
 
 			case .failure:
-				completion(.failure(RemoteImageCommentsLoader.Error.connectivity))
+				completion(.failure(Error.connectivity))
 			}
 		}
 	}
@@ -71,7 +71,7 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 			let items = try ImageCommentsMapper.map(data, from: response)
 			return .success(items)
 		} catch {
-			return .failure(error)
+			return .failure(Error.invalidData)
 		}
 	}
 }
