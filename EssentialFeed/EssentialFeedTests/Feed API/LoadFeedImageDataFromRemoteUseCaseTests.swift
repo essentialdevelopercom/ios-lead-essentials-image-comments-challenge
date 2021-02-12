@@ -41,10 +41,10 @@ class LoadFeedImageDataFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_loadImageDataFromURL_deliversInvalidDataErrorOnNon200HTTPResponse() {
+	func test_loadImageDataFromURL_deliversInvalidDataErrorOnNon2xxHTTPResponse() {
 		let (sut, client) = makeSUT()
 		
-		let samples = [199, 201, 300, 400, 500]
+		let samples = [199, 300, 350, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
