@@ -89,35 +89,4 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	private func makeComment(message: String = "", creationDate: Date = Date(), authorUsername: String = "") -> FeedImageComment {
 		return FeedImageComment(id: UUID(), message: message, creationDate: creationDate, authorUsername: authorUsername)
 	}
-	
-	class LoaderSpy: FeedImageCommentLoader {
-		
-		// MARK:- FeedImageCommentLoader
-		
-		private struct TaskSpy: FeedImageCommentLoaderTask {
-			let cancelCallback: () -> Void
-			func cancel() {
-				cancelCallback()
-			}
-		}
-		
-		private var imageCommentRequests = [(url: URL, completion: (FeedImageCommentLoader.Result) -> Void)]()
-		
-		var loadedImageCommentURLs: [URL] {
-			return imageCommentRequests.map { $0.url }
-		}
-				
-		func loadImageCommentData(from url: URL, completion: @escaping (Result<[FeedImageComment], Error>) -> Void) -> FeedImageCommentLoaderTask {
-			imageCommentRequests.append((url, completion))
-			return TaskSpy { }
-		}
-		
-		func completeFeedCommentLoading(with feedComments: [FeedImageComment] = [], at index: Int = 0) {
-			imageCommentRequests[index].completion(.success(feedComments))
-		}
-		
-		func completeFeedCommentLoadingWithError(at index: Int = 0) {
-			imageCommentRequests[index].completion(.failure(anyNSError()))
-		}
-	}
 }
