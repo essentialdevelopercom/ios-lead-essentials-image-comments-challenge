@@ -9,8 +9,7 @@ class FeedItemsMapperTests: XCTestCase {
 	
 	func test_map_deliversErrorOnNon2xxHTTPResponse() throws {
 		let json = makeItemsJSON([])
-		let samples = [199, 300, 350,
-					   400, 500]
+		let samples = [199, 300, 350, 400, 500]
 		
 		try samples.forEach { code in
 			XCTAssertThrowsError(
@@ -88,17 +87,3 @@ class FeedItemsMapperTests: XCTestCase {
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
-
-private extension HTTPURLResponse {
-	convenience init(
-		statusCode: Int
-	) {
-		self.init(
-			url: anyURL(),
-			statusCode: statusCode,
-			httpVersion: nil,
-			headerFields: nil
-		)!
-	}
-}
-
