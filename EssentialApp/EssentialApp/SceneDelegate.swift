@@ -21,10 +21,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
 	
-	private lazy var remoteFeedLoader: RemoteFeedLoader = {
-		RemoteFeedLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
-			client: httpClient)
+	private lazy var remoteFeedLoader: RemoteLoader = {
+		RemoteLoader(
+			url: URL(
+				string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed"
+			)!,
+			client: httpClient,
+			mapper: FeedItemsMapper.map
+		)
 	}()
 	
 	private lazy var localFeedLoader: LocalFeedLoader = {
@@ -45,7 +49,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		self.store = store
 	}
 	
-	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+	func scene(
+		_ scene: UIScene,
+		willConnectTo session: UISceneSession,
+		options connectionOptions: UIScene.ConnectionOptions
+	) {
 		guard let scene = (scene as? UIWindowScene) else { return }
 		
 		window = UIWindow(windowScene: scene)

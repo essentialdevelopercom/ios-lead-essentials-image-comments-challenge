@@ -53,20 +53,6 @@ class FeedItemsMapperTests: XCTestCase {
 		XCTAssertEqual(result, [item1.model, item2.model])
 	}
 	
-	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
-		let url = URL(string: "http://any-url.com")!
-		let client = HTTPClientSpy()
-		var sut: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
-		
-		var capturedResults = [RemoteFeedLoader.Result]()
-		sut?.load { capturedResults.append($0) }
-		
-		sut = nil
-		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
-		
-		XCTAssertTrue(capturedResults.isEmpty)
-	}
-	
 	// MARK: - Helpers
 	
 	private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String: Any]) {

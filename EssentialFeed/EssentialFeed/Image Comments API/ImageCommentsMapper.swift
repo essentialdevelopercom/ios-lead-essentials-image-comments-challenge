@@ -35,7 +35,11 @@ public enum ImageCommentsMapper {
 			}
 		}
 	}
-
+	
+	public enum Error: Swift.Error {
+		case invalidData
+	}
+	
 	public static func map(
 		_ data: Data,
 		from response: HTTPURLResponse
@@ -44,7 +48,7 @@ public enum ImageCommentsMapper {
 		decoder.dateDecodingStrategy = .iso8601
 
 		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
-			throw RemoteImageCommentsLoader.Error.invalidData
+			throw Error.invalidData
 		}
 
 		return root.comments
