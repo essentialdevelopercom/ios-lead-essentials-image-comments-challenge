@@ -10,14 +10,14 @@ import UIKit
 import EssentialFeed
 
 final public class FeedImageCommentViewController: UITableViewController {
-	private var loader: FeedImageCommentLoader?
+	private var feedCommentLoader: FeedImageCommentLoader?
 	private var url: URL?
 	
 	private var tableModel = [FeedImageComment]()
 	
-	public convenience init(loader: FeedImageCommentLoader, url: URL) {
+	public convenience init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
 		self.init()
-		self.loader = loader
+		self.feedCommentLoader = feedCommentLoader
 		self.url = url
 	}
 	
@@ -31,7 +31,7 @@ final public class FeedImageCommentViewController: UITableViewController {
 	
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
-		_ = loader?.loadImageCommentData(from: url!) { [weak self] result in
+		_ = feedCommentLoader?.loadImageCommentData(from: url!) { [weak self] result in
 			if let feed = try? result.get() {
 				self?.tableModel = feed
 				self?.tableView.reloadData()
