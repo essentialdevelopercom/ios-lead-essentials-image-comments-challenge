@@ -142,19 +142,10 @@
 				08073B4C238D2E0E00A75DC6 /* UIButton+TestHelpers.swift */,
 				08073B4F238D2E0F00A75DC6 /* UIControl+TestHelpers.swift */,
 				08367CD72486FB51009CD536 /* UIView+TestHelpers.swift */,
-				08073B51238D2E0F00A75DC6 /* FeedViewController+TestHelpers.swift */,
-				08073B4E238D2E0E00A75DC6 /* FeedImageCell+TestHelpers.swift */,
-				08073B4D238D2E0E00A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift */,
-				08073B52238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift */,
-				08073B4B238D2E0E00A75DC6 /* FeedUIIntegrationTests+Localization.swift */,
 				082C00032359E46C008927D3 /* XCTestCase+MemoryLeakTracking.swift */,
 				082C00052359E4C6008927D3 /* SharedTestHelpers.swift */,
 				0851CDAB239AB13100C19B1D /* HTTPClientStub.swift */,
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
-				F25A05AE25D613E600B44B37 /* FeedImageCommentUIIntegrationTests+Assertions.swift */,
-				F25A05B125D6145700B44B37 /* FeedImageCommentViewController+TestHelpers.swift */,
-				F25A05B425D614CA00B44B37 /* FeedImageCommentCell+TestHelpers.swift */,
-				F25A05B725D6156400B44B37 /* FeedImageCommentUIIntegrationTests+LoaderSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -202,10 +193,10 @@
 			children = (
 				0895DA9F234B3B980031BB2D /* Info.plist */,
 				082C00022359E43F008927D3 /* Helpers */,
+				F25A05BF25D6172300B44B37 /* Feed Feature */,
+				F25A05BA25D6164000B44B37 /* Feed Image Comment Feature */,
 				0832C9CF238D2811002314C9 /* SceneDelegateTests.swift */,
 				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
-				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
-				F24972DE25D34D1B00036B53 /* FeedImageCommentUIIntegrationTests.swift */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -217,6 +208,47 @@
 				0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F25A05BA25D6164000B44B37 /* Feed Image Comment Feature */ = {
+			isa = PBXGroup;
+			children = (
+				F25A05BE25D616F900B44B37 /* Helpers */,
+				F24972DE25D34D1B00036B53 /* FeedImageCommentUIIntegrationTests.swift */,
+			);
+			path = "Feed Image Comment Feature";
+			sourceTree = "<group>";
+		};
+		F25A05BE25D616F900B44B37 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F25A05B125D6145700B44B37 /* FeedImageCommentViewController+TestHelpers.swift */,
+				F25A05B425D614CA00B44B37 /* FeedImageCommentCell+TestHelpers.swift */,
+				F25A05B725D6156400B44B37 /* FeedImageCommentUIIntegrationTests+LoaderSpy.swift */,
+				F25A05AE25D613E600B44B37 /* FeedImageCommentUIIntegrationTests+Assertions.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		F25A05BF25D6172300B44B37 /* Feed Feature */ = {
+			isa = PBXGroup;
+			children = (
+				F25A05C025D6173B00B44B37 /* Helpers */,
+				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
+			);
+			path = "Feed Feature";
+			sourceTree = "<group>";
+		};
+		F25A05C025D6173B00B44B37 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				08073B51238D2E0F00A75DC6 /* FeedViewController+TestHelpers.swift */,
+				08073B4E238D2E0E00A75DC6 /* FeedImageCell+TestHelpers.swift */,
+				08073B4D238D2E0E00A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift */,
+				08073B52238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift */,
+				08073B4B238D2E0E00A75DC6 /* FeedUIIntegrationTests+Localization.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
