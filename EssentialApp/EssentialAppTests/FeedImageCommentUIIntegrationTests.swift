@@ -86,28 +86,6 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func assertThat(_ sut: FeedImageCommentViewController, isRendering feedComments: [FeedImageComment], file: StaticString = #file, line: UInt = #line) {
-		guard sut.numberOfRenderedFeedImageCommentsViews() == feedComments.count else {
-			return XCTFail("Expected \(feedComments.count) images, got \(sut.numberOfRenderedFeedImageCommentsViews()) instead.", file: file, line: line)
-		}
-
-		feedComments.enumerated().forEach { index, imageComment in
-			assertThat(sut, hasViewConfiguredFor: imageComment, at: index, file: file, line: line)
-		}
-	}
-	
-	private func assertThat(_ sut: FeedImageCommentViewController, hasViewConfiguredFor imageComment: FeedImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
-		let view = sut.feedImageCommentView(at: index)
-
-		guard let cell = view as? FeedImageCommentCell else {
-			return XCTFail("Expected \(FeedImageCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
-		}
-
-		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message text to be \(String(describing: imageComment.message)) for image comment view at index (\(index))", file: file, line: line)
-
-		XCTAssertEqual(cell.authorNameText, imageComment.author, "Expected author text to be \(String(describing: imageComment.author)) for image comment view at index (\(index)", file: file, line: line)
-	}
-	
 	private func makeComment(message: String = "", creationDate: Date = Date(), authorUsername: String = "") -> FeedImageComment {
 		return FeedImageComment(id: UUID(), message: message, creationDate: creationDate, authorUsername: authorUsername)
 	}
@@ -141,40 +119,5 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		func completeFeedCommentLoadingWithError(at index: Int = 0) {
 			imageCommentRequests[index].completion(.failure(anyNSError()))
 		}
-	}
-}
-
-
-private extension FeedImageCommentViewController {
-	func simulateUserInitiatedFeedCommentReload() {
-		refreshControl?.simulatePullToRefresh()
-	}
-	
-	var isShowingLoadingIndicator: Bool {
-		return refreshControl?.isRefreshing == true
-	}
-	
-	func numberOfRenderedFeedImageCommentsViews() -> Int {
-		return tableView.numberOfRows(inSection: feedCommentsSection)
-	}
-	
-	func feedImageCommentView(at row: Int) -> UITableViewCell? {
-		let ds = tableView.dataSource
-		let index = IndexPath(row: row, section: feedCommentsSection)
-		return ds?.tableView(tableView, cellForRowAt: index)
-	}
-	
-	private var feedCommentsSection: Int {
-		return 0
-	}
-}
-
-private extension FeedImageCommentCell {
-	var authorNameText: String? {
-		return authorNameLabel.text
-	}
-	
-	var messageText: String? {
-		return messageLabel.text
 	}
 }
