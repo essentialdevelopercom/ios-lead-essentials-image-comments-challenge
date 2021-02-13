@@ -14,10 +14,12 @@ public final class FeedImageCommentUIComposer {
 	private init() {}
 	
 	public static func feedImageCommentComposedWith(feedCommentLoader: FeedImageCommentLoader, url: URL) -> FeedImageCommentViewController {
-		let refreshController = FeedImageCommentRefreshController(feedCommentLoader: feedCommentLoader, url: url)
+		let feedViewModel = FeedCommentViewModel(feedCommentLoader: feedCommentLoader, 
+													  url: url)
+		let refreshController = FeedImageCommentRefreshController(viewModel: feedViewModel)
 		let feedCommentController = FeedImageCommentViewController(refreshController: refreshController)
 		
-		refreshController.onRefresh = adaptFeedToImageCommentCellControllers(forwardingTo: feedCommentController, loader: feedCommentLoader)
+		feedViewModel.onFeedCommentLoad = adaptFeedToImageCommentCellControllers(forwardingTo: feedCommentController, loader: feedCommentLoader)
 		
 		return feedCommentController
 	}
@@ -25,7 +27,7 @@ public final class FeedImageCommentUIComposer {
 	private static func adaptFeedToImageCommentCellControllers(forwardingTo controller: FeedImageCommentViewController, loader: FeedImageCommentLoader) -> ([FeedImageComment]) -> Void {
 		return { [weak controller] comments in
 			controller?.tableModel = comments.map { model in
-				FeedImageCommentCellController(model: model)
+				FeedImageCommentCellController(viewModel: FeedImageCommentViewModel(model: model))
 			}
 		}
 	}

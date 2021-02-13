@@ -10,16 +10,20 @@ import UIKit
 import EssentialFeed
 
 public final class FeedImageCommentCellController {
-	private let model: FeedImageComment
+	private let viewModel: FeedImageCommentViewModel
 
-	public init(model: FeedImageComment) {
-		self.model = model
+	public init(viewModel: FeedImageCommentViewModel) {
+		self.viewModel = viewModel
 	}
 	
 	func view() -> UITableViewCell {
-		let cell = FeedImageCommentCell()
-		cell.messageLabel.text = model.message
-		cell.authorNameLabel.text = model.author
+		let cell = binded(FeedImageCommentCell())
+		return cell
+	}
+	
+	private func binded(_ cell: FeedImageCommentCell) -> FeedImageCommentCell {
+		cell.messageLabel.text = viewModel.message
+		cell.authorNameLabel.text = viewModel.authorName
 		return cell
 	}
 }
