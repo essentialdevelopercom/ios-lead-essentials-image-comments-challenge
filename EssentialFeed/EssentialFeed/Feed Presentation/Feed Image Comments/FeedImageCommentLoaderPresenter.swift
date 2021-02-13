@@ -33,24 +33,21 @@ public final class FeedImageCommentCellViewModel {
 }
 
 public final class FeedImageCommentLoaderPresenter {	
-	private let feedCommentLoader: FeedImageCommentLoader
-	private let url: URL
-	
-	public init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
-		self.feedCommentLoader = feedCommentLoader
-		self.url = url
-	}
-
 	public var feedCommentView: FeedImageCommentView?
 	public var loadingView: FeedLoadingView?
-
-	public func loadComments() {
+	
+	public init() {}
+	
+	public func didStartLoadingFeed() {
 		loadingView?.display(FeedLoadingViewModel(isLoading: true))
-		_ = feedCommentLoader.loadImageCommentData(from: url) { [weak self] result in
-			if let comments = try? result.get() {
-				self?.feedCommentView?.display(FeedCommentViewModel(comments: comments))
-			}
-			self?.loadingView?.display(FeedLoadingViewModel(isLoading: false))
-		}
+	}
+	
+	public func didFinishLoadingFeed(with comments: [FeedImageComment]) {
+		feedCommentView?.display(FeedCommentViewModel(comments: comments))
+		loadingView?.display(FeedLoadingViewModel(isLoading: false))
+	}
+	
+	public func didFinishLoadingFeed(with error: Error) {
+		loadingView?.display(FeedLoadingViewModel(isLoading: false))
 	}
 } 
