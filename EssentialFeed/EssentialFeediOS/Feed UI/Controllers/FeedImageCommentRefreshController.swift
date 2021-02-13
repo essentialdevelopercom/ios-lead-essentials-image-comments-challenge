@@ -12,14 +12,14 @@ import EssentialFeed
 public final class FeedImageCommentRefreshController: NSObject, FeedLoadingView {
 	private(set) lazy var view: UIRefreshControl = loadView()
 
-	private let presenter: FeedImageCommentLoaderPresenter
+	private let loadComments: () -> Void
 
-	public init(presenter: FeedImageCommentLoaderPresenter) {
-		self.presenter = presenter
+	public init(loadComments: @escaping () -> Void) {
+		self.loadComments = loadComments
 	}
 
 	@objc func refresh() {
-		presenter.loadComments()
+		loadComments()
 	}
 	
 	public func display(_ viewModel: FeedLoadingViewModel) {
