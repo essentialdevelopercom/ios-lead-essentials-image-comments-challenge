@@ -10,35 +10,25 @@ import UIKit
 import EssentialFeed
 
 final public class FeedImageCommentViewController: UITableViewController {
-	private var feedCommentLoader: FeedImageCommentLoader?
-	private var url: URL?
+	private var refreshController: FeedImageCommentRefreshController?
 	
-	private var tableModel = [FeedImageComment]()
+	private var tableModel = [FeedImageComment]() {
+		didSet { tableView.reloadData() }
+	}
 	
 	public convenience init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
 		self.init()
-		self.feedCommentLoader = feedCommentLoader
-		self.url = url
+		self.refreshController = FeedImageCommentRefreshController(feedCommentLoader: feedCommentLoader, url: url)
 	}
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		load()
-	}
-	
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
-		_ = feedCommentLoader?.loadImageCommentData(from: url!) { [weak self] result in
-			if let feed = try? result.get() {
-				self?.tableModel = feed
-				self?.tableView.reloadData()
-
-			}
-			self?.refreshControl?.endRefreshing()
+		refreshControl = refreshController?.view
+		refreshController?.onRefresh = { [weak self] feed in
+			self?.tableModel = feed
 		}
+		refreshController?.refresh()
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
