@@ -15,7 +15,7 @@ final public class FeedImageCommentViewController: UITableViewController {
 	private var tableModel = [FeedImageComment]() {
 		didSet { tableView.reloadData() }
 	}
-	
+		
 	public convenience init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
 		self.init()
 		self.refreshController = FeedImageCommentRefreshController(feedCommentLoader: feedCommentLoader, url: url)
@@ -37,9 +37,7 @@ final public class FeedImageCommentViewController: UITableViewController {
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellModel = tableModel[indexPath.row]
-		let cell = FeedImageCommentCell()
-		cell.messageLabel.text = cellModel.message
-		cell.authorNameLabel.text = cellModel.author
-		return cell
+		let cellController = FeedImageCommentCellController(model: cellModel)
+		return cellController.view()
 	}
 }
