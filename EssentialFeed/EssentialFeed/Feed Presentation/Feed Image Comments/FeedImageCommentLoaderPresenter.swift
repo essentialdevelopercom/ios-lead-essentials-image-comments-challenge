@@ -32,22 +32,25 @@ public final class FeedImageCommentCellViewModel {
 	}
 }
 
-public final class FeedImageCommentLoaderPresenter {	
-	public var feedCommentView: FeedImageCommentView?
-	public var loadingView: FeedLoadingView?
+public final class FeedImageCommentLoaderPresenter {
+	private let feedCommentView: FeedImageCommentView
+	private let loadingView: FeedLoadingView
 	
-	public init() {}
+	public init(feedCommentView: FeedImageCommentView, loadingView: FeedLoadingView) {
+		self.feedCommentView = feedCommentView
+		self.loadingView = loadingView
+	}
 	
 	public func didStartLoadingFeed() {
-		loadingView?.display(FeedLoadingViewModel(isLoading: true))
+		loadingView.display(FeedLoadingViewModel(isLoading: true))
 	}
 	
 	public func didFinishLoadingFeed(with comments: [FeedImageComment]) {
-		feedCommentView?.display(FeedCommentViewModel(comments: comments))
-		loadingView?.display(FeedLoadingViewModel(isLoading: false))
+		feedCommentView.display(FeedCommentViewModel(comments: comments))
+		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingFeed(with error: Error) {
-		loadingView?.display(FeedLoadingViewModel(isLoading: false))
+		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 } 

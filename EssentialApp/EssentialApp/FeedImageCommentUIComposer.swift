@@ -14,13 +14,11 @@ public final class FeedImageCommentUIComposer {
 	private init() {}
 	
 	public static func feedImageCommentComposedWith(feedCommentLoader: FeedImageCommentLoader, url: URL) -> FeedImageCommentViewController {
-		let presenter = FeedImageCommentLoaderPresenter()
-		let presentationAdapter = FeedImageCommentLoaderPresentationAdapter(feedCommentLoader: feedCommentLoader, presenter: presenter, url: url)
+		let presentationAdapter = FeedImageCommentLoaderPresentationAdapter(feedCommentLoader: feedCommentLoader, url: url)
 		let refreshController = FeedImageCommentRefreshController(delegate: presentationAdapter)
 		let controller = FeedImageCommentViewController(refreshController: refreshController)
-		presenter.loadingView = WeakRefVirtualProxy(refreshController)
-		presenter.feedCommentView = FeedImageCommentViewAdapter(controller: controller,
-																feedCommentLoader: feedCommentLoader)
+		
+		presentationAdapter.presenter = FeedImageCommentLoaderPresenter(feedCommentView: FeedImageCommentViewAdapter(controller: controller, feedCommentLoader: feedCommentLoader), loadingView: WeakRefVirtualProxy(refreshController))
 		
 		return controller
 	}
@@ -45,25 +43,24 @@ private final class FeedImageCommentViewAdapter: FeedImageCommentView {
 
 private final class FeedImageCommentLoaderPresentationAdapter: FeedRefreshViewControllerDelegate {
 	private let feedCommentLoader: FeedImageCommentLoader
-	private let presenter: FeedImageCommentLoaderPresenter
+	var presenter: FeedImageCommentLoaderPresenter?
 	private let url: URL
 
-	init(feedCommentLoader: FeedImageCommentLoader, presenter: FeedImageCommentLoaderPresenter, url: URL) {
+	init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
 		self.feedCommentLoader = feedCommentLoader
-		self.presenter = presenter
 		self.url = url
 	}
 	
 	func didRequestFeedCommentRefresh() {
-		presenter.didStartLoadingFeed()
+		presenter?.didStartLoadingFeed()
 
 		_ = feedCommentLoader.loadImageCommentData(from: url) { [weak self] result in
 			switch result {
 			case let .success(comments):
-				self?.presenter.didFinishLoadingFeed(with: comments)
+				self?.presenter?.didFinishLoadingFeed(with: comments)
 
 			case let .failure(error):
-				self?.presenter.didFinishLoadingFeed(with: error)
+				self?.presenter?.didFinishLoadingFeed(with: error)
 			}
 		}
 	}
