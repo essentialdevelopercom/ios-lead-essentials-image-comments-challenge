@@ -9,17 +9,21 @@
 import UIKit
 import EssentialFeed
 
+public protocol FeedRefreshViewControllerDelegate {
+	func didRequestFeedCommentRefresh()
+}
+
 public final class FeedImageCommentRefreshController: NSObject, FeedLoadingView {
 	private(set) lazy var view: UIRefreshControl = loadView()
 
-	private let loadComments: () -> Void
+	private let delegate: FeedRefreshViewControllerDelegate
 
-	public init(loadComments: @escaping () -> Void) {
-		self.loadComments = loadComments
+	public init(delegate: FeedRefreshViewControllerDelegate) {
+		self.delegate = delegate
 	}
 
 	@objc func refresh() {
-		loadComments()
+		delegate.didRequestFeedCommentRefresh()
 	}
 	
 	public func display(_ viewModel: FeedLoadingViewModel) {
