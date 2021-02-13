@@ -8,6 +8,7 @@
 
 import XCTest
 import UIKit
+import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
@@ -80,7 +81,8 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedImageCommentViewController(feedCommentLoader: loader, url: url)
+		let sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: loader, 
+																		  url: url)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

@@ -9,7 +9,7 @@
 import UIKit
 import EssentialFeed
 
-final class FeedImageCommentRefreshController: NSObject {
+public final class FeedImageCommentRefreshController: NSObject {
 	private(set) lazy var view: UIRefreshControl = {
 		let view = UIRefreshControl()
 		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
@@ -19,12 +19,12 @@ final class FeedImageCommentRefreshController: NSObject {
 	private let feedCommentLoader: FeedImageCommentLoader
 	private let url: URL
 
-	init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
+	public init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
 		self.feedCommentLoader = feedCommentLoader
 		self.url = url
 	}
 
-	var onRefresh: (([FeedImageComment]) -> Void)?
+	public var onRefresh: (([FeedImageComment]) -> Void)?
 
 	@objc func refresh() {
 		view.beginRefreshing()

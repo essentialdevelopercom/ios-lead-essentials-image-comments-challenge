@@ -9,10 +9,10 @@
 import UIKit
 import EssentialFeed
 
-final class FeedImageCommentCellController {
+public final class FeedImageCommentCellController {
 	private let model: FeedImageComment
 
-	init(model: FeedImageComment) {
+	public init(model: FeedImageComment) {
 		self.model = model
 	}
 	
