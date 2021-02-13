@@ -47,6 +47,22 @@ public extension FeedLoader {
 	}
 }
 
+public extension CommentLoader {
+	typealias Publisher = AnyPublisher<[Comment], Error>
+
+	func loadPublisher() -> Publisher {
+		var task: CommentsLoaderTask?
+
+		return Deferred {
+			Future { completion in
+				task = self.load(completion: completion)
+			}
+		}
+		.handleEvents(receiveCancel: { task?.cancel() })
+		.eraseToAnyPublisher()
+	}
+}
+
 extension Publisher {
 	func fallback(to fallbackPublisher: @escaping () -> AnyPublisher<Output, Failure>) -> AnyPublisher<Output, Failure> {
 		self.catch { _ in fallbackPublisher() }.eraseToAnyPublisher()
@@ -116,21 +132,5 @@ extension DispatchQueue {
 		func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
 			DispatchQueue.main.schedule(after: date, interval: interval, tolerance: tolerance, options: options, action)
 		}
-	}
-}
-
-public extension CommentLoader {
-	typealias Publisher = AnyPublisher<[Comment], Error>
-
-	func loadPublisher() -> Publisher {
-		var task: CommentsLoaderTask?
-
-		return Deferred {
-			Future { completion in
-				task = self.load(completion: completion)
-			}
-		}
-		.handleEvents(receiveCancel: { task?.cancel() })
-		.eraseToAnyPublisher()
 	}
 }
