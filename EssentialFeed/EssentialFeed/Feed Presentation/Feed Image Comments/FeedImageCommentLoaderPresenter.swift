@@ -1,5 +1,5 @@
 //
-//  FeedImageCommentViewModel.swift
+//  FeedImageCommentLoaderPresenter.swift
 //  EssentialFeed
 //
 //  Created by Mario Alberto Barragán Espinosa on 13/02/21.
@@ -8,7 +8,15 @@
 
 import Foundation
 
-public final class FeedImageCommentViewModel {
+public protocol FeedImageCommentView {
+	func display(_ viewModel: FeedCommentViewModel)
+}
+
+public struct FeedCommentViewModel {
+	public let comments: [FeedImageComment]
+}
+
+public final class FeedImageCommentCellViewModel {
 	private let model: FeedImageComment
 	
 	public init(model: FeedImageComment) {
@@ -24,9 +32,7 @@ public final class FeedImageCommentViewModel {
 	}
 }
 
-public final class FeedImageCommentLoaderViewModel {
-	public typealias Observer<T> = (T) -> Void
-	
+public final class FeedImageCommentLoaderPresenter {	
 	private let feedCommentLoader: FeedImageCommentLoader
 	private let url: URL
 	
@@ -35,16 +41,16 @@ public final class FeedImageCommentLoaderViewModel {
 		self.url = url
 	}
 
-	public var onLoadingStateChange: Observer<Bool>?
-	public var onFeedCommentLoad: Observer<[FeedImageComment]>?
+	public var feedCommentView: FeedImageCommentView?
+	public var loadingView: FeedLoadingView?
 
 	public func loadComments() {
-		onLoadingStateChange?(true)
+		loadingView?.display(FeedLoadingViewModel(isLoading: true))
 		_ = feedCommentLoader.loadImageCommentData(from: url) { [weak self] result in
 			if let comments = try? result.get() {
-				self?.onFeedCommentLoad?(comments)
+				self?.feedCommentView?.display(FeedCommentViewModel(comments: comments))
 			}
-			self?.onLoadingStateChange?(false)
+			self?.loadingView?.display(FeedLoadingViewModel(isLoading: false))
 		}
 	}
 } 

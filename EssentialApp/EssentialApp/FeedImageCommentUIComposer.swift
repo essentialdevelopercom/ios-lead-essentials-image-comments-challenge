@@ -14,21 +14,29 @@ public final class FeedImageCommentUIComposer {
 	private init() {}
 	
 	public static func feedImageCommentComposedWith(feedCommentLoader: FeedImageCommentLoader, url: URL) -> FeedImageCommentViewController {
-		let feedViewModel = FeedImageCommentLoaderViewModel(feedCommentLoader: feedCommentLoader, 
-													  url: url)
-		let refreshController = FeedImageCommentRefreshController(viewModel: feedViewModel)
-		let feedCommentController = FeedImageCommentViewController(refreshController: refreshController)
+		let presenter = FeedImageCommentLoaderPresenter(feedCommentLoader: feedCommentLoader, url: url)
+		let refreshController = FeedImageCommentRefreshController(presenter: presenter)
+		let controller = FeedImageCommentViewController(refreshController: refreshController)
+		presenter.loadingView = WeakRefVirtualProxy(refreshController)
+		presenter.feedCommentView = FeedImageCommentViewAdapter(controller: controller,
+																feedCommentLoader: feedCommentLoader)
 		
-		feedViewModel.onFeedCommentLoad = adaptFeedToImageCommentCellControllers(forwardingTo: feedCommentController, loader: feedCommentLoader)
-		
-		return feedCommentController
+		return controller
+	}
+}
+
+private final class FeedImageCommentViewAdapter: FeedImageCommentView {
+	private weak var controller: FeedImageCommentViewController?
+	private let feedCommentLoader: FeedImageCommentLoader
+	
+	init(controller: FeedImageCommentViewController, feedCommentLoader: FeedImageCommentLoader) {
+		self.controller = controller
+		self.feedCommentLoader = feedCommentLoader
 	}
 	
-	private static func adaptFeedToImageCommentCellControllers(forwardingTo controller: FeedImageCommentViewController, loader: FeedImageCommentLoader) -> ([FeedImageComment]) -> Void {
-		return { [weak controller] comments in
-			controller?.tableModel = comments.map { model in
-				FeedImageCommentCellController(viewModel: FeedImageCommentViewModel(model: model))
-			}
+	func display(_ viewModel: FeedCommentViewModel) {
+		controller?.tableModel = viewModel.comments.map { model in
+			FeedImageCommentCellController(viewModel: FeedImageCommentCellViewModel(model: model))
 		}
 	}
 }
