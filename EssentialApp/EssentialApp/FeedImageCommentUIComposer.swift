@@ -14,7 +14,7 @@ public final class FeedImageCommentUIComposer {
 	private init() {}
 	
 	public static func feedImageCommentComposedWith(feedCommentLoader: FeedImageCommentLoader, url: URL) -> FeedImageCommentViewController {
-		let feedViewModel = FeedCommentViewModel(feedCommentLoader: feedCommentLoader, 
+		let feedViewModel = FeedImageCommentLoaderViewModel(feedCommentLoader: feedCommentLoader, 
 													  url: url)
 		let refreshController = FeedImageCommentRefreshController(viewModel: feedViewModel)
 		let feedCommentController = FeedImageCommentViewController(refreshController: refreshController)

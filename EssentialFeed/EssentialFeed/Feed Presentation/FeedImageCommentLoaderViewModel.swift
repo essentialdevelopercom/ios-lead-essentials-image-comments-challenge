@@ -24,7 +24,7 @@ public final class FeedImageCommentViewModel {
 	}
 }
 
-public final class FeedCommentViewModel {
+public final class FeedImageCommentLoaderViewModel {
 	public typealias Observer<T> = (T) -> Void
 	
 	private let feedCommentLoader: FeedImageCommentLoader

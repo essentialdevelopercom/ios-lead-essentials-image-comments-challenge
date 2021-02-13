@@ -12,9 +12,9 @@ import EssentialFeed
 public final class FeedImageCommentRefreshController: NSObject {
 	private(set) lazy var view: UIRefreshControl = binded(UIRefreshControl())
 
-	private let viewModel: FeedCommentViewModel
+	private let viewModel: FeedImageCommentLoaderViewModel
 
-	public init(viewModel: FeedCommentViewModel) {
+	public init(viewModel: FeedImageCommentLoaderViewModel) {
 		self.viewModel = viewModel
 	}
 
