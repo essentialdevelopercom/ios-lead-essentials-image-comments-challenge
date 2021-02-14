@@ -137,12 +137,14 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	}
 	
 	private func makeItem(id: UUID, message: String? = "", createdAt: Date? = Date(), author: Author) -> (model: Comment, json: [String: Any]) {
-
-		let item = Comment(id: id, message: message!, createdAt: createdAt!, author: author)
+		let formatter = ISO8601DateFormatter()
+		formatter.timeZone = TimeZone(abbreviation: "UTC")
+		let sDate = formatter.string(from: createdAt!)
+		let item = Comment(id: id, message: message!, createdAt: formatter.date(from: sDate)!, author: author)
 		let json = [
 			"id": id.uuidString,
 			"message": message ?? "",
-			"created_at": createdAt!,
+			"created_at": sDate,
 			"author": ["username": author.username]
 		].compactMapValues { $0 }
 		return (item, json)
