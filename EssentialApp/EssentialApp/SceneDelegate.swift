@@ -21,23 +21,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
 	
-	private lazy var remoteFeedLoader: RemoteFeedLoader = {
-		RemoteFeedLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
-			client: httpClient)
-	}()
-	
 	private lazy var localFeedLoader: LocalFeedLoader = {
 		LocalFeedLoader(store: store, currentDate: Date.init)
-	}()
-	
-	private lazy var remoteImageLoader: RemoteFeedImageDataLoader = {
-		RemoteFeedImageDataLoader(client: httpClient)
 	}()
 	
 	private lazy var localImageLoader: LocalFeedImageDataLoader = {
 		LocalFeedImageDataLoader(store: store)
 	}()
+
+	private let remoteFeedURL = URL(
+		string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed"
+	)!
 	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
@@ -45,7 +39,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		self.store = store
 	}
 	
-	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+	func scene(
+		_ scene: UIScene,
+		willConnectTo session: UISceneSession,
+		options connectionOptions: UIScene.ConnectionOptions
+	) {
 		guard let scene = (scene as? UIWindowScene) else { return }
 		
 		window = UIWindow(windowScene: scene)
@@ -65,19 +63,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		localFeedLoader.validateCache { _ in }
 	}
 	
-	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
-		return remoteFeedLoader
-			.loadPublisher()
+	private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
+		httpClient
+			.getPublisher(url: remoteFeedURL)
+			.tryMap(FeedItemsMapper.map)
 			.caching(to: localFeedLoader)
 			.fallback(to: localFeedLoader.loadPublisher)
 	}
 	
-	private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
-		return localImageLoader
+	private func makeLocalImageLoaderWithRemoteFallback(
+		url: URL
+	) -> FeedImageDataLoader.Publisher {
+		localImageLoader
 			.loadImageDataPublisher(from: url)
-			.fallback(to: { [remoteImageLoader, localImageLoader] in
-				remoteImageLoader
-					.loadImageDataPublisher(from: url)
+			.fallback(to: { [httpClient, localImageLoader] in
+				httpClient
+					.getPublisher(url: url)
+					.tryMap(FeedImageDataMapper.map)
 					.caching(to: localImageLoader, using: url)
 			})
 	}
