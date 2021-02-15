@@ -12,6 +12,10 @@ public protocol FeedImageCommentView {
 	func display(_ viewModel: FeedCommentViewModel)
 }
 
+public struct FeedCommentViewModel {
+	public let comments: [FeedImageComment]
+}
+
 public final class FeedImageCommentLoaderPresenter {
 	private let feedCommentView: FeedImageCommentView
 	private let loadingView: FeedLoadingView
