@@ -11,6 +11,7 @@ import EssentialFeed
 
 final public class FeedImageCommentViewController: UITableViewController {
 	private var refreshController: FeedImageCommentRefreshController?
+	private var loadingControllers = [IndexPath: FeedImageCommentCellController]()
 	
 	public var tableModel = [FeedImageCommentCellController]() {
 		didSet { tableView.reloadData() }
@@ -26,6 +27,11 @@ final public class FeedImageCommentViewController: UITableViewController {
 		
 		refreshControl = refreshController?.view
 		refreshController?.refresh()
+	}
+	
+	public func display(_ cellControllers: [FeedImageCommentCellController]) {
+		loadingControllers = [:]
+		tableModel = cellControllers
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
