@@ -12,26 +12,6 @@ public protocol FeedImageCommentView {
 	func display(_ viewModel: FeedCommentViewModel)
 }
 
-public struct FeedCommentViewModel {
-	public let comments: [FeedImageComment]
-}
-
-public final class FeedImageCommentCellViewModel {
-	private let model: FeedImageComment
-	
-	public init(model: FeedImageComment) {
-		self.model = model
-	}
-	
-	public var message: String? {
-		return model.message
-	}
-	
-	public var authorName: String?  {
-		return model.author
-	}
-}
-
 public final class FeedImageCommentLoaderPresenter {
 	private let feedCommentView: FeedImageCommentView
 	private let loadingView: FeedLoadingView
