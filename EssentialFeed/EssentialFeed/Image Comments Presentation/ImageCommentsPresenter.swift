@@ -8,6 +8,14 @@
 
 import Foundation
 
+public protocol ImageCommentsLoadingView {
+	func display(isLoading: Bool)
+}
+
+public protocol ImageCommentsErrorView {
+	func display(errorMessage: String?)
+}
+
 public final class ImageCommentsPresenter {
 
 	public static var title: String {
@@ -19,5 +27,19 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
-	public init(view: Any) {}
+	private let loadingView: ImageCommentsLoadingView
+	private let errorView: ImageCommentsErrorView
+
+	public init(
+		loadingView: ImageCommentsLoadingView,
+		errorView: ImageCommentsErrorView
+	) {
+		self.loadingView = loadingView
+		self.errorView = errorView
+	}
+
+	public func didStartLoading() {
+		errorView.display(errorMessage: nil)
+		loadingView.display(isLoading: true)
+	}
 }

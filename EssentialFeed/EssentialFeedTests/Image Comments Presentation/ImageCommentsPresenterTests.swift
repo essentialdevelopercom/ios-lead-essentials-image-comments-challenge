@@ -17,9 +17,24 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	func test_init_doesNotSendMessagesToView() {
 		let view = ViewSpy()
-		_ = ImageCommentsPresenter(view: view)
+		_ = ImageCommentsPresenter(
+			loadingView: view,
+			errorView: view
+		)
 
 		XCTAssertTrue(view.messages.isEmpty)
+	}
+
+	func test_didStartLoading_displaysNoErrorMessageAndStartsLoading() {
+		let view = ViewSpy()
+		let sut = ImageCommentsPresenter(
+			loadingView: view,
+			errorView: view
+		)
+
+		sut.didStartLoading()
+
+		XCTAssertEqual(view.messages, [.display(errorMessage: nil), .display(isLoading: true)])
 	}
 
 	// MARK: - Helpers
@@ -38,7 +53,27 @@ class ImageCommentsPresenterTests: XCTestCase {
 		)
 	}
 
-	private class ViewSpy {
-		private(set) var messages = [Any]()
+	private class ViewSpy:
+		ImageCommentsLoadingView,
+		ImageCommentsErrorView
+	{
+		enum Message: Hashable {
+			case display(errorMessage: String?)
+			case display(isLoading: Bool)
+		}
+
+		private(set) var messages = Set<Message>()
+
+		func display(isLoading: Bool) {
+			messages.insert(
+				.display(isLoading: isLoading)
+			)
+		}
+
+		func display(errorMessage: String?) {
+			messages.insert(
+				.display(errorMessage: errorMessage)
+			)
+		}
 	}
 }
