@@ -18,4 +18,6 @@ public final class ImageCommentsPresenter {
 			comment: "Title for the image comments view"
 		)
 	}
+
+	public init(view: Any) {}
 }
