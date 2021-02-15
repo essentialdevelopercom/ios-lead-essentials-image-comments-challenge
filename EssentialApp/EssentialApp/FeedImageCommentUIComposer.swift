@@ -30,7 +30,6 @@ public final class FeedImageCommentUIComposer {
 
 private final class FeedImageCommentViewAdapter: FeedImageCommentView {
 	private weak var controller: FeedImageCommentViewController?
-	var presenter: FeedImageCommentCellPresenter?
 	
 	init(controller: FeedImageCommentViewController) {
 		self.controller = controller
@@ -39,8 +38,8 @@ private final class FeedImageCommentViewAdapter: FeedImageCommentView {
 	func display(_ viewModel: FeedCommentViewModel) {
 		controller?.display(viewModel.comments.map { model in
 			let view = FeedImageCommentCellController()
-			self.presenter = FeedImageCommentCellPresenter(commentView: view)
-			presenter?.displayCommentView(for: model)
+			let presenter = FeedImageCommentCellPresenter(commentView: view)
+			presenter.displayCommentView(for: model)
 			return view
 		})
 	}
