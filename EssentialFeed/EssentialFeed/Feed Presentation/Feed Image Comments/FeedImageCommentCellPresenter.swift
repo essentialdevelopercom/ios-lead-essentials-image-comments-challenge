@@ -15,6 +15,7 @@ public protocol FeedCommentView {
 public struct FeedImageCommentCellViewModel {
 	public let message: String
 	public let authorName: String
+	public let createdAt: String
 }
 
 public final class FeedImageCommentCellPresenter {
@@ -25,7 +26,9 @@ public final class FeedImageCommentCellPresenter {
 	}
 	
 	public func displayCommentView(for model: FeedImageComment) {
+		let createdAtText = FeedCommentDatePolicy.getRelativeDate(for: model.creationDate)
 		commentView.display(FeedImageCommentCellViewModel(message: model.message, 
-														  authorName: model.author))
+														  authorName: model.author, 
+														  createdAt: createdAtText))
 	}
 }

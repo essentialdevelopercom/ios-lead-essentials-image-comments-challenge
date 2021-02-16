@@ -49,8 +49,12 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadingFeedCommentCompletion_rendersSuccessfullyLoadedComments() {
-		let comment0 = makeComment(message: "a message", authorUsername: "An author name")
-		let comment1 = makeComment(message: "another message", authorUsername: "Another author name")
+		let comment0 = makeComment(message: "a message", 
+								   creationDate: Date().oneDayAgo(), 
+								   authorUsername: "An author name")
+		let comment1 = makeComment(message: "another message", 
+								   creationDate: Date().oneWeekAgo(),
+								   authorUsername: "Another author name")
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
@@ -90,5 +94,23 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	
 	private func makeComment(message: String = "", creationDate: Date = Date(), authorUsername: String = "") -> FeedImageComment {
 		return FeedImageComment(id: UUID(), message: message, creationDate: creationDate, authorUsername: authorUsername)
+	}
+}
+
+private extension Date {
+	func oneHourAgo() -> Date {
+		return self - 3600
+	}
+	
+	func oneDayAgo() -> Date {
+		return adding(days: -1)
+	}
+	
+	func oneWeekAgo() -> Date {
+		return adding(days: -7)
+	}
+	
+	private func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }

@@ -10,5 +10,6 @@ import UIKit
 
 public class FeedImageCommentCell: UITableViewCell {
 	public let authorNameLabel = UILabel()
+	public let createdAtLabel = UILabel()
 	public let messageLabel = UILabel()
 }

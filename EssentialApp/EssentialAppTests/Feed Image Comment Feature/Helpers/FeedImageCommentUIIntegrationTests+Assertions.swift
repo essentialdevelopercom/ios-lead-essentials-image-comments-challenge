@@ -30,6 +30,10 @@ extension FeedImageCommentUIIntegrationTests {
 
 		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message text to be \(String(describing: imageComment.message)) for image comment view at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(cell.authorNameText, imageComment.author, "Expected author text to be \(String(describing: imageComment.author)) for image comment view at index (\(index)", file: file, line: line)
+		XCTAssertEqual(cell.authorNameText, imageComment.author, "Expected author text to be \(String(describing: imageComment.author)) for image comment view at index (\(index))", file: file, line: line)
+		
+		let createdAtText = FeedCommentDatePolicy.getRelativeDate(for: imageComment.creationDate)
+		
+		XCTAssertEqual(cell.createdAtText, createdAtText, "Expected creation date text to be \(String(describing: createdAtText)) for image comment view at index (\(index))", file: file, line: line)
 	}
 }

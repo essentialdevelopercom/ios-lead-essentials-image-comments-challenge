@@ -21,6 +21,7 @@ public final class FeedImageCommentCellController: FeedCommentView {
 	public func display(_ viewModel: FeedImageCommentCellViewModel) {
 		cell.messageLabel.text = viewModel.message
 		cell.authorNameLabel.text = viewModel.authorName
+		cell.createdAtLabel.text = viewModel.createdAt
 	}
 }
 
