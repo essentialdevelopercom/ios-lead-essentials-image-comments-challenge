@@ -41,10 +41,7 @@ private final class FeedImageCommentViewAdapter: FeedImageCommentView {
 	
 	func display(_ viewModel: FeedCommentViewModel) {
 		controller?.display(viewModel.comments.map { model in
-			let view = FeedImageCommentCellController()
-			let presenter = FeedImageCommentCellPresenter(commentView: view)
-			presenter.displayCommentView(for: model)
-			return view
+			return FeedImageCommentCellController(model: model)
 		})
 	}
 }

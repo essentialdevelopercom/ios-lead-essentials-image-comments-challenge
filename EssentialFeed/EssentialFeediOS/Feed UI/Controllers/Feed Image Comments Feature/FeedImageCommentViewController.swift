@@ -45,6 +45,6 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return tableModel[indexPath.row].view()
+		return tableModel[indexPath.row].view(in: tableView)
 	}
 }

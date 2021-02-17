@@ -46,7 +46,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedImageCell" id="bwr-Ai-R9i" userLabel="FeedImageCommentCell" customClass="FeedImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedImageCommentCell" id="bwr-Ai-R9i" userLabel="FeedImageCommentCell" customClass="FeedImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="62" width="414" height="189"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bwr-Ai-R9i" id="kCN-Y7-YZa">
@@ -98,12 +98,17 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <accessibility key="accessibilityConfiguration" identifier="feed-image-comment-cell"/>
+                                <connections>
+                                    <outlet property="authorNameLabel" destination="E83-HI-8Vz" id="QWn-zB-DXt"/>
+                                    <outlet property="createdAtLabel" destination="wfK-Nv-kWM" id="XTR-nE-LJP"/>
+                                    <outlet property="messageLabel" destination="woC-7x-7S7" id="Eg4-6S-AKj"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="4RM-o1-xHS" id="nHp-T9-rHG"/>
                             <outlet property="delegate" destination="4RM-o1-xHS" id="v8B-Pm-Cfd"/>
-                            <outlet property="prefetchDataSource" destination="4RM-o1-xHS" id="IGh-EB-Oef"/>
+                            <outlet property="prefetchDataSource" destination="4RM-o1-xHS" id="f2u-iR-X4j"/>
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="dpl-Ub-UDr" userLabel="Refresh Control">

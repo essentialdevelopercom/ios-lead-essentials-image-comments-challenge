@@ -9,19 +9,20 @@
 import UIKit
 import EssentialFeed
 
-public final class FeedImageCommentCellController: FeedCommentView {
-	private lazy var cell = FeedImageCommentCell()
+public final class FeedImageCommentCellController {
+	private var cell: FeedImageCommentCell?
+	private let model: CommentItemViewModel
 	
-	public init() {}
-	
-	func view() -> UITableViewCell {
-		return cell
+	public init(model: CommentItemViewModel) {
+		self.model = model
 	}
 	
-	public func display(_ viewModel: FeedImageCommentCellViewModel) {
-		cell.messageLabel.text = viewModel.message
-		cell.authorNameLabel.text = viewModel.authorName
-		cell.createdAtLabel.text = viewModel.createdAt
+	func view(in tableView: UITableView) -> UITableViewCell {
+		cell = tableView.dequeueReusableCell()
+		cell?.messageLabel.text = model.message
+		cell?.authorNameLabel.text = model.authorName
+		cell?.createdAtLabel.text = model.createdAt
+		return cell!
 	}
 }
 

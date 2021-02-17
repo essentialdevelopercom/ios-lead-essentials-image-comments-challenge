@@ -9,7 +9,7 @@
 import UIKit
 
 public class FeedImageCommentCell: UITableViewCell {
-	public let authorNameLabel = UILabel()
-	public let createdAtLabel = UILabel()
-	public let messageLabel = UILabel()
+	@IBOutlet private(set) public var authorNameLabel: UILabel!
+	@IBOutlet private(set) public var createdAtLabel: UILabel!
+	@IBOutlet private(set) public var messageLabel: UILabel!
 }

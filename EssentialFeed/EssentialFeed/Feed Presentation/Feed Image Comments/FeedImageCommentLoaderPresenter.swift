@@ -13,7 +13,13 @@ public protocol FeedImageCommentView {
 }
 
 public struct FeedCommentViewModel {
-	public let comments: [FeedImageComment]
+	public let comments: [CommentItemViewModel]
+}
+
+public struct CommentItemViewModel {
+	public let message: String
+	public let authorName: String
+	public let createdAt: String
 }
 
 public final class FeedImageCommentLoaderPresenter {
@@ -30,11 +36,19 @@ public final class FeedImageCommentLoaderPresenter {
 	}
 	
 	public func didFinishLoadingFeed(with comments: [FeedImageComment]) {
-		feedCommentView.display(FeedCommentViewModel(comments: comments))
+		feedCommentView.display(FeedCommentViewModel(comments: map(comments)))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingFeed(with error: Error) {
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
+	}
+	
+	func map(_ comments: [FeedImageComment]) -> [CommentItemViewModel] {
+		comments.map {
+			CommentItemViewModel(message: $0.message, 
+										  authorName: $0.author, 
+										  createdAt: FeedCommentDatePolicy.getRelativeDate(for: $0.creationDate))
+		}
 	}
 } 
