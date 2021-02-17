@@ -29,6 +29,15 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [.display(errorMessage: nil), .display(isLoading: true)])
 	}
 
+	func test_didFinishLoading_displaysCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+
+		let comments = uniqueComments()
+		sut.didFinishLoading(with: comments)
+
+		XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
@@ -37,6 +46,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 	) -> (ImageCommentsPresenter, ViewSpy) {
 		let view = ViewSpy()
 		let sut = ImageCommentsPresenter(
+			commentsView: view,
 			loadingView: view,
 			errorView: view
 		)
@@ -67,13 +77,32 @@ class ImageCommentsPresenterTests: XCTestCase {
 		)
 	}
 
+	private func uniqueComments() -> [ImageComment] {
+		[
+			ImageComment(
+				id: UUID(),
+				message: "a message",
+				createdAt: Date(),
+				username: "a username"
+			),
+			ImageComment(
+				id: UUID(),
+				message: "another message",
+				createdAt: Date(),
+				username: "another username"
+			),
+		]
+	}
+
 	private class ViewSpy:
+		ImageCommentsView,
 		ImageCommentsLoadingView,
 		ImageCommentsErrorView
 	{
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
+			case display(comments: [ImageComment])
 		}
 
 		private(set) var messages = Set<Message>()
@@ -87,6 +116,12 @@ class ImageCommentsPresenterTests: XCTestCase {
 		func display(errorMessage: String?) {
 			messages.insert(
 				.display(errorMessage: errorMessage)
+			)
+		}
+
+		func display(comments: [ImageComment]) {
+			messages.insert(
+				.display(comments: comments)
 			)
 		}
 	}

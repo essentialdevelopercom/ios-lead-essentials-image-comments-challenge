@@ -16,6 +16,10 @@ public protocol ImageCommentsErrorView {
 	func display(errorMessage: String?)
 }
 
+public protocol ImageCommentsView {
+	func display(comments: [ImageComment])
+}
+
 public final class ImageCommentsPresenter {
 
 	public static var title: String {
@@ -27,13 +31,16 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
+	private let commentsView: ImageCommentsView
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
 
 	public init(
+		commentsView: ImageCommentsView,
 		loadingView: ImageCommentsLoadingView,
 		errorView: ImageCommentsErrorView
 	) {
+		self.commentsView = commentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
 	}
@@ -41,5 +48,12 @@ public final class ImageCommentsPresenter {
 	public func didStartLoading() {
 		errorView.display(errorMessage: nil)
 		loadingView.display(isLoading: true)
+	}
+
+	public func didFinishLoading(
+		with comments: [ImageComment]
+	) {
+		commentsView.display(comments: comments)
+		loadingView.display(isLoading: false)
 	}
 }
