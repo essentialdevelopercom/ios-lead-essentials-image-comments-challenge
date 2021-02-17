@@ -10,16 +10,11 @@ import UIKit
 import EssentialFeed
 
 final public class FeedImageCommentViewController: UITableViewController {
-	private var refreshController: FeedImageCommentRefreshController?
+	public var refreshController: FeedImageCommentRefreshController?
 	private var loadingControllers = [IndexPath: FeedImageCommentCellController]()
 	
 	public var tableModel = [FeedImageCommentCellController]() {
 		didSet { tableView.reloadData() }
-	}
-		
-	public convenience init(refreshController: FeedImageCommentRefreshController) {
-		self.init()
-		self.refreshController = refreshController
 	}
 	
 	public override func viewDidLoad() {

@@ -16,7 +16,11 @@ public final class FeedImageCommentUIComposer {
 	public static func feedImageCommentComposedWith(feedCommentLoader: FeedImageCommentLoader, url: URL) -> FeedImageCommentViewController {
 		let presentationAdapter = FeedImageCommentLoaderPresentationAdapter(feedCommentLoader: feedCommentLoader, url: url)
 		let refreshController = FeedImageCommentRefreshController(delegate: presentationAdapter)
-		let controller = FeedImageCommentViewController(refreshController: refreshController)
+		
+		let bundle = Bundle(for: FeedImageCommentViewController.self)
+		let storyboard = UIStoryboard(name: "FeedComments", bundle: bundle)
+		let controller = storyboard.instantiateInitialViewController() as! FeedImageCommentViewController
+		controller.refreshController = refreshController
 		
 		let feedCommentView = FeedImageCommentViewAdapter(controller: controller)
 						
