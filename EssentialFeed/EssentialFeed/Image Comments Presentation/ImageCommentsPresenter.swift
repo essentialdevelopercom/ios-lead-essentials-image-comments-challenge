@@ -31,6 +31,17 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
+	private var errorMessage: String {
+		NSLocalizedString(
+			"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
+			tableName: "ImageComments",
+			bundle: Bundle(
+				for: ImageCommentsPresenter.self
+			),
+			comment: "Error message for a loading comments error"
+		)
+	}
+
 	private let commentsView: ImageCommentsView
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
@@ -54,6 +65,11 @@ public final class ImageCommentsPresenter {
 		with comments: [ImageComment]
 	) {
 		commentsView.display(comments: comments)
+		loadingView.display(isLoading: false)
+	}
+
+	public func didFinishLoading(with error: Error) {
+		errorView.display(errorMessage: errorMessage)
 		loadingView.display(isLoading: false)
 	}
 }

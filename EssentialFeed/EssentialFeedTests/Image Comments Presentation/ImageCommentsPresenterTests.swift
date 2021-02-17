@@ -38,6 +38,19 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
 	}
 
+	func test_didFinishLoadingWithError_displaysErrorAndStopsLoading() {
+		let (sut, view) = makeSUT()
+
+		let error = anyNSError()
+		sut.didFinishLoading(with: error)
+
+		XCTAssertEqual(
+			view.messages,
+			[.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")),
+			 .display(isLoading: false)]
+		)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
