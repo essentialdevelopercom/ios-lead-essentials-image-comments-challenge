@@ -9,8 +9,12 @@
 import UIKit
 import EssentialFeed
 
-final public class FeedImageCommentViewController: UITableViewController {
-	public var refreshController: FeedImageCommentRefreshController?
+public protocol FeedImageCommentViewControllerDelegate {
+	func didRequestFeedCommentRefresh()
+}
+
+final public class FeedImageCommentViewController: UITableViewController, FeedLoadingView {
+	public var delegate: FeedImageCommentViewControllerDelegate?
 	private var loadingControllers = [IndexPath: FeedImageCommentCellController]()
 	
 	public var tableModel = [FeedImageCommentCellController]() {
@@ -20,13 +24,20 @@ final public class FeedImageCommentViewController: UITableViewController {
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		refreshControl = refreshController?.view
-		refreshController?.refresh()
+		refresh()
+	}
+	
+	@IBAction private func refresh() {
+		delegate?.didRequestFeedCommentRefresh()
 	}
 	
 	public func display(_ cellControllers: [FeedImageCommentCellController]) {
 		loadingControllers = [:]
 		tableModel = cellControllers
+	}
+	
+	public func display(_ viewModel: FeedLoadingViewModel) {
+		refreshControl?.update(isRefreshing: viewModel.isLoading)
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
