@@ -170,9 +170,19 @@ https://ile-api.essentialdeveloper.com/essential-feed/v1/image/{image-id}/commen
 
 1) Fork the latest version of this repository. Here's <a href="https://guides.github.com/activities/forking" target="_blank">how forking works</a>.
 
-2) Open the `EssentialApp/EssentialApp.xcworkspace` workspace project on Xcode 12.3 (you can use other Xcode versions by switching to the appropriate branch, e.g., `xcode11`/`xcode12`).
+2) Open the `EssentialApp/EssentialApp.xcworkspace` workspace project on Xcode 12.4 (you can use other Xcode versions by switching to the appropriate branch, e.g., `xcode11`, `xcode12`, `xcode12_2`, `xcode12_3`).
 
-	- ⚠️ Important: ***On Xcode 12.3, run the snapshot tests using the 'iPhone 12 - iOS 14.3' simulator*** (the same simulator used to take the snapshots). On older Xcode branches, run the tests with the 'iPhone 11 - iOS 13.x or 14.x' simulator.
+	- ⚠️ Important: ***Different simulators may generate slightly different snapshots (even if they look the same!).*** So you must run the snapshot tests using the appropriate simulator based on the branch you chose:
+
+		- `xcode11` -> iPhone 11 - iOS 13.x
+		- `xcode12` -> iPhone 12 - iOS 14.0 or iOS 14.1
+		- `xcode12_2` -> iPhone 12 - iOS 14.2
+		- `xcode12_3` -> iPhone 12 - iOS 14.3
+		- `xcode12_4` -> iPhone 12 - iOS 14.4
+
+	- Do not change the indentation in the project.
+
+	- Do not rename the existing classes and files.
 
 3) You can develop the platform-agnostic logic in the `EssentialFeed` target using the `macOS` platform to speed up the TDD cycle.
 
@@ -185,9 +195,23 @@ https://ile-api.essentialdeveloper.com/essential-feed/v1/image/{image-id}/commen
 5) You can see/interact with your solution by running the Application on the simulator (or device). 
 	- Switch to the `EssentialApp` scheme and press CMD+R.
 
-6) When all tests are passing and you're done implementing your solution, create a Pull Request from your branch to the main challenge repo  **with the title: "Your Name - Image Comments Challenge**. 
+6) Errors should be handled accordingly.
 
-**7) Post a comment in the challenge page in the academy with the link to your PR, so we can review your solution and provide feedback.**
+	- There shouldn't be *any* `fatalError` in production code.
+
+	- There shouldn't be empty `catch` blocks.
+
+	- There shouldn't be any `print` statements, such as `print(error)`.
+
+7) When all tests are passing and you're done implementing your solution:
+
+	- Create a Pull Request from your branch to the main challenge repo's matching branch.
+
+		- For example, if you implemented the challenge using the `xcode12_4` branch, your PR should be from your fork's `xcode12_4` branch into the main repo's `xcode12_4` branch (DO NOT MIX Xcode versions or you'll have merge conflicts!).
+
+	- The title of the Pull Request should be: **Your Name - Image Comments Challenge**.
+
+8) Post a comment in the challenge page in the academy with the link to your PR, so we can review your solution and provide feedback.
 
 
 ## Guidelines
