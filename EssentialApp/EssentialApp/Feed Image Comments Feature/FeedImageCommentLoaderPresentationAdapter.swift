@@ -7,15 +7,17 @@
 //
 
 import Foundation
+import Combine
 import EssentialFeed
 import EssentialFeediOS
 
 final class FeedImageCommentLoaderPresentationAdapter: FeedImageCommentViewControllerDelegate {
-	private let feedCommentLoader: FeedImageCommentLoader
+	private let feedCommentLoader: (URL) -> FeedImageCommentLoader.Publisher
 	var presenter: FeedImageCommentLoaderPresenter?
 	private let url: URL
+	private var cancellable: Cancellable?
 
-	init(feedCommentLoader: FeedImageCommentLoader, url: URL) {
+	init(feedCommentLoader: @escaping (URL) -> FeedImageCommentLoader.Publisher, url: URL) {
 		self.feedCommentLoader = feedCommentLoader
 		self.url = url
 	}
@@ -23,14 +25,19 @@ final class FeedImageCommentLoaderPresentationAdapter: FeedImageCommentViewContr
 	func didRequestFeedCommentRefresh() {
 		presenter?.didStartLoadingFeed()
 
-		_ = feedCommentLoader.loadImageCommentData(from: url) { [weak self] result in
-			switch result {
-			case let .success(comments):
-				self?.presenter?.didFinishLoadingFeed(with: comments)
-
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingFeed(with: error)
-			}
-		}
+		cancellable = feedCommentLoader(url)
+			.dispatchOnMainQueue()
+			.sink(
+				receiveCompletion: { [weak self] completion in
+					switch completion {
+					case .finished: break
+						
+					case let .failure(error):
+						self?.presenter?.didFinishLoadingFeed(with: error)
+					}
+					
+				}, receiveValue: { [weak self] comments in
+					self?.presenter?.didFinishLoadingFeed(with: comments)
+				})
 	}
 }

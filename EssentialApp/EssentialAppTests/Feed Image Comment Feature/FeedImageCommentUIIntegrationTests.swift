@@ -89,12 +89,23 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0])
 	}
 	
+	func test_loadFeedCommentCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		let exp = expectation(description: "Wait for background queue")
+		DispatchQueue.global().async {
+			loader.completeFeedCommentLoading(at: 0)
+			exp.fulfill()
+		}
+		wait(for: [exp], timeout: 1.0)
+	}
+
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: loader, 
-																		  url: url)
+		let sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: loader.loadImageCommentPublisher, url: url)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

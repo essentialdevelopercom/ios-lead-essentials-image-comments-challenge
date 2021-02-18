@@ -13,7 +13,9 @@ import EssentialFeediOS
 public final class FeedImageCommentUIComposer {
 	private init() {}
 	
-	public static func feedImageCommentComposedWith(feedCommentLoader: FeedImageCommentLoader, url: URL) -> FeedImageCommentViewController {
+	public static func feedImageCommentComposedWith(
+		feedCommentLoader: @escaping (URL) -> FeedImageCommentLoader.Publisher, 
+		url: URL) -> FeedImageCommentViewController {
 		let presentationAdapter = FeedImageCommentLoaderPresentationAdapter(feedCommentLoader: feedCommentLoader, url: url)
 		
 		let controller = makeController(delegate: presentationAdapter, title: FeedImageCommentLoaderPresenter.title)

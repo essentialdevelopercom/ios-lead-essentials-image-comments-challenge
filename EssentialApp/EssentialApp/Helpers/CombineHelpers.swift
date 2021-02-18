@@ -118,3 +118,17 @@ extension DispatchQueue {
 		}
 	}
 }
+
+public extension FeedImageCommentLoader {
+	typealias Publisher = AnyPublisher<[FeedImageComment], Error>
+	
+	func loadImageCommentPublisher(from url: URL) -> Publisher {
+		
+		return Deferred {
+			Future { completion in
+				_ = self.loadImageCommentData(from: url, completion: completion)
+			}
+		}
+		.eraseToAnyPublisher()
+	}
+}
