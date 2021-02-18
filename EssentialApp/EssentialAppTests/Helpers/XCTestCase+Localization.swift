@@ -1,12 +1,16 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  XCTestCase+Localization.swift
+//  EssentialAppTests
+//
+//  Created by Mario Alberto Barragán Espinosa on 17/02/21.
+//  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
 import Foundation
 import XCTest
 import EssentialFeed
 
-extension FeedUIIntegrationTests {
+extension XCTestCase {
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "Feed"
 		let bundle = Bundle(for: FeedPresenter.self)

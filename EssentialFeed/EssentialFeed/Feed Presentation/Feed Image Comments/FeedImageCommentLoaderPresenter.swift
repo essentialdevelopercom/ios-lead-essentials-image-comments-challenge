@@ -31,6 +31,13 @@ public final class FeedImageCommentLoaderPresenter {
 		self.loadingView = loadingView
 	}
 	
+	public static var title: String {
+		return NSLocalizedString("FEED_COMMENT_VIEW_TITLE",
+			 tableName: "Feed",
+			 bundle: Bundle(for: FeedImageCommentLoaderPresenter.self),
+			 comment: "Title for the feed comment view")
+	}
+	
 	public func didStartLoadingFeed() {
 		loadingView.display(FeedLoadingViewModel(isLoading: true))
 	}
