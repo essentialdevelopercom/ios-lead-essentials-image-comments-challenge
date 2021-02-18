@@ -38,6 +38,7 @@
 		0895DAAD234B3F7E0031BB2D /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; };
 		0895DAAE234B3F7E0031BB2D /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F227D7D225DDF59A0032F36C /* XCTestCase+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F227D7D125DDF59A0032F36C /* XCTestCase+Localization.swift */; };
+		F227D7D825DDFF860032F36C /* FeedImageCommentLoaderPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F227D7D725DDFF860032F36C /* FeedImageCommentLoaderPresentationAdapter.swift */; };
 		F24972DF25D34D1B00036B53 /* FeedImageCommentUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24972DE25D34D1B00036B53 /* FeedImageCommentUIIntegrationTests.swift */; };
 		F25A05AF25D613E600B44B37 /* FeedImageCommentUIIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25A05AE25D613E600B44B37 /* FeedImageCommentUIIntegrationTests+Assertions.swift */; };
 		F25A05B225D6145700B44B37 /* FeedImageCommentViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25A05B125D6145700B44B37 /* FeedImageCommentViewController+TestHelpers.swift */; };
@@ -108,6 +109,7 @@
 		08FF35DB2534688B00DB6ABC /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		08FF35DD2534688E00DB6ABC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		F227D7D125DDF59A0032F36C /* XCTestCase+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Localization.swift"; sourceTree = "<group>"; };
+		F227D7D725DDFF860032F36C /* FeedImageCommentLoaderPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentLoaderPresentationAdapter.swift; sourceTree = "<group>"; };
 		F24972DE25D34D1B00036B53 /* FeedImageCommentUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentUIIntegrationTests.swift; sourceTree = "<group>"; };
 		F25A05AE25D613E600B44B37 /* FeedImageCommentUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageCommentUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 		F25A05B125D6145700B44B37 /* FeedImageCommentViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageCommentViewController+TestHelpers.swift"; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				F2F301A225D75E2600FD2212 /* FeedImageCommentUIComposer.swift */,
+				F227D7D725DDFF860032F36C /* FeedImageCommentLoaderPresentationAdapter.swift */,
 			);
 			path = "Feed Image Comments Feature";
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 			files = (
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
+				F227D7D825DDFF860032F36C /* FeedImageCommentLoaderPresentationAdapter.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* FeedLoaderPresentationAdapter.swift in Sources */,
 				08073B47238D2DFA00A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift in Sources */,
 				F2F301A325D75E2600FD2212 /* FeedImageCommentUIComposer.swift in Sources */,
