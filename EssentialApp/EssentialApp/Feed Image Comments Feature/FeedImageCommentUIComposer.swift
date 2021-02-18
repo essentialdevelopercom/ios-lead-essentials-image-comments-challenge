@@ -16,11 +16,7 @@ public final class FeedImageCommentUIComposer {
 	public static func feedImageCommentComposedWith(feedCommentLoader: FeedImageCommentLoader, url: URL) -> FeedImageCommentViewController {
 		let presentationAdapter = FeedImageCommentLoaderPresentationAdapter(feedCommentLoader: feedCommentLoader, url: url)
 		
-		let bundle = Bundle(for: FeedImageCommentViewController.self)
-		let storyboard = UIStoryboard(name: "FeedComments", bundle: bundle)
-		let controller = storyboard.instantiateInitialViewController() as! FeedImageCommentViewController
-		
-		controller.delegate = presentationAdapter
+		let controller = makeController(delegate: presentationAdapter)
 		
 		let feedCommentView = FeedImageCommentViewAdapter(controller: controller)
 						
@@ -29,6 +25,14 @@ public final class FeedImageCommentUIComposer {
 			loadingView: WeakRefVirtualProxy(controller))
 		
 		return controller
+	}
+	
+	private static func makeController(delegate: FeedImageCommentViewControllerDelegate) -> FeedImageCommentViewController {
+		let bundle = Bundle(for: FeedImageCommentViewController.self)
+		let storyboard = UIStoryboard(name: "FeedComments", bundle: bundle)
+		let feedController = storyboard.instantiateInitialViewController() as! FeedImageCommentViewController
+		feedController.delegate = delegate
+		return feedController
 	}
 }
 
