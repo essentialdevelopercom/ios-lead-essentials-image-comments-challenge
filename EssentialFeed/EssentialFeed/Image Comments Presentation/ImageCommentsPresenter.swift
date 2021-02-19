@@ -9,15 +9,15 @@
 import Foundation
 
 public protocol ImageCommentsLoadingView {
-	func display(isLoading: Bool)
+	func display(_ viewModel: ImageCommentsLoadingViewModel)
 }
 
 public protocol ImageCommentsErrorView {
-	func display(errorMessage: String?)
+	func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
 public protocol ImageCommentsView {
-	func display(comments: [ImageComment])
+	func display(_ viewModel: ImageCommentsViewModel)
 }
 
 public final class ImageCommentsPresenter {
@@ -57,19 +57,19 @@ public final class ImageCommentsPresenter {
 	}
 
 	public func didStartLoading() {
-		errorView.display(errorMessage: nil)
-		loadingView.display(isLoading: true)
+		errorView.display(.noError)
+		loadingView.display(.loading)
 	}
 
 	public func didFinishLoading(
 		with comments: [ImageComment]
 	) {
-		commentsView.display(comments: comments)
-		loadingView.display(isLoading: false)
+		commentsView.display(.comments(comments))
+		loadingView.display(.notLoading)
 	}
 
 	public func didFinishLoading(with error: Error) {
-		errorView.display(errorMessage: errorMessage)
-		loadingView.display(isLoading: false)
+		errorView.display(.error(message: errorMessage))
+		loadingView.display(.notLoading)
 	}
 }

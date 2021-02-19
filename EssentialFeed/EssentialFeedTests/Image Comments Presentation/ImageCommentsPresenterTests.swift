@@ -120,21 +120,27 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 		private(set) var messages = Set<Message>()
 
-		func display(isLoading: Bool) {
+		func display(
+			_ viewModel: ImageCommentsLoadingViewModel
+		) {
 			messages.insert(
-				.display(isLoading: isLoading)
+				.display(isLoading: viewModel.isLoading)
 			)
 		}
 
-		func display(errorMessage: String?) {
+		func display(
+			_ viewModel: ImageCommentsErrorViewModel
+		) {
 			messages.insert(
-				.display(errorMessage: errorMessage)
+				.display(errorMessage: viewModel.message)
 			)
 		}
 
-		func display(comments: [ImageComment]) {
+		func display(
+			_ viewModel: ImageCommentsViewModel
+		) {
 			messages.insert(
-				.display(comments: comments)
+				.display(comments: viewModel.comments)
 			)
 		}
 	}
