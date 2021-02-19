@@ -25,10 +25,21 @@ public struct CommentItemViewModel {
 public final class FeedImageCommentLoaderPresenter {
 	private let feedCommentView: FeedImageCommentView
 	private let loadingView: FeedLoadingView
+	private let errorView: FeedErrorView
 	
-	public init(feedCommentView: FeedImageCommentView, loadingView: FeedLoadingView) {
+	private var feedLoadError: String {
+		return NSLocalizedString("FEED_VIEW_CONNECTION_ERROR",
+			 tableName: "Feed",
+			 bundle: Bundle(for: FeedPresenter.self),
+			 comment: "Error message displayed when we can't load the image feed from the server")
+	}
+	
+	public init(feedCommentView: FeedImageCommentView, 
+				loadingView: FeedLoadingView,
+				errorView: FeedErrorView) {
 		self.feedCommentView = feedCommentView
 		self.loadingView = loadingView
+		self.errorView = errorView
 	}
 	
 	public static var title: String {
@@ -39,6 +50,7 @@ public final class FeedImageCommentLoaderPresenter {
 	}
 	
 	public func didStartLoadingFeed() {
+		errorView.display(.noError)
 		loadingView.display(FeedLoadingViewModel(isLoading: true))
 	}
 	
@@ -48,6 +60,7 @@ public final class FeedImageCommentLoaderPresenter {
 	}
 	
 	public func didFinishLoadingFeed(with error: Error) {
+		errorView.display(.error(message: feedLoadError))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	

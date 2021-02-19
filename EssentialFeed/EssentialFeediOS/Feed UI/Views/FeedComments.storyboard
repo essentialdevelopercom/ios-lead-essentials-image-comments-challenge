@@ -118,6 +118,9 @@
                             <action selector="refresh" destination="4RM-o1-xHS" eventType="valueChanged" id="x5D-gy-BQk"/>
                         </connections>
                     </refreshControl>
+                    <connections>
+                        <outlet property="errorView" destination="Xpc-1p-cVt" id="RYz-Lq-hD9"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fiZ-gQ-6mU" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="t5m-sz-eBu">

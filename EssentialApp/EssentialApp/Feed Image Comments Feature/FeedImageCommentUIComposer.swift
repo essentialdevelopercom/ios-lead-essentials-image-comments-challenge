@@ -24,7 +24,8 @@ public final class FeedImageCommentUIComposer {
 						
 		presentationAdapter.presenter = FeedImageCommentLoaderPresenter(
 			feedCommentView: feedCommentView, 
-			loadingView: WeakRefVirtualProxy(controller))
+			loadingView: WeakRefVirtualProxy(controller), 
+			errorView: WeakRefVirtualProxy(controller))
 		
 		return controller
 	}

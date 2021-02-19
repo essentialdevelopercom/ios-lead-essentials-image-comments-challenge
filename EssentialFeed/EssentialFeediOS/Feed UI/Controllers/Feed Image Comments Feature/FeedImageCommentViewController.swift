@@ -13,7 +13,8 @@ public protocol FeedImageCommentViewControllerDelegate {
 	func didRequestFeedCommentRefresh()
 }
 
-final public class FeedImageCommentViewController: UITableViewController, FeedLoadingView {
+final public class FeedImageCommentViewController: UITableViewController, FeedLoadingView, FeedErrorView {
+	@IBOutlet private(set) public var errorView: ErrorView?
 	public var delegate: FeedImageCommentViewControllerDelegate?
 	private var loadingControllers = [IndexPath: FeedImageCommentCellController]()
 	
@@ -38,6 +39,10 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 	
 	public func display(_ viewModel: FeedLoadingViewModel) {
 		refreshControl?.update(isRefreshing: viewModel.isLoading)
+	}
+	
+	public func display(_ viewModel: FeedErrorViewModel) {
+		errorView?.message = viewModel.message
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

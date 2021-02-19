@@ -100,6 +100,19 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		}
 		wait(for: [exp], timeout: 1.0)
 	}
+	
+	func test_loadFeedCommentCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeFeedCommentLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateUserInitiatedFeedCommentReload()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
 
 	// MARK: - Helpers
 	
