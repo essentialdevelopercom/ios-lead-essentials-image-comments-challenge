@@ -71,7 +71,10 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 		sut.didStartLoading()
 
-		XCTAssertEqual(view.messages, [.display(errorMessage: nil), .display(isLoading: true)])
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: nil),
+			.display(isLoading: true)
+		])
 	}
 
 	func test_didFinishLoading_displaysCommentsAndStopsLoading() {
@@ -80,11 +83,10 @@ class ImageCommentsPresenterTests: XCTestCase {
 		let comments = uniqueComments()
 		sut.didFinishLoading(with: comments)
 
-		XCTAssertEqual(
-			view.messages,
-			[.display(comments: ImageCommentsPresenter.map(comments).comments),
-			 .display(isLoading: false)]
-		)
+		XCTAssertEqual(view.messages, [
+			.display(comments: ImageCommentsPresenter.map(comments).comments),
+			.display(isLoading: false)
+		])
 	}
 
 	func test_didFinishLoadingWithError_displaysErrorAndStopsLoading() {
@@ -93,11 +95,10 @@ class ImageCommentsPresenterTests: XCTestCase {
 		let error = anyNSError()
 		sut.didFinishLoading(with: error)
 
-		XCTAssertEqual(
-			view.messages,
-			[.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")),
-			 .display(isLoading: false)]
-		)
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")),
+			.display(isLoading: false)
+		])
 	}
 
 	// MARK: - Helpers
