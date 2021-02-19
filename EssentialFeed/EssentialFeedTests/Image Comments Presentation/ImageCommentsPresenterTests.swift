@@ -15,6 +15,51 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
 
+	func test_map_createsViewModels() {
+		let now = Date()
+
+		let comments = [
+			ImageComment(
+				id: UUID(),
+				message: "a message",
+				createdAt: now.adding(seconds: -30),
+				username: "a username"
+			),
+			ImageComment(
+				id: UUID(),
+				message: "another message",
+				createdAt: now.adding(minutes: -10),
+				username: "another username"
+			),
+			ImageComment(
+				id: UUID(),
+				message: "yet another message",
+				createdAt: now.adding(days: -2),
+				username: "yet another username"
+			)
+		]
+
+		let viewModel = ImageCommentsPresenter.map(comments)
+
+		XCTAssertEqual(viewModel.comments, [
+			ImageCommentViewModel(
+				message: "a message",
+				date: "30 seconds ago",
+				username: "a username"
+			),
+			ImageCommentViewModel(
+				message: "another message",
+				date: "10 minutes ago",
+				username: "another username"
+			),
+			ImageCommentViewModel(
+				message: "yet another message",
+				date: "2 days ago",
+				username: "yet another username"
+			)
+		])
+	}
+
 	func test_init_doesNotSendMessagesToView() {
 		let (_, view) = makeSUT()
 
@@ -35,7 +80,11 @@ class ImageCommentsPresenterTests: XCTestCase {
 		let comments = uniqueComments()
 		sut.didFinishLoading(with: comments)
 
-		XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+		XCTAssertEqual(
+			view.messages,
+			[.display(comments: ImageCommentsPresenter.map(comments).comments),
+			 .display(isLoading: false)]
+		)
 	}
 
 	func test_didFinishLoadingWithError_displaysErrorAndStopsLoading() {
@@ -115,7 +164,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
-			case display(comments: [ImageComment])
+			case display(comments: [ImageCommentViewModel])
 		}
 
 		private(set) var messages = Set<Message>()

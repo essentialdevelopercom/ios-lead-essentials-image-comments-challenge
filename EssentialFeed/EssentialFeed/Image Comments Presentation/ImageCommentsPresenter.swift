@@ -31,6 +31,19 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
+	public static func map(_ comments: [ImageComment]) -> ImageCommentsViewModel {
+		ImageCommentsViewModel(comments: comments.map {
+			ImageCommentViewModel(
+				message: $0.message,
+				date: RelativeDateTimeFormatter().localizedString(
+					for: $0.createdAt,
+					relativeTo: Date()
+				),
+				username: $0.username
+			)
+		})
+	}
+
 	private var errorMessage: String {
 		NSLocalizedString(
 			"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
@@ -64,7 +77,7 @@ public final class ImageCommentsPresenter {
 	public func didFinishLoading(
 		with comments: [ImageComment]
 	) {
-		commentsView.display(.comments(comments))
+		commentsView.display(Self.map(comments))
 		loadingView.display(.notLoading)
 	}
 
