@@ -188,6 +188,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
+	func test_loadCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+
+		loader.completeLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, ImageCommentsPresenter.errorMessage)
+
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
@@ -294,6 +307,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 extension ImageCommentsViewController {
 	private var commentsSection: Int { 0 }
+
+	var errorMessage: String? {
+		errorView.message
+	}
 
 	var isShowingLoadingIndicator: Bool {
 		refreshControl?.isRefreshing == true
