@@ -128,51 +128,30 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_loadCompletion_rendersSuccessfullyLoadedComments() {
 		let (sut, loader) = makeSUT()
 
-		let date = Date()
 		let comments = [
-			makeComment(message: "a message", username: "a username"),
-			makeComment(message: "another message", username: "another username")
+			makeComment(
+				message: "a message",
+				username: "a username"
+			),
+			makeComment(
+				message: "another message",
+				username: "another username"
+			)
 		]
 
 		sut.loadViewIfNeeded()
 		loader.completeLoading(with: comments)
-
-		let viewModels = ImageCommentsPresenter.map(comments, currentDate: date).comments
-
-		let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
-		XCTAssertEqual(cell1?.usernameLabel?.text, viewModels[0].username)
-		XCTAssertEqual(cell1?.dateLabel?.text, viewModels[0].date)
-		XCTAssertEqual(cell1?.messageLabel?.text, viewModels[0].message)
-
-		let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ImageCommentCell
-		XCTAssertEqual(cell2?.usernameLabel?.text, viewModels[1].username)
-		XCTAssertEqual(cell2?.dateLabel?.text, viewModels[1].date)
-		XCTAssertEqual(cell2?.messageLabel?.text, viewModels[1].message)
+		assertThat(sut, isRendering: comments)
 	}
 
 	func test_loadCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
 		let (sut, loader) = makeSUT()
 
-		let date = Date()
 		let comments = [makeComment()]
 
 		sut.loadViewIfNeeded()
 		loader.completeLoading(with: comments)
-
-		let viewModels = ImageCommentsPresenter.map(comments, currentDate: date).comments
-
-		let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
-		XCTAssertEqual(cell1?.usernameLabel?.text, viewModels[0].username)
-		XCTAssertEqual(cell1?.dateLabel?.text, viewModels[0].date)
-		XCTAssertEqual(cell1?.messageLabel?.text, viewModels[0].message)
-
-		sut.simulateUserInitiatedReload()
-		loader.completeLoading(with: [], at: 1)
-		XCTAssertEqual(
-			sut.tableView.numberOfRows(inSection: 0),
-			0,
-			"Expected no comments after complete loading with empty image comments"
-		)
+		assertThat(sut, isRendering: comments)
 	}
 
 	// MARK: - Helpers
@@ -200,6 +179,56 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			createdAt: Date(),
 			username: username
 		)
+	}
+
+	private func assertThat(
+		_ sut: ImageCommentsViewController,
+		isRendering comments: [ImageComment],
+		file: StaticString = #filePath,
+		line: UInt = #line
+	) {
+		let numberOfRenderedComments = sut.numberOfRenderedComments()
+		XCTAssertEqual(
+			numberOfRenderedComments,
+			comments.count,
+			"Expected \(comments.count) comments but got \(numberOfRenderedComments) instead.",
+			file: file,
+			line: line
+		)
+
+		let viewModel = ImageCommentsPresenter.map(comments)
+
+		viewModel.comments.enumerated().forEach { index, comment in
+			guard let cell = sut.commentCell(at: index) else {
+				return XCTFail("Expected ImageCommentCell instance at \(index) but got nil instead", file: file, line: line)
+			}
+			let message = cell.message
+			XCTAssertEqual(
+				message,
+				comment.message,
+				"Expected message to be \(comment.message) but got \(String(describing: message)) instead",
+				file: file,
+				line: line
+			)
+
+			let username = cell.username
+			XCTAssertEqual(
+				username,
+				comment.username,
+				"Expected username to be \(comment.username) but got \(String(describing: username)) instead",
+				file: file,
+				line: line
+			)
+
+			let date = cell.date
+			XCTAssertEqual(
+				date,
+				comment.date,
+				"Expected date to be \(comment.date) but got \(String(describing: date)) instead",
+				file: file,
+				line: line
+			)
+		}
 	}
 
 	private class LoaderSpy {
@@ -230,11 +259,45 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 }
 
 extension ImageCommentsViewController {
+	private var commentsSection: Int { 0 }
+
 	var isShowingLoadingIndicator: Bool {
 		refreshControl?.isRefreshing == true
 	}
 
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+
+	func numberOfRenderedComments() -> Int {
+		tableView.numberOfRows(
+			inSection: commentsSection
+		)
+	}
+
+	func commentCell(
+		at row: Int
+	) -> ImageCommentCell? {
+		tableView.dataSource?.tableView(
+			tableView,
+			cellForRowAt: IndexPath(
+				row: row,
+				section: commentsSection
+			)
+		) as? ImageCommentCell
+	}
+}
+
+extension ImageCommentCell {
+	var message: String? {
+		messageLabel?.text
+	}
+
+	var username: String? {
+		usernameLabel?.text
+	}
+
+	var date: String? {
+		dateLabel?.text
 	}
 }
