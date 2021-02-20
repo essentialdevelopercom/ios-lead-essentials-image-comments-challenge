@@ -7,63 +7,10 @@
 //
 
 import Combine
-@testable import EssentialApp
+import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 import XCTest
-
-final class ImageCommentsUIComposer {
-	static func imageCommentsComposed(
-		with commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
-	) -> ImageCommentsViewController {
-		let bundle = Bundle(for: ImageCommentsViewController.self)
-		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
-		let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader)
-		imageCommentsController.delegate = presentationAdapter
-		let presenter = ImageCommentsPresenter(
-			commentsView: WeakRefVirtualProxy(imageCommentsController),
-			loadingView: WeakRefVirtualProxy(imageCommentsController),
-			errorView: WeakRefVirtualProxy(imageCommentsController)
-		)
-		presentationAdapter.presenter = presenter
-		return imageCommentsController
-	}
-}
-
-final class ImageCommentsPresentationAdapter:
-	ImageCommentsViewControllerDelegate
-{
-
-	var presenter: ImageCommentsPresenter?
-
-	let loader: () -> AnyPublisher<[ImageComment], Error>
-	private var cancellables = Set<AnyCancellable>()
-
-	init(loader: @escaping () -> AnyPublisher<[ImageComment], Error>) {
-		self.loader = loader
-	}
-
-	func didRequestCommentsRefresh() {
-		presenter?.didStartLoading()
-		loader()
-			.dispatchOnMainQueue()
-			.sink(
-				receiveCompletion: { [presenter] result in
-					switch result {
-					case let .failure(error):
-						presenter?.didFinishLoading(with: error)
-
-					case .finished:
-						break
-					}
-				},
-				receiveValue: { [presenter] comments in
-					presenter?.didFinishLoading(with: comments)
-				}
-			).store(in: &cancellables)
-	}
-}
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
 
