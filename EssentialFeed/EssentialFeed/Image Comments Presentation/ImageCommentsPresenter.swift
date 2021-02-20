@@ -52,7 +52,7 @@ public final class ImageCommentsPresenter {
 		})
 	}
 
-	private var errorMessage: String {
+	public static var errorMessage: String {
 		NSLocalizedString(
 			"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
 			tableName: "ImageComments",
@@ -90,7 +90,7 @@ public final class ImageCommentsPresenter {
 	}
 
 	public func didFinishLoading(with error: Error) {
-		errorView.display(.error(message: errorMessage))
+		errorView.display(.error(message: Self.errorMessage))
 		loadingView.display(.notLoading)
 	}
 }
