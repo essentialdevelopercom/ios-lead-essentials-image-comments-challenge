@@ -51,16 +51,23 @@ class FeedAcceptanceTests: XCTestCase {
 		
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
-	
+		
 	// MARK: - Helpers
+	
+	private func makeSUT(httpClient: HTTPClientStub,
+						 store: InMemoryFeedStore, 
+						 file: StaticString = #file, line: UInt = #line) -> SceneDelegate {
+		let sut = SceneDelegate(httpClient: httpClient, store: store)
+		sut.window = UIWindow()
+		sut.configureWindow()
+		return sut
+	}
 	
 	private func launch(
 		httpClient: HTTPClientStub = .offline,
 		store: InMemoryFeedStore = .empty
 	) -> FeedViewController {
-		let sut = SceneDelegate(httpClient: httpClient, store: store)
-		sut.window = UIWindow()
-		sut.configureWindow()
+		let sut = makeSUT(httpClient: httpClient, store: store)
 		
 		let nav = sut.window?.rootViewController as? UINavigationController
 		return nav?.topViewController as! FeedViewController
