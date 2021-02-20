@@ -101,6 +101,12 @@
                             <outlet property="delegate" destination="uMu-jP-yaL" id="AER-By-tsY"/>
                         </connections>
                     </tableView>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="PbS-RG-R6W">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refresh" destination="uMu-jP-yaL" eventType="valueChanged" id="DVn-Yy-00c"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="prO-bc-a6A" id="uwp-9i-7Fe"/>
                     </connections>

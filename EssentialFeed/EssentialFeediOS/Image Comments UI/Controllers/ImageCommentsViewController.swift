@@ -9,6 +9,10 @@
 import EssentialFeed
 import UIKit
 
+public protocol ImageCommentsViewControllerDelegate {
+	func didRequestCommentsRefresh()
+}
+
 public final class ImageCommentsViewController:
 	UITableViewController,
 	ImageCommentsView,
@@ -17,6 +21,7 @@ public final class ImageCommentsViewController:
 	@IBOutlet
 	private(set) public var errorView: ErrorView!
 
+	public var delegate: ImageCommentsViewControllerDelegate?
 
 	private var viewModels = [ImageCommentViewModel]() {
 		didSet {
@@ -30,11 +35,26 @@ public final class ImageCommentsViewController:
 		tableView.sizeTableHeaderToFit()
 	}
 
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+
+		refresh()
+	}
+
+	@IBAction
+	func refresh() {
+		delegate?.didRequestCommentsRefresh()
+	}
+
+	// MARK: - ImageCommentsView
+
 	public func display(
 		_ viewModel: ImageCommentsViewModel
 	) {
 		viewModels = viewModel.comments
 	}
+
+	// MARK: - ImageCommentsErrorView
 
 	public func display(
 		_ viewModel: ImageCommentsErrorViewModel
