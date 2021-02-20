@@ -10,12 +10,15 @@ import EssentialFeed
 import XCTest
 
 enum EssentialFeedEndpoint {
+	case feed
 	case imageComments(id: UUID)
 
 	var url: URL {
 		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 
 		switch self {
+		case .feed:
+			return baseURL.appendingPathComponent("v1/feed")
 
 		case .imageComments(let id):
 			return baseURL.appendingPathComponent("v1/image/\(id)/comments")
@@ -24,6 +27,19 @@ enum EssentialFeedEndpoint {
 }
 
 class EssentialFeedEndpointTests: XCTestCase {
+
+	func test_feedEndpontURL_isCorrect() {
+		let endpoint = EssentialFeedEndpoint.feed.url
+
+		let expected = URL(
+			string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed"
+		)!
+		XCTAssertEqual(
+			endpoint,
+			expected,
+			"Expected URL \(expected.absoluteString) but got \(endpoint.absoluteString) instead"
+		)
+	}
 
 	func test_imageCommentsEndpontURL_isCorrect() {
 		let uuidString = "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086"
