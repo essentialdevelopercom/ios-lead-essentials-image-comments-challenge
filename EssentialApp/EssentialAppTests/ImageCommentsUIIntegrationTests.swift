@@ -128,20 +128,27 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_loadCompletion_rendersSuccessfullyLoadedComments() {
 		let (sut, loader) = makeSUT()
 
-		let comments = [
-			makeComment(
-				message: "a message",
-				username: "a username"
-			),
-			makeComment(
-				message: "another message",
-				username: "another username"
-			)
-		]
+		let comment0 = makeComment(
+			message: "a message",
+			username: "a username"
+		)
+
+		let comment1 = makeComment(
+			message: "another message",
+			username: "another username"
+		)
 
 		sut.loadViewIfNeeded()
-		loader.completeLoading(with: comments)
-		assertThat(sut, isRendering: comments)
+		assertThat(sut, isRendering: [ImageComment]())
+
+		let comments0 = [comment0]
+		loader.completeLoading(with: comments0, at: 0)
+		assertThat(sut, isRendering: comments0)
+
+		sut.simulateUserInitiatedReload()
+		let comments1 = [comment0, comment1]
+		loader.completeLoading(with: comments1, at: 1)
+		assertThat(sut, isRendering: comments1)
 	}
 
 	func test_loadCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
