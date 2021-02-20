@@ -130,18 +130,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		let date = Date()
 		let comments = [
-			ImageComment(
-				id: UUID(),
-				message: "a message",
-				createdAt: date,
-				username: "a username"
-			),
-			ImageComment(
-				id: UUID(),
-				message: "another message",
-				createdAt: date,
-				username: "another username"
-			)
+			makeComment(message: "a message", username: "a username"),
+			makeComment(message: "another message", username: "another username")
 		]
 
 		sut.loadViewIfNeeded()
@@ -164,14 +154,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 
 		let date = Date()
-		let comments = [
-			ImageComment(
-				id: UUID(),
-				message: "a message",
-				createdAt: date,
-				username: "a username"
-			)
-		]
+		let comments = [makeComment()]
 
 		sut.loadViewIfNeeded()
 		loader.completeLoading(with: comments)
@@ -205,6 +188,18 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+
+	private func makeComment(
+		message: String = "any message",
+		username: String = "any username"
+	) -> ImageComment {
+		ImageComment(
+			id: UUID(),
+			message: message,
+			createdAt: Date(),
+			username: username
+		)
 	}
 
 	private class LoaderSpy {
