@@ -210,7 +210,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(
 			numberOfRenderedComments,
 			comments.count,
-			"Expected \(comments.count) comments but got \(numberOfRenderedComments) instead.",
+			"comments count",
 			file: file,
 			line: line
 		)
@@ -219,13 +219,17 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		viewModel.comments.enumerated().forEach { index, comment in
 			guard let cell = sut.commentCell(at: index) else {
-				return XCTFail("Expected ImageCommentCell instance at \(index) but got nil instead", file: file, line: line)
+				return XCTFail(
+					"Expected ImageCommentCell instance at \(index) but got nil instead",
+					file: file,
+					line: line
+				)
 			}
 			let message = cell.message
 			XCTAssertEqual(
 				message,
 				comment.message,
-				"Expected message to be \(comment.message) but got \(String(describing: message)) instead",
+				"message at \(index)",
 				file: file,
 				line: line
 			)
@@ -234,7 +238,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			XCTAssertEqual(
 				username,
 				comment.username,
-				"Expected username to be \(comment.username) but got \(String(describing: username)) instead",
+				"username at \(index)",
 				file: file,
 				line: line
 			)
@@ -243,7 +247,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			XCTAssertEqual(
 				date,
 				comment.date,
-				"Expected date to be \(comment.date) but got \(String(describing: date)) instead",
+				"date at \(index)",
 				file: file,
 				line: line
 			)
