@@ -48,7 +48,15 @@ final class ImageCommentsPresentationAdapter:
 		presenter?.didStartLoading()
 		loader()
 			.sink(
-				receiveCompletion: { _ in },
+				receiveCompletion: { [presenter] result in
+					switch result {
+					case let .failure(error):
+						presenter?.didFinishLoading(with: error)
+
+					case .finished:
+						break
+					}
+				},
 				receiveValue: { [presenter] comments in
 					presenter?.didFinishLoading(with: comments)
 				}
@@ -102,6 +110,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			sut.isShowingLoadingIndicator,
 			"Expected no loading indicator once loading completes successfully"
 		)
+
+		sut.simulateUserInitiatedReload()
+		XCTAssertTrue(
+			sut.isShowingLoadingIndicator,
+			"Expected loading indicator once user initiates a reload"
+		)
+
+		loader.completeLoadingWithError(at: 1)
+		XCTAssertEqual(
+			sut.isShowingLoadingIndicator,
+			false,
+			"Expected no loading indicator once user initiated loading completes with error"
+		)
 	}
 
 	// MARK: - Helpers
@@ -135,6 +156,12 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		) {
 			requests[index].send([])
 			requests[index].send(completion: .finished)
+		}
+
+		func completeLoadingWithError(
+			at index: Int = 0
+		) {
+			requests[index].send(completion: .failure(anyNSError()))
 		}
 	}
 }
