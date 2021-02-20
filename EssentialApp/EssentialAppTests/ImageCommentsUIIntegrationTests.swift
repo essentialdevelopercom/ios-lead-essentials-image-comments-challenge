@@ -125,6 +125,41 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		)
 	}
 
+	func test_loadCompletion_rendersSuccessfullyLoadedComments() {
+		let (sut, loader) = makeSUT()
+
+		let date = Date()
+		let comments = [
+			ImageComment(
+				id: UUID(),
+				message: "a message",
+				createdAt: date,
+				username: "a username"
+			),
+			ImageComment(
+				id: UUID(),
+				message: "another message",
+				createdAt: date,
+				username: "another username"
+			)
+		]
+
+		sut.loadViewIfNeeded()
+		loader.completeLoading(with: comments)
+
+		let viewModels = ImageCommentsPresenter.map(comments, currentDate: date).comments
+
+		let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
+		XCTAssertEqual(cell1?.usernameLabel?.text, viewModels[0].username)
+		XCTAssertEqual(cell1?.dateLabel?.text, viewModels[0].date)
+		XCTAssertEqual(cell1?.messageLabel?.text, viewModels[0].message)
+
+		let cell2 = sut.tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ImageCommentCell
+		XCTAssertEqual(cell2?.usernameLabel?.text, viewModels[1].username)
+		XCTAssertEqual(cell2?.dateLabel?.text, viewModels[1].date)
+		XCTAssertEqual(cell2?.messageLabel?.text, viewModels[1].message)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
@@ -152,9 +187,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		}
 
 		func completeLoading(
+			with comments: [ImageComment] = [],
 			at index: Int = 0
 		) {
-			requests[index].send([])
+			requests[index].send(comments)
 			requests[index].send(completion: .finished)
 		}
 
