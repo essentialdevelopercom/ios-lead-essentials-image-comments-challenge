@@ -23,7 +23,7 @@ final class FeedImageCommentLoaderPresentationAdapter: FeedImageCommentViewContr
 	}
 	
 	func didRequestFeedCommentRefresh() {
-		presenter?.didStartLoadingFeed()
+		presenter?.didStartLoadingFeedComments()
 
 		cancellable = feedCommentLoader(url)
 			.dispatchOnMainQueue()

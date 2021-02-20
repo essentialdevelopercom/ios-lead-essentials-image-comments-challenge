@@ -49,7 +49,7 @@ public final class FeedImageCommentLoaderPresenter {
 			 comment: "Title for the feed comment view")
 	}
 	
-	public func didStartLoadingFeed() {
+	public func didStartLoadingFeedComments() {
 		errorView.display(.noError)
 		loadingView.display(FeedLoadingViewModel(isLoading: true))
 	}
