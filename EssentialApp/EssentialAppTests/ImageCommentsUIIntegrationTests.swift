@@ -7,6 +7,7 @@
 //
 
 import Combine
+@testable import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 import XCTest
@@ -18,24 +19,40 @@ final class ImageCommentsUIComposer {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
-		imageCommentsController.delegate = ImageCommentsPresentationAdapter(loader: commentsLoader)
+		let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader)
+		imageCommentsController.delegate = presentationAdapter
+		let presenter = ImageCommentsPresenter(
+			commentsView: WeakRefVirtualProxy(imageCommentsController),
+			loadingView: WeakRefVirtualProxy(imageCommentsController),
+			errorView: WeakRefVirtualProxy(imageCommentsController)
+		)
+		presentationAdapter.presenter = presenter
 		return imageCommentsController
 	}
 }
 
-final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
+final class ImageCommentsPresentationAdapter:
+	ImageCommentsViewControllerDelegate
+{
+
+	var presenter: ImageCommentsPresenter?
+
 	let loader: () -> AnyPublisher<[ImageComment], Error>
+	private var cancellables = Set<AnyCancellable>()
 
 	init(loader: @escaping () -> AnyPublisher<[ImageComment], Error>) {
 		self.loader = loader
 	}
 
 	func didRequestCommentsRefresh() {
-		_ = loader()
+		presenter?.didStartLoading()
+		loader()
 			.sink(
 				receiveCompletion: { _ in },
-				receiveValue: { _ in }
-			)
+				receiveValue: { [presenter] comments in
+					presenter?.didFinishLoading(with: comments)
+				}
+			).store(in: &cancellables)
 	}
 }
 
@@ -71,6 +88,22 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		)
 	}
 
+	func test_loadingIndicator_isVisibleWhileLoadingComments() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(
+			sut.isShowingLoadingIndicator,
+			"Expected loading indicator once view is loaded"
+		)
+
+		loader.completeLoading()
+		XCTAssertFalse(
+			sut.isShowingLoadingIndicator,
+			"Expected no loading indicator once loading completes successfully"
+		)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
@@ -96,10 +129,21 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			requests.append(publisher)
 			return publisher.eraseToAnyPublisher()
 		}
+
+		func completeLoading(
+			at index: Int = 0
+		) {
+			requests[index].send([])
+			requests[index].send(completion: .finished)
+		}
 	}
 }
 
 extension ImageCommentsViewController {
+	var isShowingLoadingIndicator: Bool {
+		refreshControl?.isRefreshing == true
+	}
+
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
 	}

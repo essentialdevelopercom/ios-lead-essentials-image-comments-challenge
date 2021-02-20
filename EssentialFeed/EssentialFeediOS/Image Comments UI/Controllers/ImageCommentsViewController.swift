@@ -16,7 +16,8 @@ public protocol ImageCommentsViewControllerDelegate {
 public final class ImageCommentsViewController:
 	UITableViewController,
 	ImageCommentsView,
-	ImageCommentsErrorView
+	ImageCommentsErrorView,
+	ImageCommentsLoadingView
 {
 	@IBOutlet
 	private(set) public var errorView: ErrorView!
@@ -60,6 +61,18 @@ public final class ImageCommentsViewController:
 		_ viewModel: ImageCommentsErrorViewModel
 	) {
 		errorView.message = viewModel.message
+	}
+
+	// MARK: - ImageCommentsLoadingView
+
+	public func display(
+		_ viewModel: ImageCommentsLoadingViewModel
+	) {
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
 	}
 
 	// MARK: - UITableViewDataSource
