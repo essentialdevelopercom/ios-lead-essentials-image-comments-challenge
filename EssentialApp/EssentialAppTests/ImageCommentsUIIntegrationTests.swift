@@ -47,6 +47,7 @@ final class ImageCommentsPresentationAdapter:
 	func didRequestCommentsRefresh() {
 		presenter?.didStartLoading()
 		loader()
+			.dispatchOnMainQueue()
 			.sink(
 				receiveCompletion: { [presenter] result in
 					switch result {
@@ -172,6 +173,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedReload()
 		loader.completeLoadingWithError(at: 1)
 		assertThat(sut, isRendering: comments)
+	}
+
+	func test_loadCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+
+		let exp = expectation(description: "Wait for background queue")
+		DispatchQueue.global().async {
+			loader.completeLoading(at: 0)
+			exp.fulfill()
+		}
+
+		wait(for: [exp], timeout: 1.0)
 	}
 
 	// MARK: - Helpers
