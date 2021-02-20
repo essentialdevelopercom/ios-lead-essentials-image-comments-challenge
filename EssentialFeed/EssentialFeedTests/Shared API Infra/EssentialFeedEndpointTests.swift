@@ -9,23 +9,6 @@
 import EssentialFeed
 import XCTest
 
-enum EssentialFeedEndpoint {
-	case feed
-	case imageComments(id: UUID)
-
-	var url: URL {
-		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-
-		switch self {
-		case .feed:
-			return baseURL.appendingPathComponent("v1/feed")
-
-		case .imageComments(let id):
-			return baseURL.appendingPathComponent("v1/image/\(id)/comments")
-		}
-	}
-}
-
 class EssentialFeedEndpointTests: XCTestCase {
 
 	func test_feedEndpontURL_isCorrect() {
