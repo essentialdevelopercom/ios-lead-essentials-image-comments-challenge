@@ -160,6 +160,38 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(cell2?.messageLabel?.text, viewModels[1].message)
 	}
 
+	func test_loadCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
+		let (sut, loader) = makeSUT()
+
+		let date = Date()
+		let comments = [
+			ImageComment(
+				id: UUID(),
+				message: "a message",
+				createdAt: date,
+				username: "a username"
+			)
+		]
+
+		sut.loadViewIfNeeded()
+		loader.completeLoading(with: comments)
+
+		let viewModels = ImageCommentsPresenter.map(comments, currentDate: date).comments
+
+		let cell1 = sut.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ImageCommentCell
+		XCTAssertEqual(cell1?.usernameLabel?.text, viewModels[0].username)
+		XCTAssertEqual(cell1?.dateLabel?.text, viewModels[0].date)
+		XCTAssertEqual(cell1?.messageLabel?.text, viewModels[0].message)
+
+		sut.simulateUserInitiatedReload()
+		loader.completeLoading(with: [], at: 1)
+		XCTAssertEqual(
+			sut.tableView.numberOfRows(inSection: 0),
+			0,
+			"Expected no comments after complete loading with empty image comments"
+		)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(
