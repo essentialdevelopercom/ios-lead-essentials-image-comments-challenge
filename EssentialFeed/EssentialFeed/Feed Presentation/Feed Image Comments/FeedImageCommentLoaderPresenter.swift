@@ -16,7 +16,7 @@ public struct FeedCommentViewModel {
 	public let comments: [CommentItemViewModel]
 }
 
-public struct CommentItemViewModel {
+public struct CommentItemViewModel: Hashable {
 	public let message: String
 	public let authorName: String
 	public let createdAt: String
@@ -64,7 +64,7 @@ public final class FeedImageCommentLoaderPresenter {
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
-	func map(_ comments: [FeedImageComment]) -> [CommentItemViewModel] {
+	private func map(_ comments: [FeedImageComment]) -> [CommentItemViewModel] {
 		comments.map {
 			CommentItemViewModel(message: $0.message, 
 										  authorName: $0.author, 
