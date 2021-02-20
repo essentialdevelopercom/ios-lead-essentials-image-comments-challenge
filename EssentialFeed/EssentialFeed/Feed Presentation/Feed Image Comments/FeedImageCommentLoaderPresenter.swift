@@ -59,7 +59,7 @@ public final class FeedImageCommentLoaderPresenter {
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
-	public func didFinishLoadingFeed(with error: Error) {
+	public func didFinishLoadingFeedComments(with error: Error) {
 		errorView.display(.error(message: feedLoadError))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}

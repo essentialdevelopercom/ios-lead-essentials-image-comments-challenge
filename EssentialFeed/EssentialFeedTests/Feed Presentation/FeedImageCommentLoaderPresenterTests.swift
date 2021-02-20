@@ -39,6 +39,18 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 		])
 	}
 	
+	func test_didFinishLoadingFeedWithError_displaysLocalizedErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+
+		sut.didFinishLoadingFeedComments(with: anyNSError())
+
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: localized(for: FeedImageCommentLoaderPresenter.self,
+											 "FEED_VIEW_CONNECTION_ERROR")),
+			.display(isLoading: false)
+		])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentLoaderPresenter, view: ViewSpy){

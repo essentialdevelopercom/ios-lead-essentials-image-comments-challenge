@@ -33,7 +33,7 @@ final class FeedImageCommentLoaderPresentationAdapter: FeedImageCommentViewContr
 					case .finished: break
 						
 					case let .failure(error):
-						self?.presenter?.didFinishLoadingFeed(with: error)
+						self?.presenter?.didFinishLoadingFeedComments(with: error)
 					}
 					
 				}, receiveValue: { [weak self] comments in
