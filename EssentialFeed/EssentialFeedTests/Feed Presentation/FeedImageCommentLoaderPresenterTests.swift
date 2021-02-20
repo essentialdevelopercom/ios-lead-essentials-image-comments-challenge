@@ -21,11 +21,11 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentLoaderPresenter, view: ViewSpy){
 		let view = ViewSpy()
-		
 		let sut = FeedImageCommentLoaderPresenter(feedCommentView: view, 
 												  loadingView: view, 
 												  errorView: view)
-		
+		trackForMemoryLeaks(view, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
 	}
 	
