@@ -10,6 +10,12 @@
 import XCTest
 
 final class FeedImageCommentLoaderPresenterTests: XCTestCase {
+	
+	func test_title_isLocalized() {
+		XCTAssertEqual(FeedImageCommentLoaderPresenter.title, 
+					   localized(for: FeedImageCommentLoaderPresenter.self,
+								 "FEED_COMMENT_VIEW_TITLE"))
+	}
 
     func test_init_doesNotSendMessagesToView() {
 		let (_, view) = makeSUT()
