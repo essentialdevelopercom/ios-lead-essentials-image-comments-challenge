@@ -11,18 +11,35 @@ import UIKit
 
 public final class ImageCommentsViewController:
 	UITableViewController,
-	ImageCommentsView
+	ImageCommentsView,
+	ImageCommentsErrorView
 {
+	@IBOutlet
+	private(set) public var errorView: ErrorView!
+
+
 	private var viewModels = [ImageCommentViewModel]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
 
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+
+		tableView.sizeTableHeaderToFit()
+	}
+
 	public func display(
 		_ viewModel: ImageCommentsViewModel
 	) {
 		viewModels = viewModel.comments
+	}
+
+	public func display(
+		_ viewModel: ImageCommentsErrorViewModel
+	) {
+		errorView.message = viewModel.message
 	}
 
 	// MARK: - UITableViewDataSource

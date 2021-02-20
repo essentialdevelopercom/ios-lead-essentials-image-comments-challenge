@@ -488,6 +488,7 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				C9C936F625E096E5007DB455 /* Shared UI */,
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 				C9BEC5CC25E071D400D2248A /* Image Comments UI */,
@@ -520,7 +521,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -612,6 +612,22 @@
 			children = (
 				C9BEC5D925E0732600D2248A /* ImageComments.storyboard */,
 				C907C7D125E08B8600B4FBEC /* ImageCommentCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C9C936F625E096E5007DB455 /* Shared UI */ = {
+			isa = PBXGroup;
+			children = (
+				C9C936F725E09709007DB455 /* Views */,
+			);
+			path = "Shared UI";
+			sourceTree = "<group>";
+		};
+		C9C936F725E09709007DB455 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
