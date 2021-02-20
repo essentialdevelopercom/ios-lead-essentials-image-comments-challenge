@@ -70,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
 		return httpClient
 			.getPublisher(
-				url: EssentialFeedEndpoint.feed.url
+				url: EssentialFeedEndpoint.feed.url(baseURL: baseURL)
 			)
 			.tryMap(FeedItemsMapper.map)
 			.caching(to: localFeedLoader)
@@ -93,7 +93,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func showComments(for image: FeedImage) {
 		let comments = ImageCommentsUIComposer.imageCommentsComposed(
 			with: makeRemoteCommentsLoader(
-				url: EssentialFeedEndpoint.imageComments(id: image.id).url
+				url: EssentialFeedEndpoint.imageComments(id: image.id).url(baseURL: baseURL)
 			)
 		)
 		navigationController.pushViewController(comments, animated: true)
