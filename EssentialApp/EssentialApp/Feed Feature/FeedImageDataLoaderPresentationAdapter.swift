@@ -43,4 +43,8 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
 	func didCancelImageRequest() {
 		cancellable?.cancel()
 	}
+	
+	func didTapFeedImage() {
+		presenter?.didTapFeedImage(with: model.id.uuidString)
+	}
 }

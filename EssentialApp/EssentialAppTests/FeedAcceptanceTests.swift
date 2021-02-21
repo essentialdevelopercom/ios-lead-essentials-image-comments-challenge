@@ -10,7 +10,7 @@ import EssentialFeediOS
 class FeedAcceptanceTests: XCTestCase {
 	
 	func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
-		let feed = launch(httpClient: .online(response), store: .empty)
+		let (_, feed) = launch(httpClient: .online(response), store: .empty)
 		
 		XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 2)
 		XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData())
@@ -19,11 +19,11 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() {
 		let sharedStore = InMemoryFeedStore.empty
-		let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
+		let (_, onlineFeed) = launch(httpClient: .online(response), store: sharedStore)
 		onlineFeed.simulateFeedImageViewVisible(at: 0)
 		onlineFeed.simulateFeedImageViewVisible(at: 1)
 		
-		let offlineFeed = launch(httpClient: .offline, store: sharedStore)
+		let (_, offlineFeed) = launch(httpClient: .offline, store: sharedStore)
 		
 		XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 2)
 		XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData())
@@ -31,7 +31,7 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	func test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache() {
-		let feed = launch(httpClient: .offline, store: .empty)
+		let (_, feed) = launch(httpClient: .offline, store: .empty)
 		
 		XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 0)
 	}
@@ -51,6 +51,18 @@ class FeedAcceptanceTests: XCTestCase {
 		
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
+	
+	func test_onFeedImageTap_displaysFeedImageComments() {
+		let (sut, feed) = launch(httpClient: .online(response), store: .empty)
+		
+		feed.simulateFeedImageTap(at: 0)
+		
+		let root = sut.window?.rootViewController
+		let rootNavigation = root as? UINavigationController
+		let topController = rootNavigation?.topViewController
+		XCTAssertTrue(topController is FeedImageCommentViewController, 
+					  "Expected a feed image comment controller as top view controller, got \(String(describing: topController)) instead")
+	}
 		
 	// MARK: - Helpers
 	
@@ -66,11 +78,10 @@ class FeedAcceptanceTests: XCTestCase {
 	private func launch(
 		httpClient: HTTPClientStub = .offline,
 		store: InMemoryFeedStore = .empty
-	) -> FeedViewController {
+	) -> (sut: SceneDelegate, feed: FeedViewController) {
 		let sut = makeSUT(httpClient: httpClient, store: store)
-		
 		let nav = sut.window?.rootViewController as? UINavigationController
-		return nav?.topViewController as! FeedViewController
+		return (sut, nav?.topViewController as! FeedViewController)
 	}
 	
 	private func enterBackground(with store: InMemoryFeedStore) {

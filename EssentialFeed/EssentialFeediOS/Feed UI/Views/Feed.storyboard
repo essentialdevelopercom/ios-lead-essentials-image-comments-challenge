@@ -102,6 +102,18 @@ Location</string>
                                                                 <action selector="retryButtonTapped" destination="4Aa-lg-gTp" eventType="touchUpInside" id="qtX-lz-XAI"/>
                                                             </connections>
                                                         </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mJj-zi-gSy">
+                                                            <rect key="frame" x="0.0" y="0.0" width="374" height="374"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                                            <state key="normal">
+                                                                <color key="titleColor" systemColor="systemBackgroundColor"/>
+                                                            </state>
+                                                            <connections>
+                                                                <action selector="feedImageTapped" destination="4Aa-lg-gTp" eventType="touchUpInside" id="hT3-QR-meA"/>
+                                                                <action selector="retryButtonTapped" destination="4Aa-lg-gTp" eventType="touchUpInside" id="XUk-BC-gOZ"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                                     <constraints>
@@ -145,6 +157,7 @@ Location</string>
                                 <accessibility key="accessibilityConfiguration" identifier="feed-image-cell"/>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="H63-o4-rxp" id="2Er-vI-jnc"/>
+                                    <outlet property="feedImageButton" destination="mJj-zi-gSy" id="Fbb-PE-5zv"/>
                                     <outlet property="feedImageContainer" destination="FAU-iA-TTE" id="k7Q-aT-bl8"/>
                                     <outlet property="feedImageRetryButton" destination="ojQ-jM-69D" id="qY7-3z-Rze"/>
                                     <outlet property="feedImageView" destination="tsT-7G-iNQ" id="8Vg-J5-Z1K"/>

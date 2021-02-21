@@ -12,7 +12,8 @@ public final class FeedUIComposer {
 	
 	public static func feedComposedWith(
 		feedLoader: @escaping () -> FeedLoader.Publisher,
-		imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher
+		imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
+		router: FeedImageRouter
 	) -> FeedViewController {
 		let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
 		
@@ -23,7 +24,8 @@ public final class FeedUIComposer {
 		presentationAdapter.presenter = FeedPresenter(
 			feedView: FeedViewAdapter(
 				controller: feedController,
-				imageLoader: imageLoader),
+				imageLoader: imageLoader, 
+				router: router),
 			loadingView: WeakRefVirtualProxy(feedController),
 			errorView: WeakRefVirtualProxy(feedController))
 		

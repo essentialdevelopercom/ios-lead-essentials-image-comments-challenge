@@ -9,10 +9,14 @@ import EssentialFeediOS
 final class FeedViewAdapter: FeedView {
 	private weak var controller: FeedViewController?
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
+	private let router: FeedImageRouter
 	
-	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
+	init(controller: FeedViewController, 
+		 imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
+		 router: FeedImageRouter) {
 		self.controller = controller
 		self.imageLoader = imageLoader
+		self.router = router
 	}
 	
 	func display(_ viewModel: FeedViewModel) {
@@ -22,7 +26,8 @@ final class FeedViewAdapter: FeedView {
 			
 			adapter.presenter = FeedImagePresenter(
 				view: WeakRefVirtualProxy(view),
-				imageTransformer: UIImage.init)
+				imageTransformer: UIImage.init, 
+				router: router)
 			
 			return view
 		})

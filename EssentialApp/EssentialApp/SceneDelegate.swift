@@ -7,7 +7,7 @@ import CoreData
 import Combine
 import EssentialFeed
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, FeedImageRouter {
 	var window: UIWindow?
 	
 	private lazy var httpClient: HTTPClient = {
@@ -39,7 +39,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		LocalFeedImageDataLoader(store: store)
 	}()
 	
-	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+	convenience init(httpClient: HTTPClient, 
+					 store: FeedStore & FeedImageDataStore) {
 		self.init()
 		self.httpClient = httpClient
 		self.store = store
@@ -56,7 +57,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.rootViewController = UINavigationController(
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
+				imageLoader: makeLocalImageLoaderWithRemoteFallback, 
+				router: self))
 		
 		window?.makeKeyAndVisible()
 	}
@@ -80,5 +82,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					.loadImageDataPublisher(from: url)
 					.caching(to: localImageLoader, using: url)
 			})
+	}
+	
+	func goToComments(for feedImageID: String) {
+		let root = window?.rootViewController
+		let rootNavigation = root as? UINavigationController
+		
+		let feedCommentLoader = RemoteFeedImageCommentLoader(client: httpClient)
+		
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImageID)/comments")!
+		let controller = FeedImageCommentUIComposer.feedImageCommentComposedWith(
+			feedCommentLoader: feedCommentLoader.loadImageCommentPublisher, 
+			url: url)
+		rootNavigation?.pushViewController(controller, animated: false)
 	}
 }

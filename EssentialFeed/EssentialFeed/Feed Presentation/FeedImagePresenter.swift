@@ -10,13 +10,21 @@ public protocol FeedImageView {
 	func display(_ model: FeedImageViewModel<Image>)
 }
 
+public protocol FeedImageRouter {
+	func goToComments(for feedImageID: String)
+}
+
 public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
 	private let view: View
 	private let imageTransformer: (Data) -> Image?
+	private let router: FeedImageRouter
 	
-	public init(view: View, imageTransformer: @escaping (Data) -> Image?) {
+	public init(view: View, 
+				imageTransformer: @escaping (Data) -> Image?,
+				router: FeedImageRouter) {
 		self.view = view
 		self.imageTransformer = imageTransformer
+		self.router = router
 	}
 	
 	public func didStartLoadingImageData(for model: FeedImage) {
@@ -45,5 +53,9 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
 			image: nil,
 			isLoading: false,
 			shouldRetry: true))
+	}
+	
+	public func didTapFeedImage(with id: String) {
+		router.goToComments(for: id)
 	}
 }
