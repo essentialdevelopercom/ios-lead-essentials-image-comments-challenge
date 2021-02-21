@@ -52,7 +52,7 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
-	func test_onFeedImageTap_displaysFeedImageComments() {
+	func test_onFeedImageTap_displaysFeedImageComments() throws {
 		let (sut, feed) = launch(httpClient: .online(response), store: .empty)
 		
 		feed.simulateFeedImageTap(at: 0)
@@ -61,8 +61,11 @@ class FeedAcceptanceTests: XCTestCase {
 		let root = sut.window?.rootViewController
 		let rootNavigation = root as? UINavigationController
 		let topController = rootNavigation?.topViewController
-		XCTAssertTrue(topController is FeedImageCommentViewController, 
-					  "Expected a feed image comment controller as top view controller, got \(String(describing: topController)) instead")
+		let feedCommentsController = try XCTUnwrap(topController as? FeedImageCommentViewController, "Expected a feed image comment controller as top view controller, got \(String(describing: topController)) instead")
+		
+		feedCommentsController.loadViewIfNeeded()
+		
+		XCTAssertEqual(feedCommentsController.numberOfRenderedFeedImageCommentsViews(), 3)
 	}
 		
 	// MARK: - Helpers
@@ -96,12 +99,15 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	private func makeData(for url: URL) -> Data {
-		switch url.absoluteString {
-		case "http://image.com":
-			return makeImageData()
+		switch url.pathComponents.last {
+		case "comments":
+			return makeFeedCommentData()
+			
+		case "feed":
+			return makeFeedData()
 			
 		default:
-			return makeFeedData()
+			return makeImageData()
 		}
 	}
 	
@@ -116,4 +122,31 @@ class FeedAcceptanceTests: XCTestCase {
 		]])
 	}
 	
+	private func responseForFeedComments(for url: URL) -> (Data, HTTPURLResponse) {
+		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
+		return (makeFeedCommentData(), response)
+	}
+	
+	private func makeFeedCommentData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString, 
+				"message": "a messege", 
+				"created_at": "2020-05-20T11:24:59+0000",
+				"author": ["username": "An Author"]
+			],
+			[
+				"id": UUID().uuidString, 
+				"message": "a messege", 
+				"created_at": "2020-05-20T11:24:59+0000",
+				"author": ["username": "An Author"]
+			],
+			[
+				"id": UUID().uuidString, 
+				"message": "a messege", 
+				"created_at": "2020-05-20T11:24:59+0000",
+				"author": ["username": "An Author"]
+			]
+		]])
+	}
 }
