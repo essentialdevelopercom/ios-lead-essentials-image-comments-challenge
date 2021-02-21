@@ -28,6 +28,12 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 		refresh()
 	}
 	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
+	}
+	
 	@IBAction private func refresh() {
 		delegate?.didRequestFeedCommentRefresh()
 	}
