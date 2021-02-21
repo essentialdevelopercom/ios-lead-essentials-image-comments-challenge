@@ -74,6 +74,15 @@ class FeedImagePresenterTests: XCTestCase {
 		XCTAssertNil(message?.image)
 	}
 	
+	func test_didTapFeedImage_GoesToComments() {
+		let anyID = "anyID"
+		let (sut, view) = makeSUT()
+		
+		sut.didTapFeedImage(with: anyID)
+		
+		XCTAssertEqual(view.routerMessages, [anyID])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(
@@ -82,7 +91,7 @@ class FeedImagePresenterTests: XCTestCase {
 		line: UInt = #line
 	) -> (sut: FeedImagePresenter<ViewSpy, AnyImage>, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImagePresenter(view: view, imageTransformer: imageTransformer)
+		let sut = FeedImagePresenter(view: view, imageTransformer: imageTransformer, router: view)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -94,11 +103,16 @@ class FeedImagePresenterTests: XCTestCase {
 	
 	private struct AnyImage: Equatable {}
 	
-	private class ViewSpy: FeedImageView {
+	private class ViewSpy: FeedImageView, FeedImageRouter {
 		private(set) var messages = [FeedImageViewModel<AnyImage>]()
+		private(set) var routerMessages = [String]()
 		
 		func display(_ model: FeedImageViewModel<AnyImage>) {
 			messages.append(model)
+		}
+		
+		func goToComments(for feedImageID: String) {
+			routerMessages.append(feedImageID)
 		}
 	}
 	
