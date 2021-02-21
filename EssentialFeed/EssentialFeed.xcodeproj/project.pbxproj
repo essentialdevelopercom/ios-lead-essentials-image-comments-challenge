@@ -100,6 +100,7 @@
 		F2BA214525D21F59007C842D /* FeedImageCommentMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BA214425D21F59007C842D /* FeedImageCommentMapper.swift */; };
 		F2CD63EF25D4BEDA00EE5BCA /* FeedImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2CD63EE25D4BED900EE5BCA /* FeedImageCommentCell.swift */; };
 		F2F159A625CF74BC004BF74B /* RemoteFeedImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F159A525CF74BC004BF74B /* RemoteFeedImageComment.swift */; };
+		F2F1FBBC25E3122000FE327D /* FeedCommentsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F1FBBB25E3122000FE327D /* FeedCommentsSnapshotTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -227,6 +228,7 @@
 		F2BA214425D21F59007C842D /* FeedImageCommentMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentMapper.swift; sourceTree = "<group>"; };
 		F2CD63EE25D4BED900EE5BCA /* FeedImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentCell.swift; sourceTree = "<group>"; };
 		F2F159A525CF74BC004BF74B /* RemoteFeedImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedImageComment.swift; sourceTree = "<group>"; };
+		F2F1FBBB25E3122000FE327D /* FeedCommentsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCommentsSnapshotTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -536,6 +538,7 @@
 				08D917AF22B92A5D003BC31B /* Info.plist */,
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
+				F2F1FBBB25E3122000FE327D /* FeedCommentsSnapshotTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -920,6 +923,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08BB7EA922C138AC00F8B83C /* XCTestCase+MemoryLeakTracking.swift in Sources */,
+				F2F1FBBC25E3122000FE327D /* FeedCommentsSnapshotTests.swift in Sources */,
 				086AEFB923A7DFA400EE8933 /* FeedSnapshotTests.swift in Sources */,
 				0800314923B6909A00720217 /* XCTestCase+Snapshot.swift in Sources */,
 				0800314723B68FAB00720217 /* UIViewController+Snapshot.swift in Sources */,
