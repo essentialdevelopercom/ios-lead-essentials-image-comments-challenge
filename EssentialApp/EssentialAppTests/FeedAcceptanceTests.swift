@@ -57,6 +57,7 @@ class FeedAcceptanceTests: XCTestCase {
 		
 		feed.simulateFeedImageTap(at: 0)
 		
+		RunLoop.current.run(until: Date())
 		let root = sut.window?.rootViewController
 		let rootNavigation = root as? UINavigationController
 		let topController = rootNavigation?.topViewController
