@@ -169,8 +169,8 @@ final class FeedUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [image0])
-		let view0 = sut.simulateFeedImageViewVisible(at: 0)
-		view0?.simulateFeedImageTap()
+		let _ = sut.simulateFeedImageViewVisible(at: 0)
+		sut.simulateFeedImageTap(at: 0)
 		
 		XCTAssertEqual(loader.routerMessages, [image0.id.uuidString])
 	}
