@@ -13,6 +13,14 @@ import EssentialFeediOS
 import XCTest
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
+	
+	func test_imageCommentsView_hasTitle() {
+		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.title, ImageCommentsPresenter.title)
+	}
 
 	func test_loadAction_requestCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
@@ -105,8 +113,12 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let comments = [makeComment()]
 
 		sut.loadViewIfNeeded()
-		loader.completeLoading(with: comments)
+		loader.completeLoading(with: comments, at: 0)
 		assertThat(sut, isRendering: comments)
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
 	}
 
 	func test_loadCompletion_doesNotAlterCurrentRenderingStateOnError() {
@@ -147,6 +159,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
+	
+	func test_tapOnErrorView_hidesErrorMessage() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, ImageCommentsPresenter.errorMessage)
+		
+		sut.simulateErrorViewTap()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
 
 	func test_deinit_cancelsRunningRequest() {
 		var cancelCallCount = 0
@@ -154,8 +179,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		var sut: ImageCommentsViewController?
 
 		autoreleasepool {
-			sut = ImageCommentsUIComposer.imageCommentsComposed(
-				with: {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(
+				commentsLoader: {
 					PassthroughSubject<[ImageComment], Error>()
 						.handleEvents(receiveCancel: {
 							cancelCallCount += 1
@@ -180,10 +205,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		line: UInt = #line
 	) -> (ImageCommentsViewController, LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsUIComposer.imageCommentsComposed(
-			with: loader.loadPublisher
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(
+			commentsLoader: loader.loadPublisher
 		)
-		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(loader, file: file, line: line) 
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}

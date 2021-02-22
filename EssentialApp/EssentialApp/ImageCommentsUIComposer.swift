@@ -12,39 +12,55 @@ import EssentialFeediOS
 import UIKit
 
 public final class ImageCommentsUIComposer {
-	public static func imageCommentsComposed(
-		with commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
+	public static func imageCommentsComposedWith(
+		commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
 	) -> ImageCommentsViewController {
-		let bundle = Bundle(for: ImageCommentsViewController.self)
-		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
 		let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader)
-		imageCommentsController.delegate = presentationAdapter
+		
+		let imageCommentsController = makeCommentsViewController(
+			title: ImageCommentsPresenter.title,
+			delegate: presentationAdapter
+		)
+		
 		let presenter = ImageCommentsPresenter(
 			commentsView: WeakRefVirtualProxy(imageCommentsController),
 			loadingView: WeakRefVirtualProxy(imageCommentsController),
 			errorView: WeakRefVirtualProxy(imageCommentsController)
 		)
 		presentationAdapter.presenter = presenter
+		
 		return imageCommentsController
+	}
+	
+	private static func makeCommentsViewController(
+		title: String,
+		delegate: ImageCommentsViewControllerDelegate
+	) -> ImageCommentsViewController {
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let controller = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		controller.title = title
+		controller.delegate = delegate
+		return controller
 	}
 }
 
-public final class ImageCommentsPresentationAdapter:
+private final class ImageCommentsPresentationAdapter:
 	ImageCommentsViewControllerDelegate
 {
 	var presenter: ImageCommentsPresenter?
 
-	let loader: () -> AnyPublisher<[ImageComment], Error>
-	private var cancellables = Set<AnyCancellable>()
+	private let loader: () -> AnyPublisher<[ImageComment], Error>
+	
+	private var cancellable: AnyCancellable?
 
 	init(loader: @escaping () -> AnyPublisher<[ImageComment], Error>) {
 		self.loader = loader
 	}
 
-	public func didRequestCommentsRefresh() {
+	fileprivate func didRequestCommentsRefresh() {
 		presenter?.didStartLoading()
-		loader()
+		cancellable = loader()
 			.dispatchOnMainQueue()
 			.sink(receiveCompletion: { [presenter] result in
 				switch result {
@@ -57,6 +73,5 @@ public final class ImageCommentsPresentationAdapter:
 			}, receiveValue: { [presenter] comments in
 				presenter?.didFinishLoading(with: comments)
 			})
-			.store(in: &cancellables)
 	}
 }

@@ -11,33 +11,31 @@ import XCTest
 
 class EssentialFeedEndpointTests: XCTestCase {
 
-	private let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-
 	func test_feedEndpontURL_isCorrect() {
+		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 		let endpoint = EssentialFeedEndpoint.feed.url(baseURL: baseURL)
 
 		let expected = URL(
 			string: "\(baseURL)/v1/feed"
-		)!
+		)
 		XCTAssertEqual(
 			endpoint,
-			expected,
-			"Expected URL \(expected.absoluteString) but got \(endpoint.absoluteString) instead"
+			expected
 		)
 	}
 
 	func test_imageCommentsEndpontURL_isCorrect() {
 		let uuidString = "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086"
 		let imageID = UUID(uuidString: uuidString)!
+		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 		let endpoint = EssentialFeedEndpoint.imageComments(id: imageID).url(baseURL: baseURL)
 
 		let expected = URL(
 			string: "\(baseURL)/v1/image/\(uuidString)/comments"
-		)!
+		)
 		XCTAssertEqual(
 			endpoint,
-			expected,
-			"Expected URL \(expected.absoluteString) but got \(endpoint.absoluteString) instead"
+			expected
 		)
 	}
 }

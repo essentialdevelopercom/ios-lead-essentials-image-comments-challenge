@@ -4,23 +4,40 @@
 
 import UIKit
 
-public final class ErrorView: UIView {
-	@IBOutlet private var label: UILabel!
-	
+public final class ErrorView: UIButton {
 	public var message: String? {
-		get { isVisible ? label.text : nil }
+		get { isVisible ? title(for: .normal) : nil }
 		set { setMessageAnimated(newValue) }
 	}
+	
+	public var onHide: (() -> Void)?
 
 	private var isVisible: Bool { alpha > 0 }
 	
-	public override func awakeFromNib() {
-		super.awakeFromNib()
-		
-		label.text = nil
-		alpha = 0
+	public override init(frame: CGRect) {
+		super.init(frame: frame)
+		configure()
 	}
-
+	
+	required init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+	
+	private func configure() {
+		backgroundColor = .errorBackgroundColor
+		
+		addTarget(self, action: #selector(hideMessageAnimated), for: .touchUpInside)
+		configureLabel()
+		hideMessage()
+	}
+	
+	private func configureLabel() {
+		titleLabel?.textColor = .white
+		titleLabel?.textAlignment = .center
+		titleLabel?.numberOfLines = 0
+		titleLabel?.font = .preferredFont(forTextStyle: .body)
+	}
+	
 	private func setMessageAnimated(_ message: String?) {
 		if let message = message {
 			showAnimated(message)
@@ -30,20 +47,33 @@ public final class ErrorView: UIView {
 	}
 	
 	private func showAnimated(_ message: String) {
-		label.text = message
-		
+		setTitle(message, for: .normal)
+		contentEdgeInsets = .init(top: 8, left: 8, bottom: 8, right: 8)
+
 		UIView.animate(withDuration: 0.25) {
 			self.alpha = 1
 		}
 	}
 	
-	@IBAction
-	private func hideMessageAnimated() {
+	@objc private func hideMessageAnimated() {
 		UIView.animate(
 			withDuration: 0.25,
 			animations: { self.alpha = 0 },
 			completion: { completed in
-				if completed { self.label.text = nil }
+				if completed { self.hideMessage() }
 			})
+	}
+	
+	private func hideMessage() {
+		setTitle(nil, for: .normal)
+		alpha = 0
+		contentEdgeInsets = .init(top: -2.5, left: 0, bottom: -2.5, right: 0)
+		onHide?()
+	}
+}
+
+extension UIColor {
+	static var errorBackgroundColor: UIColor {
+		UIColor(red: 1, green: 106 / 255, blue: 106 / 255, alpha: 1)
 	}
 }
