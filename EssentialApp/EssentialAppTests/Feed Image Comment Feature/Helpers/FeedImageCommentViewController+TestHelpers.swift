@@ -35,4 +35,8 @@ extension FeedImageCommentViewController {
 	var errorMessage: String? {
 		return errorView?.message
 	}
+	
+	func simulateUserGoesBack() {
+		viewWillDisappear(false)
+	}
 }

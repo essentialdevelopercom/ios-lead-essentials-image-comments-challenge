@@ -40,4 +40,8 @@ final class FeedImageCommentLoaderPresentationAdapter: FeedImageCommentViewContr
 					self?.presenter?.didFinishLoadingFeed(with: comments)
 				})
 	}
+	
+	func didCancelFeedCommentRequest() {
+		cancellable?.cancel()
+	}
 }

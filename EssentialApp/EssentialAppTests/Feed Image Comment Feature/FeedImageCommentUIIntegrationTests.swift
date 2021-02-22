@@ -113,6 +113,20 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedFeedCommentReload()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
+	
+	func test_feedViewComments_cancelsImageCommentLoadingWhenViewWillDisappear() {
+		let urlRequest = anyURL()
+		let (sut, loader) = makeSUT(url: urlRequest)
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedCommentLoading(with: [makeComment()])
+		XCTAssertEqual(loader.cancelledCommentsURLs, [], "Expected no cancelled image comments requests")
+		
+		sut.simulateUserInitiatedFeedCommentReload()
+		sut.simulateUserGoesBack()
+				
+		XCTAssertEqual(loader.cancelledCommentsURLs, [urlRequest], "Expected first cancelled image comment request once user dismisses view")
+	}
 
 	// MARK: - Helpers
 	

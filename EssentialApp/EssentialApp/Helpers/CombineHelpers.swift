@@ -123,12 +123,14 @@ public extension FeedImageCommentLoader {
 	typealias Publisher = AnyPublisher<[FeedImageComment], Error>
 	
 	func loadImageCommentPublisher(from url: URL) -> Publisher {
+		var task: FeedImageCommentLoaderTask?
 		
 		return Deferred {
 			Future { completion in
-				_ = self.loadImageCommentData(from: url, completion: completion)
+				task = self.loadImageCommentData(from: url, completion: completion)
 			}
 		}
+		.handleEvents(receiveCancel: { task?.cancel() })
 		.eraseToAnyPublisher()
 	}
 }

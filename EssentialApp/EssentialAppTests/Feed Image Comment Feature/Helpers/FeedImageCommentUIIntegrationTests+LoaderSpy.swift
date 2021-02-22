@@ -27,10 +27,14 @@ extension FeedImageCommentUIIntegrationTests {
 		var loadedImageCommentURLs: [URL] {
 			return imageCommentRequests.map { $0.url }
 		}
+		
+		private(set) var cancelledCommentsURLs = [URL]()
 				
 		func loadImageCommentData(from url: URL, completion: @escaping (Result<[FeedImageComment], Error>) -> Void) -> FeedImageCommentLoaderTask {
 			imageCommentRequests.append((url, completion))
-			return TaskSpy { }
+			return TaskSpy { [weak self] in 
+				self?.cancelledCommentsURLs.append(url) 
+			}
 		}
 		
 		func completeFeedCommentLoading(with feedComments: [FeedImageComment] = [], at index: Int = 0) {
