@@ -91,8 +91,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	private func showComments(for image: FeedImage) {
-		let comments = ImageCommentsUIComposer.imageCommentsComposed(
-			with: makeRemoteCommentsLoader(
+		let comments = ImageCommentsUIComposer.imageCommentsComposedWith(
+			commentsLoader: makeRemoteCommentsLoader(
 				url: EssentialFeedEndpoint.imageComments(id: image.id).url(baseURL: baseURL)
 			)
 		)

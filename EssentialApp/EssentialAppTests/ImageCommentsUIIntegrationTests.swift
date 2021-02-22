@@ -154,8 +154,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		var sut: ImageCommentsViewController?
 
 		autoreleasepool {
-			sut = ImageCommentsUIComposer.imageCommentsComposed(
-				with: {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(
+				commentsLoader: {
 					PassthroughSubject<[ImageComment], Error>()
 						.handleEvents(receiveCancel: {
 							cancelCallCount += 1
@@ -180,10 +180,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		line: UInt = #line
 	) -> (ImageCommentsViewController, LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsUIComposer.imageCommentsComposed(
-			with: loader.loadPublisher
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(
+			commentsLoader: loader.loadPublisher
 		)
-		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(loader, file: file, line: line) 
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}

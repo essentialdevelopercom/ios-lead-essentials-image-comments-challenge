@@ -12,8 +12,8 @@ import EssentialFeediOS
 import UIKit
 
 public final class ImageCommentsUIComposer {
-	public static func imageCommentsComposed(
-		with commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
+	public static func imageCommentsComposedWith(
+		commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
 	) -> ImageCommentsViewController {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
