@@ -11,9 +11,8 @@ import XCTest
 
 class EssentialFeedEndpointTests: XCTestCase {
 
-	private let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-
 	func test_feedEndpontURL_isCorrect() {
+		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 		let endpoint = EssentialFeedEndpoint.feed.url(baseURL: baseURL)
 
 		let expected = URL(
@@ -29,6 +28,7 @@ class EssentialFeedEndpointTests: XCTestCase {
 	func test_imageCommentsEndpontURL_isCorrect() {
 		let uuidString = "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086"
 		let imageID = UUID(uuidString: uuidString)!
+		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 		let endpoint = EssentialFeedEndpoint.imageComments(id: imageID).url(baseURL: baseURL)
 
 		let expected = URL(
