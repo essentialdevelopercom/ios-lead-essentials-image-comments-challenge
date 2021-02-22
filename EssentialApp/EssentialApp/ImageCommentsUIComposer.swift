@@ -37,7 +37,7 @@ private final class ImageCommentsPresentationAdapter:
 
 	private let loader: () -> AnyPublisher<[ImageComment], Error>
 	
-	private var cancellables = Set<AnyCancellable>()
+	private var cancellable: AnyCancellable?
 
 	init(loader: @escaping () -> AnyPublisher<[ImageComment], Error>) {
 		self.loader = loader
@@ -45,7 +45,7 @@ private final class ImageCommentsPresentationAdapter:
 
 	fileprivate func didRequestCommentsRefresh() {
 		presenter?.didStartLoading()
-		loader()
+		cancellable = loader()
 			.dispatchOnMainQueue()
 			.sink(receiveCompletion: { [presenter] result in
 				switch result {
@@ -58,6 +58,5 @@ private final class ImageCommentsPresentationAdapter:
 			}, receiveValue: { [presenter] comments in
 				presenter?.didFinishLoading(with: comments)
 			})
-			.store(in: &cancellables)
 	}
 }
