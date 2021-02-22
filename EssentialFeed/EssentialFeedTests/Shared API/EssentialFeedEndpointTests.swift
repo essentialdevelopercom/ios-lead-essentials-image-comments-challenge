@@ -17,11 +17,10 @@ class EssentialFeedEndpointTests: XCTestCase {
 
 		let expected = URL(
 			string: "\(baseURL)/v1/feed"
-		)!
+		)
 		XCTAssertEqual(
 			endpoint,
-			expected,
-			"Expected URL \(expected.absoluteString) but got \(endpoint.absoluteString) instead"
+			expected
 		)
 	}
 
@@ -33,11 +32,10 @@ class EssentialFeedEndpointTests: XCTestCase {
 
 		let expected = URL(
 			string: "\(baseURL)/v1/image/\(uuidString)/comments"
-		)!
+		)
 		XCTAssertEqual(
 			endpoint,
-			expected,
-			"Expected URL \(expected.absoluteString) but got \(endpoint.absoluteString) instead"
+			expected
 		)
 	}
 }
