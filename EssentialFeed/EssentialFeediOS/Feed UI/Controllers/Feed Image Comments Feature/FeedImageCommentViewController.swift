@@ -16,7 +16,6 @@ public protocol FeedImageCommentViewControllerDelegate {
 final public class FeedImageCommentViewController: UITableViewController, FeedLoadingView, FeedErrorView {
 	@IBOutlet private(set) public var errorView: ErrorView?
 	public var delegate: FeedImageCommentViewControllerDelegate?
-	private var loadingControllers = [IndexPath: FeedImageCommentCellController]()
 	
 	public var tableModel = [FeedImageCommentCellController]() {
 		didSet { tableView.reloadData() }
@@ -39,7 +38,6 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 	}
 	
 	public func display(_ cellControllers: [FeedImageCommentCellController]) {
-		loadingControllers = [:]
 		tableModel = cellControllers
 	}
 	
