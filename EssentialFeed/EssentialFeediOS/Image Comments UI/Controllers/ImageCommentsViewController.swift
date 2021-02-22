@@ -17,10 +17,10 @@ public final class ImageCommentsViewController:
 	UITableViewController,
 	ImageCommentsView,
 	ImageCommentsErrorView,
-	ImageCommentsLoadingView
+	ImageCommentsLoadingView,
+	ErrorViewContainer
 {
-	@IBOutlet
-	private(set) public var errorView: ErrorView!
+	private(set) public lazy var errorView = ErrorView()
 
 	public var delegate: ImageCommentsViewControllerDelegate?
 
@@ -39,9 +39,10 @@ public final class ImageCommentsViewController:
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
+		configureErrorView()
 		refresh()
 	}
-
+	
 	@IBAction
 	func refresh() {
 		delegate?.didRequestCommentsRefresh()

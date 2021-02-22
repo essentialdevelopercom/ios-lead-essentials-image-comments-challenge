@@ -159,6 +159,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
+	
+	func test_tapOnErrorView_hidesErrorMessage() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, ImageCommentsPresenter.errorMessage)
+		
+		sut.simulateErrorViewTap()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
 
 	func test_deinit_cancelsRunningRequest() {
 		var cancelCallCount = 0

@@ -13,9 +13,10 @@ public final class FeedViewController:
 	UITableViewController,
 	UITableViewDataSourcePrefetching,
 	FeedLoadingView,
-	FeedErrorView
+	FeedErrorView,
+	ErrorViewContainer
 {
-	@IBOutlet private(set) public var errorView: ErrorView?
+	private(set) public lazy var errorView = ErrorView()
 	
 	private var loadingControllers = [IndexPath: FeedImageCellController]()
 	
@@ -28,6 +29,7 @@ public final class FeedViewController:
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		configureErrorView()
 		refresh()
 	}
 	
@@ -57,7 +59,7 @@ public final class FeedViewController:
 	public func display(
 		_ viewModel: FeedErrorViewModel
 	) {
-		errorView?.message = viewModel.message
+		errorView.message = viewModel.message
 	}
 	
 	public override func tableView(
