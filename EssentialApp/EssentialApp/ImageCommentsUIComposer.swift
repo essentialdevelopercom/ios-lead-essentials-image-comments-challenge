@@ -35,7 +35,8 @@ public final class ImageCommentsPresentationAdapter:
 {
 	var presenter: ImageCommentsPresenter?
 
-	let loader: () -> AnyPublisher<[ImageComment], Error>
+	private let loader: () -> AnyPublisher<[ImageComment], Error>
+	
 	private var cancellables = Set<AnyCancellable>()
 
 	init(loader: @escaping () -> AnyPublisher<[ImageComment], Error>) {
