@@ -12,20 +12,18 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class FeedImageCommentLoaderPresentationAdapter: FeedImageCommentViewControllerDelegate {
-	private let feedCommentLoader: (URL) -> FeedImageCommentLoader.Publisher
+	private let loader: () -> FeedImageCommentLoader.Publisher
 	var presenter: FeedImageCommentLoaderPresenter?
-	private let url: URL
 	private var cancellable: Cancellable?
 
-	init(feedCommentLoader: @escaping (URL) -> FeedImageCommentLoader.Publisher, url: URL) {
-		self.feedCommentLoader = feedCommentLoader
-		self.url = url
+	init(loader: @escaping () -> FeedImageCommentLoader.Publisher) {
+		self.loader = loader
 	}
 	
 	func didRequestFeedCommentRefresh() {
 		presenter?.didStartLoadingFeedComments()
 
-		cancellable = feedCommentLoader(url)
+		cancellable = loader()
 			.dispatchOnMainQueue()
 			.sink(
 				receiveCompletion: { [weak self] completion in
