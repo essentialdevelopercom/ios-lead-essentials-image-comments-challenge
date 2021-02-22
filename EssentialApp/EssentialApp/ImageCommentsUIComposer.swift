@@ -18,6 +18,7 @@ public final class ImageCommentsUIComposer {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		imageCommentsController.title = ImageCommentsPresenter.title
 		let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader)
 		imageCommentsController.delegate = presentationAdapter
 		let presenter = ImageCommentsPresenter(

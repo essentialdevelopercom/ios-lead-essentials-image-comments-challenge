@@ -13,6 +13,14 @@ import EssentialFeediOS
 import XCTest
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
+	
+	func test_imageCommentsView_hasTitle() {
+		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.title, ImageCommentsPresenter.title)
+	}
 
 	func test_loadAction_requestCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
