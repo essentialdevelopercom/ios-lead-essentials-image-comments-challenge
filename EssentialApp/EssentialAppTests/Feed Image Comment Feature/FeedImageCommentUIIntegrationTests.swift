@@ -8,6 +8,7 @@
 
 import XCTest
 import UIKit
+import Combine
 import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
@@ -114,18 +115,27 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
-	func test_feedViewComments_cancelsImageCommentLoadingWhenViewWillDisappear() {
-		let urlRequest = anyURL()
-		let (sut, loader) = makeSUT(url: urlRequest)
+	func test_deinit_cancelsRunningRequest() {
+		let url = anyURL()
+		var sut: FeedImageCommentViewController?
+		var cancelCallCount = 0
 		
-		sut.loadViewIfNeeded()
-		loader.completeFeedCommentLoading(with: [makeComment()])
-		XCTAssertEqual(loader.cancelledCommentsURLs, [], "Expected no cancelled image comments requests")
+		autoreleasepool {
+			sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: { _ in 
+				PassthroughSubject<[FeedImageComment], Error>()
+					.handleEvents(receiveCancel: {
+						cancelCallCount += 1
+					}).eraseToAnyPublisher()
+			}, url: url)
+			
+			sut?.loadViewIfNeeded()
+		}
 		
-		sut.simulateUserInitiatedFeedCommentReload()
-		sut.simulateUserGoesBack()
-				
-		XCTAssertEqual(loader.cancelledCommentsURLs, [urlRequest], "Expected first cancelled image comment request once user dismisses view")
+		XCTAssertEqual(cancelCallCount, 0)
+		
+		sut = nil
+		
+		XCTAssertEqual(cancelCallCount, 1)
 	}
 
 	// MARK: - Helpers

@@ -11,7 +11,6 @@ import EssentialFeed
 
 public protocol FeedImageCommentViewControllerDelegate {
 	func didRequestFeedCommentRefresh()
-	func didCancelFeedCommentRequest()
 }
 
 final public class FeedImageCommentViewController: UITableViewController, FeedLoadingView, FeedErrorView {
@@ -33,12 +32,6 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 		super.viewDidLayoutSubviews()
 		
 		tableView.sizeTableHeaderToFit()
-	}
-	
-	public override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		
-		delegate?.didCancelFeedCommentRequest()
 	}
 	
 	@IBAction private func refresh() {
