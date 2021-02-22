@@ -115,7 +115,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		loader.completeFeedLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
 		
-		sut.simulateErrorViewTap()
+		sut.tableView.simulateTapOnErrorView()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	

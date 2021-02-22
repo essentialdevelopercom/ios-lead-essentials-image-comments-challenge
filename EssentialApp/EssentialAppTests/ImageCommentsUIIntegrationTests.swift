@@ -168,8 +168,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		loader.completeLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, ImageCommentsPresenter.errorMessage)
-		
-		sut.simulateErrorViewTap()
+
+		sut.tableView.simulateTapOnErrorView()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 

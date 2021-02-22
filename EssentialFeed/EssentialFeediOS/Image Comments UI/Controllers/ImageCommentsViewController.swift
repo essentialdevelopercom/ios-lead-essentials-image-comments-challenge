@@ -17,8 +17,7 @@ public final class ImageCommentsViewController:
 	UITableViewController,
 	ImageCommentsView,
 	ImageCommentsErrorView,
-	ImageCommentsLoadingView,
-	ErrorViewContainer
+	ImageCommentsLoadingView
 {
 	private(set) public lazy var errorView = ErrorView()
 
@@ -39,7 +38,7 @@ public final class ImageCommentsViewController:
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
-		configureErrorView()
+		tableView.configureHeader(using: errorView)
 		refresh()
 	}
 	

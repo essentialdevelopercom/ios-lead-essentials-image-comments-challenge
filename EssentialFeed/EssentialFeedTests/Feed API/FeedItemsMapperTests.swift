@@ -7,9 +7,9 @@ import EssentialFeed
 
 class FeedItemsMapperTests: XCTestCase {
 	
-	func test_map_deliversErrorOnNon2xxHTTPResponse() throws {
+	func test_map_deliversErrorOnNon200HTTPResponse() throws {
 		let json = makeItemsJSON([])
-		let samples = [199, 300, 350, 400, 500]
+		let samples = [199, 201, 300, 400, 500]
 		
 		try samples.forEach { code in
 			XCTAssertThrowsError(
