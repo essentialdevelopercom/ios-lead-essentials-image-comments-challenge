@@ -30,7 +30,7 @@ public final class ImageCommentsUIComposer {
 	}
 }
 
-public final class ImageCommentsPresentationAdapter:
+private final class ImageCommentsPresentationAdapter:
 	ImageCommentsViewControllerDelegate
 {
 	var presenter: ImageCommentsPresenter?
@@ -43,7 +43,7 @@ public final class ImageCommentsPresentationAdapter:
 		self.loader = loader
 	}
 
-	public func didRequestCommentsRefresh() {
+	fileprivate func didRequestCommentsRefresh() {
 		presenter?.didStartLoading()
 		loader()
 			.dispatchOnMainQueue()
