@@ -8,7 +8,7 @@ import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
 	
-	class LoaderSpy: FeedLoader, FeedImageDataLoader {
+	class LoaderSpy: FeedLoader, FeedImageDataLoader, FeedImageRouter {
 		
 		// MARK: - FeedLoader
 		
@@ -60,6 +60,14 @@ extension FeedUIIntegrationTests {
 		func completeImageLoadingWithError(at index: Int = 0) {
 			let error = NSError(domain: "an error", code: 0)
 			imageRequests[index].completion(.failure(error))
+		}
+		
+		// MARK: - FeedImageRouter
+		
+		var routerMessages = [String]()
+		
+		func goToComments(for feedImageID: String) {
+			routerMessages.append(feedImageID)
 		}
 	}
 	
