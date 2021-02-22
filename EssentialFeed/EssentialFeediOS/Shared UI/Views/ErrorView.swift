@@ -78,3 +78,27 @@ extension UIColor {
 		UIColor(red: 1, green: 106 / 255, blue: 106 / 255, alpha: 1)
 	}
 }
+
+extension UITableView {
+	func configureHeader(using errorView: ErrorView) {
+		let container = UIView()
+		container.backgroundColor = .clear
+		container.addSubview(errorView)
+
+		errorView.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			errorView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+			container.trailingAnchor.constraint(equalTo: errorView.trailingAnchor),
+			errorView.topAnchor.constraint(equalTo: container.topAnchor),
+			container.bottomAnchor.constraint(equalTo: errorView.bottomAnchor),
+		])
+
+		tableHeaderView = container
+
+		errorView.onHide = { [weak self] in
+			self?.beginUpdates()
+			self?.sizeTableHeaderToFit()
+			self?.endUpdates()
+		}
+	}
+}
