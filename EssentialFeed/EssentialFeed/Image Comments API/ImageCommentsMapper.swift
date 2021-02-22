@@ -47,10 +47,14 @@ public enum ImageCommentsMapper {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 
-		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+		guard isOK(response), let root = try? decoder.decode(Root.self, from: data) else {
 			throw Error.invalidData
 		}
 
 		return root.comments
+	}
+	
+	private static func isOK(_ response: HTTPURLResponse) -> Bool {
+		(200...299).contains(response.statusCode)
 	}
 }
