@@ -105,8 +105,12 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let comments = [makeComment()]
 
 		sut.loadViewIfNeeded()
-		loader.completeLoading(with: comments)
+		loader.completeLoading(with: comments, at: 0)
 		assertThat(sut, isRendering: comments)
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
 	}
 
 	func test_loadCompletion_doesNotAlterCurrentRenderingStateOnError() {
