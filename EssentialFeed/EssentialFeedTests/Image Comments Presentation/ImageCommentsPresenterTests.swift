@@ -14,6 +14,10 @@ class ImageCommentsPresenterTests: XCTestCase {
 	func test_title_isLocalized() {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
+	
+	func test_errorMessage_isLocalized() {
+		XCTAssertEqual(ImageCommentsPresenter.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+	}
 
 	func test_map_createsViewModels() {
 		let now = Date()
