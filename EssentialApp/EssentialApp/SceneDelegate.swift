@@ -39,6 +39,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, FeedImageRouter {
 		LocalFeedImageDataLoader(store: store)
 	}()
 	
+	private lazy var rootNavigation: UINavigationController = {
+		window?.rootViewController as! UINavigationController
+	}()
+	
 	convenience init(httpClient: HTTPClient, 
 					 store: FeedStore & FeedImageDataStore) {
 		self.init()
@@ -84,16 +88,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, FeedImageRouter {
 			})
 	}
 	
-	func goToComments(for feedImageID: String) {
-		let root = window?.rootViewController
-		let rootNavigation = root as? UINavigationController
-		
+	func goToComments(for feedImageID: String) {		
 		let feedCommentLoader = RemoteFeedImageCommentLoader(client: httpClient)
 		
 		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImageID)/comments")!
 		let controller = FeedImageCommentUIComposer.feedImageCommentComposedWith(
 			feedCommentLoader: feedCommentLoader.loadImageCommentPublisher, 
 			url: url)
-		rootNavigation?.pushViewController(controller, animated: true)
+		rootNavigation.pushViewController(controller, animated: true)
 	}
 }
