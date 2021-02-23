@@ -8,7 +8,7 @@ import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
 	
-	class LoaderSpy: FeedLoader, FeedImageDataLoader, FeedImageRouter {
+	class LoaderSpy: FeedLoader, FeedImageDataLoader {
 		
 		// MARK: - FeedLoader
 		
@@ -61,8 +61,11 @@ extension FeedUIIntegrationTests {
 			let error = NSError(domain: "an error", code: 0)
 			imageRequests[index].completion(.failure(error))
 		}
-		
-		// MARK: - FeedImageRouter
+	}
+	
+	// MARK: - FeedImageRouter
+	
+	class FeedImageRouterSpy: FeedImageRouter {
 		
 		var routerMessages = [String]()
 		

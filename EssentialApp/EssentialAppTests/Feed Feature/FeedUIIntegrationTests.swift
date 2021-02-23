@@ -164,7 +164,8 @@ final class FeedUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_feedImageView_callsRouterOnTap() {
-		let (sut, loader) = makeSUT()
+		let router = FeedImageRouterSpy()
+		let (sut, loader) = makeSUT(router: router)
 		let image0 = makeImage()
 		
 		sut.loadViewIfNeeded()
@@ -172,7 +173,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		let _ = sut.simulateFeedImageViewVisible(at: 0)
 		sut.simulateFeedImageTap(at: 0)
 		
-		XCTAssertEqual(loader.routerMessages, [image0.id.uuidString])
+		XCTAssertEqual(router.routerMessages, [image0.id.uuidString])
 	}
 	
 	func test_feedImageView_rendersImageLoadedFromURL() {
@@ -331,9 +332,9 @@ final class FeedUIIntegrationTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(router: FeedImageRouter = FeedImageRouterSpy(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, router: loader)
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, router: router)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
