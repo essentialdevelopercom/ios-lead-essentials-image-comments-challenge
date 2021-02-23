@@ -9,9 +9,7 @@ public final class ErrorView: UIButton {
 		get { return isVisible ? title(for: .normal) : nil }
 		set { setMessageAnimated(newValue) }
 	}
-	
-	public var onHide: (() -> Void)?
-	
+		
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
 		configure()
@@ -71,7 +69,6 @@ public final class ErrorView: UIButton {
 		setTitle(nil, for: .normal)
 		alpha = 0
 		contentEdgeInsets = .init(top: -2.5, left: 0, bottom: -2.5, right: 0)
-		onHide?()
 	}
 }
 
