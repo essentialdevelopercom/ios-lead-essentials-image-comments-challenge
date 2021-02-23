@@ -26,6 +26,10 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 		
 		refresh()
 		
+		configureTableView()
+	}
+	
+	private func configureTableView() {
 		tableView.tableHeaderView = errorView.makeContainer()
 		errorView.onHide = { [weak self] in
 			self?.tableView.beginUpdates()
