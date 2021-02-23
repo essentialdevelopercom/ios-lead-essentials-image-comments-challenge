@@ -135,12 +135,12 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 		var cancelCallCount = 0
 		
 		autoreleasepool {
-			sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: { _ in 
+			sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: {
 				PassthroughSubject<[FeedImageComment], Error>()
 					.handleEvents(receiveCancel: {
 						cancelCallCount += 1
 					}).eraseToAnyPublisher()
-			}, url: url)
+			})
 			
 			sut?.loadViewIfNeeded()
 		}
@@ -156,7 +156,7 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy(url: url)
-		let sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: loader.loadImageCommentPublisher, url: url)
+		let sut = FeedImageCommentUIComposer.feedImageCommentComposedWith(feedCommentLoader: loader.loadImageCommentPublisher)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

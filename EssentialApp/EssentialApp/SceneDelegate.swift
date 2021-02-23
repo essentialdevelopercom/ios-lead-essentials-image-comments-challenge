@@ -93,8 +93,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, FeedImageRouter {
 		
 		let feedCommentLoader = RemoteFeedImageCommentLoader(url: url, client: httpClient)
 		let controller = FeedImageCommentUIComposer.feedImageCommentComposedWith(
-			feedCommentLoader: feedCommentLoader.loadImageCommentPublisher, 
-			url: url)
+			feedCommentLoader: feedCommentLoader.loadImageCommentPublisher)
+		
 		rootNavigation.pushViewController(controller, animated: true)
 	}
 }

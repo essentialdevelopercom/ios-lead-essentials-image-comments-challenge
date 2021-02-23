@@ -122,7 +122,7 @@ extension DispatchQueue {
 public extension FeedImageCommentLoader {
 	typealias Publisher = AnyPublisher<[FeedImageComment], Error>
 	
-	func loadImageCommentPublisher(from url: URL) -> Publisher {
+	func loadImageCommentPublisher() -> Publisher {
 		var task: FeedImageCommentLoaderTask?
 		
 		return Deferred {
