@@ -14,7 +14,7 @@ public protocol FeedImageCommentViewControllerDelegate {
 }
 
 final public class FeedImageCommentViewController: UITableViewController, FeedLoadingView, FeedErrorView {
-	@IBOutlet private(set) public var errorView: ErrorView?
+	private(set) public var errorView = ErrorView()
 	public var delegate: FeedImageCommentViewControllerDelegate?
 	
 	public var tableModel = [FeedImageCommentCellController]() {
@@ -25,6 +25,13 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 		super.viewDidLoad()
 		
 		refresh()
+		
+		tableView.tableHeaderView = errorView.makeContainer()
+		errorView.onHide = { [weak self] in
+			self?.tableView.beginUpdates()
+			self?.tableView.sizeTableHeaderToFit()
+			self?.tableView.endUpdates()
+		}
 	}
 	
 	public override func viewDidLayoutSubviews() {
@@ -46,7 +53,7 @@ final public class FeedImageCommentViewController: UITableViewController, FeedLo
 	}
 	
 	public func display(_ viewModel: FeedErrorViewModel) {
-		errorView?.message = viewModel.message
+		errorView.message = viewModel.message
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
