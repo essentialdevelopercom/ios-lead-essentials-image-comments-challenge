@@ -33,10 +33,10 @@ extension FeedImageCommentViewController {
 	}
 	
 	var errorMessage: String? {
-		return errorView?.message
+		return errorView.message
 	}
 	
 	func simulateErrorViewTap() {
-		errorView?.button.simulateTap()
+		errorView.simulateTap()
 	}
 }
