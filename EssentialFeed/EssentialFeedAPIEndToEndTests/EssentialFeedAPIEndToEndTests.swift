@@ -35,7 +35,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 
 		let exp = expectation(description: "Wait for load completion")
 		
-		let url = feedTestServerURL.appendingPathComponent("11E123D5-1272-4F17-9B91-F3D0FFEC895A/comments")
+		let url = feedTestServerURL.appendingPathComponent("54F35D06-9CC6-4294-A0D8-963D397E8B98/comments")
 
 		var receivedResult: FeedImageCommentLoader.Result?
 		loader.loadImageCommentData(from: url) { result in
@@ -48,7 +48,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 	}
 	
 	private var feedTestServerURL: URL {
-		return URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image")!
+		return URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/image")!
 	}
 	
 	private func ephemeralClient(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
@@ -74,25 +74,25 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 	
 	private func message(at index: Int) -> String {
 		return [
-			"The gallery was seen in Wolfgang Becker's movie Goodbye, Lenin!",
-			"It was also featured in English indie/rock band Bloc Party's single Kreuzberg taken from the album A Weekend in the City.",
-			"The restoration process has been marked by major conflict. Eight of the artists of 1990 refused to paint their own images again after they were completely destroyed by the renovation. In order to defend the copyright, they founded Founder Initiative East Side with other artists whose images were copied without permission.",
+			"message-1",
+			"message-2",
+			"message-3",
 		][index]
 	}
 	
 	private func creationDate(at index: Int) -> String {
 		return [
-			"2020-10-09T11:24:59+0000",
-			"2020-10-01T04:23:53+0000",
-			"2020-09-26T11:22:59+0000",
+			"2020-07-31T11:24:59+0000",
+			"2020-07-31T04:23:53+0000",
+			"2020-07-26T11:22:59+0000",
 		][index]
 	}
 	
 	private func authorUsername(at index: Int) -> String {
 		return [
-			"Joe",
-			"Megan",
-			"Dwight",
+			"username-1",
+			"username-2",
+			"username-3",
 		][index]
 	}
 }
