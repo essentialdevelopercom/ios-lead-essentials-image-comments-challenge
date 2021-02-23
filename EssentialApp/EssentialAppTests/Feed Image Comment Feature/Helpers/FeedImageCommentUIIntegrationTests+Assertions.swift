@@ -28,12 +28,12 @@ extension FeedImageCommentUIIntegrationTests {
 			return XCTFail("Expected \(FeedImageCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 
-		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message text to be \(String(describing: imageComment.message)) for image comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.messageText, imageComment.message, "messageText at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(cell.authorNameText, imageComment.author, "Expected author text to be \(String(describing: imageComment.author)) for image comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.authorNameText, imageComment.author, "authorNameText at index (\(index))", file: file, line: line)
 		
 		let createdAtText = FeedCommentDatePolicy.getRelativeDate(for: imageComment.creationDate)
 		
-		XCTAssertEqual(cell.createdAtText, createdAtText, "Expected creation date text to be \(String(describing: createdAtText)) for image comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.createdAtText, createdAtText, "createdAtText at index (\(index))", file: file, line: line)
 	}
 }
