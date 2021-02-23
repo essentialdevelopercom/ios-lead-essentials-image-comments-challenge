@@ -67,10 +67,10 @@ extension FeedUIIntegrationTests {
 	
 	class FeedImageRouterSpy: FeedImageRouter {
 		
-		var routerMessages = [String]()
+		var routerMessages = [FeedImage]()
 		
-		func goToComments(for feedImageID: String) {
-			routerMessages.append(feedImageID)
+		func goToComments(for image: FeedImage) {
+			routerMessages.append(image)
 		}
 	}
 	

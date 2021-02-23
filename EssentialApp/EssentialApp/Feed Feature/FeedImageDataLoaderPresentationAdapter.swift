@@ -45,6 +45,6 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
 	}
 	
 	func didTapFeedImage() {
-		presenter?.didTapFeedImage(with: model.id.uuidString)
+		presenter?.didTapFeedImage(image: model)
 	}
 }

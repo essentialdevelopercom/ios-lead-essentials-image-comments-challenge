@@ -88,10 +88,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, FeedImageRouter {
 			})
 	}
 	
-	func goToComments(for feedImageID: String) {		
+	func goToComments(for image: FeedImage) {		
 		let feedCommentLoader = RemoteFeedImageCommentLoader(client: httpClient)
 		
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImageID)/comments")!
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
 		let controller = FeedImageCommentUIComposer.feedImageCommentComposedWith(
 			feedCommentLoader: feedCommentLoader.loadImageCommentPublisher, 
 			url: url)

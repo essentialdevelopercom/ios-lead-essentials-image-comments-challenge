@@ -173,7 +173,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		let _ = sut.simulateFeedImageViewVisible(at: 0)
 		sut.simulateFeedImageTap(at: 0)
 		
-		XCTAssertEqual(router.routerMessages, [image0.id.uuidString])
+		XCTAssertEqual(router.routerMessages, [image0])
 	}
 	
 	func test_feedImageView_rendersImageLoadedFromURL() {

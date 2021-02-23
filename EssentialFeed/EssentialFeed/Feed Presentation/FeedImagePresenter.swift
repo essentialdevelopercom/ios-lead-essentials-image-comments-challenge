@@ -11,7 +11,7 @@ public protocol FeedImageView {
 }
 
 public protocol FeedImageRouter {
-	func goToComments(for feedImageID: String)
+	func goToComments(for image: FeedImage)
 }
 
 public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
@@ -55,7 +55,7 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
 			shouldRetry: true))
 	}
 	
-	public func didTapFeedImage(with id: String) {
-		router.goToComments(for: id)
+	public func didTapFeedImage(image: FeedImage) {
+		router.goToComments(for: image)
 	}
 }
