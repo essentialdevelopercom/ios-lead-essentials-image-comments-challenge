@@ -30,15 +30,14 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 	// MARK: - Helpers
 	
 	private func getFeedCommentResult(file: StaticString = #file, line: UInt = #line) -> FeedImageCommentLoader.Result? {
-		let loader = RemoteFeedImageCommentLoader(client: ephemeralClient())
+		let url = feedTestServerURL.appendingPathComponent("54F35D06-9CC6-4294-A0D8-963D397E8B98/comments")
+		let loader = RemoteFeedImageCommentLoader(url: url, client: ephemeralClient())
 		trackForMemoryLeaks(loader, file: file, line: line)
 
 		let exp = expectation(description: "Wait for load completion")
-		
-		let url = feedTestServerURL.appendingPathComponent("54F35D06-9CC6-4294-A0D8-963D397E8B98/comments")
 
 		var receivedResult: FeedImageCommentLoader.Result?
-		loader.loadImageCommentData(from: url) { result in
+		_ = loader.loadImageCommentData() { result in
 			receivedResult = result
 			exp.fulfill()
 		}

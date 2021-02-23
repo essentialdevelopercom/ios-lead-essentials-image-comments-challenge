@@ -9,9 +9,11 @@
 import Foundation
 
 public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
+	private let url: URL
 	private let client: HTTPClient
 	
-	public init(client: HTTPClient) {
+	public init(url: URL, client: HTTPClient) {
+		self.url = url
 		self.client = client
 	}
 	
@@ -45,7 +47,7 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 		}
 	}
 	
-	public func loadImageCommentData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageCommentLoaderTask {
+	public func loadImageCommentData(completion: @escaping (Result) -> Void) -> FeedImageCommentLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }

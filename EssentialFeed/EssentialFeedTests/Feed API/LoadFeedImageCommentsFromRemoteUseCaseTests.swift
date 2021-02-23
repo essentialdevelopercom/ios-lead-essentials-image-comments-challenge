@@ -21,7 +21,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		_ = sut.loadImageCommentData(from: url) { _ in }
+		_ = sut.loadImageCommentData() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -30,8 +30,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 
-		_ = sut.loadImageCommentData(from: url) { _ in }
-		_ = sut.loadImageCommentData(from: url) { _ in }
+		_ = sut.loadImageCommentData() { _ in }
+		_ = sut.loadImageCommentData() { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -125,10 +125,10 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_loadImageCommentDataFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
 		let client = HTTPClientSpy()
-		var sut: RemoteFeedImageCommentLoader? = RemoteFeedImageCommentLoader(client: client)
+		var sut: RemoteFeedImageCommentLoader? = RemoteFeedImageCommentLoader(url: anyURL(), client: client)
 
 		var capturedResults = [RemoteFeedImageCommentLoader.Result]()
-		_ = sut?.loadImageCommentData(from: anyURL()) { capturedResults.append($0) }
+		_ = sut?.loadImageCommentData() { capturedResults.append($0) }
 
 		sut = nil
 		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
@@ -137,10 +137,10 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_cancelLoadImageCommentDataFromURL_cancelsClientURLRequest() {
-		let (sut, client) = makeSUT()
 		let url = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(url: url)
 
-		let task = sut.loadImageCommentData(from: url) { _ in }
+		let task = sut.loadImageCommentData() { _ in }
 		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
 
 		task.cancel()
@@ -152,7 +152,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let nonEmptyData = Data("non-empty data".utf8)
 
 		var received = [FeedImageCommentLoader.Result]()
-		let task = sut.loadImageCommentData(from: anyURL()) { received.append($0) }
+		let task = sut.loadImageCommentData() { received.append($0) }
 		task.cancel()
 
 		client.complete(withStatusCode: 404, data: anyData())
@@ -166,7 +166,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let sut = RemoteFeedImageCommentLoader(client: client)
+		let sut = RemoteFeedImageCommentLoader(url: url, client: client)
 		
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
@@ -200,10 +200,9 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	private func expect(_ sut: RemoteFeedImageCommentLoader, toCompleteWith expectedResult: RemoteFeedImageCommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-		let url = URL(string: "https://a-given-url.com")!
 		let exp = expectation(description: "Wait for load completion")
 
-		_ = sut.loadImageCommentData(from: url) { receivedResult in
+		_ = sut.loadImageCommentData() { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedData), .success(expectedData)):
 				XCTAssertEqual(receivedData, expectedData, file: file, line: line)

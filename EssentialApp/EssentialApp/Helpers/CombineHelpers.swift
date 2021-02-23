@@ -127,7 +127,7 @@ public extension FeedImageCommentLoader {
 		
 		return Deferred {
 			Future { completion in
-				task = self.loadImageCommentData(from: url, completion: completion)
+				task = self.loadImageCommentData(completion: completion)
 			}
 		}
 		.handleEvents(receiveCancel: { task?.cancel() })
