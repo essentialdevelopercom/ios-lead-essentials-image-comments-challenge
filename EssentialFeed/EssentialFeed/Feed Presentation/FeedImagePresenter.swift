@@ -17,14 +17,11 @@ public protocol FeedImageRouter {
 public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
 	private let view: View
 	private let imageTransformer: (Data) -> Image?
-	private let router: FeedImageRouter
 	
 	public init(view: View, 
-				imageTransformer: @escaping (Data) -> Image?,
-				router: FeedImageRouter) {
+				imageTransformer: @escaping (Data) -> Image?) {
 		self.view = view
 		self.imageTransformer = imageTransformer
-		self.router = router
 	}
 	
 	public func didStartLoadingImageData(for model: FeedImage) {
@@ -53,9 +50,5 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
 			image: nil,
 			isLoading: false,
 			shouldRetry: true))
-	}
-	
-	public func didTapFeedImage(image: FeedImage) {
-		router.goToComments(for: image)
 	}
 }
