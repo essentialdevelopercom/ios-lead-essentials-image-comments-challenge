@@ -3,7 +3,6 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,24 +19,27 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAl-X3-GPy">
-                                    <rect key="frame" x="8" y="8" width="398" height="18"/>
-                                    <viewLayoutGuide key="safeArea" id="rAn-pY-fCl"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OaB-og-Wwr">
+                                    <rect key="frame" x="0.0" y="8" width="414" height="18"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                    <state key="normal" title="Button">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="hideMessageAnimated" destination="Xpc-1p-cVt" eventType="touchUpInside" id="ZrN-SI-n80"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <gestureRecognizers/>
                             <constraints>
-                                <constraint firstItem="GAl-X3-GPy" firstAttribute="top" secondItem="Xpc-1p-cVt" secondAttribute="top" constant="8" id="jTn-B1-GEv"/>
-                                <constraint firstItem="GAl-X3-GPy" firstAttribute="leading" secondItem="Xpc-1p-cVt" secondAttribute="leadingMargin" id="jjy-qN-dtR"/>
-                                <constraint firstAttribute="trailingMargin" secondItem="GAl-X3-GPy" secondAttribute="trailing" id="pYs-82-SKg"/>
-                                <constraint firstAttribute="bottom" secondItem="GAl-X3-GPy" secondAttribute="bottom" constant="8" id="tDU-fM-eFH"/>
+                                <constraint firstItem="OaB-og-Wwr" firstAttribute="top" secondItem="Xpc-1p-cVt" secondAttribute="top" constant="8" id="ErT-TO-6UG"/>
+                                <constraint firstAttribute="trailing" secondItem="OaB-og-Wwr" secondAttribute="trailing" id="S6R-Gb-rV9"/>
+                                <constraint firstAttribute="bottom" secondItem="OaB-og-Wwr" secondAttribute="bottom" constant="8" id="bQi-t4-AZN"/>
+                                <constraint firstItem="OaB-og-Wwr" firstAttribute="leading" secondItem="Xpc-1p-cVt" secondAttribute="leading" id="xcM-UP-twg"/>
                             </constraints>
                             <connections>
-                                <outlet property="label" destination="GAl-X3-GPy" id="8vG-1l-DvD"/>
+                                <outlet property="button" destination="OaB-og-Wwr" id="iGC-S9-GB1"/>
                                 <outletCollection property="gestureRecognizers" destination="t5m-sz-eBu" appends="YES" id="yhW-92-5p6"/>
                             </connections>
                         </view>
@@ -122,11 +124,7 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fiZ-gQ-6mU" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="t5m-sz-eBu">
-                    <connections>
-                        <action selector="hideMessageAnimated" destination="Xpc-1p-cVt" id="Pdh-Xb-0Ct"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="t5m-sz-eBu"/>
             </objects>
             <point key="canvasLocation" x="1105.7971014492755" y="-11.383928571428571"/>
         </scene>
