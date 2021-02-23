@@ -6,6 +6,10 @@ import UIKit
 import EssentialFeediOS
 
 extension FeedViewController {
+	func simulateTapOnErrorView() {
+		errorView.simulateTap()
+	}
+	
 	func simulateTapOnFeedImage(
 		at row: Int
 	) {

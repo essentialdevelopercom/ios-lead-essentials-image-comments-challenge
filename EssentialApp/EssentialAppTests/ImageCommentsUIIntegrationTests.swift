@@ -13,12 +13,12 @@ import EssentialFeediOS
 import XCTest
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
-	
+
 	func test_imageCommentsView_hasTitle() {
 		let (sut, _) = makeSUT()
-		
+
 		sut.loadViewIfNeeded()
-		
+
 		XCTAssertEqual(sut.title, ImageCommentsPresenter.title)
 	}
 
@@ -115,7 +115,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		loader.completeLoading(with: comments, at: 0)
 		assertThat(sut, isRendering: comments)
-		
+
 		sut.simulateUserInitiatedReload()
 		loader.completeLoading(with: [], at: 1)
 		assertThat(sut, isRendering: [])
@@ -159,17 +159,17 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
-	
+
 	func test_tapOnErrorView_hidesErrorMessage() {
 		let (sut, loader) = makeSUT()
-		
+
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(sut.errorMessage, nil)
-		
+
 		loader.completeLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, ImageCommentsPresenter.errorMessage)
 
-		sut.tableView.simulateTapOnErrorView()
+		sut.simulateTapOnErrorView()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 
@@ -208,7 +208,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(
 			commentsLoader: loader.loadPublisher
 		)
-		trackForMemoryLeaks(loader, file: file, line: line) 
+		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
@@ -337,6 +337,10 @@ extension ImageCommentsViewController {
 				section: commentsSection
 			)
 		) as? ImageCommentCell
+	}
+
+	func simulateTapOnErrorView() {
+		errorView.simulateTap()
 	}
 }
 
