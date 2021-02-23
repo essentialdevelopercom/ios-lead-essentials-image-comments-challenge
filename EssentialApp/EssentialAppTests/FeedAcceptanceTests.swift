@@ -57,7 +57,7 @@ class FeedAcceptanceTests: XCTestCase {
 		
 		feed.simulateFeedImageTap(at: 0)
 		
-		executeRunLoopToCleanUpReferences()
+		executeRunLoop()
 		
 		let root = sut.window?.rootViewController
 		let rootNavigation = root as? UINavigationController
@@ -151,7 +151,7 @@ class FeedAcceptanceTests: XCTestCase {
 		]])
 	}
 	
-	private func executeRunLoopToCleanUpReferences() {
+	private func executeRunLoop() {
 		RunLoop.current.run(until: Date())
 	}
 }
