@@ -59,10 +59,7 @@ class FeedAcceptanceTests: XCTestCase {
 		
 		executeRunLoop()
 		
-		let root = sut.window?.rootViewController
-		let rootNavigation = root as? UINavigationController
-		let topController = rootNavigation?.topViewController
-		let feedCommentsController = try XCTUnwrap(topController as? FeedImageCommentViewController, "Expected a feed image comment controller as top view controller, got \(String(describing: topController)) instead")
+		let feedCommentsController = try XCTUnwrap(topController(for: sut.window) as? FeedImageCommentViewController, "Expected a feed image comment controller as top view controller, got \(String(describing: topController)) instead")
 		
 		feedCommentsController.loadViewIfNeeded()
 		
@@ -92,6 +89,12 @@ class FeedAcceptanceTests: XCTestCase {
 	private func enterBackground(with store: InMemoryFeedStore) {
 		let sut = SceneDelegate(httpClient: HTTPClientStub.offline, store: store)
 		sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
+	}
+	
+	private func topController(for window: UIWindow?) -> UIViewController? {
+		let root = window?.rootViewController
+		let rootNavigation = root as? UINavigationController
+		return rootNavigation?.topViewController
 	}
 	
 	private func response(for url: URL) -> (Data, HTTPURLResponse) {
