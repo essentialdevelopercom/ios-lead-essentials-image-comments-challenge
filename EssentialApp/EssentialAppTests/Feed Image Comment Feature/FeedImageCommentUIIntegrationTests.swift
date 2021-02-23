@@ -177,11 +177,7 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	}
 }
 
-private extension Date {
-	func oneHourAgo() -> Date {
-		return self - 3600
-	}
-	
+private extension Date {	
 	func oneDayAgo() -> Date {
 		return adding(days: -1)
 	}
