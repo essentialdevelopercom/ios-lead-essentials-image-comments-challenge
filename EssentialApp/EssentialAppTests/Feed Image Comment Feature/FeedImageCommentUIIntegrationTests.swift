@@ -151,6 +151,16 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	private func makeComment(message: String = "", creationDate: Date = Date(), authorUsername: String = "") -> FeedImageComment {
 		return FeedImageComment(id: UUID(), message: message, creationDate: creationDate, authorUsername: authorUsername)
 	}
+	
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "FeedComments"
+		let bundle = Bundle(for: FeedImageCommentLoaderPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
+	}
 }
 
 private extension Date {

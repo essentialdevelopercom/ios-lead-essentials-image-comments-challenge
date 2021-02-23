@@ -29,8 +29,8 @@ public final class FeedImageCommentLoaderPresenter {
 	
 	private var feedLoadError: String {
 		return NSLocalizedString("FEED_VIEW_CONNECTION_ERROR",
-			 tableName: "Feed",
-			 bundle: Bundle(for: FeedPresenter.self),
+			 tableName: "FeedComments",
+			 bundle: Bundle(for: FeedImageCommentLoaderPresenter.self),
 			 comment: "Error message displayed when we can't load the image feed from the server")
 	}
 	
@@ -44,7 +44,7 @@ public final class FeedImageCommentLoaderPresenter {
 	
 	public static var title: String {
 		return NSLocalizedString("FEED_COMMENT_VIEW_TITLE",
-			 tableName: "Feed",
+			 tableName: "FeedComments",
 			 bundle: Bundle(for: FeedImageCommentLoaderPresenter.self),
 			 comment: "Title for the feed comment view")
 	}

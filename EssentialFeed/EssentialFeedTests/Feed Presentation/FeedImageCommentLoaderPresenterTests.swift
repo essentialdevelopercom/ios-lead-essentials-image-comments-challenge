@@ -13,8 +13,7 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 	
 	func test_title_isLocalized() {
 		XCTAssertEqual(FeedImageCommentLoaderPresenter.title, 
-					   localized(for: FeedImageCommentLoaderPresenter.self,
-								 "FEED_COMMENT_VIEW_TITLE"))
+					   localized("FEED_COMMENT_VIEW_TITLE"))
 	}
 
     func test_init_doesNotSendMessagesToView() {
@@ -51,8 +50,7 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 		sut.didFinishLoadingFeedComments(with: anyNSError())
 
 		XCTAssertEqual(view.messages, [
-			.display(errorMessage: localized(for: FeedImageCommentLoaderPresenter.self,
-											 "FEED_VIEW_CONNECTION_ERROR")),
+			.display(errorMessage: localized("FEED_VIEW_CONNECTION_ERROR")),
 			.display(isLoading: false)
 		])
 	}
@@ -67,6 +65,16 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
+	}
+	
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "FeedComments"
+		let bundle = Bundle(for: FeedImageCommentLoaderPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
 	}
 	
 	private func uniqueImageFeedComments() -> (models: [FeedImageComment], viewModels: [CommentItemViewModel]) {

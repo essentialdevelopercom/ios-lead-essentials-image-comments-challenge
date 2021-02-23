@@ -63,6 +63,16 @@ class FeedPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
+	private func localized(for classType: AnyClass,_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "Feed"
+		let bundle = Bundle(for: classType)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
+	}
+	
 	private class ViewSpy: FeedView, FeedLoadingView, FeedErrorView {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
