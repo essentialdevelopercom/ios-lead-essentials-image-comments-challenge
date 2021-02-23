@@ -17,7 +17,7 @@ internal class FeedImageCommentMapper {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		
-		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+		guard 200 ..< 300 ~= response.statusCode, let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteFeedImageCommentLoader.Error.invalidData
 		}
 		
