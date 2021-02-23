@@ -55,6 +55,39 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 		])
 	}
 	
+	func test_map_createsCommentItemViewModels() {
+		let (sut, _) = makeSUT()
+		let locale = Locale(identifier: "en_US_POSIX")
+		
+		let comments = [
+			FeedImageComment(
+				id: UUID(),
+				message: "a message",
+				creationDate: Date().oneDayAgo(),
+				authorUsername: "a username"),
+			FeedImageComment(
+				id: UUID(),
+				message: "another message",
+				creationDate: Date().oneWeekAgo(),
+				authorUsername: "another username")
+		]
+		
+		let commentItems = sut.map(comments, locale: locale)
+		
+		XCTAssertEqual(commentItems, [
+			CommentItemViewModel(
+				message: "a message",
+				authorName: "a username",
+				createdAt: "1 day ago"
+			),
+			CommentItemViewModel(
+				message: "another message",
+				authorName: "another username",
+				createdAt: "1 week ago"
+			)
+		])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageCommentLoaderPresenter, view: ViewSpy){
@@ -112,5 +145,19 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 		func display(_ viewModel: FeedErrorViewModel) {
 			messages.insert(.display(errorMessage: viewModel.message))
 		}
+	}
+}
+
+private extension Date {	
+	func oneDayAgo() -> Date {
+		return adding(days: -1)
+	}
+	
+	func oneWeekAgo() -> Date {
+		return adding(days: -7)
+	}
+	
+	private func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }

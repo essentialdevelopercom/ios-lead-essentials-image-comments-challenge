@@ -64,11 +64,11 @@ public final class FeedImageCommentLoaderPresenter {
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
-	private func map(_ comments: [FeedImageComment]) -> [CommentItemViewModel] {
+	func map(_ comments: [FeedImageComment], locale: Locale = .current) -> [CommentItemViewModel] {
 		comments.map {
 			CommentItemViewModel(message: $0.message, 
 										  authorName: $0.author, 
-										  createdAt: FeedCommentDateFormatter.getRelativeDate(for: $0.creationDate))
+										  createdAt: FeedCommentDateFormatter.getRelativeDate(for: $0.creationDate, locale: locale))
 		}
 	}
 } 
