@@ -10,7 +10,7 @@ import EssentialFeediOS
 class FeedAcceptanceTests: XCTestCase {
 	
 	func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
-		let (_, feed) = launch(httpClient: .online(response), store: .empty)
+		let feed = launch(httpClient: .online(response), store: .empty)
 		
 		XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 2)
 		XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData())
@@ -19,11 +19,11 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() {
 		let sharedStore = InMemoryFeedStore.empty
-		let (_, onlineFeed) = launch(httpClient: .online(response), store: sharedStore)
+		let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
 		onlineFeed.simulateFeedImageViewVisible(at: 0)
 		onlineFeed.simulateFeedImageViewVisible(at: 1)
 		
-		let (_, offlineFeed) = launch(httpClient: .offline, store: sharedStore)
+		let offlineFeed = launch(httpClient: .offline, store: sharedStore)
 		
 		XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 2)
 		XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData())
@@ -31,7 +31,7 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	func test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache() {
-		let (_, feed) = launch(httpClient: .offline, store: .empty)
+		let feed = launch(httpClient: .offline, store: .empty)
 		
 		XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 0)
 	}
@@ -53,7 +53,8 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	func test_onFeedImageTap_displaysFeedImageComments() throws {
-		let (sut, feed) = launch(httpClient: .online(response), store: .empty)
+		let sut = makeSUT(httpClient: .online(response), store: .empty)
+		let feed = topController(for: sut.window) as! FeedViewController
 		
 		feed.simulateFeedImageTap(at: 0)
 		
@@ -79,11 +80,10 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func launch(
 		httpClient: HTTPClientStub = .offline,
-		store: InMemoryFeedStore = .empty
-	) -> (sut: SceneDelegate, feed: FeedViewController) {
+		store: InMemoryFeedStore = .empty) -> FeedViewController {
 		let sut = makeSUT(httpClient: httpClient, store: store)
 		let nav = sut.window?.rootViewController as? UINavigationController
-		return (sut, nav?.topViewController as! FeedViewController)
+		return nav?.topViewController as! FeedViewController
 	}
 	
 	private func enterBackground(with store: InMemoryFeedStore) {
