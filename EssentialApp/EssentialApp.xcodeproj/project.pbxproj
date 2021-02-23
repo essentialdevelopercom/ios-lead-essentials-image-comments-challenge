@@ -40,7 +40,6 @@
 		0895DAAE234B3F7E0031BB2D /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C9C9370625E0A014007DB455 /* ImageCommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C9370525E0A014007DB455 /* ImageCommentsUIIntegrationTests.swift */; };
 		C9C9372425E15EC6007DB455 /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C9372325E15EC6007DB455 /* ImageCommentsUIComposer.swift */; };
-		C9F8450125E473800099FD1D /* UITableView+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F8450025E473800099FD1D /* UITableView+TestHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,7 +106,6 @@
 		08FF35DD2534688E00DB6ABC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		C9C9370525E0A014007DB455 /* ImageCommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		C9C9372325E15EC6007DB455 /* ImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIComposer.swift; sourceTree = "<group>"; };
-		C9F8450025E473800099FD1D /* UITableView+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+TestHelpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,7 +145,6 @@
 				082C00052359E4C6008927D3 /* SharedTestHelpers.swift */,
 				0851CDAB239AB13100C19B1D /* HTTPClientStub.swift */,
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
-				C9F8450025E473800099FD1D /* UITableView+TestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
