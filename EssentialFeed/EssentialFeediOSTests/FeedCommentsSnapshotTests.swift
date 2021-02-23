@@ -20,6 +20,8 @@ final class FeedCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_COMMENTS_WITH_CONTENT_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_COMMENTS_WITH_CONTENT_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSizeCategory: .extraExtraExtraLarge)), named: "FEED_COMMENTS_WITH_CONTENT_light_extraExtraExtraLarge")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSizeCategory: .extraExtraExtraLarge)), named: "FEED_COMMENTS_WITH_CONTENT_dark_extraExtraExtraLarge")
 	}
 	
 	func test_feedCommentsWithErrorMessage() {
@@ -29,6 +31,16 @@ final class FeedCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_dark")
+		assert(snapshot: sut.snapshot(
+						for: .iPhone8(
+							style: .light,
+							contentSizeCategory: .extraExtraExtraLarge)),
+					   named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_light_extraExtraExtraLarge")
+		assert(snapshot: sut.snapshot(
+				for: .iPhone8(
+					style: .dark,
+					contentSizeCategory: .extraExtraExtraLarge)),
+			   named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_dark_extraExtraExtraLarge")
 	}
 	
 	// MARK: - Helpers
