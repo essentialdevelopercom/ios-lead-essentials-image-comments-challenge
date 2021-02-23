@@ -68,7 +68,7 @@ public final class FeedImageCommentLoaderPresenter {
 		comments.map {
 			CommentItemViewModel(message: $0.message, 
 										  authorName: $0.author, 
-										  createdAt: FeedCommentDatePolicy.getRelativeDate(for: $0.creationDate))
+										  createdAt: FeedCommentDateFormatter.getRelativeDate(for: $0.creationDate))
 		}
 	}
 } 

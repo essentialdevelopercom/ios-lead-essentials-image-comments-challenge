@@ -1,5 +1,5 @@
 //
-//  FeedCommentDatePolicy.swift
+//  FeedCommentDateFormatter.swift
 //  EssentialFeed
 //
 //  Created by Mario Alberto Barragán Espinosa on 15/02/21.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class FeedCommentDatePolicy {
+public final class FeedCommentDateFormatter {
 	private init() {}
 	
 	public static func getRelativeDate(for date: Date) -> String {

@@ -81,7 +81,7 @@ final class FeedImageCommentLoaderPresenterTests: XCTestCase {
 		let models = [uniqueComment(), uniqueComment()]
 		let viewModels = models.map { CommentItemViewModel(message: $0.message, 
 													  authorName: $0.author, 
-													  createdAt: FeedCommentDatePolicy.getRelativeDate(for: $0.creationDate)) }
+													  createdAt: FeedCommentDateFormatter.getRelativeDate(for: $0.creationDate)) }
 		return (models, viewModels)
 	}
 	

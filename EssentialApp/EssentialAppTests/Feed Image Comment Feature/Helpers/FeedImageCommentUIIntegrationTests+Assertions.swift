@@ -32,7 +32,7 @@ extension FeedImageCommentUIIntegrationTests {
 
 		XCTAssertEqual(cell.authorNameText, imageComment.author, "authorNameText at index (\(index))", file: file, line: line)
 		
-		let createdAtText = FeedCommentDatePolicy.getRelativeDate(for: imageComment.creationDate)
+		let createdAtText = FeedCommentDateFormatter.getRelativeDate(for: imageComment.creationDate)
 		
 		XCTAssertEqual(cell.createdAtText, createdAtText, "createdAtText at index (\(index))", file: file, line: line)
 	}
