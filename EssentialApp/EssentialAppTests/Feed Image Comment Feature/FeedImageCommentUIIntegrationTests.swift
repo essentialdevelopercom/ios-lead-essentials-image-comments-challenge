@@ -130,7 +130,6 @@ class FeedImageCommentUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_deinit_cancelsRunningRequest() {
-		let url = anyURL()
 		var sut: FeedImageCommentViewController?
 		var cancelCallCount = 0
 		
