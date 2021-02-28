@@ -17,8 +17,8 @@ class ImageCommentSnapshotTests: XCTestCase {
 		
 		sut.display(emptyComments())
 		
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_IMAGE_COMMENT_LIGHT")
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENT_DARK")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_IMAGE_COMMENT_LIGHT")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENT_DARK")
 	}
 	
 	func test_imageCommentWithErrorMessage() {
@@ -26,8 +26,8 @@ class ImageCommentSnapshotTests: XCTestCase {
 		
 		sut.display(ImageCommentsErrorViewModel(message: "This is a\nmulti-line\nerror message"))
 		
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_WITH_ERROR_LIGHT")
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_WITH_ERROR_DARK")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_WITH_ERROR_LIGHT")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_WITH_ERROR_DARK")
 	}
 	
 	//MARK: Helpers
