@@ -76,7 +76,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let model = imageComments[indexPath.row]
-		let cell = ImageCommentsCell()
+		let cell: ImageCommentsCell = tableView.dequeueReusableCell()
 		cell.usernameLabel.text = model.author.username
 		cell.createdTimeLabel.text = relativeDateStringFromNow(to: model.createdDate)
 		cell.message.text = model.message

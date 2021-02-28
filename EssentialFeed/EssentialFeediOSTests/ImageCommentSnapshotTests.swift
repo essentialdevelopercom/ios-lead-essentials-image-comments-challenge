@@ -30,6 +30,15 @@ class ImageCommentSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_WITH_ERROR_DARK")
 	}
 	
+	func test_imageCommentWithContent() {
+		let sut = makeSUT()
+		
+		sut.display(imageCommentWithContent())
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_WITH_CONTENT_LIGHT")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_WITH_CONTENT_DARK")
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT() -> ImageCommentsViewController {
@@ -44,5 +53,17 @@ class ImageCommentSnapshotTests: XCTestCase {
 	
 	private func emptyComments() -> ImageCommentsViewModel {
 		return ImageCommentsViewModel(comments: [])
+	}
+	
+	private func imageCommentWithContent() -> ImageCommentsViewModel {
+		return ImageCommentsViewModel(comments: [
+			ImageComment(id: UUID(),
+						 message: "A Message", createdDate: Date(timeIntervalSinceNow: -20000), author: CommentAuthor(username: "Jen")),
+			ImageComment(id: UUID(),
+						 message: "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.", createdDate: Date(timeIntervalSinceNow: -2000), author: CommentAuthor(username: "Jack")),
+			ImageComment(id: UUID(),
+						 message: "A Message\n.\n.\n.\n.\n.\n.\n😀", createdDate: Date(timeIntervalSinceNow: -10000), author: CommentAuthor(username: "Megan"))
+
+		])
 	}
 }
