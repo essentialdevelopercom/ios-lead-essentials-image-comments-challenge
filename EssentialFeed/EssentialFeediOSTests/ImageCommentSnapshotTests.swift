@@ -21,6 +21,15 @@ class ImageCommentSnapshotTests: XCTestCase {
 		record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENT_DARK")
 	}
 	
+	func test_imageCommentWithErrorMessage() {
+		let sut = makeSUT()
+		
+		sut.display(ImageCommentsErrorViewModel(message: "This is a\nmulti-line\nerror message"))
+		
+		record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_WITH_ERROR_LIGHT")
+		record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_WITH_ERROR_DARK")
+	}
+	
 	//MARK: Helpers
 	
 	private func makeSUT() -> ImageCommentsViewController {

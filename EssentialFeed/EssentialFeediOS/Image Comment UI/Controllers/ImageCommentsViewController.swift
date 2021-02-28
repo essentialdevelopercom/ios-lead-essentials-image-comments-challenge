@@ -15,17 +15,14 @@ public protocol ImageCommentsViewControllerDelegate {
 }
 
 public class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
+	@IBOutlet private(set) public var errorView: ErrorView?
+	
 	private var delegate: ImageCommentsViewControllerDelegate?
 	private var imageComments = [ImageComment]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
-	
-	private lazy var errorLabel: UILabel = {
-		let label = UILabel()
-		return label
-	}()
 	
 	convenience public init(delegate: ImageCommentsViewControllerDelegate) {
 		self.init()
@@ -35,12 +32,16 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		tableView.tableHeaderView = errorLabel
-		
 		self.refreshControl = UIRefreshControl()
 		self.refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
 		
 		load()
+	}
+	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
 	}
 	
 	@objc func load() {
@@ -63,9 +64,9 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
 		if let errorMessage = viewModel.message {
 			self.refreshControl?.endRefreshing()
-			self.errorLabel.text = errorMessage
+			errorView?.message = errorMessage
 		} else {
-			self.errorLabel.text = nil
+			errorView?.message = nil
 		}
 	}
 	
