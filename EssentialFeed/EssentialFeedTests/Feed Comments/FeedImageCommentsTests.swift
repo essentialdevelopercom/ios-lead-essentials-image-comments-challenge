@@ -80,6 +80,28 @@ final class FeedImageCommentsTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client, _) = makeSUT()
+		
+		let item1 = makeComment(
+			id: UUID(),
+			createdAt: (Date(timeIntervalSince1970: 1614618409), "2021-03-01T17:06:49+0000")
+		)
+		
+		let item2 = makeComment(
+			id: UUID(),
+			message: "test comment",
+			createdAt: (Date(timeIntervalSince1970: 1614618409), "2021-03-01T17:06:49+0000")
+		)
+		
+		let items = [item1.model, item2.model]
+		
+		expect(sut, toCompleteWith: .success(items), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	private func assert(requestedUrls: [URL], imageUrlProvider: @escaping ((String) -> URL), imageIds: String...) {
 		let apiUrls = imageIds.map { imageUrlProvider($0) }
 		XCTAssertEqual(requestedUrls, apiUrls)
@@ -94,6 +116,22 @@ final class FeedImageCommentsTests: XCTestCase {
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
+	private func makeComment(id: UUID, message: String = "msg", createdAt: (date: Date, stringValue: String), username: String = "user") -> (model: FeedComment, json: [String: Any]) {
+		let comment = FeedComment(id: id, message: message, createdAt: createdAt.date, author: .init(username: username)
+		)
+		
+		let authorJson = [
+			"username": username
+		]
+		let commentJson = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.stringValue,
+			"author": authorJson
+		].compactMapValues { $0 }
+		
+		return (comment, commentJson)
+	}
 	
 	private func makeSUT() -> (RemoteImageCommentLoader, HTTPClientSpy, (String) -> URL) {
 		let imageUrlProvider: (String) -> URL = { imageId in

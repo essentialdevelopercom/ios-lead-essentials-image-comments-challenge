@@ -11,7 +11,7 @@ import Foundation
 struct FeedComment: Hashable {
 	let id: UUID
 	let message: String
-	let createdAt: String
+	let createdAt: Date
 	let author: FeedCommentAuthor
 }
 

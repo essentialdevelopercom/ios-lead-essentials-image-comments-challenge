@@ -48,10 +48,23 @@ class RemoteImageCommentLoader {
 struct RemoteImageCommentMapper {
 	
 	struct RemoteFeedComment: Codable {
+		
+		enum CodingKeys: String, CodingKey {
+			case id, message, createdAt = "created_at", author
+		}
+		
 		let id: UUID
 		let message: String
-		let createdAt: String
+		let createdAt: Date
 		let author: RemoteFeedCommentAuthor
+		
+		init(id: UUID, message: String, createdAt: Date, author: RemoteImageCommentMapper.RemoteFeedCommentAuthor) {
+			self.id = id
+			self.message = message
+			self.createdAt = createdAt
+			self.author = author
+		}
+		
 	}
 	
 	struct RemoteFeedCommentAuthor: Codable {
@@ -63,10 +76,11 @@ struct RemoteImageCommentMapper {
 	}
 	
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedComment] {
-		guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data) else {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteImageCommentLoader.Error.invalidData
 		}
-		
 		return root.items
 	}
 	
