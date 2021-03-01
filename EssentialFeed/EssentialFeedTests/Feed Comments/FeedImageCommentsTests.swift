@@ -84,6 +84,9 @@ final class FeedImageCommentsTests: XCTestCase {
 		let client = HTTPClientSpy()
 		let loader = RemoteImageFeedCommentLoader(baseUrl: url, client: client)
 
+		trackForMemoryLeaks(client)
+		trackForMemoryLeaks(loader)
+		
 		return (loader, client)
 	}
 	
