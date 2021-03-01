@@ -65,6 +65,11 @@ class FeedImageCommentPresenter {
 		loadingView.display(.init(isLoading: true))
 	}
 	
+	public func didFinishLoadingComments(with comments: [FeedComment]) {
+		commentsView.display(.init(comments: comments))
+		loadingView.display(.init(isLoading: false))
+	}
+	
 }
 
 
@@ -80,7 +85,7 @@ class FeedImageCommentPresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
-	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+	func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
 		let (sut, view) = makeSUT()
 		
 		sut.didStartLoadingComments()
@@ -88,6 +93,18 @@ class FeedImageCommentPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [
 			.display(errorMessage: .none),
 			.display(isLoading: true)
+		])
+	}
+	
+	func test_didFinishLoadingComments_displaysFeedAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let comments = uniqueComments()
+		
+		sut.didFinishLoadingComments(with: comments)
+		
+		XCTAssertEqual(view.messages, [
+			.display(comments: comments),
+			.display(isLoading: false)
 		])
 	}
 	
@@ -135,4 +152,16 @@ class FeedImageCommentPresenterTests: XCTestCase {
 		
 	}
 	
+}
+
+func uniqueComment() -> FeedComment {
+	.init(id: UUID(),
+		  message: "a message",
+		  createdAt: Date(),
+		  author: .init(username: "danil")
+	)
+}
+
+func uniqueComments() -> [FeedComment] {
+	[uniqueComment(), uniqueComment()]
 }
