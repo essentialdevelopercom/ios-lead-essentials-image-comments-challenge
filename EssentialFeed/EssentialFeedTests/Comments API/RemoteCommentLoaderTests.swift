@@ -13,14 +13,12 @@ private class RemoteCommentLoader {
 	
 	private let url: URL = URL(string: "http://any-url.com")!
 	private let client: HTTPClient
-	var requestURLCount: Int = 0
 	
 	init(client: HTTPClient) {
 		self.client = client
 	}
 	
 	public func load(completion: @escaping (Error?) -> Void) {
-		requestURLCount += 1
 		client.get(from: url) { result in
 			switch result {
 			case let .failure(error):
@@ -36,26 +34,26 @@ private class RemoteCommentLoader {
 class RemoteCommentLoaderTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
-		let (sut, _) = makeSUT()
+		let (_, client) = makeSUT()
 		
-		XCTAssertEqual(sut.requestURLCount, 0)
+		XCTAssertEqual(client.requestedURLs.count, 0)
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let (sut, _) = makeSUT()
+		let (sut, client) = makeSUT()
 		
 		sut.load() { _ in }
 		
-		XCTAssertEqual(sut.requestURLCount, 1)
+		XCTAssertEqual(client.requestedURLs.count, 1)
 	}
 	
 	func test_load_requestsDataFromURLTwice() {
-		let (sut, _) = makeSUT()
+		let (sut, client) = makeSUT()
 		
 		sut.load() { _ in }
 		sut.load() { _ in }
 		
-		XCTAssertEqual(sut.requestURLCount, 2)
+		XCTAssertEqual(client.requestedURLs.count, 2)
 	}
 	
 	func test_load_deliversErrorOnClientError() {
