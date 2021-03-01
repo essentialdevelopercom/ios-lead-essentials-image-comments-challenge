@@ -19,11 +19,15 @@ private class RemoteCommentLoader {
 		self.client = client
 	}
 	
+	enum Error: Swift.Error, Equatable {
+		case connectivity
+	}
+	
 	public func load(completion: @escaping (Error?) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .failure(error):
-				completion(error)
+			case .failure:
+				completion(.connectivity)
 			default:
 				completion(nil)
 			}
@@ -64,7 +68,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		
 		let exp = expectation(description: "Wait for load completion")
 		
-		var receivedError: Error?
+		var receivedError: RemoteCommentLoader.Error?
 		sut.load { error in
 			receivedError = error
 			exp.fulfill()
@@ -74,7 +78,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		
 		wait(for: [exp], timeout: 1.0)
 		
-		XCTAssertNotNil(receivedError)
+		XCTAssertEqual(receivedError, .connectivity)
 	}
 	
 	// MARK: - Helpers
