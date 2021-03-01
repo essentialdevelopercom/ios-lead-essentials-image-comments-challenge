@@ -28,12 +28,20 @@ private class RemoteCommentLoader {
 	public func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case .success:
-				completion(.failure(.invalidData))
+			case let .success(data, response):
+				if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data)  {
+					completion(.success([]))
+				} else {
+					completion(.failure(.invalidData))
+				}
 			case .failure:
 				completion(.failure(.connectivity))
 			}
 		}
+	}
+	
+	private struct Root: Decodable {
+		let items: [Comment]
 	}
 	
 }
@@ -91,6 +99,15 @@ class RemoteCommentLoaderTests: XCTestCase {
 		
 		expect(sut, toCompleteWith: .failure(.invalidData)) {
 			client.complete(withStatusCode: 200, data: invalidJSONData)
+		}
+	}
+	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		let emptyListJSONData = "{\"items\": []}".data(using: .utf8)!
+		
+		expect(sut, toCompleteWith: .success([])) {
+			client.complete(withStatusCode: 200, data: emptyListJSONData)
 		}
 	}
 	
