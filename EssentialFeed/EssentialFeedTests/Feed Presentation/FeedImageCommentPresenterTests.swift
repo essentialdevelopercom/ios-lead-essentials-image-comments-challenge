@@ -60,14 +60,26 @@ class FeedImageCommentPresenter {
 			comment: "Title for comments screen")
 	}
 	
+	private var commentsLoadError: String {
+		return NSLocalizedString("FEED_COMMENTS_VIEW_ERROR_MESSAGE",
+			 tableName: "Comments",
+			 bundle: Bundle(for: FeedImageCommentPresenter.self),
+			 comment: "Error message displayed when we can't load the image comments from the server")
+	}
+	
 	func didStartLoadingComments() {
 		errorView.display(.noError)
 		loadingView.display(.init(isLoading: true))
 	}
 	
-	public func didFinishLoadingComments(with comments: [FeedComment]) {
+	func didFinishLoadingComments(with comments: [FeedComment]) {
 		commentsView.display(.init(comments: comments))
 		loadingView.display(.init(isLoading: false))
+	}
+	
+	func didFinishLoadingComments(with error: Error) {
+		loadingView.display(.init(isLoading: false))
+		errorView.display(.error(message: commentsLoadError))
 	}
 	
 }
@@ -104,6 +116,17 @@ class FeedImageCommentPresenterTests: XCTestCase {
 		
 		XCTAssertEqual(view.messages, [
 			.display(comments: comments),
+			.display(isLoading: false)
+		])
+	}
+	
+	func test_didFinishLoadingFeedWithError_displaysLocalizedErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingComments(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE")),
 			.display(isLoading: false)
 		])
 	}
