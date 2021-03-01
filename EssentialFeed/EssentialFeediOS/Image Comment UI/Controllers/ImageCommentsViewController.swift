@@ -17,16 +17,11 @@ public protocol ImageCommentsViewControllerDelegate {
 public class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 	@IBOutlet private(set) public var errorView: ErrorView?
 	
-	private var delegate: ImageCommentsViewControllerDelegate?
+	public var delegate: ImageCommentsViewControllerDelegate?
 	private var imageComments = [ImageComment]() {
 		didSet {
 			tableView.reloadData()
 		}
-	}
-	
-	convenience public init(delegate: ImageCommentsViewControllerDelegate) {
-		self.init()
-		self.delegate = delegate
 	}
 	
 	public override func viewDidLoad() {
