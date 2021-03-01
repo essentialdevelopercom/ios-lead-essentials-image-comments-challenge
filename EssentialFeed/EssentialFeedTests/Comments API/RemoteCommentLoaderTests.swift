@@ -34,4 +34,13 @@ class RemoteCommentLoaderTests: XCTestCase {
 		XCTAssertEqual(sut.requestURLCount, 1)
 	}
 	
+	func test_load_requestsDataFromURLTwice() {
+		let sut = RemoteCommentLoader()
+		
+		sut.load()
+		sut.load()
+		
+		XCTAssertEqual(sut.requestURLCount, 2)
+	}
+	
 }
