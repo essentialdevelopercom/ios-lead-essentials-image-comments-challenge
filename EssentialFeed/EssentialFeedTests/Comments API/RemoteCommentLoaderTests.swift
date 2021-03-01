@@ -84,6 +84,15 @@ class RemoteCommentLoaderTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+		let invalidJSONData = "invalid json".data(using: .utf8)!
+		
+		expect(sut, toCompleteWithError: .invalidData) {
+			client.complete(withStatusCode: 200, data: invalidJSONData)
+		}
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
