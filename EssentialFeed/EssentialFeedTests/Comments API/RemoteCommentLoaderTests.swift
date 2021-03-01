@@ -11,10 +11,11 @@ import EssentialFeed
 
 private class RemoteCommentLoader {
 	
-	private let url: URL = URL(string: "http://any-url.com")!
+	private let url: URL
 	private let client: HTTPClient
 	
-	init(client: HTTPClient) {
+	init(url: URL, client: HTTPClient) {
+		self.url = url
 		self.client = client
 	}
 	
@@ -75,9 +76,9 @@ class RemoteCommentLoaderTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT() -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL()) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let sut = RemoteCommentLoader(client: client)
+		let sut = RemoteCommentLoader(url: url, client: client)
 		trackForMemoryLeaks(sut)
 		trackForMemoryLeaks(client)
 		return (sut, client)
