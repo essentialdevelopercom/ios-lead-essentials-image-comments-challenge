@@ -9,83 +9,7 @@
 import XCTest
 import EssentialFeed
 
-protocol FeedImageCommentView {
-	func display(_ viewModel: FeedImageCommentViewModel)
-}
-
-struct FeedImageCommentViewModel {
-	let comments: [FeedComment]
-}
-
-protocol FeedImageCommentLoadingView {
-	func display(_ viewModel: FeedImageCommentLoadingViewModel)
-}
-
-struct FeedImageCommentLoadingViewModel {
-	let isLoading: Bool
-}
-
-protocol FeedImageCommentErrorView {
-	func display(_ viewModel: FeedImageCommentErrorViewModel)
-}
-
-struct FeedImageCommentErrorViewModel {
-	public let message: String?
-	
-	static var noError: Self {
-		Self(message: nil)
-	}
-	
-	static func error(message: String) -> Self {
-		Self(message: message)
-	}
-}
-
-class FeedImageCommentPresenter {
-	private let commentsView: FeedImageCommentView
-	private let errorView: FeedImageCommentErrorView
-	private let loadingView: FeedImageCommentLoadingView
-	
-	init(commentsView: FeedImageCommentView, errorView: FeedImageCommentErrorView, loadingView: FeedImageCommentLoadingView) {
-		self.commentsView = commentsView
-		self.errorView = errorView
-		self.loadingView = loadingView
-	}
-	
-	static var title: String {
-		NSLocalizedString(
-			"FEED_COMMENT_TITLE",
-			tableName: "Comments",
-			bundle: Bundle(for: FeedImageCommentPresenter.self),
-			comment: "Title for comments screen")
-	}
-	
-	private var commentsLoadError: String {
-		return NSLocalizedString("FEED_COMMENTS_VIEW_ERROR_MESSAGE",
-			 tableName: "Comments",
-			 bundle: Bundle(for: FeedImageCommentPresenter.self),
-			 comment: "Error message displayed when we can't load the image comments from the server")
-	}
-	
-	func didStartLoadingComments() {
-		errorView.display(.noError)
-		loadingView.display(.init(isLoading: true))
-	}
-	
-	func didFinishLoadingComments(with comments: [FeedComment]) {
-		commentsView.display(.init(comments: comments))
-		loadingView.display(.init(isLoading: false))
-	}
-	
-	func didFinishLoadingComments(with error: Error) {
-		loadingView.display(.init(isLoading: false))
-		errorView.display(.error(message: commentsLoadError))
-	}
-	
-}
-
-
-class FeedImageCommentPresenterTests: XCTestCase {
+final class FeedImageCommentPresenterTests: XCTestCase {
 
 	func test_title_isLocalized() {
 		XCTAssertEqual(FeedImageCommentPresenter.title, localized("FEED_COMMENT_TITLE"))
@@ -175,16 +99,4 @@ class FeedImageCommentPresenterTests: XCTestCase {
 		
 	}
 	
-}
-
-func uniqueComment() -> FeedComment {
-	.init(id: UUID(),
-		  message: "a message",
-		  createdAt: Date(),
-		  author: .init(username: "danil")
-	)
-}
-
-func uniqueComments() -> [FeedComment] {
-	[uniqueComment(), uniqueComment()]
 }
