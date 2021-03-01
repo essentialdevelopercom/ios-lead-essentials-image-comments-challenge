@@ -19,18 +19,19 @@ private class RemoteCommentLoader {
 		self.client = client
 	}
 	
+	typealias Result = Swift.Result<[Comment], Error>
 	enum Error: Swift.Error, Equatable {
 		case connectivity
 		case invalidData
 	}
 	
-	public func load(completion: @escaping (Error?) -> Void) {
+	public func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
 			case .success:
-				completion(.invalidData)
+				completion(.failure(.invalidData))
 			case .failure:
-				completion(.connectivity)
+				completion(.failure(.connectivity))
 			}
 		}
 	}
@@ -67,7 +68,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWithError: .connectivity) {
+		expect(sut, toCompleteWith: .failure(.connectivity)) {
 			client.complete(with: anyNSError())
 		}
 	}
@@ -78,7 +79,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let codes = [199, 201, 300, 400, 500]
 		
 		codes.enumerated().forEach { index, code in
-			expect(sut, toCompleteWithError: .invalidData) {
+			expect(sut, toCompleteWith: .failure(.invalidData)) {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			}
 		}
@@ -88,7 +89,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let invalidJSONData = "invalid json".data(using: .utf8)!
 		
-		expect(sut, toCompleteWithError: .invalidData) {
+		expect(sut, toCompleteWith: .failure(.invalidData)) {
 			client.complete(withStatusCode: 200, data: invalidJSONData)
 		}
 	}
@@ -102,11 +103,20 @@ class RemoteCommentLoaderTests: XCTestCase {
 		return (sut, client)
 	}
 	
-	private func expect(_ sut: RemoteCommentLoader, toCompleteWithError expectedError: RemoteCommentLoader.Error, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: RemoteCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
-		sut.load { receivedError in
-			XCTAssertEqual(receivedError, expectedError, "Expected \(expectedError), got \(receivedError) instead", file: file, line: line)
+		sut.load { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.success(receivedItems), .success(expectedItems)):
+				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
+				
+			case let (.failure(receivedError as RemoteCommentLoader.Error), .failure(expectedError as RemoteCommentLoader.Error)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+				
+			default:
+				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+			}
 			
 			exp.fulfill()
 		}
