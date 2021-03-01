@@ -12,15 +12,26 @@ private class RemoteCommentLoader {
 	
 	var requestURLCount: Int = 0
 	
+	public func load() {
+		requestURLCount += 1
+	}
 	
 }
 
 class RemoteCommentLoaderTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
-		let loader = RemoteCommentLoader()
+		let sut = RemoteCommentLoader()
 		
-		XCTAssertEqual(loader.requestURLCount, 0)
+		XCTAssertEqual(sut.requestURLCount, 0)
+	}
+	
+	func test_load_requestsDataFromURL() {
+		let sut = RemoteCommentLoader()
+		
+		sut.load()
+		
+		XCTAssertEqual(sut.requestURLCount, 1)
 	}
 	
 }
