@@ -8,9 +8,18 @@
 
 import Foundation
 
-public struct Comment: Equatable, Decodable {
+public struct Comment: Equatable {
 	public let id: UUID
 	public let message: String
-	public let created_at: Date
+	public let createdAt: Date
 	public let author: CommentAuthor
+}
+
+extension Comment: Decodable {
+	enum CodingKeys: String, CodingKey {
+		case id
+		case message
+		case createdAt = "created_at"
+		case author
+	}
 }
