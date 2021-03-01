@@ -37,24 +37,26 @@ class RemoteCommentLoaderTests: XCTestCase {
 	func test_init_doesNotRequestDataFromURL() {
 		let (_, client) = makeSUT()
 		
-		XCTAssertEqual(client.requestedURLs.count, 0)
+		XCTAssertEqual(client.requestedURLs, [])
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let (sut, client) = makeSUT()
+		let url = anyURL()
+		let (sut, client) = makeSUT(url: url)
 		
 		sut.load() { _ in }
 		
-		XCTAssertEqual(client.requestedURLs.count, 1)
+		XCTAssertEqual(client.requestedURLs, [url])
 	}
 	
 	func test_load_requestsDataFromURLTwice() {
-		let (sut, client) = makeSUT()
+		let url = anyURL()
+		let (sut, client) = makeSUT(url: url)
 		
 		sut.load() { _ in }
 		sut.load() { _ in }
 		
-		XCTAssertEqual(client.requestedURLs.count, 2)
+		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
 	
 	func test_load_deliversErrorOnClientError() {
