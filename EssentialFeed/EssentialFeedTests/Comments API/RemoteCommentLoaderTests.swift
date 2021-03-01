@@ -7,13 +7,28 @@
 //
 
 import XCTest
+import EssentialFeed
 
 private class RemoteCommentLoader {
 	
+	private let url: URL = URL(string: "http://any-url.com")!
+	private let client: HTTPClient
 	var requestURLCount: Int = 0
 	
-	public func load() {
+	init(client: HTTPClient) {
+		self.client = client
+	}
+	
+	public func load(completion: @escaping (Error?) -> Void) {
 		requestURLCount += 1
+		client.get(from: url) { result in
+			switch result {
+			case let .failure(error):
+				completion(error)
+			default:
+				completion(nil)
+			}
+		}
 	}
 	
 }
@@ -21,33 +36,53 @@ private class RemoteCommentLoader {
 class RemoteCommentLoaderTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
-		let sut = makeSUT()
+		let (sut, _) = makeSUT()
 		
 		XCTAssertEqual(sut.requestURLCount, 0)
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let sut = makeSUT()
+		let (sut, _) = makeSUT()
 		
-		sut.load()
+		sut.load() { _ in }
 		
 		XCTAssertEqual(sut.requestURLCount, 1)
 	}
 	
 	func test_load_requestsDataFromURLTwice() {
-		let sut = makeSUT()
+		let (sut, _) = makeSUT()
 		
-		sut.load()
-		sut.load()
+		sut.load() { _ in }
+		sut.load() { _ in }
 		
 		XCTAssertEqual(sut.requestURLCount, 2)
 	}
 	
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		
+		let exp = expectation(description: "Wait for load completion")
+		
+		var receivedError: Error?
+		sut.load { error in
+			receivedError = error
+			exp.fulfill()
+		}
+		
+		client.complete(with: anyNSError())
+		
+		wait(for: [exp], timeout: 1.0)
+		
+		XCTAssertNotNil(receivedError)
+	}
+	
 	// MARK: - Helpers
-	private func makeSUT() -> RemoteCommentLoader {
-		let sut = RemoteCommentLoader()
+	private func makeSUT() -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
+		let client = HTTPClientSpy()
+		let sut = RemoteCommentLoader(client: client)
 		trackForMemoryLeaks(sut)
-		return sut
+		trackForMemoryLeaks(client)
+		return (sut, client)
 	}
 	
 	
