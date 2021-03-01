@@ -9,65 +9,39 @@
 import XCTest
 import EssentialFeed
 
-struct FeedComment: Hashable {
-	let id: UUID
-	let message: String
-	let createdAt: String
-	let author: FeedCommentAuthor
-}
-
-struct FeedCommentAuthor: Hashable {
-	let username: String
-}
-
-class RemoteImageFeedCommentLoader {
-	
-	public enum Error: Swift.Error {
-		case connectivity
-		case invalidData
-	}
-	
-	typealias Result = Swift.Result<[FeedComment], Error>
-	
-	private let baseUrl: URL
-	private let client: HTTPClient
-	
-	init(baseUrl: URL, client: HTTPClient) {
-		self.baseUrl = baseUrl
-		self.client = client
-	}
-	
-	func load(imageId: String, completion: @escaping (Result) -> Void) {
-		client.get(from: baseUrl, completion: { result in
-			switch result {
-			case .success: break
-			case .failure:
-				completion(.failure(.connectivity))
-			}
-		})
-	}
-	
-}
-
 final class FeedImageCommentsTests: XCTestCase {
 
 	func test_init_doesNotRequestDataFromUrl() {
-		let (_, client) = makeSUT()
+		let (_, client, _) = makeSUT()
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-		let (loader, client) = makeSUT(url: url)
+		let (loader, client, imageUrlProvider) = makeSUT()
 
-		loader.load(imageId: "any", completion: { _ in })
-
-		XCTAssertEqual(client.requestedURLs, [url])
+		loader.load(imageId: "1", completion: { _ in })
+		
+		assert(requestedUrls: client.requestedURLs,
+			   imageUrlProvider: imageUrlProvider,
+			   imageIds: "1"
+		)
+	}
+	
+	func test_loadTwice_requestsDataFromURLTwice() {
+		let (sut, client, imageUrlProvider) = makeSUT()
+		
+		sut.load(imageId: "1") { _ in }
+		sut.load(imageId: "2") { _ in }
+		
+		assert(requestedUrls: client.requestedURLs,
+			   imageUrlProvider: imageUrlProvider,
+			   imageIds: "1", "2"
+		)
 	}
 	
 	func test_load_deliversErrorOnClientError() {
-		let (sut, client) = makeSUT()
+		let (sut, client, _) = makeSUT()
 		
 		expect(sut, toCompleteWith: failure(.connectivity), when: {
 			let clientError = NSError(domain: "Test", code: 0)
@@ -75,22 +49,52 @@ final class FeedImageCommentsTests: XCTestCase {
 		})
 	}
 	
-	private func failure(_ error: RemoteImageFeedCommentLoader.Error) -> RemoteImageFeedCommentLoader.Result {
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client, _) = makeSUT()
+		
+		let samples = [199, 201, 300, 400, 500]
+		
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
+				let json = makeItemsJSON([])
+				client.complete(withStatusCode: code, data: json, at: index)
+			})
+		}
+	}
+	
+	private func assert(requestedUrls: [URL], imageUrlProvider: @escaping ((String) -> URL), imageIds: String...) {
+		let apiUrls = imageIds.map { imageUrlProvider($0) }
+		XCTAssertEqual(requestedUrls, apiUrls)
+	}
+	
+	private func failure(_ error: RemoteImageCommentLoader.Error) -> RemoteImageCommentLoader.Result {
 		return .failure(error)
 	}
 	
-	private func makeSUT(url: URL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!) -> (RemoteImageFeedCommentLoader, HTTPClientSpy) {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
+	}
+	
+	
+	private func makeSUT() -> (RemoteImageCommentLoader, HTTPClientSpy, (String) -> URL) {
+		let imageUrlProvider: (String) -> URL = { imageId in
+			URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
+		}
+		
 		let client = HTTPClientSpy()
-		let loader = RemoteImageFeedCommentLoader(baseUrl: url, client: client)
+		let loader = RemoteImageCommentLoader(
+			imageUrlProvider: imageUrlProvider,
+			client: client
+		)
 
 		trackForMemoryLeaks(client)
 		trackForMemoryLeaks(loader)
 		
-		return (loader, client)
+		return (loader, client, imageUrlProvider)
 	}
 	
-	private func expect(_ sut: RemoteImageFeedCommentLoader, toCompleteWith expectedResult: RemoteImageFeedCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: RemoteImageCommentLoader, toCompleteWith expectedResult: RemoteImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		sut.load(imageId: "any") { receivedResult in
