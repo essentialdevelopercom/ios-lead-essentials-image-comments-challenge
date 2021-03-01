@@ -75,8 +75,12 @@ class RemoteCommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWithError: .invalidData) {
-			client.complete(withStatusCode: 199, data: anyData())
+		let codes = [199, 201, 300, 400, 500]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWithError: .invalidData) {
+				client.complete(withStatusCode: code, data: anyData(), at: index)
+			}
 		}
 	}
 	
