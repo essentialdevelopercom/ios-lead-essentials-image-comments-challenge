@@ -1,5 +1,5 @@
 //
-//  ImageCommentsViewControllerTests.swift
+//  ImageCommentsUIIntegrationTests.swift
 //  EssentialFeediOSTests
 //
 //  Created by Alok Subedi on 04/02/2021.
@@ -10,8 +10,9 @@ import XCTest
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+import EssentialApp
 
-class ImageCommentsViewControllerTests: XCTestCase {
+class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	func test_init_doesNotRequestLoadImageComments() {
 		let (_, loader) = makeSUT()

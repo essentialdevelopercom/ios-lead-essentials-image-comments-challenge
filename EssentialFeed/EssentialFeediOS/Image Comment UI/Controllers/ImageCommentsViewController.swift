@@ -15,32 +15,28 @@ public protocol ImageCommentsViewControllerDelegate {
 }
 
 public class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
-	private var delegate: ImageCommentsViewControllerDelegate?
+	@IBOutlet private(set) public var errorView: ErrorView?
+	
+	public var delegate: ImageCommentsViewControllerDelegate?
 	private var imageComments = [ImageComment]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
 	
-	private lazy var errorLabel: UILabel = {
-		let label = UILabel()
-		return label
-	}()
-	
-	convenience public init(delegate: ImageCommentsViewControllerDelegate) {
-		self.init()
-		self.delegate = delegate
-	}
-	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		tableView.tableHeaderView = errorLabel
 		
 		self.refreshControl = UIRefreshControl()
 		self.refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
 		
 		load()
+	}
+	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
 	}
 	
 	@objc func load() {
@@ -63,9 +59,9 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
 		if let errorMessage = viewModel.message {
 			self.refreshControl?.endRefreshing()
-			self.errorLabel.text = errorMessage
+			errorView?.message = errorMessage
 		} else {
-			self.errorLabel.text = nil
+			errorView?.message = nil
 		}
 	}
 	
@@ -75,7 +71,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let model = imageComments[indexPath.row]
-		let cell = ImageCommentsCell()
+		let cell: ImageCommentsCell = tableView.dequeueReusableCell()
 		cell.usernameLabel.text = model.author.username
 		cell.createdTimeLabel.text = relativeDateStringFromNow(to: model.createdDate)
 		cell.message.text = model.message

@@ -10,12 +10,9 @@ import EssentialFeediOS
 import UIKit
 
 extension ImageCommentsViewController {
-   private var errorView: UILabel? {
-	   return tableView.tableHeaderView as? UILabel
-   }
    
    var errorMessage: String? {
-	   return errorView?.text
+	   return errorView?.message
    }
    
    func renderedCell(at row: Int) -> ImageCommentsCell? {

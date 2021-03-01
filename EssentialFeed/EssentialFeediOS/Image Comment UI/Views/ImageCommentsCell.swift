@@ -9,7 +9,7 @@
 import UIKit
 
 public class ImageCommentsCell: UITableViewCell {
-	private(set) public var usernameLabel = UILabel()
-	private(set) public var createdTimeLabel = UILabel()
-	private(set) public var message = UILabel()
+	@IBOutlet private(set) public var usernameLabel: UILabel!
+	@IBOutlet private(set) public var createdTimeLabel: UILabel!
+	@IBOutlet private(set) public var message: UILabel!
 }

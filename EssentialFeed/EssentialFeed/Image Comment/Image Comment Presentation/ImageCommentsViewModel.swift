@@ -10,5 +10,9 @@ import Foundation
 
 public struct ImageCommentsViewModel {
 	public let comments: [ImageComment]
+	
+	public init(comments: [ImageComment]) {
+		self.comments = comments
+	}
 }
 
