@@ -133,6 +133,21 @@ final class FeedImageCommentsTests: XCTestCase {
 		return (comment, commentJson)
 	}
 	
+	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let client = HTTPClientSpy()
+		var sut: RemoteImageCommentLoader? = RemoteImageCommentLoader(imageUrlProvider: { imageId in
+			URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
+		}, client: client)
+		
+		var capturedResults = [RemoteImageCommentLoader.Result]()
+		sut?.load(imageId: "1") { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+		
+		XCTAssertTrue(capturedResults.isEmpty)
+	}
+	
 	private func makeSUT() -> (RemoteImageCommentLoader, HTTPClientSpy, (String) -> URL) {
 		let imageUrlProvider: (String) -> URL = { imageId in
 			URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!

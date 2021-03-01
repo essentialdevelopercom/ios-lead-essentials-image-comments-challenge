@@ -28,7 +28,9 @@ class RemoteImageCommentLoader {
 	
 	func load(imageId: String, completion: @escaping (Result) -> Void) {
 		let url = imageUrlProvider(imageId)
-		client.get(from: url, completion: { result in
+		client.get(from: url, completion: { [weak self] result in
+			guard self != nil else { return }
+			
 			switch result {
 			case let .success(result):
 				do {
