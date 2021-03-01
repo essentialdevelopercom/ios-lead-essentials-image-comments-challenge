@@ -71,6 +71,15 @@ final class FeedImageCommentsTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client, _) = makeSUT()
+		
+		expect(sut, toCompleteWith: .success([]), when: {
+			let emptyListJSON = makeItemsJSON([])
+			client.complete(withStatusCode: 200, data: emptyListJSON)
+		})
+	}
+	
 	private func assert(requestedUrls: [URL], imageUrlProvider: @escaping ((String) -> URL), imageIds: String...) {
 		let apiUrls = imageIds.map { imageUrlProvider($0) }
 		XCTAssertEqual(requestedUrls, apiUrls)
