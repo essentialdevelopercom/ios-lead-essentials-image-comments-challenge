@@ -62,6 +62,15 @@ final class FeedImageCommentsTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client, _) = makeSUT()
+		
+		expect(sut, toCompleteWith: failure(.invalidData), when: {
+			let invalidJSON = Data("invalid json".utf8)
+			client.complete(withStatusCode: 200, data: invalidJSON)
+		})
+	}
+	
 	private func assert(requestedUrls: [URL], imageUrlProvider: @escaping ((String) -> URL), imageIds: String...) {
 		let apiUrls = imageIds.map { imageUrlProvider($0) }
 		XCTAssertEqual(requestedUrls, apiUrls)
