@@ -67,46 +67,40 @@ class RemoteCommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		let exp = expectation(description: "Wait for load completion")
-		
-		var receivedError: RemoteCommentLoader.Error?
-		sut.load { error in
-			receivedError = error
-			exp.fulfill()
+		expect(sut, toCompleteWithError: .connectivity) {
+			client.complete(with: anyNSError())
 		}
-		
-		client.complete(with: anyNSError())
-		
-		wait(for: [exp], timeout: 1.0)
-		
-		XCTAssertEqual(receivedError, .connectivity)
 	}
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 		
-		let exp = expectation(description: "Wait for load completion")
-		
-		var receivedError: RemoteCommentLoader.Error?
-		sut.load { error in
-			receivedError = error
-			exp.fulfill()
+		expect(sut, toCompleteWithError: .invalidData) {
+			client.complete(withStatusCode: 199, data: anyData())
 		}
-		
-		client.complete(withStatusCode: 199, data: anyData())
-		
-		wait(for: [exp], timeout: 1.0)
-		
-		XCTAssertEqual(receivedError, .invalidData)
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(url: URL = anyURL()) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteCommentLoader(url: url, client: client)
-		trackForMemoryLeaks(sut)
-		trackForMemoryLeaks(client)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func expect(_ sut: RemoteCommentLoader, toCompleteWithError expectedError: RemoteCommentLoader.Error, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load completion")
+		
+		sut.load { receivedError in
+			XCTAssertEqual(receivedError, expectedError, "Expected \(expectedError), got \(receivedError) instead", file: file, line: line)
+			
+			exp.fulfill()
+		}
+		
+		action()
+		
+		wait(for: [exp], timeout: 1.0)
 	}
 	
 	
