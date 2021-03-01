@@ -21,13 +21,13 @@ private class RemoteCommentLoader {
 class RemoteCommentLoaderTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
-		let sut = RemoteCommentLoader()
+		let sut = makeSUT()
 		
 		XCTAssertEqual(sut.requestURLCount, 0)
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let sut = RemoteCommentLoader()
+		let sut = makeSUT()
 		
 		sut.load()
 		
@@ -35,12 +35,20 @@ class RemoteCommentLoaderTests: XCTestCase {
 	}
 	
 	func test_load_requestsDataFromURLTwice() {
-		let sut = RemoteCommentLoader()
+		let sut = makeSUT()
 		
 		sut.load()
 		sut.load()
 		
 		XCTAssertEqual(sut.requestURLCount, 2)
 	}
+	
+	// MARK: - Helpers
+	private func makeSUT() -> RemoteCommentLoader {
+		let sut = RemoteCommentLoader()
+		trackForMemoryLeaks(sut)
+		return sut
+	}
+	
 	
 }
