@@ -40,4 +40,15 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
 	
+	func test_loadImageCommentsTwice_requestsImageCommentsTwice() {
+		let url = anyURL()
+		let client = HTTPClientSpy()
+		let sut = ImageCommentsRemoteLoader(client: client)
+		
+		sut.loadImageComments(from: url) { _ in }
+		sut.loadImageComments(from: url) { _ in }
+		
+		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
 }
