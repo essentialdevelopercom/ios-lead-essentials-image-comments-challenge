@@ -10,9 +10,10 @@ import EssentialFeed
 import EssentialFeediOS
 import Foundation
 import UIKit
+import Combine
 
 public class ImageCommentsUIComposer {
-	public static func imageCommentsComposedWith(loader: ImageCommentsLoader) -> ImageCommentsViewController {
+	public static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(loader: loader)
 		
 		let imageCommentsViewController = makeImageCommentsViewController(delegate: presentationAdapter)
@@ -36,36 +37,27 @@ public class ImageCommentsUIComposer {
 }
 
 class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
-	private let loader: ImageCommentsLoader
+	private var cancellable: Cancellable?
+	private let loader: () -> ImageCommentsLoader.Publisher
 	var presenter: ImageCommentsPresenter?
 	
-	init(loader: ImageCommentsLoader) {
+	init(loader: @escaping () -> ImageCommentsLoader.Publisher) {
 		self.loader = loader
 	}
 	
 	func didRequestImageCommentsRefresh() {
-		dispatchInMainQueue {
-			self.presenter?.didStartLoadingImageComments()
-			self.loader.load { [weak self] result in
-				switch result {
-				case let .success(imageComments):
-					self?.presenter?.didFinishLoadingImageComments(with: imageComments)
+		presenter?.didStartLoadingImageComments()
+		cancellable = loader()
+			.dispatchOnMainQueue()
+			.sink(receiveCompletion: { [weak self] completion in
+				switch completion {
+				case .finished: break
 					
 				case let .failure(error):
 					self?.presenter?.didFinishLoadingImageComments(with: error)
 				}
-			}
-		}
-		
-	}
-}
-
-func dispatchInMainQueue(_ call: @escaping () -> Void) {
-	if Thread.isMainThread {
-		call()
-	} else {
-		DispatchQueue.main.async {
-			call()
-		}
+			}, receiveValue: { [weak self] comments in
+				self?.presenter?.didFinishLoadingImageComments(with: comments)
+			})
 	}
 }

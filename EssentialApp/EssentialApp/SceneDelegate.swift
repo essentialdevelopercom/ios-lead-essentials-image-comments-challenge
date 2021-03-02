@@ -71,7 +71,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func showImageCommentViewController(for imageId: String) {
 		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
 		let imageCommentsLoader = RemoteImageCommentsLoader(client: httpClient, url: url)
-		let imageCommentController = ImageCommentsUIComposer.imageCommentsComposedWith(loader: imageCommentsLoader)
+		let imageCommentController = ImageCommentsUIComposer.imageCommentsComposedWith(loader: imageCommentsLoader.loadPublisher)
 		navigationController?.pushViewController(imageCommentController, animated: true)
 	}
 	
