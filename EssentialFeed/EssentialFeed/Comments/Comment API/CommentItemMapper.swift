@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class CommentItemMapper {
+internal final class CommentItemMapper {
 	private struct Root: Decodable {
 		let items: [RemoteCommentItem]
 	}
@@ -16,7 +16,7 @@ public class CommentItemMapper {
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteCommentItem] {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
-		guard response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) else {
+		guard response.statusCode >= 200, response.statusCode <= 299, let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteCommentLoader.Error.invalidData
 		}
 		return root.items

@@ -9,7 +9,7 @@
 import UIKit
 
 public class CommentCell: UITableViewCell {
-	@IBOutlet public var dateLabel: UILabel!
-	@IBOutlet public var messageLabel: UILabel!
-	@IBOutlet public var usernameLabel: UILabel!
+	@IBOutlet public private(set) var dateLabel: UILabel!
+	@IBOutlet public private(set) var messageLabel: UILabel!
+	@IBOutlet public private(set) var usernameLabel: UILabel!
 }

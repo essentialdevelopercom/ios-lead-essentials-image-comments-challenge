@@ -96,7 +96,7 @@ class CommentPresenterTests: XCTestCase {
 	
 	private func makeComments() -> (models: [Comment], presentable: [PresentableComment]) {
 		let comment0 = makeComment(id: UUID(), message: "Some message", date: (date: Date(), string: "in 0 seconds"), author: "some author")
-		let comment1 = makeComment(id: UUID(), message: "Another message", date: (date: Date(), string: "in 0 seconds"), author: "another author")
+		let comment1 = makeComment(id: UUID(), message: "Another message", date: (date: Date(timeInterval: -3, since: Date()), string: "3 seconds ago"), author: "another author")
 
 		return ([comment0.model, comment1.model], [comment0.presentable, comment1.presentable])
 	}

@@ -24,8 +24,8 @@ func makeItemsJSON(_ items: [[String: Any]]) -> Data {
 
 
 func checkStringshaveKeysAndValuesForAllSupportedLocalizations(in table: String, for bundle: Bundle, file: StaticString = #file, line: UInt = #line) {
-	let localizationBundles = allLocalizationBundles(in: bundle)
-	let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
+	let localizationBundles = allLocalizationBundles(in: bundle, file: file, line: line)
+	let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table, file: file, line: line)
 	
 	localizationBundles.forEach { (bundle, localization) in
 		localizedStringKeys.forEach { key in
@@ -34,7 +34,7 @@ func checkStringshaveKeysAndValuesForAllSupportedLocalizations(in table: String,
 			if localizedString == key {
 				let language = Locale.current.localizedString(forLanguageCode: localization) ?? ""
 				
-				XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'")
+				XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'", file: file, line: line)
 			}
 		}
 	}

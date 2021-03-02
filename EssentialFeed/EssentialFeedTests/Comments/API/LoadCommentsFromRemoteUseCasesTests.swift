@@ -57,24 +57,31 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	}
 	
 	func test_load_deliversErrorOn200HTTPResponeWithInvalidJSON() {
-		let (sut, client) =  makeSUT()
-		expect(sut, toCompleteWith: failure(.invalidData), when: {
-			let invalidJSON = Data("invalid json".utf8)
-			client.complete(withStatusCode: 200, data: invalidJSON)
-		})
+		let (sut, client) = makeSUT()
+		
+		let acceptedStatusCodes = [200, 201, 245, 298, 299]
+
+		acceptedStatusCodes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
+				let invalidJsonData = Data("invalid data".utf8)
+				client.complete(withStatusCode: code, data: invalidJsonData, at: index)
+			})
+		}
 	}
 	
 	func test_load_deliversNoItemsOn200HTTPReponseWithEmptyJSONList() {
-		let (sut, client) = makeSUT()
-		expect(sut, toCompleteWith: .success([]), when: {
-			let emptyListJSON = makeItemsJSON([])
-			client.complete(withStatusCode: 200, data: emptyListJSON)
-		})
+		let acceptedStatusCodes = [200, 201, 245, 298, 299]
+
+		acceptedStatusCodes.enumerated().forEach { index, code in
+			let (sut, client) = makeSUT()
+			expect(sut, toCompleteWith: success([]), when: {
+				let emptyListJSON = makeItemsJSON([])
+				client.complete(withStatusCode: code, data: emptyListJSON)
+			})
+		}
 	}
 	
 	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
-		let (sut, client) = makeSUT()
-		
 		let author = Author(username: "a username")
 		let item1 = makeItem(id: UUID(), author: author)
 		
@@ -82,10 +89,16 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		
 		let items = [item1.model, item2.model]
 		
-		expect(sut, toCompleteWith: .success(items), when: {
-			let json = makeItemsJSON([item1.json, item2.json])
-			client.complete(withStatusCode: 200, data: json)
-		})
+		let acceptedStatusCodes = [200, 201, 245, 298, 299]
+
+		acceptedStatusCodes.enumerated().forEach { index, code in
+			let (sut, client) = makeSUT()
+			expect(sut, toCompleteWith: .success(items), when: {
+				let json = makeItemsJSON([item1.json, item2.json])
+				client.complete(withStatusCode: code, data: json)
+			})
+		}
+			
 	}
 	
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
@@ -116,35 +129,44 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	private func failure(_ error: RemoteCommentLoader.Error) -> CommentLoader.Result {
 		return .failure(error)
 	}
+	
+	private func success(_ comments: [Comment]) -> CommentLoader.Result {
+		return .success(comments)
+	}
 
-	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
-		
+	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: Result<[Comment], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
+
 		sut.load { receivedResult in
-			switch (receivedResult, expectedResult) {
-			case let (.success(receivedItems), .success(expectedItems)):
-				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
-			case let (.failure(receivedError as RemoteCommentLoader.Error), .failure(expectedError as RemoteCommentLoader.Error)):
-				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+			switch (expectedResult, receivedResult) {
+			case let (.success(expectedComments),
+					  .success(receivedComments)):
+				XCTAssertEqual(expectedComments, receivedComments, file: file, line: line)
+
+			case let (.failure(expectedError as RemoteCommentLoader.Error),
+					  .failure(receivedError as RemoteCommentLoader.Error)):
+				XCTAssertEqual(expectedError, receivedError, file: file, line: line)
+
 			default:
-				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+				XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
 			}
+
 			exp.fulfill()
 		}
-		
+
 		action()
-		wait(for: [exp], timeout: 1.0)
+
+		wait(for: [exp], timeout: 2.0)
 	}
 	
-	private func makeItem(id: UUID, message: String? = "", createdAt: Date? = Date(), author: Author) -> (model: Comment, json: [String: Any]) {
-		let formatter = ISO8601DateFormatter()
-		formatter.timeZone = TimeZone(abbreviation: "UTC")
-		let sDate = formatter.string(from: createdAt!)
-		let item = Comment(id: id, message: message!, createdAt: formatter.date(from: sDate)!, author: author)
+	private func makeItem(id: UUID, message: String = "", createdAt: Date = Date(), author: Author) -> (model: Comment, json: [String: Any]) {
+
+		let date = (actual: Date(timeIntervalSince1970: 1598627222), string: "2020-08-28T15:07:02+00:00")
+		let item = Comment(id: id, message: message, createdAt: date.actual, author: author)
 		let json = [
 			"id": id.uuidString,
-			"message": message ?? "",
-			"created_at": sDate,
+			"message": message,
+			"created_at": date.string,
 			"author": ["username": author.username]
 		].compactMapValues { $0 }
 		return (item, json)

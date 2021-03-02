@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public class RemoteCommentLoader: CommentLoader {
 	
 	private let url: URL
@@ -23,6 +22,7 @@ public class RemoteCommentLoader: CommentLoader {
 		self.url = url
 		self.client = client
 	}
+	
 	public typealias Result = CommentLoader.Result
 	
 	private class Task: CommentsLoaderTask {
@@ -65,19 +65,6 @@ public class RemoteCommentLoader: CommentLoader {
 
 		return task
 	}
-
-	
-//	public func load(completion: @escaping (CommentLoader.Result) -> Void) {
-//		client.get(from: url) { [weak self] result in
-//			guard self != nil else { return }
-//			switch result {
-//			case .failure:
-//				completion(.failure(Error.connectivity))
-//			case let .success((data, response)):
-//				completion(RemoteCommentLoader.map(data, from: response))
-//			}
-//		}
-//	}
 	
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> CommentLoader.Result {
 		do {
@@ -91,6 +78,6 @@ public class RemoteCommentLoader: CommentLoader {
 
 private extension Array where Element == RemoteCommentItem {
 	func toModels() -> [Comment] {
-		return map { Comment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: $0.author) }
+		return map { Comment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: Author(username: $0.author.username)) }
 	}
 }

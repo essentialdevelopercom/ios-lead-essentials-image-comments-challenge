@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public final class CommentsPresenter {
 	private let commentView: CommentView
 	private let errorView: CommentErrorView
@@ -28,10 +27,11 @@ public final class CommentsPresenter {
 	}
 	
 	public static var title: String {
-		return NSLocalizedString("COMMENTS_VIEW_TITLE",
-								 tableName: "Comments",
-								 bundle: Bundle(for: CommentsPresenter.self),
-								 comment: "Title for Comment View")
+		return NSLocalizedString(
+			"COMMENTS_VIEW_TITLE",
+			tableName: "Comments",
+			bundle: Bundle(for: CommentsPresenter.self),
+			comment: "Title for Comment View")
 	}
 	
 	private var commentLoadError: String {

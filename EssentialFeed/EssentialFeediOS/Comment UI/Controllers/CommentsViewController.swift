@@ -30,11 +30,10 @@ public class CommentsViewController: UITableViewController, CommentView, Comment
 	}
 	
 	public override func viewDidLoad() {
-        super.viewDidLoad()
+		super.viewDidLoad()
 		refresh()
     }
 	
-
     // MARK: - Table view data source
 
 	public override func numberOfSections(in tableView: UITableView) -> Int {

@@ -59,6 +59,7 @@ class CommentsUIIntegrationTests: XCTestCase {
 		let comment1 = makeComment(id: UUID(), message: "message1", date: (date: date.adding(days: -3), string: "3 days ago"), author: "author1")
 		let comment2 =  makeComment(id: UUID(), message: "message2", date: (date: date.adding(days: -31), string: "1 month ago"), author: "author2")
 		let comment3 = makeComment(id: UUID(), message: "message3", date: (date: date.adding(days: -366), string: "1 year ago"), author: "author3")
+		let comment4 = makeComment(id: UUID(), message: "message4", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author4")
 		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
 
 		sut.loadViewIfNeeded()
@@ -68,8 +69,8 @@ class CommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.expected])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model], at: 1)
-		assertThat(sut, isRendering: [comment0.expected, comment1.expected, comment2.expected, comment3.expected])
+		loader.completeLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model, comment4.model], at: 1)
+		assertThat(sut, isRendering: [comment0.expected, comment1.expected, comment2.expected, comment3.expected, comment4.expected])
 	}
 	
 	func test_loadCommentsCompletion_rendersErrorMessageOnLoaderFailureUntilNextReload() {
@@ -100,23 +101,37 @@ class CommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.cancelCount, 1, "Loading should be cancelled when view is about to disappear")
 	}
 	
-	func test_feedImageSelection_navigatesToComments() {
-		let feed = launch(httpClient: .online(response), store: .empty)
+	func test_loadCommentCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let date = Date()
+		let comment0 = makeComment(id: UUID(), message: "message0", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author0")
+		let comment1 = makeComment(id: UUID(), message: "message1", date: (date: date.adding(days: -3), string: "3 days ago"), author: "author1")
+		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
 
-		feed.simulateFeedImageSelection(at: 0)
-		RunLoop.current.run(until: Date())
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
 
-		let comments = feed.navigationController?.topViewController as? CommentsViewController
-		XCTAssertNotNil(comments, "Expected shown view to be the image comments UI")
-		XCTAssertEqual(comments?.numberOfRenderedCommentViews(), 2)
-
-		XCTAssertNotNil(comments?.commentView(at: 0), "Expected a comment view for the first comment")
-		XCTAssertEqual(comments?.commentMessage(at: 0), "some message")
-
-		XCTAssertNotNil(comments?.commentView(at: 1), "Expected a comment view for the second comment")
-		XCTAssertEqual(comments?.commentMessage(at: 1), "another message")
+		sut.simulateUserInitiatedReload()
+		loader.completeLoading(with: [comment0.model, comment1.model], at: 1)
+		assertThat(sut, isRendering: [comment0.expected, comment1.expected])
+		
+		loader.completeLoadingWithError()
+		loader.completeLoading(with: [comment0.model, comment1.model], at: 1)
+		assertThat(sut, isRendering: [comment0.expected, comment1.expected])
 	}
 	
+	func test_loadCommentError_errorViewHidesAfterTapped() {
+		let date = Date()
+		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
+
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+		
+		loader.completeLoadingWithError()
+		sut.simulateErrorViewTap()
+		
+		XCTAssertTrue(sut.errorView.alpha == 0)
+		
+	}
 	
 	// MARK: - Helpers
 
@@ -128,63 +143,12 @@ class CommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func launch(
-		httpClient: HTTPClientStub = .offline,
-		store: InMemoryFeedStore = .empty
-	) -> FeedViewController {
-		let sut = SceneDelegate(httpClient: httpClient, store: store)
-		sut.window = UIWindow()
-		sut.configureWindow()
-		
-		let nav = sut.window?.rootViewController as? UINavigationController
-		return nav?.topViewController as! FeedViewController
-	}
-	
 	private func enterBackground(with store: InMemoryFeedStore) {
 		let sut = SceneDelegate(httpClient: HTTPClientStub.offline, store: store)
 		sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
 	}
 	
-	private func response(for url: URL) -> (Data, HTTPURLResponse) {
-		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-		return (makeData(for: url), response)
-	}
-	
-	private func makeData(for url: URL) -> Data {
-		switch url.absoluteString {
-		case "http://image.com":
-			return makeImageData()
-
-		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed":
-			return makeFeedData()
-
-		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/2C6A70A3-FA35-449C-816F-6C6F7C294393/comments":
-			return makeCommentsData()
-
-		default:
-			fatalError("There's no data defined for \(url)")
-		}
-	}
-	
-	private func makeImageData() -> Data {
-		return UIImage.make(withColor: .red).pngData()!
-	}
-	
-	private func makeFeedData() -> Data {
-		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": "2c6a70a3-fa35-449c-816f-6c6f7c294393", "image": "http://image.com"],
-			["id": UUID().uuidString, "image": "http://image.com"]
-		]])
-	}
-
-	private func makeCommentsData() -> Data {
-		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "message": "some message", "created_at" : "2008-09-24T02:10:22+00:00", "author": ["username": "some user"]],
-			["id": UUID().uuidString, "message": "another message", "created_at" : "2012-04-02T02:22:13+00:00", "author": ["username": "another user"]]
-		]])
-	}
-	
-	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "Comments"
 		let bundle = Bundle(for: CommentsPresenter.self)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
@@ -194,18 +158,7 @@ class CommentsUIIntegrationTests: XCTestCase {
 		return value
 	}
 	
-	struct ExpectedCellContent {
-		let username: String
-		let message: String
-		let date: String
-	}
-	
-
-	private func makeComment(id: UUID, message: String, date: (date: Date, string: String), author: String) -> (model: Comment, expected: ExpectedCellContent) {
-		return (Comment(id: id, message: message, createdAt: date.date, author: Author(username: author)), ExpectedCellContent(username: author, message: message, date: date.string))
-	}
-	
-	class LoaderSpy: CommentLoader {
+	private class LoaderSpy: CommentLoader {
 		
 		// MARK: - CommentLoader
 		
@@ -231,7 +184,6 @@ class CommentsUIIntegrationTests: XCTestCase {
 		func load(completion: @escaping (CommentLoader.Result) -> Void) -> CommentsLoaderTask {
 			completions.append(completion)
 			return Task { [weak self] in
-				//guard self != nil else { return }
 				self?.cancelCount += 1
 			}
 		}
@@ -243,6 +195,40 @@ class CommentsUIIntegrationTests: XCTestCase {
 		func completeLoadingWithError(at index: Int = 0) {
 			completions[index](.failure(NSError(domain: "loading error", code: 0)))
 		}
+	}
+	
+	private struct ExpectedCellContent {
+		let username: String
+		let message: String
+		let date: String
+	}
+	
+	private func makeComment(id: UUID, message: String, date: (date: Date, string: String), author: String) -> (model: Comment, expected: ExpectedCellContent) {
+		return (Comment(id: id, message: message, createdAt: date.date, author: Author(username: author)), ExpectedCellContent(username: author, message: message, date: date.string))
+	}
+	
+	private func assertThat(_ sut: CommentsViewController, isRendering comments: [ExpectedCellContent], file: StaticString = #filePath, line: UInt = #line) {
+		guard sut.numberOfRenderedCommentViews() == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedCommentViews()) instead.", file: file, line: line)
+		}
+
+		comments.enumerated().forEach { index, image in
+			assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
+		}
+	}
+
+	private func assertThat(_ sut: CommentsViewController, hasViewConfiguredFor expected: ExpectedCellContent, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+		let view = sut.commentView(at: index)
+
+		guard let cell = view as? CommentCell else {
+			return XCTFail("Expected \(CommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+
+		XCTAssertEqual(cell.usernameText, expected.username, "username in cell at index \(index)", file: file, line: line)
+
+		XCTAssertEqual(cell.messageText, expected.message, "message in cell at index \(index)", file: file, line: line)
+
+		XCTAssertEqual(cell.dateText, expected.date, "date in cell at index \(index)", file: file, line: line)
 	}
 }
 
@@ -258,5 +244,11 @@ extension FeedViewController {
 	}
 	private var feedImagesSection: Int {
 		return 0
+	}
+}
+
+extension CommentsViewController {
+	func simulateErrorViewTap() {
+		errorView.hideMessageView()
 	}
 }

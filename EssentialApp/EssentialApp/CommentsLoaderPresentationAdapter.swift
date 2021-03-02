@@ -10,7 +10,7 @@ import Combine
 import EssentialFeed
 import EssentialFeediOS
 
-public class CommentsLoaderPresentationAdapter : CommentsViewControllerDelegate {
+final class CommentsLoaderPresentationAdapter : CommentsViewControllerDelegate {
 	private let loader: () -> CommentLoader.Publisher
 	private var cancellable: Cancellable?
 	var presenter: CommentsPresenter?
@@ -19,7 +19,7 @@ public class CommentsLoaderPresentationAdapter : CommentsViewControllerDelegate 
 		self.loader = loader
 	}
 
-	public func didRequestCommentsRefresh() {
+	internal func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		cancellable = loader()
 			.dispatchOnMainQueue()
