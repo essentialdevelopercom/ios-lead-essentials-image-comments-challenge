@@ -27,13 +27,9 @@ class ImageCommentsRemoteLoader {
 		client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			
-			if let response = try? result.get() {
-				if response.1.statusCode != 200 {
-					completion(.failure(.invalidData))
-					return 
-				}
-			}
-			completion(.failure(.connectivity))
+			completion(result
+				.mapError { _ in Error.connectivity}
+				.flatMap { _ in .failure(Error.invalidData) })
 		}
 	}
 }
