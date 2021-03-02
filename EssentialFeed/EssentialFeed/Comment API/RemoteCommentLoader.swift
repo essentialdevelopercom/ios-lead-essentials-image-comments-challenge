@@ -51,13 +51,3 @@ private extension Array where Element == RemoteComment {
 		return map { $0.local }
 	}
 }
-
-struct RemoteCommentAuthor: Decodable {
-	public let username: String
-	
-	var local: CommentAuthor {
-		return CommentAuthor(username: username)
-	}
-}
-
-

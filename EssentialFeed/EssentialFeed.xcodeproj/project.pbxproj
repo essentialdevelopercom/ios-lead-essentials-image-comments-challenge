@@ -89,6 +89,7 @@
 		B553AA5525EE675C004DDE1A /* RemoteCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA5425EE675C004DDE1A /* RemoteCommentLoader.swift */; };
 		B553AA5F25EE6C52004DDE1A /* RemoteCommentMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */; };
 		B553AA6525EE6C81004DDE1A /* RemoteComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA6425EE6C81004DDE1A /* RemoteComment.swift */; };
+		B553AA6B25EE6CA0004DDE1A /* RemoteCommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA6A25EE6CA0004DDE1A /* RemoteCommentAuthor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -198,6 +199,7 @@
 		B553AA5425EE675C004DDE1A /* RemoteCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentLoader.swift; sourceTree = "<group>"; };
 		B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentMapper.swift; sourceTree = "<group>"; };
 		B553AA6425EE6C81004DDE1A /* RemoteComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteComment.swift; sourceTree = "<group>"; };
+		B553AA6A25EE6CA0004DDE1A /* RemoteCommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentAuthor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -548,6 +550,7 @@
 				B553AA5425EE675C004DDE1A /* RemoteCommentLoader.swift */,
 				B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */,
 				B553AA6425EE6C81004DDE1A /* RemoteComment.swift */,
+				B553AA6A25EE6CA0004DDE1A /* RemoteCommentAuthor.swift */,
 			);
 			path = "Comment API";
 			sourceTree = "<group>";
@@ -743,6 +746,7 @@
 				08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */,
 				08897BED23393A2E0029F5E4 /* RemoteFeedImageDataLoader.swift in Sources */,
 				08B42EA421C3F09A00DDA349 /* RemoteFeedLoader.swift in Sources */,
+				B553AA6B25EE6CA0004DDE1A /* RemoteCommentAuthor.swift in Sources */,
 				08285AF4228BFAFF000A8987 /* FeedStore.xcdatamodeld in Sources */,
 				08604505233E316F005ECD22 /* CoreDataFeedStore+FeedStore.swift in Sources */,
 				0886893A221DAA34007BC3E7 /* LocalFeedImage.swift in Sources */,
