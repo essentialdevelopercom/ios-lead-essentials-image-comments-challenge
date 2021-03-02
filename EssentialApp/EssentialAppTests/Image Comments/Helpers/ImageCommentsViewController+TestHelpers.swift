@@ -10,24 +10,28 @@ import EssentialFeediOS
 import UIKit
 
 extension ImageCommentsViewController {
-   
-   var errorMessage: String? {
-	   return errorView?.message
-   }
-   
-   func renderedCell(at row: Int) -> ImageCommentsCell? {
-	   let ds = tableView.dataSource
-	   let index = IndexPath(row: row, section: imageCommentsSection)
-	   return ds?.tableView(tableView, cellForRowAt: index) as? ImageCommentsCell
-   }
-   
-   var isShowingLoadingIndicator: Bool {
-	   return self.refreshControl?.isRefreshing == true
-   }
-   
-   var numberOfRenderedImageCommentsViews: Int {
-	   return tableView.numberOfRows(inSection: imageCommentsSection)
-   }
-   
-   private var imageCommentsSection: Int { 0 }
+	var errorMessage: String? {
+		return errorView?.message
+	}
+	
+	func renderedCell(at row: Int) -> ImageCommentsCell? {
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: imageCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index) as? ImageCommentsCell
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return self.refreshControl?.isRefreshing == true
+	}
+	
+	var numberOfRenderedImageCommentsViews: Int {
+		return tableView.numberOfRows(inSection: imageCommentsSection)
+	}
+	
+	func commentMessage(at row: Int) -> String? {
+		let cell = renderedCell(at: row)
+		return cell?.message.text
+	}
+	
+	private var imageCommentsSection: Int { 0 }
 }
