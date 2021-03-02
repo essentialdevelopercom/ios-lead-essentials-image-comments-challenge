@@ -24,16 +24,14 @@ class ImageCommentsRemoteLoader {
 class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
-		let client = HTTPClientSpy()
-		let _ = ImageCommentsRemoteLoader(client: client)
+		let (_, client) = makeSUT()
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
 	func test_loadImageComments_requestsDataFromURL() {
 		let url = anyURL()
-		let client = HTTPClientSpy()
-		let sut = ImageCommentsRemoteLoader(client: client)
+		let (sut, client) = makeSUT()
 		
 		sut.loadImageComments(from: url) { _ in }
 		
@@ -42,13 +40,20 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 	
 	func test_loadImageCommentsTwice_requestsImageCommentsTwice() {
 		let url = anyURL()
-		let client = HTTPClientSpy()
-		let sut = ImageCommentsRemoteLoader(client: client)
+		let (sut, client) = makeSUT()
 		
 		sut.loadImageComments(from: url) { _ in }
 		sut.loadImageComments(from: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+
+	// MARK: - Helpers
+	
+	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsRemoteLoader, client: HTTPClientSpy) {
+		let client = HTTPClientSpy()
+		let sut = ImageCommentsRemoteLoader(client: client)
+		return (sut, client)
 	}
 	
 }
