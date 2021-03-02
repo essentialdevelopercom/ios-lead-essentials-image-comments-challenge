@@ -29,14 +29,18 @@ private class RemoteCommentLoader {
 		client.get(from: url) { result in
 			switch result {
 			case let .success((data, response)):
-				if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data)  {
-					completion(.success(root.items))
-				} else {
-					completion(.failure(.invalidData))
-				}
+				completion(RemoteCommentLoader.map(data, from: response))
 			case .failure:
 				completion(.failure(.connectivity))
 			}
+		}
+	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data)  {
+			return .success(root.items)
+		} else {
+			return .failure(.invalidData)
 		}
 	}
 	
