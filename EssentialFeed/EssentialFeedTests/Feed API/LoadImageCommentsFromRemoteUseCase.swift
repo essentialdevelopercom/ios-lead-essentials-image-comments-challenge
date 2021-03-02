@@ -9,9 +9,13 @@
 import XCTest
 import EssentialFeed
 
-class RemoteImageCommentsLoader {
+protocol ImageCommentsLoader {
 	typealias Result = Swift.Result<Any, Error>
 	
+	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void)
+}
+
+class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
 
 	enum Error: Swift.Error {
@@ -23,7 +27,7 @@ class RemoteImageCommentsLoader {
 		self.client = client
 	}
 	
-	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void) {
+	func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) {
 		client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			
@@ -65,7 +69,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		let (sut, client) = makeSUT()
 		let clientError = anyNSError()
 		
-		expect(sut, toCompleteWith: .failure(.connectivity), when: {
+		expect(sut, toCompleteWith: failure(.connectivity), when: {
 			client.complete(with: clientError)
 		})
 	}
@@ -76,7 +80,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		let samples = [199, 201, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
-			expect(sut, toCompleteWith: .failure(.invalidData), when: {
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			})
 		}
@@ -92,12 +96,16 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		return (sut, client)
 	}
 	
+	private func failure(_ error: RemoteImageCommentsLoader.Error) -> ImageCommentsLoader.Result {
+		.failure(error)
+	}
+	
 	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load comments completion")
 		
 		sut.loadImageComments(from: anyURL()) { receivedResult in
 			switch (receivedResult, expectedResult) {
-			case let (.failure(receivedError), .failure(expectedError)):
+			case let (.failure(receivedError as RemoteImageCommentsLoader.Error), .failure(expectedError as RemoteImageCommentsLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 				
 			default:
