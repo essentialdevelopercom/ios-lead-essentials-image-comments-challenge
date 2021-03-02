@@ -52,24 +52,6 @@ private extension Array where Element == RemoteComment {
 	}
 }
 
-struct RemoteComment: Decodable {
-	public let id: UUID
-	public let message: String
-	public let createdAt: String
-	public let author: RemoteCommentAuthor
-	
-	enum CodingKeys: String, CodingKey {
-		case id
-		case message
-		case createdAt = "created_at"
-		case author
-	}
-	
-	var local: Comment {
-		return Comment(id: id, message: message, createdAt: createdAt, author: author.local)
-	}
-}
-
 struct RemoteCommentAuthor: Decodable {
 	public let username: String
 	
