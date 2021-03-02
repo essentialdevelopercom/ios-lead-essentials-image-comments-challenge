@@ -28,6 +28,8 @@ class ImageCommentSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_WITH_ERROR_LIGHT")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_WITH_ERROR_DARK")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraSmall)), named: "IMAGE_COMMENT_WITH_ERROR_LIGHT_EXTRA_SMALL")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSize: .extraSmall)), named: "IMAGE_COMMENT_WITH_ERROR_DARK_EXTRA_SMALL")
 	}
 	
 	func test_imageCommentWithContent() {
@@ -37,6 +39,8 @@ class ImageCommentSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_WITH_CONTENT_LIGHT")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_WITH_CONTENT_DARK")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraSmall)), named: "IMAGE_COMMENT_WITH_CONTENT_LIGHT_EXTRA_SMALL")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSize: .extraSmall)), named: "IMAGE_COMMENT_WITH_CONTENT_DARK_EXTRA_SMALL")
 	}
 	
 	//MARK: Helpers

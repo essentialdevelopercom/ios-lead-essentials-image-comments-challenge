@@ -31,6 +31,13 @@ public class ImageCommentsPresenter {
 		self.errorView = errorView
 	}
 	
+	public static var Title: String {
+		return NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE",
+			 tableName: "ImageComments",
+			 bundle: Bundle(for: FeedPresenter.self),
+			 comment: "Title for the image comments view")
+	}
+	
 	private var localizedErrorMessage: String {
 		return NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
 								 tableName: "ImageComments",

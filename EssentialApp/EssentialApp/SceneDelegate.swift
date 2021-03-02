@@ -59,6 +59,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
 				onFeedSelect: showImageCommentViewController))
+
+		navigationController?.navigationBar.tintColor = .systemGray
 		
 		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
@@ -73,6 +75,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let imageCommentsLoader = RemoteImageCommentsLoader(client: httpClient, url: url)
 		let imageCommentController = ImageCommentsUIComposer.imageCommentsComposedWith(loader: imageCommentsLoader.loadPublisher)
 		navigationController?.pushViewController(imageCommentController, animated: true)
+		removeTitleInBackButton()
+	}
+	
+	private func removeTitleInBackButton() {
+		let backButton = UIBarButtonItem()
+		backButton.title = ""
+		navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
 	}
 	
 	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
