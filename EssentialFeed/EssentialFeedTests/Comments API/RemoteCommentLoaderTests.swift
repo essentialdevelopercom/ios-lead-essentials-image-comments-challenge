@@ -39,7 +39,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: .failure(.connectivity)) {
+		expect(sut, toCompleteWith: .failure(RemoteCommentLoader.Error.connectivity)) {
 			client.complete(with: anyNSError())
 		}
 	}
@@ -50,7 +50,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let codes = [199, 201, 300, 400, 500]
 		
 		codes.enumerated().forEach { index, code in
-			expect(sut, toCompleteWith: .failure(.invalidData)) {
+			expect(sut, toCompleteWith: .failure(RemoteCommentLoader.Error.invalidData)) {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			}
 		}
@@ -60,7 +60,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let invalidJSONData = "invalid json".data(using: .utf8)!
 		
-		expect(sut, toCompleteWith: .failure(.invalidData)) {
+		expect(sut, toCompleteWith: .failure(RemoteCommentLoader.Error.invalidData)) {
 			client.complete(withStatusCode: 200, data: invalidJSONData)
 		}
 	}

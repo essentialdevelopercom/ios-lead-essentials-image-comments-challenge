@@ -13,7 +13,7 @@ public class RemoteCommentLoader {
 	private let url: URL
 	private let client: HTTPClient
 	
-	public typealias Result = Swift.Result<[Comment], Error>
+	public typealias Result = Swift.Result<[Comment], Swift.Error>
 	public enum Error: Swift.Error, Equatable {
 		case connectivity
 		case invalidData
@@ -30,23 +30,42 @@ public class RemoteCommentLoader {
 			case let .success((data, response)):
 				completion(RemoteCommentLoader.map(data, from: response))
 			case .failure:
-				completion(.failure(.connectivity))
+				completion(.failure(Error.connectivity))
 			}
 		}
 	}
 	
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
-		if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data)  {
-			return .success(root.items.toLocal())
-		} else {
-			return .failure(.invalidData)
+		do {
+			let items = try RemoteCommentMapper.map(data, from: response)
+			return .success(items.toLocal())
+		} catch {
+			return .failure(error)
 		}
 	}
 	
 }
 
-private struct Root: Decodable {
-	let items: [RemoteComment]
+private extension Array where Element == RemoteComment {
+	func toLocal() -> [Comment] {
+		return map { $0.local }
+	}
+}
+
+private final class RemoteCommentMapper {
+	
+	private struct Root: Decodable {
+		let items: [RemoteComment]
+	}
+	
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteComment] {
+		guard response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) else {
+			throw RemoteCommentLoader.Error.invalidData
+		}
+		
+		return root.items
+	}
+	
 }
 
 private struct RemoteComment: Decodable {
@@ -75,8 +94,4 @@ private struct RemoteCommentAuthor: Decodable {
 	}
 }
 
-private extension Array where Element == RemoteComment {
-	func toLocal() -> [Comment] {
-		return map { $0.local }
-	}
-}
+
