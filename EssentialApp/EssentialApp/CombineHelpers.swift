@@ -51,9 +51,14 @@ public extension ImageCommentsLoader {
 	typealias Publisher = AnyPublisher<[ImageComment], Error>
 	
 	func loadPublisher() -> Publisher {
-		Deferred {
-			Future(self.load)
+		var task: ImageCommentsLoaderTask?
+		
+		return Deferred {
+			Future { completion in
+				task = self.load(completion: completion)
+			}
 		}
+		.handleEvents(receiveCancel: { task?.cancel() })
 		.eraseToAnyPublisher()
 	}
 }

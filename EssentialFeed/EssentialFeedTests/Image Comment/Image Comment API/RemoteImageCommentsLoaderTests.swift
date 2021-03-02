@@ -20,11 +20,11 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let url = URL(string: "https://a-url.com")!
 		
-		sut.load { _ in }
+		_ = sut.load { _ in }
 		XCTAssertEqual(client.requestedURLs, [url])
 		
-		sut.load { _ in }
-		sut.load { _ in }
+		_ = sut.load { _ in }
+		_ = sut.load { _ in }
 		XCTAssertEqual(client.requestedURLs, [url,url,url])
 	}
 	
@@ -91,7 +91,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client, url: url)
 		
 		var capturedResults = [RemoteImageCommentsLoader.Result]()
-		sut?.load { capturedResults.append($0) }
+		_ = sut?.load { capturedResults.append($0) }
 		
 		sut = nil
 		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
@@ -110,7 +110,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	}
 	
 	private func expect(sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-		sut.load() { recievedResult in
+		_ = sut.load() { recievedResult in
 			switch (recievedResult, expectedResult) {
 			case let (.failure(recievedError as RemoteImageCommentsLoader.Error),
 					  .failure(expectedError as RemoteImageCommentsLoader.Error)):

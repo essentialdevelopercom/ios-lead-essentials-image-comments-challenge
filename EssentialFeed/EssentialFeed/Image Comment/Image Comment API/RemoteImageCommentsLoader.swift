@@ -22,24 +22,43 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 		case invalidData
 	}
 	
-	public func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
-		client.get(from: url) { [weak self] result  in
-			guard self != nil else { return }
-			switch result {
-			case let .success((data, response)):
-				completion(RemoteImageCommentsLoader.map(data, from: response))
-			case .failure:
-				completion(.failure(Error.connectivity))
-			}
+	private final class HTTPClientTaskWrapper: ImageCommentsLoaderTask {
+		private var completion: ((ImageCommentsLoader.Result) -> Void)?
+		
+		var wrapped: HTTPClientTask?
+		
+		init(_ completion: @escaping (ImageCommentsLoader.Result) -> Void) {
+			self.completion = completion
+		}
+		
+		func complete(with result: ImageCommentsLoader.Result) {
+			completion?(result)
+		}
+		
+		func cancel() {
+			preventFurtherCompletions()
+			wrapped?.cancel()
+		}
+		
+		private func preventFurtherCompletions() {
+			completion = nil
 		}
 	}
 	
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> ImageCommentsLoader.Result {
-		do {
-			let comments = try ImageCommentsMapper.map(data: data, from: response)
-			return .success(comments)
-		} catch {
-			return.failure(error as! RemoteImageCommentsLoader.Error)
+	public func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+		let task = HTTPClientTaskWrapper(completion)
+		task.wrapped = client.get(from: url){ [weak self] result in
+			guard self != nil else { return }
+			
+			task.complete(with: result
+							.mapError { _ in Error.connectivity }
+							.flatMap { (data, response) in
+								Result {
+									try ImageCommentsMapper.map(data: data, from: response)
+								}
+							}
+			)
 		}
+		return task
 	}
 }

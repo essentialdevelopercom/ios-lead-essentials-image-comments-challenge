@@ -34,7 +34,7 @@ class ImageCommentAPIEndToEndTests: XCTestCase {
 		let exp = expectation(description: "Wait for load to complete")
 		
 		var receivedResult: ImageCommentsLoader.Result?
-		loader.load { result in
+		_ = loader.load { result in
 			receivedResult = result
 			exp.fulfill()
 		}

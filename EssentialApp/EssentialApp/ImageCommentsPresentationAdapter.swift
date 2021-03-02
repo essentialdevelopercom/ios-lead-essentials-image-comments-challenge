@@ -34,4 +34,8 @@ class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 				self?.presenter?.didFinishLoadingImageComments(with: comments)
 			})
 	}
+	
+	deinit {
+		cancellable?.cancel()
+	}
 }

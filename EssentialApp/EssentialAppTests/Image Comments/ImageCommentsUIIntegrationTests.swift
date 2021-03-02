@@ -115,6 +115,21 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_onBackButtonPressed_cancelRequestFeedFromLoader() {
+		let loader = LoaderSpy()
+		var sut: ImageCommentsViewController?
+		
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader.loadPublisher)
+			sut?.loadViewIfNeeded()
+		}
+
+		XCTAssertEqual(loader.cancelCount, 0)
+
+		sut = nil
+		XCTAssertEqual(loader.cancelCount, 1)
+	}
+	
 	func test_loadImageCommentsCompletion_dispatchesFromBackgroundToMainThread() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
@@ -175,13 +190,30 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	class LoaderSpy: ImageCommentsLoader {
+		var cancelCount = 0
+		
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		var loadCallCount: Int {
 			return imageCommentsRequests.count
 		}
 		
-		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
+		private class Task: ImageCommentsLoaderTask {
+			let onCancel: () -> Void
+
+			init(onCancel: @escaping () -> Void) {
+				self.onCancel = onCancel
+			}
+
+			func cancel() {
+				onCancel()
+			}
+		}
+		
+		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			imageCommentsRequests.append((completion))
+			return Task { [weak self] in
+				self?.cancelCount += 1
+			}
 		}
 		
 		func completeLoading(with comments: [ImageComment] = [], at index: Int) {
