@@ -52,23 +52,7 @@ private extension Array where Element == RemoteComment {
 	}
 }
 
-private final class RemoteCommentMapper {
-	
-	private struct Root: Decodable {
-		let items: [RemoteComment]
-	}
-	
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteComment] {
-		guard response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) else {
-			throw RemoteCommentLoader.Error.invalidData
-		}
-		
-		return root.items
-	}
-	
-}
-
-private struct RemoteComment: Decodable {
+struct RemoteComment: Decodable {
 	public let id: UUID
 	public let message: String
 	public let createdAt: String
@@ -86,7 +70,7 @@ private struct RemoteComment: Decodable {
 	}
 }
 
-private struct RemoteCommentAuthor: Decodable {
+struct RemoteCommentAuthor: Decodable {
 	public let username: String
 	
 	var local: CommentAuthor {

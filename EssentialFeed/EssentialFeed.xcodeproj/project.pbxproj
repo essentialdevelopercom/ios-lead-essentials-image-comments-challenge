@@ -87,6 +87,7 @@
 		B553AA4825ED012E004DDE1A /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA4725ED012E004DDE1A /* Comment.swift */; };
 		B553AA4E25ED0152004DDE1A /* CommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA4D25ED0152004DDE1A /* CommentAuthor.swift */; };
 		B553AA5525EE675C004DDE1A /* RemoteCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA5425EE675C004DDE1A /* RemoteCommentLoader.swift */; };
+		B553AA5F25EE6C52004DDE1A /* RemoteCommentMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -194,6 +195,7 @@
 		B553AA4725ED012E004DDE1A /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		B553AA4D25ED0152004DDE1A /* CommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentAuthor.swift; sourceTree = "<group>"; };
 		B553AA5425EE675C004DDE1A /* RemoteCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentLoader.swift; sourceTree = "<group>"; };
+		B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -542,6 +544,7 @@
 			isa = PBXGroup;
 			children = (
 				B553AA5425EE675C004DDE1A /* RemoteCommentLoader.swift */,
+				B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */,
 			);
 			path = "Comment API";
 			sourceTree = "<group>";
@@ -760,6 +763,7 @@
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataLoader.swift in Sources */,
 				B553AA5525EE675C004DDE1A /* RemoteCommentLoader.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
+				B553AA5F25EE6C52004DDE1A /* RemoteCommentMapper.swift in Sources */,
 				08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */,
 				08285AFF228C1874000A8987 /* ManagedFeedImage.swift in Sources */,
 			);
