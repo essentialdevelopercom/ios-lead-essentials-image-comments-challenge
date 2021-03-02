@@ -56,12 +56,14 @@ class FeedAcceptanceTests: XCTestCase {
 		let feed = launch(httpClient: .online(response), store: .empty)
 		
 		feed.simulateUserSelectFeedImage(at: 0)
-		
 		RunLoop.current.run(until: Date())
 		
 		let imageComment = feed.navigationController?.topViewController as? ImageCommentsViewController
+		
 		XCTAssertNotNil(imageComment, "should open ImageCommentsViewController for selected image")
 		XCTAssertEqual(imageComment?.numberOfRenderedImageCommentsViews, 2)
+		XCTAssertEqual(imageComment?.commentMessage(at: 0), "A Message")
+		XCTAssertEqual(imageComment?.commentMessage(at: 1), "Another Message")
 	}
 	
 	// MARK: - Helpers

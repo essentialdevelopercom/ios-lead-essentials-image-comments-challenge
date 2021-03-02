@@ -28,5 +28,10 @@ extension ImageCommentsViewController {
 		return tableView.numberOfRows(inSection: imageCommentsSection)
 	}
 	
+	func commentMessage(at row: Int) -> String? {
+		let cell = renderedCell(at: row)
+		return cell?.message.text
+	}
+	
 	private var imageCommentsSection: Int { 0 }
 }
