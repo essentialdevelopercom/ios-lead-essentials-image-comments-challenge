@@ -30,7 +30,7 @@ private class RemoteCommentLoader {
 			switch result {
 			case let .success(data, response):
 				if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data)  {
-					completion(.success([]))
+					completion(.success(root.items))
 				} else {
 					completion(.failure(.invalidData))
 				}
@@ -108,6 +108,45 @@ class RemoteCommentLoaderTests: XCTestCase {
 		
 		expect(sut, toCompleteWith: .success([])) {
 			client.complete(withStatusCode: 200, data: emptyListJSONData)
+		}
+	}
+	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONList() {
+		let (sut, client) = makeSUT()
+		
+		let item1 = Comment(
+			id: UUID(),
+			message: "a message",
+			createdAt: "a date",
+			author: CommentAuthor(username: "a username"))
+		let item2 = Comment(
+			id: UUID(),
+			message: "another message",
+			createdAt: "another date",
+			author: CommentAuthor(username: "another username"))
+		
+		let json1: [String:Any] = [
+			"id": item1.id.uuidString,
+			"message": item1.message,
+			"created_at": item1.createdAt,
+			"author": [
+				"username": item1.author.username
+			]
+		]
+		let json2: [String:Any] = [
+			"id": item2.id.uuidString,
+			"message": item2.message,
+			"created_at": item2.createdAt,
+			"author": [
+				"username": item2.author.username
+			]
+		]
+		
+		let json = ["items": [json1, json2]]
+		let jsonData = try! JSONSerialization.data(withJSONObject: json)
+		
+		expect(sut, toCompleteWith: .success([item1, item2])) {
+			client.complete(withStatusCode: 200, data: jsonData)
 		}
 	}
 	

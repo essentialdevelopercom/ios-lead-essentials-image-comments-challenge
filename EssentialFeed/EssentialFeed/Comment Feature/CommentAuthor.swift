@@ -10,4 +10,8 @@ import Foundation
 
 public struct CommentAuthor: Equatable, Decodable {
 	public let username: String
+	
+	public init(username: String) {
+		self.username = username
+	}
 }
