@@ -8,9 +8,7 @@
 
 import EssentialFeed
 import EssentialFeediOS
-import Foundation
 import UIKit
-import Combine
 
 public class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
@@ -33,31 +31,5 @@ public class ImageCommentsUIComposer {
 		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
 		imageCommentsController.delegate = delegate
 		return imageCommentsController
-	}
-}
-
-class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
-	private var cancellable: Cancellable?
-	private let loader: () -> ImageCommentsLoader.Publisher
-	var presenter: ImageCommentsPresenter?
-	
-	init(loader: @escaping () -> ImageCommentsLoader.Publisher) {
-		self.loader = loader
-	}
-	
-	func didRequestImageCommentsRefresh() {
-		presenter?.didStartLoadingImageComments()
-		cancellable = loader()
-			.dispatchOnMainQueue()
-			.sink(receiveCompletion: { [weak self] completion in
-				switch completion {
-				case .finished: break
-					
-				case let .failure(error):
-					self?.presenter?.didFinishLoadingImageComments(with: error)
-				}
-			}, receiveValue: { [weak self] comments in
-				self?.presenter?.didFinishLoadingImageComments(with: comments)
-			})
 	}
 }
