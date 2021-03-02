@@ -14,7 +14,7 @@ public class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(loader: loader)
 		
-		let imageCommentsViewController = makeImageCommentsViewController(delegate: presentationAdapter)
+		let imageCommentsViewController = makeImageCommentsViewController(delegate: presentationAdapter, title: ImageCommentsPresenter.Title)
 		
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: WeakRefVirtualProxy(imageCommentsViewController),
@@ -25,11 +25,12 @@ public class ImageCommentsUIComposer {
 		return imageCommentsViewController
 	}
 	
-	private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate) -> ImageCommentsViewController {
+	private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate, title: String) -> ImageCommentsViewController {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComment", bundle: bundle)
 		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
 		imageCommentsController.delegate = delegate
+		imageCommentsController.title = title
 		return imageCommentsController
 	}
 }

@@ -20,6 +20,14 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
+	func test_imageCommentsView_hasTitle() {
+		let (sut, _) = makeSUT()
+
+		sut.loadViewIfNeeded()
+
+		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
+	}
+	
 	func test_loadImmageCommentsAction_requestsToLoadImageComments() {
 		let (sut, loader) = makeSUT()
 		
