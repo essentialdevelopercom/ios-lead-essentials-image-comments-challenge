@@ -21,12 +21,3 @@ public struct Comment: Equatable {
 		self.author = author
 	}
 }
-
-extension Comment: Decodable {
-	enum CodingKeys: String, CodingKey {
-		case id
-		case message
-		case createdAt = "created_at"
-		case author
-	}
-}

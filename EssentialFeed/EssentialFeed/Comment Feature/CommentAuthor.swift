@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct CommentAuthor: Equatable, Decodable {
+public struct CommentAuthor: Equatable {
 	public let username: String
 	
 	public init(username: String) {

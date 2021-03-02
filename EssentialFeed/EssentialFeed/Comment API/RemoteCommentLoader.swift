@@ -37,14 +37,46 @@ public class RemoteCommentLoader {
 	
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
 		if response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data)  {
-			return .success(root.items)
+			return .success(root.items.toLocal())
 		} else {
 			return .failure(.invalidData)
 		}
 	}
 	
-	private struct Root: Decodable {
-		let items: [Comment]
+}
+
+private struct Root: Decodable {
+	let items: [RemoteComment]
+}
+
+private struct RemoteComment: Decodable {
+	public let id: UUID
+	public let message: String
+	public let createdAt: String
+	public let author: RemoteCommentAuthor
+	
+	enum CodingKeys: String, CodingKey {
+		case id
+		case message
+		case createdAt = "created_at"
+		case author
 	}
 	
+	var local: Comment {
+		return Comment(id: id, message: message, createdAt: createdAt, author: author.local)
+	}
+}
+
+private struct RemoteCommentAuthor: Decodable {
+	public let username: String
+	
+	var local: CommentAuthor {
+		return CommentAuthor(username: username)
+	}
+}
+
+private extension Array where Element == RemoteComment {
+	func toLocal() -> [Comment] {
+		return map { $0.local }
+	}
 }
