@@ -13,12 +13,3 @@ final class FeedLocalizationTests: XCTestCase, LocalizationTests{
 		assertLocalization(for: table, in: presentationBundle)
 	}
 }
-
-final class ImageCommentsLocalizationTests: XCTestCase, LocalizationTests{
-	
-	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
-		let table = "ImageComments"
-		let presentationBundle = Bundle(for: ImageCommentsPresenter.self)
-		assertLocalization(for: table, in: presentationBundle)
-	}
-}
