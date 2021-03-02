@@ -10,14 +10,22 @@ import XCTest
 import EssentialFeed
 
 class ImageCommentsRemoteLoader {
+	typealias Result = Swift.Result<Any, Error>
+	
 	private let client: HTTPClient
+
+	enum Error: Swift.Error {
+		case connectivity
+	}
 	
 	init(client: HTTPClient) {
 		self.client = client
 	}
 	
-	func loadImageComments(from url: URL, completion: (Any) -> Void) {
-		client.get(from: url) { _ in }
+	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void) {
+		client.get(from: url) { _ in
+			completion(.failure(.connectivity))
+		}
 	}
 }
 
@@ -47,6 +55,15 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
+	
+	func test_loadImageComments_deliversConnectivityErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		let clientError = anyNSError()
+		
+		expect(sut, toCompleteWith: .failure(.connectivity), when: {
+			client.complete(with: clientError)
+		})
+	}
 
 	// MARK: - Helpers
 	
@@ -56,6 +73,18 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func expect(_ sut: ImageCommentsRemoteLoader, toCompleteWith expectedResult: ImageCommentsRemoteLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load comments completion")
+		
+		sut.loadImageComments(from: anyURL()) { _ in
+			exp.fulfill()
+		}
+		
+		action()
+		
+		wait(for: [exp], timeout: 1.0)
 	}
 	
 }
