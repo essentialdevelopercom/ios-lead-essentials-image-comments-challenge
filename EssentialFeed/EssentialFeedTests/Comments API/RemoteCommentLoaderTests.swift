@@ -114,38 +114,21 @@ class RemoteCommentLoaderTests: XCTestCase {
 	func test_load_deliversItemsOn200HTTPResponseWithJSONList() {
 		let (sut, client) = makeSUT()
 		
-		let item1 = Comment(
+		let item1 = makeItem(
 			id: UUID(),
 			message: "a message",
 			createdAt: "a date",
-			author: CommentAuthor(username: "a username"))
-		let item2 = Comment(
+			username: "a username")
+		let item2 = makeItem(
 			id: UUID(),
 			message: "another message",
 			createdAt: "another date",
-			author: CommentAuthor(username: "another username"))
+			username: "another username")
 		
-		let json1: [String:Any] = [
-			"id": item1.id.uuidString,
-			"message": item1.message,
-			"created_at": item1.createdAt,
-			"author": [
-				"username": item1.author.username
-			]
-		]
-		let json2: [String:Any] = [
-			"id": item2.id.uuidString,
-			"message": item2.message,
-			"created_at": item2.createdAt,
-			"author": [
-				"username": item2.author.username
-			]
-		]
-		
-		let json = ["items": [json1, json2]]
+		let json = ["items": [item1.json, item2.json]]
 		let jsonData = try! JSONSerialization.data(withJSONObject: json)
 		
-		expect(sut, toCompleteWith: .success([item1, item2])) {
+		expect(sut, toCompleteWith: .success([item1.model, item2.model])) {
 			client.complete(withStatusCode: 200, data: jsonData)
 		}
 	}
@@ -157,6 +140,23 @@ class RemoteCommentLoaderTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func makeItem(id: UUID, message: String, createdAt: String, username: String) -> (model: Comment, json: [String:Any]) {
+		let item = Comment(
+			id: id,
+			message: message,
+			createdAt: createdAt,
+			author: CommentAuthor(username: username))
+		let json: [String:Any] = [
+			"id": item.id.uuidString,
+			"message": item.message,
+			"created_at": item.createdAt,
+			"author": [
+				"username": item.author.username
+			]
+		]
+		return (item, json)
 	}
 	
 	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: RemoteCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
