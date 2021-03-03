@@ -9,10 +9,14 @@
 import XCTest
 import EssentialFeed
 
+protocol ImageCommmentsLoaderTask {
+	func cancel()
+}
+
 protocol ImageCommentsLoader {
 	typealias Result = Swift.Result<Data, Error>
 	
-	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void)
+	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommmentsLoaderTask
 }
 
 class RemoteImageCommentsLoader: ImageCommentsLoader {
@@ -27,8 +31,17 @@ class RemoteImageCommentsLoader: ImageCommentsLoader {
 		self.client = client
 	}
 	
-	func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) {
-		client.get(from: url) { [weak self] result in
+	private final class HTTPClientTaskWrapper: ImageCommmentsLoaderTask {
+		var wrapped: HTTPClientTask?
+		
+		func cancel() {
+			wrapped?.cancel()
+		}
+	}
+	
+	func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
+		let task = HTTPClientTaskWrapper()
+		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			
 			completion(result
@@ -38,6 +51,7 @@ class RemoteImageCommentsLoader: ImageCommentsLoader {
 					return isValidResponse ? .success(data) : .failure(Error.invalidData)
 				})
 		}
+		return task
 	}
 }
 
@@ -53,7 +67,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT()
 		
-		sut.loadImageComments(from: url) { _ in }
+		_ = sut.loadImageComments(from: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -62,8 +76,8 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT()
 		
-		sut.loadImageComments(from: url) { _ in }
-		sut.loadImageComments(from: url) { _ in }
+		_ = sut.loadImageComments(from: url) { _ in }
+		_ = sut.loadImageComments(from: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -106,6 +120,17 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 			client.complete(withStatusCode: 200, data: nonEmptyData)
 		})
 	}
+	
+	func test_cancelLoadImageComments_cancelsClientURLRequest() {
+		let (sut, client) = makeSUT()
+		let url = URL(string: "https://a-given-url.com")!
+		
+		let task = sut.loadImageComments(from: url) { _ in }
+		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL requests until task is cancelled")
+		
+		task.cancel()
+		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
+	}
 
 	// MARK: - Helpers
 	
@@ -124,7 +149,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load comments completion")
 		
-		sut.loadImageComments(from: anyURL()) { receivedResult in
+		_ = sut.loadImageComments(from: anyURL()) { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedData), .success(expectedData)):
 				XCTAssertEqual(receivedData, expectedData, file: file, line: line)
