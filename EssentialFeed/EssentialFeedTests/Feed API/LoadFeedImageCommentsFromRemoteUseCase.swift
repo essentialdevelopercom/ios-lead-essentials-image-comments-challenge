@@ -13,7 +13,7 @@ class RemoteFeedImageCommentsLoader {
 	let client: HTTPClient
 	let url: URL
 	
-	init(client: HTTPClient, url: URL = URL(string: "https://a-url.com")!) {
+	init(client: HTTPClient, url: URL) {
 		self.client = client
 		self.url = url
 	}
