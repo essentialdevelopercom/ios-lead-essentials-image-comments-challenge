@@ -32,19 +32,34 @@ class RemoteImageCommentsLoader: ImageCommentsLoader {
 	}
 	
 	private final class HTTPClientTaskWrapper: ImageCommmentsLoaderTask {
+		private var completion: ((ImageCommentsLoader.Result) -> Void)?
+		
 		var wrapped: HTTPClientTask?
 		
+		init(_ completion: @escaping (ImageCommentsLoader.Result) -> Void) {
+			self.completion = completion
+		}
+		
+		func complete(with result: FeedImageDataLoader.Result) {
+			completion?(result)
+		}
+		
 		func cancel() {
+			preventFurtherCompletions()
 			wrapped?.cancel()
+		}
+		
+		private func preventFurtherCompletions() {
+			completion = nil
 		}
 	}
 	
 	func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
-		let task = HTTPClientTaskWrapper()
+		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			
-			completion(result
+			task.complete(with: result
 				.mapError { _ in Error.connectivity}
 				.flatMap { data, response in
 					let isValidResponse = response.isOK && !data.isEmpty
@@ -130,6 +145,21 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		
 		task.cancel()
 		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
+	}
+	
+	func test_loadImageComments_doesNotDeliverResultAfterCancellingTask() {
+		let (sut, client) = makeSUT()
+		let nonEmptyData = Data("non-empty data".utf8)
+		
+		var received = [ImageCommentsLoader.Result]()
+		let task = sut.loadImageComments(from: anyURL()) { received.append($0) }
+		task.cancel()
+		
+		client.complete(withStatusCode: 404, data: anyData())
+		client.complete(withStatusCode: 200, data: nonEmptyData)
+		client.complete(with: anyNSError())
+		
+		XCTAssertTrue(received.isEmpty, "Expected no received results after cancelling task")
 	}
 
 	// MARK: - Helpers
