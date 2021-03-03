@@ -58,7 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				onFeedSelect: showImageCommentViewController))
+				onImageSelection: showImageCommentViewController))
 
 		navigationController?.navigationBar.tintColor = .systemGray
 		
@@ -70,8 +70,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		localFeedLoader.validateCache { _ in }
 	}
 	
-	private func showImageCommentViewController(for imageId: String) {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
+	private func showImageCommentViewController(for image: FeedImage) {
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
 		let imageCommentsLoader = RemoteImageCommentsLoader(client: httpClient, url: url)
 		let imageCommentController = ImageCommentsUIComposer.imageCommentsComposedWith(loader: imageCommentsLoader.loadPublisher)
 		navigationController?.pushViewController(imageCommentController, animated: true)

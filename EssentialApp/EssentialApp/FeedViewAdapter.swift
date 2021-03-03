@@ -9,9 +9,9 @@ import EssentialFeediOS
 final class FeedViewAdapter: FeedView {
 	private weak var controller: FeedViewController?
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
-	private var onSelect: (String) -> Void
+	private var onSelect: (FeedImage) -> Void
 	
-	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, onSelect: @escaping (String) -> Void) {
+	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, onSelect: @escaping (FeedImage) -> Void) {
 		self.controller = controller
 		self.imageLoader = imageLoader
 		self.onSelect = onSelect
@@ -21,8 +21,7 @@ final class FeedViewAdapter: FeedView {
 		controller?.display(viewModel.feed.map { model in
 			let adapter = FeedImageDataLoaderPresentationAdapter<WeakRefVirtualProxy<FeedImageCellController>, UIImage>(model: model, imageLoader: imageLoader)
 			let view = FeedImageCellController(delegate: adapter) {
-				let id = model.id
-				self.onSelect("\(id)")
+				self.onSelect(model)
 			}
 			
 			adapter.presenter = FeedImagePresenter(
