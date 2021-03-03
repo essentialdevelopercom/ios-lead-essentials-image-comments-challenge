@@ -9,57 +9,6 @@
 import XCTest
 import EssentialFeed
 
-class RemoteImageCommentsLoader: ImageCommentsLoader {
-	private let client: HTTPClient
-
-	enum Error: Swift.Error {
-		case connectivity
-		case invalidData
-	}
-	
-	init(client: HTTPClient) {
-		self.client = client
-	}
-	
-	private final class HTTPClientTaskWrapper: ImageCommmentsLoaderTask {
-		private var completion: ((ImageCommentsLoader.Result) -> Void)?
-		
-		var wrapped: HTTPClientTask?
-		
-		init(_ completion: @escaping (ImageCommentsLoader.Result) -> Void) {
-			self.completion = completion
-		}
-		
-		func complete(with result: FeedImageDataLoader.Result) {
-			completion?(result)
-		}
-		
-		func cancel() {
-			preventFurtherCompletions()
-			wrapped?.cancel()
-		}
-		
-		private func preventFurtherCompletions() {
-			completion = nil
-		}
-	}
-	
-	func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
-		let task = HTTPClientTaskWrapper(completion)
-		task.wrapped = client.get(from: url) { [weak self] result in
-			guard self != nil else { return }
-			
-			task.complete(with: result
-				.mapError { _ in Error.connectivity}
-				.flatMap { data, response in
-					let isValidResponse = response.isOK && !data.isEmpty
-					return isValidResponse ? .success(data) : .failure(Error.invalidData)
-				})
-		}
-		return task
-	}
-}
-
 class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
