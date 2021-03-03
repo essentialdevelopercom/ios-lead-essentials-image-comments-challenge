@@ -13,13 +13,25 @@ class RemoteFeedImageCommentsLoader {
 	let client: HTTPClient
 	let url: URL
 	
+	enum Error: Swift.Error {
+		case connectivity
+		case invalidData
+	}
+	
 	init(client: HTTPClient, url: URL) {
 		self.client = client
 		self.url = url
 	}
 	
-	func load() {
-		client.get(from: url, completion: { _ in })
+	func load(completion: @escaping (Error) -> Void = { _ in }) {
+		client.get(from: url, completion: { result in
+			switch result {
+			case .success(_):
+				break
+			case .failure(_):
+				completion(.connectivity)
+			}
+		})
 	}
 }
 
@@ -48,6 +60,18 @@ class LoadFeedImageCommentsFromRemoteUseCase: XCTestCase {
 		sut.load()
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		
+		var capturedErrors = [RemoteFeedImageCommentsLoader
+								.Error]()
+		sut.load() { capturedErrors.append($0) }
+		let clientError = NSError(domain: "Test", code: 0)
+		client.complete(with: clientError)
+		
+		XCTAssertEqual(capturedErrors, [.connectivity])
 	}
 	
 	// MARK - Helpers
