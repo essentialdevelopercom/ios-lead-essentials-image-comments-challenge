@@ -27,8 +27,7 @@ public final class CommentsPresenter {
 	}
 	
 	public static var title: String {
-		return NSLocalizedString(
-			"COMMENTS_VIEW_TITLE",
+		return NSLocalizedString("COMMENTS_VIEW_TITLE",
 			tableName: "Comments",
 			bundle: Bundle(for: CommentsPresenter.self),
 			comment: "Title for Comment View")

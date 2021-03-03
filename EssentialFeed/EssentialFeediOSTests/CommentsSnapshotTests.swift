@@ -27,8 +27,8 @@ class CommentsSnapshotTests: XCTestCase {
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "COMMENTS_WITH_ERROR_MESSAGE_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_ERROR_MESSAGE_dark")
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_ERROR_MESSAGE_extra_3x_large_content_size_light")
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_ERROR_MESSAGE_extra_3x_large_content_size_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_ERROR_MESSAGE_extraExtraExtraLarge_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_ERROR_MESSAGE_extraExtraExtraLarge_dark")
 	}
 	
 	func test_commentsWithContent() {
@@ -38,8 +38,8 @@ class CommentsSnapshotTests: XCTestCase {
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "LOADED_COMMENTS_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "LOADED_COMMENTS_dark")
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_CONTENT_extra_3x_large_content_size_light")
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_CONTENT_extra_3x_large_content_size_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_CONTENT_extraExtraExtraLarge_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSize: .extraExtraExtraLarge)), named: "COMMENTS_WITH_CONTENT_extraExtraExtraLarge_dark")
 	}
 	
 	// MARK: - Helpers

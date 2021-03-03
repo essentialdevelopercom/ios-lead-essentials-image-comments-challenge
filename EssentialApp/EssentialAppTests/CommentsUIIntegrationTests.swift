@@ -120,16 +120,14 @@ class CommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadCommentError_errorViewHidesAfterTapped() {
-		let date = Date()
-		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
+		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		assertThat(sut, isRendering: [])
-		
+	
 		loader.completeLoadingWithError()
 		sut.simulateErrorViewTap()
 		
-		XCTAssertTrue(sut.errorView.alpha == 0)
+		XCTAssertEqual(sut.errorMessage, nil)
 		
 	}
 	
@@ -141,11 +139,6 @@ class CommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
-	}
-	
-	private func enterBackground(with store: InMemoryFeedStore) {
-		let sut = SceneDelegate(httpClient: HTTPClientStub.offline, store: store)
-		sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
 	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {

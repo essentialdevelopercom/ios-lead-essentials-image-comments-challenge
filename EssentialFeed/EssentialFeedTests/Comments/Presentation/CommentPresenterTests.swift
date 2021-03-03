@@ -29,7 +29,7 @@ class CommentPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
+		let (sut, view) = makeSUT(locale: .init(identifier: "en_US_POSIX"))
 		let comments = makeComments()
 		
 		sut.didFinishLoadingComments(with: comments.models)
@@ -53,10 +53,10 @@ class CommentPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(
+	private func makeSUT(locale: Locale = .current,
 		file: StaticString = #file, line: UInt = #line) -> (sut: CommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = CommentsPresenter(commentView: view, loadingView: view, errorView: view)
+		let sut = CommentsPresenter(commentView: view, loadingView: view, errorView: view, locale: locale)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)

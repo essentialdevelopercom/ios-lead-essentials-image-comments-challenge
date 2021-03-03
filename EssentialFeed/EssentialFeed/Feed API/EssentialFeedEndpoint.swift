@@ -12,8 +12,8 @@ public enum EssentialFeedEndpoint {
 	case feed
 	case comments(id: UUID)
 
-	public var url: URL {
-		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+	public func url(baseURL: String) -> URL {
+		let baseURL = URL(string: baseURL)!
 		switch self {
 		case .feed:
 			return baseURL.appendingPathComponent("v1/feed")

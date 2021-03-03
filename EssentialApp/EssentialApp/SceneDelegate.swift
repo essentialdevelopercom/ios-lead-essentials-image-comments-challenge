@@ -79,7 +79,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let commentsUI = CommentUIComposer.commentsComposedWith(
 			loader: RemoteCommentLoader(
 				client: httpClient,
-				url: EssentialFeedEndpoint.comments(id: image.id).url)
+				url: EssentialFeedEndpoint.comments(id: image.id).url(baseURL: "https://ile-api.essentialdeveloper.com/essential-feed"))
 				.loadPublisher)
 		navigationController.pushViewController(commentsUI, animated: true)
 	}

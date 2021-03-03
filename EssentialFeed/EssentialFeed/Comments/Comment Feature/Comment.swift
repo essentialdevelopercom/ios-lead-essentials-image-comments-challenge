@@ -21,4 +21,8 @@ public struct Comment: Hashable {
 		self.createdAt = createdAt
 		self.author = author
 	}
+	
+	public init(id: UUID, message: String, createdAt: Date, username: String) {
+		self.init(id: id, message: message, createdAt: createdAt, author: Author(username: username))
+	}
 }

@@ -45,7 +45,7 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOnNon200HTTPResponse() {
+	func test_load_deliversErrorHTTPResponseWithEmptyData() {
 		let (sut, client) =  makeSUT()
 		
 		let samples = [199, 201, 300, 400, 500]
@@ -82,10 +82,9 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	}
 	
 	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
-		let author = Author(username: "a username")
-		let item1 = makeItem(id: UUID(), author: author)
+		let item1 = makeItem(id: UUID(), username: "wonder")
 		
-		let item2 = makeItem(id: UUID(), author: author)
+		let item2 = makeItem(id: UUID(), username: "a username")
 		
 		let items = [item1.model, item2.model]
 		
@@ -120,8 +119,8 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
 		let client =  HTTPClientSpy()
 		let sut = RemoteCommentLoader(client: client, url: url)
-		trackForMemoryLeaks(client)
-		trackForMemoryLeaks(sut)
+		trackForMemoryLeaks(client, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
 		
 		return (sut, client)
 	}
@@ -159,15 +158,16 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 		wait(for: [exp], timeout: 2.0)
 	}
 	
-	private func makeItem(id: UUID, message: String = "", createdAt: Date = Date(), author: Author) -> (model: Comment, json: [String: Any]) {
-
-		let date = (actual: Date(timeIntervalSince1970: 1598627222), string: "2020-08-28T15:07:02+00:00")
-		let item = Comment(id: id, message: message, createdAt: date.actual, author: author)
+	private func makeItem(id: UUID, message: String = "", createdAt: Date = Date(), username: String) -> (model: Comment, json: [String: Any]) {
+		
+		
+		let date = Bool.random() ? (actual: Date(timeIntervalSince1970: 1598627222), string: "2020-08-28T15:07:02+00:00") : (actual: Date(timeIntervalSince1970: 1577881882), string: "2020-01-01T12:31:22+00:00")
+		let item = Comment(id: id, message: message, createdAt: date.actual, username: username)
 		let json = [
 			"id": id.uuidString,
 			"message": message,
 			"created_at": date.string,
-			"author": ["username": author.username]
+			"author": ["username": username]
 		].compactMapValues { $0 }
 		return (item, json)
 	}
