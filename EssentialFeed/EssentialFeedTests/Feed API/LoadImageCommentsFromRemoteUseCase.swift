@@ -9,16 +9,6 @@
 import XCTest
 import EssentialFeed
 
-protocol ImageCommmentsLoaderTask {
-	func cancel()
-}
-
-protocol ImageCommentsLoader {
-	typealias Result = Swift.Result<Data, Error>
-	
-	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommmentsLoaderTask
-}
-
 class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
 
