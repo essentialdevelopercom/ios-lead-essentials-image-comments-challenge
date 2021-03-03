@@ -27,7 +27,7 @@ class RemoteFeedImageCommentsLoader {
 		client.get(from: url, completion: { result in
 			switch result {
 			case .success(_):
-				break
+				completion(.invalidData)
 			case .failure(_):
 				completion(.connectivity)
 			}
@@ -72,6 +72,21 @@ class LoadFeedImageCommentsFromRemoteUseCase: XCTestCase {
 		client.complete(with: clientError)
 		
 		XCTAssertEqual(capturedErrors, [.connectivity])
+	}
+	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		
+		let samples = [199, 201, 300, 400, 500]
+		
+		samples.enumerated().forEach { index, code in
+			var capturedErrors = [RemoteFeedImageCommentsLoader.Error]()
+			
+			sut.load() { capturedErrors.append($0) }
+			client.complete(withStatusCode: code, data: anyData(), at: index)
+			
+			XCTAssertEqual(capturedErrors, [.invalidData])
+		}
 	}
 	
 	// MARK - Helpers
