@@ -9,20 +9,20 @@
 import Foundation
 
 public final class RemoteFeedImageCommentsLoader {
-	let client: HTTPClient
-	let url: URL
+	private let client: HTTPClient
+	private let url: URL
 	
-	enum Error: Swift.Error {
+	public enum Error: Swift.Error {
 		case connectivity
 		case invalidData
 	}
 	
-	init(client: HTTPClient, url: URL) {
+	public init(client: HTTPClient, url: URL) {
 		self.client = client
 		self.url = url
 	}
 	
-	func load(completion: @escaping (Error) -> Void) {
+	public func load(completion: @escaping (Error) -> Void) {
 		client.get(from: url, completion: { result in
 			switch result {
 			case .success(_):
