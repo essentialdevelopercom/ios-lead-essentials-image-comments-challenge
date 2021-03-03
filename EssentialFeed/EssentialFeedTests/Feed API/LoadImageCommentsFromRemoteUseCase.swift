@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeed
 
 protocol ImageCommentsLoader {
-	typealias Result = Swift.Result<Any, Error>
+	typealias Result = Swift.Result<Data, Error>
 	
 	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void)
 }
@@ -33,7 +33,10 @@ class RemoteImageCommentsLoader: ImageCommentsLoader {
 			
 			completion(result
 				.mapError { _ in Error.connectivity}
-				.flatMap { _ in .failure(Error.invalidData) })
+				.flatMap { data, response in
+					let isValidResponse = response.isOK && !data.isEmpty
+					return isValidResponse ? .success(data) : .failure(Error.invalidData)
+				})
 		}
 	}
 }
@@ -94,6 +97,15 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 			client.complete(withStatusCode: 200, data: emptyData)
 		})
 	}
+	
+	func test_loadImageComments_deliversReceivedNonEmptyDataOn200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		let nonEmptyData = Data("non-empty data".utf8)
+		
+		expect(sut, toCompleteWith: .success(nonEmptyData), when: {
+			client.complete(withStatusCode: 200, data: nonEmptyData)
+		})
+	}
 
 	// MARK: - Helpers
 	
@@ -114,6 +126,9 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		
 		sut.loadImageComments(from: anyURL()) { receivedResult in
 			switch (receivedResult, expectedResult) {
+			case let (.success(receivedData), .success(expectedData)):
+				XCTAssertEqual(receivedData, expectedData, file: file, line: line)
+			
 			case let (.failure(receivedError as RemoteImageCommentsLoader.Error), .failure(expectedError as RemoteImageCommentsLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 				
