@@ -71,11 +71,11 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		
 		let (comment1, commentJSON1) = makeImageItem(id: UUID(),
 												   message: "a message",
-												   created_at: Date(timeIntervalSince1970: 1000000),
+												   created_at: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
 												   username: "user")
 		let (comment2, commentJSON2) = makeImageItem(id: UUID(),
 												   message: "another message",
-												   created_at: Date(timeIntervalSince1970: 500000),
+												   created_at: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
 												   username: "another user")
 		
 		let validJSON = makeItemsJSON([commentJSON1, commentJSON2])
@@ -141,12 +141,9 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		action()
 	}
 	
-	private func makeImageItem(id: UUID, message: String, created_at: Date, username: String) -> (model: ImageComment, json: [String: Any]) {
+	private func makeImageItem(id: UUID, message: String, created_at: (date: Date, iso8601String: String), username: String) -> (model: ImageComment, json: [String: Any]) {
 		let author = CommentAuthor(username: username)
-		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
-		
-		let iso8601DateFormatter = ISO8601DateFormatter()
-		let dateString = iso8601DateFormatter.string(from: comment.createdDate)
+		let comment = ImageComment(id: id, message: message, createdDate: created_at.date, author: author)
 		
 		let authorJSON = [
 			"username": author.username
@@ -154,7 +151,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		let commentJSON = [
 			"id": comment.id.uuidString,
 			"message": comment.message,
-			"created_at": dateString,
+			"created_at": created_at.iso8601String,
 			"author": authorJSON
 		] as [String: Any]
 		
