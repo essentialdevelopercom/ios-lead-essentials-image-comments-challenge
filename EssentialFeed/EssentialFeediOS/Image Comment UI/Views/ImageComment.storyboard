@@ -114,6 +114,12 @@
                             <outlet property="delegate" destination="0OZ-BC-9YF" id="mCT-Wz-Wgr"/>
                         </connections>
                     </tableView>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="gAz-Eq-jGa">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="load" destination="0OZ-BC-9YF" eventType="valueChanged" id="mv4-SZ-xLY"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="0S8-DM-jqn" id="N7a-Dh-V5O"/>
                     </connections>
