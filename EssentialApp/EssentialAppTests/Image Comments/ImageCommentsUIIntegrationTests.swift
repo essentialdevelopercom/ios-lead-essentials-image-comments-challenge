@@ -115,7 +115,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
-	func test_onBackButtonPressed_cancelRequestFeedFromLoader() {
+	func test_onDeinit_cancelRequestFeedFromLoader() {
 		let loader = LoaderSpy()
 		var sut: ImageCommentsViewController?
 		
