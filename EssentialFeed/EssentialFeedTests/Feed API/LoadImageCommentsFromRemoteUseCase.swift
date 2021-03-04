@@ -75,6 +75,29 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		})
 	}
 	
+	func test_loadImageComments_deliversItemsOn200HTTPResponseWithSomeItems() {
+		let (sut, client) = makeSUT()
+		
+		let item1 = makeItem(
+			id: UUID(),
+			message: "A message",
+			createdAt: Date().adding(seconds: 100),
+			author: .init(username: "An username"))
+		
+		let item2 = makeItem(
+			id: UUID(),
+			message: "Another message",
+			createdAt: Date().adding(seconds: -100),
+			author: .init(username: "Another username"))
+		
+		let items = [item1.model, item2.model]
+		
+		expect(sut, toCompleteWith: .success(items), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	func test_cancelLoadImageComments_cancelsClientURLRequest() {
 		let (sut, client) = makeSUT()
 		let url = URL(string: "https://a-given-url.com")!
@@ -128,10 +151,25 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		.failure(error)
 	}
 	
-	private func makeItem() -> (model: ImageComment, json: [String: Any]) {
-		let item = ImageComment()
-		let json = ["":""]
+	private func makeItem(id: UUID, message: String, createdAt: Date, author: ImageComment.Author) -> (model: ImageComment, json: [String: Any]) {
+		let formattedDate = formatter.date(from: formatter.string(from: createdAt))!
+		let item = ImageComment(id: id, message: message, createdAt: formattedDate, author: author)
+		
+		let authorJson = ["username": author.username].compactMapValues{ $0 }
+		let json = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": formatter.string(from: formattedDate),
+			"author": authorJson
+		].compactMapValues { $0 }
+		
 		return (item, json)
+	}
+	
+	private var formatter: DateFormatter {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+		return formatter
 	}
 	
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
