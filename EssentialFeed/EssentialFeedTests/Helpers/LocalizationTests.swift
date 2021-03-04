@@ -13,11 +13,11 @@ protocol LocalizationTests {
 }
 
 extension LocalizationTests {
-	func assertLocalization(for table: String, in bundle: Bundle) {
+	func assertLocalization(for table: String, in bundle: Bundle, file: StaticString = #filePath, line: UInt = #line) {
 		let table = table
 		let presentationBundle = bundle
-		let localizationBundles = allLocalizationBundles(in: presentationBundle)
-		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
+		let localizationBundles = allLocalizationBundles(in: presentationBundle, file: file, line: line)
+		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table, file: file, line: line)
 		
 		localizationBundles.forEach { (bundle, localization) in
 			localizedStringKeys.forEach { key in
@@ -26,7 +26,7 @@ extension LocalizationTests {
 				if localizedString == key {
 					let language = Locale.current.localizedString(forLanguageCode: localization) ?? ""
 					
-					XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'")
+					XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'", file: file, line: line)
 				}
 			}
 		}
