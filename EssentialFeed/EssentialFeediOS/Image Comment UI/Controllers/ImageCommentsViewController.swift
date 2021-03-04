@@ -39,7 +39,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 		tableView.sizeTableHeaderToFit()
 	}
 	
-	@objc func load() {
+	@objc private func load() {
 		delegate?.didRequestImageCommentsRefresh()
 	}
 	
