@@ -44,7 +44,6 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	}
 	
 	public func display(_ viewModel: ImageCommentsViewModel) {
-		self.refreshControl?.endRefreshing()
 		self.imageComments = viewModel.comments
 	}
 	
@@ -54,7 +53,6 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
 		if let errorMessage = viewModel.message {
-			self.refreshControl?.endRefreshing()
 			errorView?.message = errorMessage
 		} else {
 			errorView?.message = nil
