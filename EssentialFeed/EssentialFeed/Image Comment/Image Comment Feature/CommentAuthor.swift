@@ -6,7 +6,7 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
-public struct CommentAuthor: Equatable{
+public struct CommentAuthor: Equatable {
 	public let username: String
 	
 	public init(username: String) {
