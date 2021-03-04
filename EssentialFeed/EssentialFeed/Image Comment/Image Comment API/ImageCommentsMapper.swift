@@ -31,7 +31,7 @@ class ImageCommentsMapper {
 	static func map(data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
 		let jsonDecoder = JSONDecoder()
 		jsonDecoder.dateDecodingStrategy = .iso8601
-		guard response.isOK, let root = try? jsonDecoder.decode(Root.self, from: data) else {
+		guard response.is2xxOK, let root = try? jsonDecoder.decode(Root.self, from: data) else {
 			throw RemoteImageCommentsLoader.Error.invalidData
 		}
 		

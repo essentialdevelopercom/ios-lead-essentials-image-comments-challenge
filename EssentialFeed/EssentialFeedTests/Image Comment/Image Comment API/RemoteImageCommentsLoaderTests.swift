@@ -38,7 +38,7 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
-		let statusCodes = [111,222,300,400,500]
+		let statusCodes = [111,199,300,400,500]
 		
 		statusCodes.enumerated().forEach { index, code in
 			expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
@@ -48,26 +48,33 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
+		let statusCodes = [200,201,212,249,299]
 		let invalidJSON = Data("invalid json".utf8)
 		
-		expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
-			client.complete(withStatusCode: 200, data: invalidJSON)
-		})
+		statusCodes.enumerated().forEach { index, code in
+			expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
+				client.complete(withStatusCode: code, data: invalidJSON)
+			})
+		}
 	}
 	
-	func test_load_deliversEmptyCommentsOn200HTTPResponseWithEmptyJSONList() {
+	func test_load_deliversEmptyCommentsOn2xxHTTPResponseWithEmptyJSONList() {
 		let (sut, client) = makeSUT()
+		let statusCodes = [200,201,212,249,299]
 		let emptyJSON = Data("{\"items\":[]}".utf8)
 		
-		expect(sut: sut, toCompleteWith: .success([]), when: {
-			client.complete(withStatusCode: 200, data: emptyJSON)
-		})
+		statusCodes.enumerated().forEach { index, code in
+			expect(sut: sut, toCompleteWith: .success([]), when: {
+				client.complete(withStatusCode: code, data: emptyJSON)
+			})
+		}
 	}
 	
-	func test_load_deliversCommentsOn200ResponseWithValidJSONList() {
+	func test_load_deliversCommentsOn2xxResponseWithValidJSONList() {
 		let (sut, client) = makeSUT()
+		let statusCodes = [200,201,212,249,299]
 		
 		let (comment1, commentJSON1) = makeImageItem(id: UUID(),
 												   message: "a message",
@@ -80,9 +87,11 @@ class RemoteImageCommentsLoaderTests: XCTestCase {
 		
 		let validJSON = makeItemsJSON([commentJSON1, commentJSON2])
 		
-		expect(sut: sut, toCompleteWith: .success([comment1,comment2]), when: {
-				client.complete(withStatusCode: 200, data: validJSON)
-		})
+		statusCodes.enumerated().forEach { index, code in
+			expect(sut: sut, toCompleteWith: .success([comment1,comment2]), when: {
+				client.complete(withStatusCode: code, data: validJSON)
+			})
+		}
 	}
 	
 	func test_load_doesNotDeliverResultAfterCancellingTask() {
