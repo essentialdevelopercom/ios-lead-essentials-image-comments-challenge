@@ -14,6 +14,10 @@ extension ImageCommentsViewController {
 		return errorView?.message
 	}
 	
+	func simulateUserInitiatedReload() {
+		refreshControl?.simulatePullToRefresh()
+	}
+	
 	func renderedCell(at row: Int) -> ImageCommentsCell? {
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: imageCommentsSection)

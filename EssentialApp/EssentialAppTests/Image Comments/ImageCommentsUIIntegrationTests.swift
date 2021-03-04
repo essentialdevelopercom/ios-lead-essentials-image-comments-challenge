@@ -34,10 +34,10 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.loadCallCount, 1)
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(loader.loadCallCount, 2)
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
@@ -50,7 +50,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeLoading(at: 0)
 		XCTAssertFalse(sut.isShowingLoadingIndicator)
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReload()
 		XCTAssertTrue(sut.isShowingLoadingIndicator)
 		
 		loader.completeLoadingWithError(at: 1)
@@ -70,7 +70,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeLoading(with: [imageComment0], at: 0)
 		assertThat(sut, isRendering: [imageComment0])
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReload()
 		loader.completeLoading(with: [imageComment0, imageComment1, imageComment2, imageComment3], at: 1)
 		assertThat(sut, isRendering: [imageComment0, imageComment1, imageComment2, imageComment3])
 	}
@@ -84,7 +84,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeLoading(with: [imageComment0, imageComment1], at: 0)
 		assertThat(sut, isRendering: [imageComment0, imageComment1])
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReload()
 		loader.completeLoading(with: [], at: 1)
 		assertThat(sut, isRendering: [])
 	}
@@ -97,7 +97,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeLoading(with: [imageComment0], at: 0)
 		assertThat(sut, isRendering: [imageComment0])
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReload()
 		loader.completeLoadingWithError(at: 1)
 		assertThat(sut, isRendering: [imageComment0])
 	}
@@ -111,7 +111,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
