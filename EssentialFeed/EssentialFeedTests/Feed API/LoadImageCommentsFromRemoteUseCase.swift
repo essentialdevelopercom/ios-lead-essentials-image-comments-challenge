@@ -66,12 +66,12 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		})
 	}
 	
-	func test_loadImageComments_deliversReceivedNonEmptyDataOn200HTTPResponse() {
+	func test_loadImageComments_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
 		let (sut, client) = makeSUT()
-		let nonEmptyData = Data("non-empty data".utf8)
-		
-		expect(sut, toCompleteWith: .success(nonEmptyData), when: {
-			client.complete(withStatusCode: 200, data: nonEmptyData)
+
+		expect(sut, toCompleteWith: .success([]), when: {
+			let emptyJsonList = makeItemsJSON([])
+			client.complete(withStatusCode: 200, data: emptyJsonList)
 		})
 	}
 	
@@ -126,6 +126,17 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 	
 	private func failure(_ error: RemoteImageCommentsLoader.Error) -> ImageCommentsLoader.Result {
 		.failure(error)
+	}
+	
+	private func makeItem() -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment()
+		let json = ["":""]
+		return (item, json)
+	}
+	
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
 	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {

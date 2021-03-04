@@ -29,7 +29,7 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 			self.completion = completion
 		}
 		
-		func complete(with result: FeedImageDataLoader.Result) {
+		func complete(with result: ImageCommentsLoader.Result) {
 			completion?(result)
 		}
 		
@@ -50,11 +50,43 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 			
 			task.complete(with: result
 				.mapError { _ in Error.connectivity}
-				.flatMap { data, response in
-					let isValidResponse = response.isOK && !data.isEmpty
-					return isValidResponse ? .success(data) : .failure(Error.invalidData)
-				})
+				.flatMap(RemoteImageCommentsLoader.map))
 		}
 		return task
+	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> ImageCommentsLoader.Result {
+		do {
+			let items = try RemoteImageCommentsMapper.map(data, from: response)
+			return .success(items.toModels())
+		} catch {
+			return .failure(error)
+		}
+	}
+	
+}
+
+public struct RemoteImageComment: Decodable {
+	
+}
+
+public struct RemoteImageCommentsMapper: Decodable {
+	private struct Root: Decodable {
+		let items: [RemoteImageComment]
+	}
+	
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
+		guard response.isOK,
+			  let root = try? JSONDecoder().decode(Root.self, from: data) else {
+			throw RemoteImageCommentsLoader.Error.invalidData
+		}
+		
+		return root.items
+	}
+}
+
+private extension Array where Element == RemoteImageComment {
+	func toModels() -> [ImageComment] {
+		map { _ in ImageComment() }
 	}
 }
