@@ -31,7 +31,7 @@ public class ImageCommentsPresenter {
 		self.errorView = errorView
 	}
 	
-	public static var Title: String {
+	public static var title: String {
 		return NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE",
 			 tableName: "ImageComments",
 			 bundle: Bundle(for: FeedPresenter.self),

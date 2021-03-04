@@ -14,7 +14,7 @@ public class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(loader: loader)
 		
-		let imageCommentsViewController = makeImageCommentsViewController(delegate: presentationAdapter, title: ImageCommentsPresenter.Title)
+		let imageCommentsViewController = makeImageCommentsViewController(delegate: presentationAdapter, title: ImageCommentsPresenter.title)
 		
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: WeakRefVirtualProxy(imageCommentsViewController),
