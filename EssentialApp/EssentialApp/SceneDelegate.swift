@@ -76,10 +76,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	private func navigateToComments(for image: FeedImage) {
+		guard let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed") else { return }
 		let commentsUI = CommentUIComposer.commentsComposedWith(
 			loader: RemoteCommentLoader(
 				client: httpClient,
-				url: EssentialFeedEndpoint.comments(id: image.id).url(baseURL: "https://ile-api.essentialdeveloper.com/essential-feed"))
+				url: EssentialFeedEndpoint.comments(id: image.id).url(baseURL: url))
 				.loadPublisher)
 		navigationController.pushViewController(commentsUI, animated: true)
 	}

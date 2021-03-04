@@ -108,14 +108,11 @@ class CommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
 
 		sut.loadViewIfNeeded()
-		assertThat(sut, isRendering: [])
-
-		sut.simulateUserInitiatedReload()
-		loader.completeLoading(with: [comment0.model, comment1.model], at: 1)
+		loader.completeLoading(with: [comment0.model, comment1.model], at: 0)
 		assertThat(sut, isRendering: [comment0.expected, comment1.expected])
 		
-		loader.completeLoadingWithError()
-		loader.completeLoading(with: [comment0.model, comment1.model], at: 1)
+		sut.simulateUserInitiatedReload()
+		loader.completeLoadingWithError(at: 1)
 		assertThat(sut, isRendering: [comment0.expected, comment1.expected])
 	}
 	
@@ -156,7 +153,7 @@ class CommentsUIIntegrationTests: XCTestCase {
 		// MARK: - CommentLoader
 		
 		private var completions = [(CommentLoader.Result) -> Void]()
-		var cancelCount = 0
+		private(set) var cancelCount = 0
 
 		var loadCount: Int {
 			return completions.count
