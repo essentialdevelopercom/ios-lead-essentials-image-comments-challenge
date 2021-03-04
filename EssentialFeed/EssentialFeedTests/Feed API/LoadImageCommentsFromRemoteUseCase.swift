@@ -152,21 +152,25 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 	}
 	
 	private func makeItem(id: UUID, message: String, createdAt: Date, author: ImageComment.Author) -> (model: ImageComment, json: [String: Any]) {
-		let formattedDate = formatter.date(from: formatter.string(from: createdAt))!
-		let item = ImageComment(id: id, message: message, createdAt: formattedDate, author: author)
+		let date = eraseMilisecondsInformation(from: createdAt)
+		let item = ImageComment(id: id, message: message, createdAt: date, author: author)
 		
 		let authorJson = ["username": author.username].compactMapValues{ $0 }
 		let json = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": formatter.string(from: formattedDate),
+			"created_at": iso8601DateFormatter.string(from: date),
 			"author": authorJson
 		].compactMapValues { $0 }
 		
 		return (item, json)
 	}
 	
-	private var formatter: DateFormatter {
+	private func eraseMilisecondsInformation(from date: Date) -> Date {
+		iso8601DateFormatter.date(from: iso8601DateFormatter.string(from: date))!
+	}
+	
+	private var iso8601DateFormatter: DateFormatter {
 		let formatter = DateFormatter()
 		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
 		return formatter
