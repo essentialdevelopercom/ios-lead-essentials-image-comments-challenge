@@ -189,8 +189,8 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		return value
 	}
 	
-	class LoaderSpy: ImageCommentsLoader {
-		var cancelCount = 0
+	private class LoaderSpy: ImageCommentsLoader {
+		private(set) var cancelCount = 0
 		
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		var loadCallCount: Int {
