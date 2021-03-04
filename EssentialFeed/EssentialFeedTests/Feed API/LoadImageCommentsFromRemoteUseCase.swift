@@ -113,7 +113,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		let (sut, client) = makeSUT()
 		let nonEmptyData = Data("non-empty data".utf8)
 		
-		var received = [ImageCommentsLoader.Result]()
+		var received = [RemoteImageCommentsLoader.Result]()
 		let task = sut.loadImageComments(from: anyURL()) { received.append($0) }
 		task.cancel()
 		
@@ -128,7 +128,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		let client = HTTPClientSpy()
 		var sut: RemoteImageCommentsLoader? = RemoteImageCommentsLoader(client: client)
 		
-		var capturedResults = [ImageCommentsLoader.Result]()
+		var capturedResults = [RemoteImageCommentsLoader.Result]()
 		_ = sut?.loadImageComments(from: anyURL()) { capturedResults.append($0) }
 		
 		sut = nil
@@ -147,7 +147,7 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		return (sut, client)
 	}
 	
-	private func failure(_ error: RemoteImageCommentsLoader.Error) -> ImageCommentsLoader.Result {
+	private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result {
 		.failure(error)
 	}
 	

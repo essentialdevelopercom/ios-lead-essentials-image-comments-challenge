@@ -16,20 +16,22 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 		case invalidData
 	}
 	
+	public typealias Result = ImageCommentsLoader.Result
+	
 	public init(client: HTTPClient) {
 		self.client = client
 	}
 	
 	private final class HTTPClientTaskWrapper: ImageCommmentsLoaderTask {
-		private var completion: ((ImageCommentsLoader.Result) -> Void)?
+		private var completion: ((Result) -> Void)?
 		
 		var wrapped: HTTPClientTask?
 		
-		init(_ completion: @escaping (ImageCommentsLoader.Result) -> Void) {
+		init(_ completion: @escaping (Result) -> Void) {
 			self.completion = completion
 		}
 		
-		func complete(with result: ImageCommentsLoader.Result) {
+		func complete(with result: Result) {
 			completion?(result)
 		}
 		
@@ -43,7 +45,7 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 		}
 	}
 	
-	public func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
+	public func loadImageComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommmentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
@@ -55,7 +57,7 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 		return task
 	}
 	
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> ImageCommentsLoader.Result {
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
 		Result {
 			try RemoteImageCommentsMapper.map(data, from: response).toModels()
 		}
