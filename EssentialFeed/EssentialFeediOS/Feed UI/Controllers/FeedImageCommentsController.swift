@@ -15,12 +15,24 @@ struct FeedImageCommentViewModel {
 }
 
 class FeedImageCommentsController: UITableViewController {
-
+	private let comments = FeedImageCommentViewModel.prototypeComments
+	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 10
+		return comments.count
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return tableView.dequeueReusableCell(withIdentifier: "FeedImageCommentCell")!
+		let cell = tableView.dequeueReusableCell(withIdentifier: "FeedImageCommentCell") as! FeedImageCommentCell
+		let model = comments[indexPath.row]
+		cell.configure(with: model)
+		return cell
+	}
+}
+
+extension FeedImageCommentCell {
+	func configure(with model: FeedImageCommentViewModel) {
+		authorLabel.text = model.author
+		dateLabel.text = model.date
+		commentLabel.text = model.comment
 	}
 }

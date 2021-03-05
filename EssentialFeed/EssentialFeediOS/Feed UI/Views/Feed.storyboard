@@ -180,7 +180,7 @@ Location</string>
             </objects>
             <point key="canvasLocation" x="1105.7971014492755" y="-11.383928571428571"/>
         </scene>
-        <!--Feed Image Comments Controller-->
+        <!--Comments-->
         <scene sceneID="T7D-ed-873">
             <objects>
                 <tableViewController id="fRd-jc-krv" customClass="FeedImageCommentsController" customModule="EssentialFeediOS" customModuleProvider="target" sceneMemberID="viewController">
@@ -190,33 +190,33 @@ Location</string>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FeedImageCommentCell" id="3cn-dT-Cq1" customClass="FeedImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="64"/>
+                                <rect key="frame" x="0.0" y="28" width="414" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3cn-dT-Cq1" id="14Q-Ow-J8i">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="vDL-qD-voy">
-                                            <rect key="frame" x="10" y="10" width="394" height="44"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vDL-qD-voy">
+                                            <rect key="frame" x="16" y="16" width="382" height="48"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="295" translatesAutoresizingMaskIntoConstraints="NO" id="dZD-8i-St7">
-                                                    <rect key="frame" x="0.0" y="0.0" width="394" height="19.5"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="dZD-8i-St7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="382" height="19.5"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BJd-KR-38A">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BJd-KR-38A">
                                                             <rect key="frame" x="0.0" y="0.0" width="53.5" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2j-C2-X5y">
-                                                            <rect key="frame" x="361.5" y="0.0" width="32.5" height="19.5"/>
+                                                            <rect key="frame" x="349.5" y="0.0" width="32.5" height="19.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                 </stackView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CHR-ni-AUN">
-                                                    <rect key="frame" x="0.0" y="23.5" width="394" height="20.5"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CHR-ni-AUN">
+                                                    <rect key="frame" x="0.0" y="27.5" width="382" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -225,10 +225,10 @@ Location</string>
                                         </stackView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="vDL-qD-voy" secondAttribute="trailing" constant="10" id="0VH-Ge-BTt"/>
-                                        <constraint firstAttribute="bottom" secondItem="vDL-qD-voy" secondAttribute="bottom" constant="10" id="8dL-7C-s2Z"/>
-                                        <constraint firstItem="vDL-qD-voy" firstAttribute="leading" secondItem="14Q-Ow-J8i" secondAttribute="leading" constant="10" id="ROJ-uP-2ej"/>
-                                        <constraint firstItem="vDL-qD-voy" firstAttribute="top" secondItem="14Q-Ow-J8i" secondAttribute="top" constant="10" id="S79-zV-CCv"/>
+                                        <constraint firstAttribute="trailing" secondItem="vDL-qD-voy" secondAttribute="trailing" constant="16" id="0VH-Ge-BTt"/>
+                                        <constraint firstAttribute="bottom" secondItem="vDL-qD-voy" secondAttribute="bottom" constant="16" id="8dL-7C-s2Z"/>
+                                        <constraint firstItem="vDL-qD-voy" firstAttribute="leading" secondItem="14Q-Ow-J8i" secondAttribute="leading" constant="16" id="ROJ-uP-2ej"/>
+                                        <constraint firstItem="vDL-qD-voy" firstAttribute="top" secondItem="14Q-Ow-J8i" secondAttribute="top" constant="16" id="S79-zV-CCv"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -243,7 +243,7 @@ Location</string>
                             <outlet property="delegate" destination="fRd-jc-krv" id="Zqm-1e-P2f"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="h0d-6O-2zY"/>
+                    <navigationItem key="navigationItem" title="Comments" id="h0d-6O-2zY"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vLa-RF-AV3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
