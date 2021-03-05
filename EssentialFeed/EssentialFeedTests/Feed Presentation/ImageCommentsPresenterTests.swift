@@ -40,6 +40,10 @@ class ImageCommentsPresenter {
 		self.errorView = errorView
 	}
 	
+	private var imageCommentsLoadError: String {
+		"Some error"
+	}
+	
 	func didStartLoadingComments() {
 		errorView.display(ImageCommentsErrorViewModel(message: .none))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
@@ -47,6 +51,11 @@ class ImageCommentsPresenter {
 	
 	func didFinishLoadingComments(with comments: [ImageComment]) {
 		commentsView.display(ImageCommentsViewModel(comments: comments))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+	}
+	
+	func didFinishLoadingFeed(with error: Error) {
+		errorView.display(ImageCommentsErrorViewModel(message: imageCommentsLoadError))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 }
@@ -78,6 +87,17 @@ class ImageCommentsPresenterTests: XCTestCase {
 		
 		XCTAssertEqual(view.messages, [
 			.display(comments: comments),
+			.display(isLoading: false)
+		])
+	}
+	
+	func test_didFinishLoadingComments_displaysLocalizedErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingFeed(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: "Some error"),
 			.display(isLoading: false)
 		])
 	}
