@@ -75,6 +75,29 @@ class LoadFeedImageCommentsFromRemoteUseCase: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		
+		let item1 = makeItem(
+			id: UUID(),
+			message: "message 1",
+			createdAt: "created 1",
+			author: "author 1")
+		
+		let item2 = makeItem(
+			id: UUID(),
+			message: "message 2",
+			createdAt: "created 2",
+			author: "author 2")
+		
+		let items = [item1.model, item2.model]
+		
+		expect(sut, toCompleteWith: .success(items), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	// MARK - Helpers
 	
 	func makeSUT(url: URL = URL(string: "https://a-default-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (RemoteFeedImageCommentsLoader, HTTPClientSpy) {
@@ -85,6 +108,19 @@ class LoadFeedImageCommentsFromRemoteUseCase: XCTestCase {
 	
 	private func failure(_ error: RemoteFeedImageCommentsLoader.Error) -> RemoteFeedImageCommentsLoader.Result {
 		return .failure(error)
+	}
+	
+	private func makeItem(id: UUID, message: String, createdAt: String, author: String ) -> (model: FeedImageComment, json: [String: Any]) {
+		let model = FeedImageComment(id: id, message: message, createdAt: createdAt, author: FeedImageComment.Author(username: author))
+		let json = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt,
+			"author": [
+				"username": author
+			]
+		] as [String : Any]
+		return (model: model, json: json)
 	}
 	
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
