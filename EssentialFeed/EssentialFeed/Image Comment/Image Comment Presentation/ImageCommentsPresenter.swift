@@ -25,10 +25,16 @@ public class ImageCommentsPresenter {
 	private let errorView: ImageCommentsErrorView
 	private let imageCommentsView: ImageCommentsView
 	
-	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+	private let dateFormatter = RelativeDateTimeFormatter()
+	
+	public init(imageCommentsView: ImageCommentsView,
+				loadingView: ImageCommentsLoadingView,
+				errorView: ImageCommentsErrorView,
+				locale: Locale = Locale.current) {
 		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.dateFormatter.locale = locale
 	}
 	
 	public static var title: String {
@@ -67,9 +73,6 @@ public class ImageCommentsPresenter {
 	}
 	
 	private func relativeDateStringFromNow(to date: Date) -> String {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		let relativeDateString = formatter.localizedString(for: date, relativeTo: Date())
-		return relativeDateString
+		return dateFormatter.localizedString(for: date, relativeTo: Date())
 	}
 }

@@ -30,8 +30,9 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingImageComments_stopsLoadingAndDisplaysImageComments() {
+		let (sut, view) = makeSUT(locale: .init(identifier: "en_US_POSIX"))
+		
 		let date = Date()
-		let (sut, view) = makeSUT()
 		let comment1 = makeComment(message: "a message", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author")
 		let comment2 = makeComment(message: "another message", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author")
 
@@ -51,9 +52,9 @@ class ImageCommentsPresenterTests: XCTestCase {
 	
 	//MARK: Helpers
 	
-	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(locale: Locale = .current, file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view)
+		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view, locale: locale)
 		
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
