@@ -25,14 +25,12 @@ public final class RemoteFeedImageCommentsLoader {
 	}
 	
 	public func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url, completion: { result in
+		client.get(from: url, completion: { [weak self] result in
+			guard self != nil else { return }
+			
 			switch result {
 			case let .success((data, response)):
-				do {
-					completion(RemoteFeedImageCommentsLoader.map(data, response))
-				} catch {
-					completion(.failure(Error.invalidData))
-				}
+				completion(RemoteFeedImageCommentsLoader.map(data, response))
 			case .failure(_):
 				completion(.failure(Error.connectivity))
 			}
