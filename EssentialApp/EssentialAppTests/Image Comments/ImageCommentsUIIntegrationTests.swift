@@ -58,31 +58,33 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedImageComments() {
-		let imageComment0 = makeComment(id: UUID(), message: "message", created_at: Date(), username: "user")
-		let imageComment1 = makeComment(id: UUID(), message: "another message", created_at: Date(), username: "another user")
-		let imageComment2 = makeComment(id: UUID(), message: "third message", created_at: Date(), username: "third user")
-		let imageComment3 = makeComment(id: UUID(), message: "fourth message", created_at: Date(), username: "fourth user")
+		let date = Date()
+		let imageComment0 = makeComment(message: "message", date: (date: date.adding(days: -1), string: "1 day ago"), author: "user")
+		let imageComment1 = makeComment(message: "another message", date: (date: date.adding(days: -2), string: "2 days ago"), author: "another user")
+		let imageComment2 = makeComment(message: "third message", date: (date: date.adding(days: -31), string: "1 month ago"), author: "third user")
+		let imageComment3 = makeComment(message: "forth message", date: (date: date.adding(days: -366), string: "1 year ago"), author: "forth user")
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
-		loader.completeLoading(with: [imageComment0], at: 0)
-		assertThat(sut, isRendering: [imageComment0])
+		loader.completeLoading(with: [imageComment0.model], at: 0)
+		assertThat(sut, isRendering: [imageComment0.expectedContent])
 		
 		sut.simulateUserInitiatedReload()
-		loader.completeLoading(with: [imageComment0, imageComment1, imageComment2, imageComment3], at: 1)
-		assertThat(sut, isRendering: [imageComment0, imageComment1, imageComment2, imageComment3])
+		loader.completeLoading(with: [imageComment0.model, imageComment1.model, imageComment2.model, imageComment3.model], at: 1)
+		assertThat(sut, isRendering: [imageComment0.expectedContent, imageComment1.expectedContent, imageComment2.expectedContent, imageComment3.expectedContent])
 	}
 	
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedEmptyImageCommentsAfterNonEmptyImageComments() {
-		let imageComment0 = makeComment(id: UUID(), message: "message", created_at: Date(), username: "user")
-		let imageComment1 = makeComment(id: UUID(), message: "another message", created_at: Date(), username: "another user")
+		let date = Date()
+		let imageComment0 = makeComment(message: "message", date: (date: date.adding(days: -1), string: "1 day ago"), author: "user")
+		let imageComment1 = makeComment(message: "another message", date: (date: date.adding(days: -2), string: "2 days ago"), author: "another user")
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		loader.completeLoading(with: [imageComment0, imageComment1], at: 0)
-		assertThat(sut, isRendering: [imageComment0, imageComment1])
+		loader.completeLoading(with: [imageComment0.model, imageComment1.model], at: 0)
+		assertThat(sut, isRendering: [imageComment0.expectedContent, imageComment1.expectedContent])
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeLoading(with: [], at: 1)
@@ -90,16 +92,17 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
-		let imageComment0 = makeComment(id: UUID(), message: "message", created_at: Date(), username: "user")
+		let date = Date()
+		let imageComment0 = makeComment(message: "message", date: (date: date.adding(days: -1), string: "1 day ago"), author: "user")
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		loader.completeLoading(with: [imageComment0], at: 0)
-		assertThat(sut, isRendering: [imageComment0])
+		loader.completeLoading(with: [imageComment0.model], at: 0)
+		assertThat(sut, isRendering: [imageComment0.expectedContent])
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [imageComment0])
+		assertThat(sut, isRendering: [imageComment0.expectedContent])
 	}
 	
 	func test_loadImageCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
@@ -167,27 +170,26 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func makeComment(id: UUID, message: String, created_at: Date, username: String) -> ImageComment {
-		let author = CommentAuthor(username: username)
-		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
-		
-		return comment
+	struct ExpectedCellContent {
+		let username: String
+		let message: String
+		let date: String
+	}
+
+	private func makeComment(message: String, date: (date: Date, string: String), author: String) -> (model: ImageComment, expectedContent: ExpectedCellContent) {
+		return (
+			ImageComment(id: UUID(), message: message, createdDate: date.date, author: CommentAuthor(username: author)),
+			ExpectedCellContent(username: author, message: message, date: date.string)
+		)
 	}
 	
-	private func relativeDateStringFromNow(to date: Date) -> String {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		let relativeDateString = formatter.localizedString(for: date, relativeTo: Date())
-		return relativeDateString
-	}
-	
-	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
+	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ExpectedCellContent], file: StaticString = #file, line: UInt = #line) {
 		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews, imageComments.count, file: file, line: line)
 		
 		imageComments.enumerated().forEach { index, comment in
 			let cell = sut.renderedCell(at: index)
-			XCTAssertEqual(cell?.usernameText, comment.author.username, file: file, line: line)
-			XCTAssertEqual(cell?.createdTimetext, relativeDateStringFromNow(to: comment.createdDate), file: file, line: line)
+			XCTAssertEqual(cell?.usernameText, comment.username, file: file, line: line)
+			XCTAssertEqual(cell?.createdTimetext, comment.date, file: file, line: line)
 			XCTAssertEqual(cell?.messageText, comment.message, file: file, line: line)
 		}
 	}
@@ -236,5 +238,11 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		func completeLoadingWithError(at index: Int) {
 			imageCommentsRequests[index](.failure(NSError()))
 		}
+	}
+}
+
+extension Date {
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }
