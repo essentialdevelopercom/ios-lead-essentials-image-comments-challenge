@@ -83,9 +83,9 @@ class LoadCommentsFromRemoteUseCasesTests: XCTestCase {
 	
 	func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
 		
-		let item1 = makeItem(id: UUID(), message: "jumping jacks are easy", username: "wonder", createdAt: (date: Date(timeIntervalSince1970: 1598627222), iso8601String: "2020-08-28T15:07:02+00:00"))
+		let item1 = makeItem(id: UUID(), message: "a message", username: "wonder", createdAt: (date: Date(timeIntervalSince1970: 1598627222), iso8601String: "2020-08-28T15:07:02+00:00"))
 		
-		let item2 = makeItem(id: UUID(), message: "kobe bryant...clutch", username: "a username", createdAt: (date: Date(timeIntervalSince1970: 1577881882), iso8601String: "2020-01-01T12:31:22+00:00"))
+		let item2 = makeItem(id: UUID(), message: "another message", username: "a username", createdAt: (date: Date(timeIntervalSince1970: 1577881882), iso8601String: "2020-01-01T12:31:22+00:00"))
 		
 		let items = [item1.model, item2.model]
 		

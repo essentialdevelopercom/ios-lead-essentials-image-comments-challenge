@@ -38,10 +38,11 @@
                             </constraints>
                             <connections>
                                 <outlet property="label" destination="Yae-5a-ZF1" id="L93-rS-IZN"/>
+                                <outletCollection property="gestureRecognizers" destination="mbO-Zy-xgT" appends="YES" id="HOs-64-21D"/>
                             </connections>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommentCell" rowHeight="72" id="fv7-lx-QSu" customClass="CommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="CommentCell" rowHeight="72" id="fv7-lx-QSu" customClass="CommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="62" width="414" height="72"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fv7-lx-QSu" id="Ncy-Qn-FSS">
@@ -101,10 +102,15 @@
                         </connections>
                     </refreshControl>
                     <connections>
-                        <outlet property="errorView" destination="aey-uJ-R6u" id="O66-e7-hdp"/>
+                        <outlet property="errorView" destination="aey-uJ-R6u" id="L5t-1u-R0t"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Z2-i7-6sA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="mbO-Zy-xgT">
+                    <connections>
+                        <action selector="hideMessageAnimated" destination="aey-uJ-R6u" id="8y1-9d-Jbv"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="253.62318840579712" y="156.69642857142856"/>
         </scene>

@@ -125,7 +125,6 @@ class CommentsUIIntegrationTests: XCTestCase {
 		sut.simulateErrorViewTap()
 		
 		XCTAssertEqual(sut.errorMessage, nil)
-		
 	}
 	
 	// MARK: - Helpers
@@ -223,22 +222,14 @@ class CommentsUIIntegrationTests: XCTestCase {
 }
 
 extension Date {
-	func adding(days: Int) -> Date {
+	fileprivate func adding(days: Int) -> Date {
 		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }
 
-extension FeedViewController {
-	func simulateFeedImageSelection(at row: Int) {
-		tableView(tableView, didSelectRowAt: IndexPath(row: row, section: feedImagesSection))
-	}
-	private var feedImagesSection: Int {
-		return 0
-	}
-}
-
 extension CommentsViewController {
-	func simulateErrorViewTap() {
+	fileprivate func simulateErrorViewTap() {
 		errorView.hideMessageView()
 	}
+	
 }
