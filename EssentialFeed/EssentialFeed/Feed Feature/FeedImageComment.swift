@@ -12,10 +12,21 @@ public struct FeedImageComment: Equatable {
 	
 	public struct Author: Equatable {
 		let username: String
+		
+		public init(username: String) {
+			self.username = username
+		}
 	}
 	
-	let id: UUID
-	let message: String
-	let createdAt: String
-	let author: Author
+	public let id: UUID
+	public let message: String
+	public let createdAt: String
+	public let author: Author
+	
+	public init(id: UUID, message: String, createdAt: String, author: Author) {
+		self.id = id
+		self.message = message
+		self.createdAt = createdAt
+		self.author = author
+	}
 }
