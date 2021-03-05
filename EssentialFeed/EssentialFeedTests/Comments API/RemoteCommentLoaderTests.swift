@@ -80,12 +80,13 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let item1 = makeItem(
 			id: UUID(),
 			message: "a message",
-			createdAt: "a date",
+			createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
 			username: "a username")
+		
 		let item2 = makeItem(
 			id: UUID(),
 			message: "another message",
-			createdAt: "another date",
+			createdAt: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
 			username: "another username")
 		
 		let json = ["items": [item1.json, item2.json]]
@@ -118,21 +119,32 @@ class RemoteCommentLoaderTests: XCTestCase {
 		return (sut, client)
 	}
 	
-	private func makeItem(id: UUID, message: String, createdAt: String, username: String) -> (model: Comment, json: [String:Any]) {
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: Comment, json: [String:Any]) {
 		let item = Comment(
 			id: id,
 			message: message,
-			createdAt: createdAt,
+			createdAt: createdAt.date,
 			author: CommentAuthor(username: username))
 		let json: [String:Any] = [
 			"id": item.id.uuidString,
 			"message": item.message,
-			"created_at": item.createdAt,
+			"created_at": createdAt.iso8601String,
 			"author": [
 				"username": item.author.username
 			]
 		]
 		return (item, json)
+	}
+	
+	private func makeDate(date: Date = Date()) -> (date: Date, iso8601String: String) {
+		return (date, ISO8601DateFormatter().string(from: date))
+//		let formatter = DateFormatter()
+//		formatter.calendar = Calendar(identifier: .iso8601)
+//		//formatter.locale = Locale(identifier: "en_US_POSIX")
+//		formatter.timeZone = TimeZone(secondsFromGMT: 0)
+//		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm+ss:SS"
+//		let string = formatter.string(from: date)
+//		return (date, string)
 	}
 	
 	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: RemoteCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {

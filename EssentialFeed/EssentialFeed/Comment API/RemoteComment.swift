@@ -11,7 +11,7 @@ import Foundation
 struct RemoteComment: Decodable {
 	public let id: UUID
 	public let message: String
-	public let createdAt: String
+	public let createdAt: Date
 	public let author: RemoteCommentAuthor
 	
 	enum CodingKeys: String, CodingKey {
