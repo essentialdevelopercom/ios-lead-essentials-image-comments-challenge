@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Comment {
+public struct Comment: Equatable {
 	public let id: UUID
 	public let message: String
 	public let createdAt: Date

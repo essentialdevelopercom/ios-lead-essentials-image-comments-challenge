@@ -14,14 +14,28 @@ class RemoteCommentLoader {
 	let url: URL
 	let httpClient: HTTPClient
 	
+	typealias Result = Swift.Result<[Comment], Error>
+	
+	enum Error: Swift.Error {
+		case connectivity
+		case invalidData
+	}
+	
 	init(url: URL, client: HTTPClient) {
 		self.url = url
 		self.httpClient = client
 	}
 	
-	func load() {
+	func load(completion: @escaping (Result) -> Void) {
 		httpClient.get(from: url) { (result) in
-			print(result)
+			switch result {
+			case .failure:
+				completion(.failure(.connectivity))
+				
+			case let .success((data, response)):
+				print(data)
+				print(response)
+			}
 		}
 	}
 }
@@ -37,7 +51,7 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://another-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load()
+		sut.load { (_) in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -46,10 +60,22 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://another-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load()
-		sut.load()
+		sut.load { (_) in }
+		sut.load { (_) in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_requestDataFromRemoteDeliversClientError() {
+		let url = URL(string: "https://another-url.com")!
+		let (sut, client) = makeSUT(url: url)
+		let expectedResult = RemoteCommentLoader.Result.failure(.connectivity)
+		
+		sut.load { (receivedResult) in
+			XCTAssertEqual(receivedResult, expectedResult)
+		}
+		
+		client.complete(with: RemoteCommentLoader.Error.connectivity)
 	}
 }
 
@@ -60,3 +86,4 @@ private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: Remo
 	
 	return (sut, client)
 }
+
