@@ -28,17 +28,14 @@ class RemoteCommentLoader {
 
 class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 	func test_init_doesNotRequestDataOnInit() {
-		let url = URL(string: "https://a-url.com")!
-		let client = HTTPClientSpy()
-		_ = RemoteCommentLoader(url: url, client: client)
+		let (_, client) = makeSUT()
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
 	func test_load_requestDataFromURL() {
-		let url = URL(string: "https://a-url.com")!
-		let client = HTTPClientSpy()
-		let sut = RemoteCommentLoader(url: url, client: client)
+		let url = URL(string: "https://another-url.com")!
+		let (sut, client) = makeSUT(url: url)
 		
 		sut.load()
 		
@@ -47,4 +44,9 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 }
 
 // MARK: - Helpers
-
+private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteCommentLoader, spy: HTTPClientSpy) {
+	let client = HTTPClientSpy()
+	let sut = RemoteCommentLoader(url: url, client: client)
+	
+	return (sut, client)
+}
