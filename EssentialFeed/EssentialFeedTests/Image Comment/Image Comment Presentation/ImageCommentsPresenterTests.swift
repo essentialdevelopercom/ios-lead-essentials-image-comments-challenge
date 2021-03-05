@@ -30,12 +30,14 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingImageComments_stopsLoadingAndDisplaysImageComments() {
+		let date = Date()
 		let (sut, view) = makeSUT()
-		let comment = makeComment(id: UUID(), message: "a message", created_at: Date(), username: "user")
+		let comment1 = makeComment(message: "a message", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author")
+		let comment2 = makeComment(message: "another message", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author")
 
-		sut.didFinishLoadingImageComments(with: [comment, comment])
+		sut.didFinishLoadingImageComments(with: [comment1.model, comment2.model])
 		
-		XCTAssertEqual(view.receivedMessages, [.display(isLoading: false), .display(comments: [comment, comment])])
+		XCTAssertEqual(view.receivedMessages, [.display(isLoading: false), .display(comments: [comment1.presentableComment, comment2.presentableComment])])
 	}
 	
 	func test_didFinishLoadingImageCommentsWithError_stopsLoadingAndDisplaysError() {
@@ -59,11 +61,11 @@ class ImageCommentsPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
-	private func makeComment(id: UUID, message: String, created_at: Date, username: String) -> ImageComment {
-		let author = CommentAuthor(username: username)
-		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
-		
-		return comment
+	private func makeComment(message: String, date: (date: Date, string: String), author: String) -> (model: ImageComment, presentableComment: PresentableImageComment) {
+		return (
+			ImageComment(id: UUID(), message: message, createdDate: date.date, author: CommentAuthor(username: author)),
+			PresentableImageComment(username: author, message: message, date: date.string)
+		)
 	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -80,7 +82,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		enum Message: Equatable {
 			case display(isLoading: Bool)
 			case display(errorMessage: String?)
-			case display(comments: [ImageComment])
+			case display(comments: [PresentableImageComment])
 		}
 		var receivedMessages = [Message]()
 		
@@ -95,5 +97,11 @@ class ImageCommentsPresenterTests: XCTestCase {
 		func display(_ viewModel: ImageCommentsViewModel) {
 			receivedMessages.append(.display(comments: viewModel.comments))
 		}
+	}
+}
+
+private extension Date {
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }

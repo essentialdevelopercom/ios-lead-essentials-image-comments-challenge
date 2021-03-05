@@ -61,13 +61,9 @@ class ImageCommentSnapshotTests: XCTestCase {
 	
 	private func imageCommentWithContent() -> ImageCommentsViewModel {
 		return ImageCommentsViewModel(comments: [
-			ImageComment(id: UUID(),
-						 message: "A Message", createdDate: Date(timeIntervalSinceNow: -20000), author: CommentAuthor(username: "Jen")),
-			ImageComment(id: UUID(),
-						 message: "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.", createdDate: Date(timeIntervalSinceNow: -2000), author: CommentAuthor(username: "Jack")),
-			ImageComment(id: UUID(),
-						 message: "A Message\n.\n.\n.\n.\n.\n.\n😀", createdDate: Date(timeIntervalSinceNow: -10000), author: CommentAuthor(username: "Megan"))
-
+			PresentableImageComment(username: "Jen", message: "A Message", date: "5 hours ago"),
+			PresentableImageComment(username: "Jack", message: "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.", date: "33 minutes ago"),
+			PresentableImageComment(username: "Megan", message: "A Message\n.\n.\n.\n.\n.\n.\n😀", date: "2 hours ago")
 		])
 	}
 }

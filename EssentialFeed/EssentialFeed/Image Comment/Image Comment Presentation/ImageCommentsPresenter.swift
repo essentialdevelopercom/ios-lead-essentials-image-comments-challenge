@@ -52,11 +52,24 @@ public class ImageCommentsPresenter {
 	
 	public func didFinishLoadingImageComments(with comments: [ImageComment]) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-		imageCommentsView.display(ImageCommentsViewModel(comments: comments))
+		imageCommentsView.display(ImageCommentsViewModel(comments: presentableComment(from: comments)))
 	}
 	
 	public func didFinishLoadingImageComments(with error: Error) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 		errorView.display(ImageCommentsErrorViewModel(message: localizedErrorMessage))
+	}
+	
+	private func presentableComment(from comments: [ImageComment]) -> [PresentableImageComment] {
+		return comments.map {
+			PresentableImageComment(username: $0.author.username, message: $0.message, date: relativeDateStringFromNow(to: $0.createdDate))
+		}
+	}
+	
+	private func relativeDateStringFromNow(to date: Date) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		let relativeDateString = formatter.localizedString(for: date, relativeTo: Date())
+		return relativeDateString
 	}
 }

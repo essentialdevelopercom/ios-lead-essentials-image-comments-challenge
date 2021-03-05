@@ -18,7 +18,7 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	@IBOutlet private(set) public var errorView: ErrorView?
 	
 	public var delegate: ImageCommentsViewControllerDelegate?
-	private var imageComments = [ImageComment]() {
+	private var imageComments = [PresentableImageComment]() {
 		didSet {
 			tableView.reloadData()
 		}
@@ -63,17 +63,10 @@ public class ImageCommentsViewController: UITableViewController, ImageCommentsVi
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let model = imageComments[indexPath.row]
 		let cell: ImageCommentsCell = tableView.dequeueReusableCell()
-		cell.usernameLabel.text = model.author.username
-		cell.createdTimeLabel.text = relativeDateStringFromNow(to: model.createdDate)
+		cell.usernameLabel.text = model.username
+		cell.createdTimeLabel.text = model.date
 		cell.message.text = model.message
 		
 		return cell
-	}
-	
-	private func relativeDateStringFromNow(to date: Date) -> String {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		let relativeDateString = formatter.localizedString(for: date, relativeTo: Date())
-		return relativeDateString
 	}
 }
