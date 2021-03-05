@@ -111,7 +111,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteCommentLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: CommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteCommentLoader(url: url, client: client)
 		trackForMemoryLeaks(sut, file: file, line: line)
@@ -147,7 +147,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 //		return (date, string)
 	}
 	
-	private func expect(_ sut: RemoteCommentLoader, toCompleteWith expectedResult: RemoteCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: CommentLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		sut.load { receivedResult in
@@ -155,7 +155,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
 				
-			case let (.failure(receivedError as RemoteCommentLoader.Error), .failure(expectedError as RemoteCommentLoader.Error)):
+			case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 				
 			default:
