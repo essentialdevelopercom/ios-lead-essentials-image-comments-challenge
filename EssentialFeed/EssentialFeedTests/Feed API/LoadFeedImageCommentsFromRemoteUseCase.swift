@@ -66,6 +66,15 @@ class LoadFeedImageCommentsFromRemoteUseCase: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWith: .success([]), when: {
+			let emptyListJSON = makeItemsJSON([])
+			client.complete(withStatusCode: 200, data: emptyListJSON)
+		})
+	}
+	
 	// MARK - Helpers
 	
 	func makeSUT(url: URL = URL(string: "https://a-default-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (RemoteFeedImageCommentsLoader, HTTPClientSpy) {
