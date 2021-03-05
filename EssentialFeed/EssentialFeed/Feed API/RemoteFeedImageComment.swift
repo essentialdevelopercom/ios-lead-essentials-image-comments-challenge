@@ -9,8 +9,15 @@
 import Foundation
 
 struct RemoteFeedImageComment: Decodable {
-	public struct Author: Decodable {
+	struct Author: Decodable {
 		let username: String
+	}
+	
+	enum CodingKeys: String, CodingKey {
+		case id
+		case message
+		case createdAt = "created_at"
+		case author
 	}
 	
 	let id: UUID
