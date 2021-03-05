@@ -8,15 +8,41 @@
 
 import XCTest
 import Foundation
+import EssentialFeed
 
-class RemoteCommentLoader {}
+class RemoteCommentLoader {
+	let url: URL
+	let httpClient: HTTPClient
+	
+	init(url: URL, client: HTTPClient) {
+		self.url = url
+		self.httpClient = client
+	}
+	
+	func load() {
+		httpClient.get(from: url) { (result) in
+			print(result)
+		}
+	}
+}
 
 class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 	func test_init_doesNotRequestDataOnInit() {
+		let url = URL(string: "https://a-url.com")!
 		let client = HTTPClientSpy()
-		_ = RemoteCommentLoader()
+		_ = RemoteCommentLoader(url: url, client: client)
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
+	}
+	
+	func test_load_requestDataFromURL() {
+		let url = URL(string: "https://a-url.com")!
+		let client = HTTPClientSpy()
+		let sut = RemoteCommentLoader(url: url, client: client)
+		
+		sut.load()
+		
+		XCTAssertEqual(client.requestedURLs, [url])
 	}
 }
 
