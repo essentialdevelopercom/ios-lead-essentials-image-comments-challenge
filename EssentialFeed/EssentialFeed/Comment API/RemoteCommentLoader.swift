@@ -8,12 +8,17 @@
 
 import Foundation
 
-public class RemoteCommentLoader {
+public protocol CommentLoader {
+	typealias Result = Swift.Result<[Comment], Swift.Error>
+	
+	func load(completion: @escaping (CommentLoader.Result) -> Void)
+}
+
+public class RemoteCommentLoader: CommentLoader {
 	
 	private let url: URL
 	private let client: HTTPClient
 	
-	public typealias Result = Swift.Result<[Comment], Swift.Error>
 	public enum Error: Swift.Error, Equatable {
 		case connectivity
 		case invalidData
@@ -24,7 +29,7 @@ public class RemoteCommentLoader {
 		self.client = client
 	}
 	
-	public func load(completion: @escaping (Result) -> Void) {
+	public func load(completion: @escaping (CommentLoader.Result) -> Void) {
 		client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             
@@ -37,7 +42,7 @@ public class RemoteCommentLoader {
 		}
 	}
 	
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> CommentLoader.Result {
 		do {
 			let items = try RemoteCommentMapper.map(data, from: response)
 			return .success(items.toLocal())
