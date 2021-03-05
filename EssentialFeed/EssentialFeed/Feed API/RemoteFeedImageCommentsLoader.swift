@@ -8,7 +8,8 @@
 
 import Foundation
 
-public final class RemoteFeedImageCommentsLoader {
+public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
+	
 	private let client: HTTPClient
 	private let url: URL
 	
