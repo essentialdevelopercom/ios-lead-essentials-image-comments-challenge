@@ -136,17 +136,6 @@ class RemoteCommentLoaderTests: XCTestCase {
 		return (item, json)
 	}
 	
-	private func makeDate(date: Date = Date()) -> (date: Date, iso8601String: String) {
-		return (date, ISO8601DateFormatter().string(from: date))
-//		let formatter = DateFormatter()
-//		formatter.calendar = Calendar(identifier: .iso8601)
-//		//formatter.locale = Locale(identifier: "en_US_POSIX")
-//		formatter.timeZone = TimeZone(secondsFromGMT: 0)
-//		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm+ss:SS"
-//		let string = formatter.string(from: date)
-//		return (date, string)
-	}
-	
 	private func expect(_ sut: CommentLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
