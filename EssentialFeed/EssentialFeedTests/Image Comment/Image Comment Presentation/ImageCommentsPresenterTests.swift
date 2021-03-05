@@ -10,6 +10,10 @@ import XCTest
 import EssentialFeed
 
 class ImageCommentsPresenterTests: XCTestCase {
+	
+	func test_title_isLocalized() {
+		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
+	}
 
 	func test_init_doesNotSendMessageToView() {
 		let (_, view) = makeSUT()
@@ -36,10 +40,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingImageCommentsWithError_stopsLoadingAndDisplaysError() {
 		let (sut, view) = makeSUT()
-		let errorMessage = NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
-											 tableName: "ImageComments",
-											 bundle: Bundle(for: FeedPresenter.self),
-											 comment: "Error message displayed when we can't load the image comments from the server")
+		let errorMessage = localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")
 
 		sut.didFinishLoadingImageComments(with: NSError())
 		
@@ -63,6 +64,16 @@ class ImageCommentsPresenterTests: XCTestCase {
 		let comment = ImageComment(id: id, message: message, createdDate: created_at, author: author)
 		
 		return comment
+	}
+	
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "ImageComments"
+		let bundle = Bundle(for: ImageCommentsPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
 	}
 	
 	class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView, ImageCommentsView {
