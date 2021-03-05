@@ -1,16 +1,15 @@
 //
-//  FeedImageComment.swift
+//  RemoteFeedImageComment.swift
 //  EssentialFeed
 //
-//  Created by Anton Ilinykh on 03.03.2021.
+//  Created by Anton Ilinykh on 05.03.2021.
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
 import Foundation
 
-public struct FeedImageComment: Equatable {
-	
-	public struct Author: Equatable {
+struct RemoteFeedImageComment: Decodable {
+	public struct Author: Decodable {
 		let username: String
 	}
 	
