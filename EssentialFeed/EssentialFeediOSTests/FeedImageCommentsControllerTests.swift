@@ -7,28 +7,54 @@
 //
 
 import XCTest
+import EssentialFeed
 
-final class FeedImageCommentsController {
-	init(loader: FeedImageCommentsControllerTests.LoaderSpy) {
+final class FeedImageCommentsController: UIViewController {
+	
+	private var loader: FeedImageCommentsLoader!
+	
+	convenience init(loader: FeedImageCommentsLoader) {
+		self.init()
+		self.loader = loader
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		
+		loader.load { _ in }
 	}
 }
 
 final class FeedImageCommentsControllerTests: XCTestCase {
 	
 	func test_load_doesNotLoadCommetns() {
-		let loader = LoaderSpy()
-		let _ = FeedImageCommentsController(loader: loader)
+		let (_, loader) = makeSUT()
 		
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
+	func test_viewDidLoad_loadsFeed() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(loader.loadCallCount, 1)
+	}
+	
 	// MARK: - Helpers
 	
-	class LoaderSpy {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsController, loader: LoaderSpy) {
+		let loader = LoaderSpy()
+		let sut = FeedImageCommentsController(loader: loader)
+		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		return (sut, loader)
+	}
+	
+	class LoaderSpy: FeedImageCommentsLoader {
 		private(set) var loadCallCount = 0
 		
-		func load() {
+		func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) {
 			loadCallCount += 1
 		}
 	}
