@@ -42,7 +42,7 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
-	func test_viewDidLoad_loadsFeed() {
+	func test_viewDidLoad_loadsComments() {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
@@ -50,14 +50,14 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 1)
 	}
 	
-	func test_pullToRefresh_loadsFeed() {
+	func test_userInitiatedCommentsReload_loadsComments() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedCommentsReload()
 		XCTAssertEqual(loader.loadCallCount, 2)
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedCommentsReload()
 		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
@@ -78,18 +78,18 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
 	}
 	
-	func test_pullToRefresh_showsLoadingIndicator() {
+	func test_userInitiatedCommentsReload_showsLoadingIndicator() {
 		let (sut, _) = makeSUT()
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedCommentsReload()
 		
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 	}
 	
-	func test_pullToRefresh_hidesLoadingIndicatorOnLoadingCompletion() {
+	func test_userInitiatedCommentsReload_hidesLoadingIndicatorOnLoadingCompletion() {
 		let (sut, loader) = makeSUT()
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedCommentsReload()
 		loader.completeCommentsLoading()
 		
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
@@ -118,5 +118,11 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		func completeCommentsLoading() {
 			completions[0](.success([]))
 		}
+	}
+}
+
+private extension FeedImageCommentsController {
+	func simulateUserInitiatedCommentsReload() {
+		refreshControl?.simulatePullToRefresh()
 	}
 }
