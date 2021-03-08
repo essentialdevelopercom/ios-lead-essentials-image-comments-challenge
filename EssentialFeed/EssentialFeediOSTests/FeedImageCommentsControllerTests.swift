@@ -28,7 +28,9 @@ final class FeedImageCommentsController: UITableViewController {
 	}
 	
 	@objc private func load() {
-		loader.load { _ in }
+		loader.load { [weak self] _ in
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 }
 
@@ -67,12 +69,30 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 	}
 	
+	func test_viewDidLoad_hidesLoadingIndicatorOnLoadingCompletion() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading()
+		
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+	}
+	
 	func test_pullToRefresh_showsLoadingIndicator() {
 		let (sut, _) = makeSUT()
 		
 		sut.refreshControl?.simulatePullToRefresh()
 		
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+	}
+	
+	func test_pullToRefresh_hidesLoadingIndicatorOnLoadingCompletion() {
+		let (sut, loader) = makeSUT()
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		loader.completeCommentsLoading()
+		
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
 	}
 	
 	// MARK: - Helpers
@@ -86,10 +106,17 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 	}
 	
 	class LoaderSpy: FeedImageCommentsLoader {
-		private(set) var loadCallCount = 0
+		private var completions = [(FeedImageCommentsLoader.Result) -> Void]()
+		var loadCallCount: Int {
+			return completions.count
+		}
 		
 		func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) {
-			loadCallCount += 1
+			completions.append(completion)
+		}
+		
+		func completeCommentsLoading() {
+			completions[0](.success([]))
 		}
 	}
 }
