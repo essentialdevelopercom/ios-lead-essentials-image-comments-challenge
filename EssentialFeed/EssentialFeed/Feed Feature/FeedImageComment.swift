@@ -11,7 +11,7 @@ import Foundation
 public struct FeedImageComment: Equatable {
 	
 	public struct Author: Equatable {
-		let username: String
+		public let username: String
 		
 		public init(username: String) {
 			self.username = username
