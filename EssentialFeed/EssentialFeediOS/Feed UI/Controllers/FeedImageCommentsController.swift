@@ -29,9 +29,14 @@ public final class FeedImageCommentsController: UITableViewController {
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
 		loader.load { [weak self] result in
-			self?.comments = (try? result.get()) ?? []
-			self?.tableView.reloadData()
-			self?.refreshControl?.endRefreshing()
+			switch result {
+			case let .success(comments):
+				self?.comments = comments
+				self?.tableView.reloadData()
+				self?.refreshControl?.endRefreshing()
+			case .failure:
+				break
+			}
 		}
 	}
 	

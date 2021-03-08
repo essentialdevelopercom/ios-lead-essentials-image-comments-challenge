@@ -59,6 +59,19 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		assert(sut, isRendering: [comment0, comment1, comment2])
 	}
 	
+	func test_loadImageCommentsCompletion_doesNotAlteringCurrentRenderingStateOnError() {
+		let comment0 = makeComment()
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: [comment0], at: 0)
+		assert(sut, isRendering: [comment0])
+		
+		sut.simulateUserInitiatedCommentsReload()
+		loader.completeCommentsLoadingWithError(at: 1)
+		assert(sut, isRendering: [comment0])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsController, loader: LoaderSpy) {
@@ -74,7 +87,9 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 	}
 	
 	private func assert(_ sut: FeedImageCommentsController, isRendering comments: [FeedImageComment], file: StaticString = #file, line: UInt = #line) {
-		XCTAssertEqual(sut.numberOfRenderedFeedImageCommentViews, comments.count, "Expected \(comments.count) comments, got \(sut.numberOfRenderedFeedImageCommentViews) instead", file: file, line: line)
+		guard sut.numberOfRenderedFeedImageCommentViews == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedFeedImageCommentViews) instead", file: file, line: line)
+		}
 		comments.enumerated().forEach { index, comment in
 			assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
 		}
@@ -108,6 +123,11 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		
 		func completeCommentsLoading(with comments: [FeedImageComment] = [], at: Int) {
 			completions[at](.success(comments))
+		}
+		
+		func completeCommentsLoadingWithError(at: Int) {
+			let error = NSError(domain: "an error", code: 0)
+			completions[at](.failure(error))
 		}
 	}
 }
