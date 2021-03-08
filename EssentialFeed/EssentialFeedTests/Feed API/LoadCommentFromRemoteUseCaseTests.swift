@@ -33,8 +33,9 @@ class RemoteCommentLoader {
 				completion(.failure(.connectivity))
 				
 			case let .success((data, response)):
-				print(data)
-				print(response)
+				if response.statusCode != 200 {
+					completion(.failure(.invalidData))
+				}
 			}
 		}
 	}
@@ -80,6 +81,26 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		client.complete(with: RemoteCommentLoader.Error.connectivity)
 		
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let url = URL(string: "https://another-url.com")!
+		let (sut, client) = makeSUT(url: url)
+		let statusCodes = [199, 201, 300, 400, 500]
+		
+		statusCodes.enumerated().forEach { index, code in
+			let exp = expectation(description: "Wait for load completion")
+			let expectedResult = RemoteCommentLoader.Result.failure(.invalidData)
+			
+			sut.load { (receivedResult) in
+				XCTAssertEqual(receivedResult, expectedResult)
+				exp.fulfill()
+			}
+
+			client.complete(withStatusCode: code, data: Data.init(), at: index)
+			
+			wait(for: [exp], timeout: 1.0)
+		}
 	}
 }
 
