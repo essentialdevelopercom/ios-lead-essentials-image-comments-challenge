@@ -5,7 +5,7 @@
 import XCTest
 import EssentialFeed
 
-final class FeedLocalizationTests: XCTestCase {
+final class LocalizationTests: XCTestCase {
 	
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
 		let table = "Feed"
@@ -13,7 +13,23 @@ final class FeedLocalizationTests: XCTestCase {
 		let localizationBundles = allLocalizationBundles(in: presentationBundle)
 		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
 		
-		localizationBundles.forEach { (bundle, localization) in
+		expect(bundles: localizationBundles, toMatch: localizedStringKeys, table: table)
+
+	}
+	
+	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations_test() {
+		let table = "ImageComments"
+		let presentationBundle = Bundle(for: ImageCommentsPresenter.self)
+		let localizationBundles = allLocalizationBundles(in: presentationBundle)
+		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
+		
+		expect(bundles: localizationBundles, toMatch: localizedStringKeys, table: table)
+	}
+	
+	// MARK: - Helpers
+	
+	private func expect(bundles: [LocalizedBundle], toMatch localizedStringKeys: Set<String>, table: String, file: StaticString = #file, line: UInt = #line) {
+		bundles.forEach { (bundle, localization) in
 			localizedStringKeys.forEach { key in
 				let localizedString = bundle.localizedString(forKey: key, value: nil, table: table)
 				
@@ -25,8 +41,6 @@ final class FeedLocalizationTests: XCTestCase {
 			}
 		}
 	}
-	
-	// MARK: - Helpers
 	
 	private typealias LocalizedBundle = (bundle: Bundle, localization: String)
 	
