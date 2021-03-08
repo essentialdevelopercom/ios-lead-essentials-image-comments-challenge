@@ -40,10 +40,6 @@ class ImageCommentsPresenter {
 		self.errorView = errorView
 	}
 	
-	private var imageCommentsLoadError: String {
-		"Some error"
-	}
-	
 	func didStartLoadingComments() {
 		errorView.display(ImageCommentsErrorViewModel(message: .none))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
@@ -59,13 +55,23 @@ class ImageCommentsPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
+	private var imageCommentsLoadError: String {
+		NSLocalizedString(
+			"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
+			tableName: ImageCommentsPresenter.tableName,
+			bundle: Bundle(for: ImageCommentsPresenter.self),
+			comment: "Error message displayed when we can't load the image comments from the server")
+	}
+	
 	static var title: String {
 		NSLocalizedString(
 			"IMAGE_COMMENTS_VIEW_TITLE",
-			tableName: "ImageComments",
+			tableName: tableName,
 			bundle: Bundle(for: ImageCommentsPresenter.self),
 			comment: "Title for the image comments view")
 	}
+	
+	static var tableName: String { "ImageComments" }
 }
 
 class ImageCommentsPresenterTests: XCTestCase {
@@ -105,7 +111,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		sut.didFinishLoadingFeed(with: anyNSError())
 		
 		XCTAssertEqual(view.messages, [
-			.display(errorMessage: "Some error"),
+			.display(errorMessage: localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR")),
 			.display(isLoading: false)
 		])
 	}
@@ -141,7 +147,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
-		let table = "ImageComments"
+		let table = ImageCommentsPresenter.tableName
 		let bundle = Bundle(for: ImageCommentsPresenter.self)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
 		if value == key {
