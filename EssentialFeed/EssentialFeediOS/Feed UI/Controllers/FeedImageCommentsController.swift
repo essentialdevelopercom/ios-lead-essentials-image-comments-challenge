@@ -7,32 +7,29 @@
 //
 
 import UIKit
+import EssentialFeed
 
-struct FeedImageCommentViewModel {
-	let author: String
-	let date: String
-	let comment: String
-}
-
-class FeedImageCommentsController: UITableViewController {
-	private let comments = FeedImageCommentViewModel.prototypeComments
+public final class FeedImageCommentsController: UITableViewController {
 	
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return comments.count
+	private var loader: FeedImageCommentsLoader!
+	
+	public convenience init(loader: FeedImageCommentsLoader) {
+		self.init()
+		self.loader = loader
 	}
 	
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "FeedImageCommentCell") as! FeedImageCommentCell
-		let model = comments[indexPath.row]
-		cell.configure(with: model)
-		return cell
+	override public func viewDidLoad() {
+		super.viewDidLoad()
+		
+		refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+		load()
 	}
-}
-
-extension FeedImageCommentCell {
-	func configure(with model: FeedImageCommentViewModel) {
-		authorLabel.text = model.author
-		dateLabel.text = model.date
-		commentLabel.text = model.comment
+	
+	@objc private func load() {
+		refreshControl?.beginRefreshing()
+		loader.load { [weak self] _ in
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 }
