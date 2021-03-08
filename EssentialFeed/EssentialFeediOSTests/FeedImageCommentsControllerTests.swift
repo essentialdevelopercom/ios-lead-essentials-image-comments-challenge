@@ -66,7 +66,7 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
 	func test_viewDidLoad_hidesLoadingIndicatorOnLoadingCompletion() {
@@ -75,7 +75,7 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		loader.completeCommentsLoading()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
 	}
 	
 	func test_userInitiatedCommentsReload_showsLoadingIndicator() {
@@ -83,7 +83,7 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		
 		sut.simulateUserInitiatedCommentsReload()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
 	func test_userInitiatedCommentsReload_hidesLoadingIndicatorOnLoadingCompletion() {
@@ -92,7 +92,7 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		sut.simulateUserInitiatedCommentsReload()
 		loader.completeCommentsLoading()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
 	}
 	
 	// MARK: - Helpers
@@ -124,5 +124,9 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 private extension FeedImageCommentsController {
 	func simulateUserInitiatedCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 }
