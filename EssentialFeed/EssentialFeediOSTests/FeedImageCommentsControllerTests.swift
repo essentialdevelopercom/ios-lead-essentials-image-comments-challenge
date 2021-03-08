@@ -33,13 +33,13 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expecting a loading indicator once a view is loaded")
 		
 		loader.completeCommentsLoading(at: 0)
-		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting no loading indicator once loading is completed")
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting no loading indicator once loading is completed successfully")
 	
 		sut.simulateUserInitiatedCommentsReload()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expecting a loading indicator once user initiated a reload")
 	
-		loader.completeCommentsLoading(at: 1)
-		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting no loading indicator once user initiated loading is completed")
+		loader.completeCommentsLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting no loading indicator once user initiated loading is failed with error")
 	}
 	
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedComments() {
