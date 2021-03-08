@@ -70,12 +70,16 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://another-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		let expectedResult = RemoteCommentLoader.Result.failure(.connectivity)
+		let exp = expectation(description: "Wait for load completion")
 		
 		sut.load { (receivedResult) in
 			XCTAssertEqual(receivedResult, expectedResult)
+			exp.fulfill()
 		}
 		
 		client.complete(with: RemoteCommentLoader.Error.connectivity)
+		
+		wait(for: [exp], timeout: 1.0)
 	}
 }
 
