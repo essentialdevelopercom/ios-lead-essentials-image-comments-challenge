@@ -46,6 +46,7 @@ public class RemoteCommentLoader: CommentLoader {
 		}
 	}
 	
+	@discardableResult
 	public func load(completion: @escaping (CommentLoader.Result) -> Void) -> CommentLoaderDataTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in

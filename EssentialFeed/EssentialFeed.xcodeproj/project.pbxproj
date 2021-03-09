@@ -494,6 +494,7 @@
 			children = (
 				08D917AF22B92A5D003BC31B /* Info.plist */,
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
+				B553AB8A25F70B98004DDE1A /* Comment UI */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
 			);
 			path = EssentialFeediOSTests;
@@ -572,6 +573,13 @@
 				0844769021FCBE7D00439BE9 /* URLSessionHTTPClient.swift */,
 			);
 			path = "Shared API Infra";
+			sourceTree = "<group>";
+		};
+		B553AB8A25F70B98004DDE1A /* Comment UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Comment UI";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
