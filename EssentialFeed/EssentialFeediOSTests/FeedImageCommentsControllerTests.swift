@@ -80,7 +80,7 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		let loader = LoaderSpy()
 //		let sut = FeedImageCommentsController(loader: loader)
 		let sut = storyboard.instantiateViewController(identifier: "FeedImageCommentsController") as! FeedImageCommentsController
-		sut.loader = loader
+		sut.refreshController = FeedImageCommentsRefreshController(commentsLoader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

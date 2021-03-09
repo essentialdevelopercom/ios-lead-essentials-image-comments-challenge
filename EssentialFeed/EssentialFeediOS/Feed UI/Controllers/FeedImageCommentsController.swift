@@ -9,32 +9,47 @@
 import UIKit
 import EssentialFeed
 
+public final class FeedImageCommentsRefreshController: NSObject {
+	private(set) lazy var view: UIRefreshControl = {
+		let view = UIRefreshControl()
+		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+		return view
+	}()
+	
+	private let commentsLoader: FeedImageCommentsLoader
+	
+	public init(commentsLoader: FeedImageCommentsLoader) {
+		self.commentsLoader = commentsLoader
+	}
+	
+	var onRefresh: (([FeedImageComment]) -> Void)?
+	
+	@objc func refresh() {
+		view.beginRefreshing()
+		commentsLoader.load { [weak self] result in
+			if let comments = try? result.get() {
+				self?.onRefresh?(comments)
+			}
+			self?.view.endRefreshing()
+		}
+	}
+}
+
 public final class FeedImageCommentsController: UITableViewController {
 	
-	public var loader: FeedImageCommentsLoader!
-	private var comments = [FeedImageComment]()
-	
-	public convenience init(loader: FeedImageCommentsLoader) {
-		self.init()
-		self.loader = loader
+	public var refreshController: FeedImageCommentsRefreshController!
+	private var comments = [FeedImageComment]() {
+		didSet { tableView.reloadData() }
 	}
 	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
-		
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		load()
-	}
-	
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
-		loader.load { [weak self] result in
-			if let comments = try? result.get() {
-				self?.comments = comments
-				self?.tableView.reloadData()
-			}
-			self?.refreshControl?.endRefreshing()
+			
+		refreshControl = refreshController.view
+		refreshController.onRefresh = { [weak self] comments in
+			self?.comments = comments
 		}
+		refreshController.refresh()
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
