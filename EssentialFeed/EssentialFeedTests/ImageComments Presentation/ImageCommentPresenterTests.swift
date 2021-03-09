@@ -34,13 +34,19 @@ class ImageCommentPresenterTests: XCTestCase {
 	}
 	
 	func test_init_doesNotSendMessageToView() {
-		let view = ViewSpy()
-		let _ = ImageCommentPresenter(commentView: view)
+		let (_, view) = makeSUT()
 		
 		XCTAssert(view.messages.isEmpty, "Expected no view messages")
 	}
 	
 	// MARK: - Helpers
+	private func makeSUT() -> (sut: ImageCommentPresenter, view: ViewSpy) {
+		let view = ViewSpy()
+		let sut = ImageCommentPresenter(commentView: view)
+		trackForMemoryLeaks(view)
+		trackForMemoryLeaks(sut)
+		return (sut, view)
+	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
