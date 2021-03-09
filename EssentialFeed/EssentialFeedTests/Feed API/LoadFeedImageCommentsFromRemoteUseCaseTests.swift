@@ -90,7 +90,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let nonEmptyData = Data("non-empty data".utf8)
 		
-		var received = [FeedImageDataLoader.Result]()
+		var received = [FeedImageCommentsLoader.Result]()
 		let task = sut.loadImageComments(from: anyURL()) { received.append($0) }
 		task.cancel()
 		
