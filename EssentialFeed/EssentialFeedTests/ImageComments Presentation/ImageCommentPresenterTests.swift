@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeed
 
 struct ImageCommentViewModel {
-	
+	public let comments: [ImageComment]
 }
 
 struct ImageCommentLoadingViewModel {
@@ -54,6 +54,11 @@ class ImageCommentPresenter {
 		loadingView.display(ImageCommentLoadingViewModel(isLoading: true))
 	}
 	
+	public func didFinishLoadingComments(with comments: [ImageComment]) {
+		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
+		commentView.display(ImageCommentViewModel(comments: comments))
+	}
+	
 }
 
 class ImageCommentPresenterTests: XCTestCase {
@@ -72,9 +77,23 @@ class ImageCommentPresenterTests: XCTestCase {
 		let (sut, view) = makeSUT()
 		
 		sut.didStartLoadingComments()
+		
 		XCTAssertEqual(view.messages, [
 			.display(message: nil),
 			.display(isLoading: true)
+		])
+	}
+	
+	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let comment0 = makeComment(id: UUID(), message: "message0", createdAt: Date(), username: "username0")
+		let comment1 = makeComment(id: UUID(), message: "message1", createdAt: Date(), username: "username1")
+		
+		sut.didFinishLoadingComments(with: [comment0, comment1])
+		
+		XCTAssertEqual(view.messages, [
+			.display(isLoading: false),
+			.display(comments: [comment0, comment1])
 		])
 	}
 	
@@ -85,6 +104,14 @@ class ImageCommentPresenterTests: XCTestCase {
 		trackForMemoryLeaks(view)
 		trackForMemoryLeaks(sut)
 		return (sut, view)
+	}
+	
+	private func makeComment(id: UUID, message: String, createdAt: Date, username: String) -> ImageComment {
+		return ImageComment(
+			id: id,
+			message: message,
+			createdAt: createdAt,
+			author: ImageCommentAuthor(username: username))
 	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -100,14 +127,15 @@ class ImageCommentPresenterTests: XCTestCase {
 	private class ViewSpy: ImageCommentView, ImageCommentLoadingView, ImageCommentErrorView {
 		
 		enum Message: Hashable {
-			case display(message: String?)
+			case display(comments: [ImageComment])
 			case display(isLoading: Bool)
+			case display(message: String?)
 		}
 		
 		private(set) var messages = Set<Message>()
 		
 		func display(_ viewModel: ImageCommentViewModel) {
-			
+			messages.insert(.display(comments: viewModel.comments))
 		}
 		
 		func display(_ viewModel: ImageCommentLoadingViewModel) {
