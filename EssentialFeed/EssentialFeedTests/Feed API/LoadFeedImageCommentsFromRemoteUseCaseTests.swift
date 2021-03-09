@@ -53,7 +53,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
-	func test_loadImageDataFromURL_requestsDataFromURL() {
+	func test_loadImageCommentsFromURL_requestsCommentsFromURL() {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
