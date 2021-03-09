@@ -36,7 +36,11 @@ class RemoteCommentLoader {
 				if response.statusCode != 200 {
 					completion(.failure(.invalidData))
 				} else {
-					completion(.failure(.invalidData))
+					if let json = try? JSONSerialization.jsonObject(with: data) {
+						completion(.success([]))
+					} else {
+						completion(.failure(.invalidData))
+					}
 				}
 			}
 		}
@@ -88,11 +92,11 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversInvalidDataErrorOn200HTTPResponseWithEmptyData() {
+	func test_load_deliversEmptyDataOn200HTTPResponseWithEmptyDataResponse() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, client: client, expectedResult: .failure(.invalidData)) {
-			client.complete(withStatusCode: 200, data: Data())
+		expect(sut, client: client, expectedResult: .success([])) {
+			client.complete(withStatusCode: 200, data: Data("{\"items\": []}".utf8))
 		}
 	}
 	
