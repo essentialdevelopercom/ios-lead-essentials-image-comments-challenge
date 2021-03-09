@@ -269,8 +269,8 @@
 				080EDEF521B6DA7E00813479 /* Info.plist */,
 				B553AA7E25F088C1004DDE1A /* Shared API */,
 				B553AA8325F0890A004DDE1A /* Shared API Infra */,
-				B553AA4625ED00FA004DDE1A /* ImageComment Feature */,
-				B553AA5325EE673F004DDE1A /* ImageComment API */,
+				B553AA4625ED00FA004DDE1A /* ImageComments Feature */,
+				B553AA5325EE673F004DDE1A /* ImageComments API */,
 				080EDF1021B6DFA200813479 /* Feed Feature */,
 				08B42EA221C3F08A00DDA349 /* Feed API */,
 				089C40DA22170EB200DE552E /* Feed Cache */,
@@ -537,17 +537,17 @@
 			path = "ImageComments API";
 			sourceTree = "<group>";
 		};
-		B553AA4625ED00FA004DDE1A /* ImageComment Feature */ = {
+		B553AA4625ED00FA004DDE1A /* ImageComments Feature */ = {
 			isa = PBXGroup;
 			children = (
 				B553AA4725ED012E004DDE1A /* ImageComment.swift */,
 				B553AA4D25ED0152004DDE1A /* ImageCommentAuthor.swift */,
 				B553AB8425F70A20004DDE1A /* ImageCommentLoader.swift */,
 			);
-			path = "ImageComment Feature";
+			path = "ImageComments Feature";
 			sourceTree = "<group>";
 		};
-		B553AA5325EE673F004DDE1A /* ImageComment API */ = {
+		B553AA5325EE673F004DDE1A /* ImageComments API */ = {
 			isa = PBXGroup;
 			children = (
 				B553AA5425EE675C004DDE1A /* RemoteImageCommentLoader.swift */,
@@ -555,7 +555,7 @@
 				B553AA6425EE6C81004DDE1A /* RemoteImageComment.swift */,
 				B553AA6A25EE6CA0004DDE1A /* RemoteImageCommentAuthor.swift */,
 			);
-			path = "ImageComment API";
+			path = "ImageComments API";
 			sourceTree = "<group>";
 		};
 		B553AA7E25F088C1004DDE1A /* Shared API */ = {
