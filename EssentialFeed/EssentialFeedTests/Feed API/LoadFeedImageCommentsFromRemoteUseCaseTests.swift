@@ -45,6 +45,18 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
+	func test_loadImageCommentsFromURL_deliversInvalidDataErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		
+		let samples = [199, 201, 300, 400, 500]
+		
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
+				client.complete(withStatusCode: code, data: anyData(), at: index)
+			})
+		}
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
