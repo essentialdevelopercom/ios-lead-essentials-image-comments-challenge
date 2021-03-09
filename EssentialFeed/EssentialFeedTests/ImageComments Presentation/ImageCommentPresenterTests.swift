@@ -59,6 +59,11 @@ class ImageCommentPresenter {
 		commentView.display(ImageCommentViewModel(comments: comments))
 	}
 	
+	public func didFinishLoadingComments(with error: Error) {
+		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
+		errorView.display(ImageCommentErrorViewModel(message: "Error"))
+	}
+	
 }
 
 class ImageCommentPresenterTests: XCTestCase {
@@ -94,6 +99,18 @@ class ImageCommentPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [
 			.display(isLoading: false),
 			.display(comments: [comment0, comment1])
+		])
+	}
+	
+	func test_didFinishLoadingCommentsWithError_displaysErrorAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let error = NSError(domain: "error", code: 0)
+		
+		sut.didFinishLoadingComments(with: error)
+		
+		XCTAssertEqual(view.messages, [
+			.display(isLoading: false),
+			.display(message: "Error")
 		])
 	}
 	
