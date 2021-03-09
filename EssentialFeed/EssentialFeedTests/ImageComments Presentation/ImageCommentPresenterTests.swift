@@ -15,6 +15,13 @@ struct ImageCommentViewModel {
 
 struct ImageCommentLoadingViewModel {
 	public let isLoading: Bool
+	
+	static var loading: ImageCommentLoadingViewModel {
+		return ImageCommentLoadingViewModel(isLoading: true)
+	}
+	static var finished: ImageCommentLoadingViewModel {
+		return ImageCommentLoadingViewModel(isLoading: false)
+	}
 }
 
 struct ImageCommentErrorViewModel {
@@ -58,17 +65,17 @@ class ImageCommentPresenter {
 	}
 	
 	public func didStartLoadingComments() {
+		loadingView.display(.loading)
 		errorView.display(.clear)
-		loadingView.display(ImageCommentLoadingViewModel(isLoading: true))
 	}
 	
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
-		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
+		loadingView.display(.finished)
 		commentView.display(ImageCommentViewModel(comments: comments))
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
-		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
+		loadingView.display(.finished)
 		errorView.display(ImageCommentErrorViewModel(message: ImageCommentPresenter.errorMessage))
 	}
 	
