@@ -101,6 +101,20 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertTrue(received.isEmpty, "Expected no received results after cancelling task")
 	}
 	
+	func test_loadImageCommentsFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let url = URL(string: "https://a-given-url.com")!
+		let client = HTTPClientSpy()
+		var sut: RemoteFeedImageCommentsLoader? = RemoteFeedImageCommentsLoader(url: url, client: client)
+		
+		var capturedResults = [FeedImageCommentsLoader.Result]()
+		_ = sut?.loadImageComments(from: anyURL()) { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(withStatusCode: 200, data: anyData())
+		
+		XCTAssertTrue(capturedResults.isEmpty)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
