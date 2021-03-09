@@ -19,7 +19,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_loadImageCommentsFromURL_requestsCommentsFromURL() {
 		let url = URL(string: "https://a-given-url.com")!
-		let (sut, client) = makeSUT(url: url)
+		let (sut, client) = makeSUT()
 		
 		_ = sut.loadImageComments(from: url) { _ in }
 		
@@ -28,7 +28,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_loadImageCommentsFromURLTwice_requestsCommentsFromURLTwice() {
 		let url = URL(string: "https://a-given-url.com")!
-		let (sut, client) = makeSUT(url: url)
+		let (sut, client) = makeSUT()
 		
 		_ = sut.loadImageComments(from: url) { _ in }
 		_ = sut.loadImageComments(from: url) { _ in }
@@ -102,9 +102,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
-		let url = URL(string: "https://a-given-url.com")!
 		let client = HTTPClientSpy()
-		var sut: RemoteFeedImageCommentsLoader? = RemoteFeedImageCommentsLoader(url: url, client: client)
+		var sut: RemoteFeedImageCommentsLoader? = RemoteFeedImageCommentsLoader(client: client)
 		
 		var capturedResults = [FeedImageCommentsLoader.Result]()
 		_ = sut?.loadImageComments(from: anyURL()) { capturedResults.append($0) }
@@ -117,9 +116,9 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let sut = RemoteFeedImageCommentsLoader(url: url, client: client)
+		let sut = RemoteFeedImageCommentsLoader(client: client)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)

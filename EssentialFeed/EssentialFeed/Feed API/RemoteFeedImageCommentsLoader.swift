@@ -9,7 +9,6 @@
 import Foundation
 
 public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
-	private let url: URL
 	private let client: HTTPClient
 	
 	public enum Error: Swift.Error {
@@ -17,8 +16,7 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 		case invalidData
 	}
 	
-	public init(url: URL, client: HTTPClient) {
-		self.url = url
+	public init(client: HTTPClient) {
 		self.client = client
 	}
 	
