@@ -90,6 +90,7 @@
 		B553AA5F25EE6C52004DDE1A /* RemoteCommentMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */; };
 		B553AA6525EE6C81004DDE1A /* RemoteComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA6425EE6C81004DDE1A /* RemoteComment.swift */; };
 		B553AA6B25EE6CA0004DDE1A /* RemoteCommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AA6A25EE6CA0004DDE1A /* RemoteCommentAuthor.swift */; };
+		B553AB8525F70A20004DDE1A /* CommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AB8425F70A20004DDE1A /* CommentLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +201,7 @@
 		B553AA5E25EE6C52004DDE1A /* RemoteCommentMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentMapper.swift; sourceTree = "<group>"; };
 		B553AA6425EE6C81004DDE1A /* RemoteComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteComment.swift; sourceTree = "<group>"; };
 		B553AA6A25EE6CA0004DDE1A /* RemoteCommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentAuthor.swift; sourceTree = "<group>"; };
+		B553AB8425F70A20004DDE1A /* CommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -540,6 +542,7 @@
 			children = (
 				B553AA4725ED012E004DDE1A /* Comment.swift */,
 				B553AA4D25ED0152004DDE1A /* CommentAuthor.swift */,
+				B553AB8425F70A20004DDE1A /* CommentLoader.swift */,
 			);
 			path = "Comment Feature";
 			sourceTree = "<group>";
@@ -779,6 +782,7 @@
 				08285AFD228C1843000A8987 /* ManagedCache.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
 				B553AA4E25ED0152004DDE1A /* CommentAuthor.swift in Sources */,
+				B553AB8525F70A20004DDE1A /* CommentLoader.swift in Sources */,
 				B553AA6525EE6C81004DDE1A /* RemoteComment.swift in Sources */,
 				087148BD232BEC6700D6BE1A /* FeedErrorViewModel.swift in Sources */,
 				08897BE623390F4E0029F5E4 /* FeedImageDataLoader.swift in Sources */,
