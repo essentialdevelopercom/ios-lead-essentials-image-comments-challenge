@@ -6,10 +6,10 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
-struct RemoteCommentAuthor: Decodable {
+struct RemoteImageCommentAuthor: Decodable {
 	public let username: String
 	
-	var local: CommentAuthor {
-		return CommentAuthor(username: username)
+	var local: ImageCommentAuthor {
+		return ImageCommentAuthor(username: username)
 	}
 }

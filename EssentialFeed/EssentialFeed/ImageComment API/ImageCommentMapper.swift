@@ -8,18 +8,18 @@
 
 import Foundation
 
-final class RemoteCommentMapper {
+final class ImageCommentMapper {
 	
 	private struct Root: Decodable {
-		let items: [RemoteComment]
+		let items: [RemoteImageComment]
 	}
 	
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteComment] {
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		
 		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
-			throw RemoteCommentLoader.Error.invalidData
+			throw RemoteImageCommentLoader.Error.invalidData
 		}
 		
 		return root.items

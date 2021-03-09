@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct RemoteComment: Decodable {
+struct RemoteImageComment: Decodable {
 	public let id: UUID
 	public let message: String
 	public let createdAt: Date
-	public let author: RemoteCommentAuthor
+	public let author: RemoteImageCommentAuthor
 	
 	enum CodingKeys: String, CodingKey {
 		case id
@@ -21,7 +21,7 @@ struct RemoteComment: Decodable {
 		case author
 	}
 	
-	var local: Comment {
-		return Comment(id: id, message: message, createdAt: createdAt, author: author.local)
+	var local: ImageComment {
+		return ImageComment(id: id, message: message, createdAt: createdAt, author: author.local)
 	}
 }

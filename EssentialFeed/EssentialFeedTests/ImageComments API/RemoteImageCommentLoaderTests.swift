@@ -1,5 +1,5 @@
 //
-//  RemoteCommentLoaderTests.swift
+//  RemoteImageCommentLoaderTests.swift
 //  EssentialFeedTests
 //
 //  Created by Eric Garlock on 2/28/21.
@@ -9,7 +9,7 @@
 import XCTest
 import EssentialFeed
 
-class RemoteCommentLoaderTests: XCTestCase {
+class RemoteImageCommentLoaderTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
 		let (_, client) = makeSUT()
@@ -39,7 +39,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: .failure(RemoteCommentLoader.Error.connectivity)) {
+		expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.connectivity)) {
 			client.complete(with: anyNSError())
 		}
 	}
@@ -50,7 +50,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let codes = [199, 201, 300, 400, 500]
 		
 		codes.enumerated().forEach { index, code in
-			expect(sut, toCompleteWith: .failure(RemoteCommentLoader.Error.invalidData)) {
+			expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.invalidData)) {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			}
 		}
@@ -60,7 +60,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let invalidJSONData = "invalid json".data(using: .utf8)!
 		
-		expect(sut, toCompleteWith: .failure(RemoteCommentLoader.Error.invalidData)) {
+		expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.invalidData)) {
 			client.complete(withStatusCode: 200, data: invalidJSONData)
 		}
 	}
@@ -99,9 +99,9 @@ class RemoteCommentLoaderTests: XCTestCase {
 	
 	func test_load_doesNotDeliverResultsAfterSUTInstanceHasBeenDeallocated() {
 		let client = HTTPClientSpy()
-		var sut: RemoteCommentLoader? = RemoteCommentLoader(url: anyURL(), client: client)
+		var sut: RemoteImageCommentLoader? = RemoteImageCommentLoader(url: anyURL(), client: client)
 		
-		var capturedResults = [RemoteCommentLoader.Result]()
+		var capturedResults = [RemoteImageCommentLoader.Result]()
 		sut?.load { capturedResults.append($0) }
 		
 		sut = nil
@@ -114,8 +114,8 @@ class RemoteCommentLoaderTests: XCTestCase {
 		let url = URL(string: "https://any-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		var capturedResults = [RemoteCommentLoader.Result]()
-		var task = sut.load { capturedResults.append($0) }
+		var capturedResults = [RemoteImageCommentLoader.Result]()
+		let task = sut.load { capturedResults.append($0) }
 		
 		task.cancel()
 		
@@ -123,20 +123,20 @@ class RemoteCommentLoaderTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: CommentLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let sut = RemoteCommentLoader(url: url, client: client)
+		let sut = RemoteImageCommentLoader(url: url, client: client)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
 	}
 	
-	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: Comment, json: [String:Any]) {
-		let item = Comment(
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: ImageComment, json: [String:Any]) {
+		let item = ImageComment(
 			id: id,
 			message: message,
 			createdAt: createdAt.date,
-			author: CommentAuthor(username: username))
+			author: ImageCommentAuthor(username: username))
 		let json: [String:Any] = [
 			"id": item.id.uuidString,
 			"message": item.message,
@@ -148,7 +148,7 @@ class RemoteCommentLoaderTests: XCTestCase {
 		return (item, json)
 	}
 	
-	private func expect(_ sut: CommentLoader, toCompleteWith expectedResult: CommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: ImageCommentLoader, toCompleteWith expectedResult: ImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		sut.load { receivedResult in

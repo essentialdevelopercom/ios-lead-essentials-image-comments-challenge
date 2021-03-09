@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class RemoteCommentLoader: CommentLoader {
+public class RemoteImageCommentLoader: ImageCommentLoader {
 	
 	private let url: URL
 	private let client: HTTPClient
@@ -23,16 +23,16 @@ public class RemoteCommentLoader: CommentLoader {
 		self.client = client
 	}
 	
-	private final class HTTPClientTaskWrapper: CommentLoaderDataTask {
-		private var completion: ((CommentLoader.Result) -> Void)?
+	private final class HTTPClientTaskWrapper: ImageCommentLoaderDataTask {
+		private var completion: ((ImageCommentLoader.Result) -> Void)?
 		
 		var wrapped: HTTPClientTask?
 		
-		init(_ completion: @escaping (CommentLoader.Result) -> Void) {
+		init(_ completion: @escaping (ImageCommentLoader.Result) -> Void) {
 			self.completion = completion
 		}
 		
-		func complete(with result: CommentLoader.Result) {
+		func complete(with result: ImageCommentLoader.Result) {
 			completion?(result)
 		}
 		
@@ -47,14 +47,14 @@ public class RemoteCommentLoader: CommentLoader {
 	}
 	
 	@discardableResult
-	public func load(completion: @escaping (CommentLoader.Result) -> Void) -> CommentLoaderDataTask {
+	public func load(completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderDataTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             
 			switch result {
 			case let .success((data, response)):
-				completion(RemoteCommentLoader.map(data, from: response))
+				completion(RemoteImageCommentLoader.map(data, from: response))
 			case .failure:
 				completion(.failure(Error.connectivity))
 			}
@@ -62,9 +62,9 @@ public class RemoteCommentLoader: CommentLoader {
 		return task
 	}
 	
-	private static func map(_ data: Data, from response: HTTPURLResponse) -> CommentLoader.Result {
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> ImageCommentLoader.Result {
 		do {
-			let items = try RemoteCommentMapper.map(data, from: response)
+			let items = try ImageCommentMapper.map(data, from: response)
 			return .success(items.toLocal())
 		} catch {
 			return .failure(error)
@@ -73,8 +73,8 @@ public class RemoteCommentLoader: CommentLoader {
 	
 }
 
-private extension Array where Element == RemoteComment {
-	func toLocal() -> [Comment] {
+private extension Array where Element == RemoteImageComment {
+	func toLocal() -> [ImageComment] {
 		return map { $0.local }
 	}
 }

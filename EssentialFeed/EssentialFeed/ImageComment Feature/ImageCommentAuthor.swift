@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct CommentAuthor: Equatable {
+public struct ImageCommentAuthor: Equatable {
 	public let username: String
 	
 	public init(username: String) {
