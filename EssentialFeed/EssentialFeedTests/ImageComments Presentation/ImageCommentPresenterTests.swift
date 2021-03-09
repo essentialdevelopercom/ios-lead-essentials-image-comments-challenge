@@ -7,11 +7,22 @@
 //
 
 import XCTest
+import EssentialFeed
+
+protocol ImageCommentView {
+	
+}
 
 class ImageCommentPresenter {
 	
 	public static var title: String {
 		return NSLocalizedString("COMMENT_VIEW_TITLE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentPresenter.self), comment: "Title for the comments view")
+	}
+	
+	private let commentView: ImageCommentView
+	
+	public init(commentView: ImageCommentView) {
+		self.commentView = commentView
 	}
 	
 }
@@ -20,6 +31,13 @@ class ImageCommentPresenterTests: XCTestCase {
 
 	func test_title_isLocalized() {
 		XCTAssertEqual(ImageCommentPresenter.title, localized("COMMENT_VIEW_TITLE"))
+	}
+	
+	func test_init_doesNotSendMessageToView() {
+		let view = ViewSpy()
+		let _ = ImageCommentPresenter(commentView: view)
+		
+		XCTAssert(view.messages.isEmpty, "Expected no view messages")
 	}
 	
 	// MARK: - Helpers
@@ -32,6 +50,16 @@ class ImageCommentPresenterTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+	
+	private class ViewSpy: ImageCommentView {
+		
+		enum Message: Hashable {
+			
+		}
+		
+		private(set) var messages = Set<Message>()
+		
 	}
 
 }
