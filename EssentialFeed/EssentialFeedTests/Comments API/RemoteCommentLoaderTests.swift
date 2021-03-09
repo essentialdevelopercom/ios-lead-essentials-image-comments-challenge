@@ -110,6 +110,18 @@ class RemoteCommentLoaderTests: XCTestCase {
 		XCTAssertTrue(capturedResults.isEmpty)
 	}
 	
+	func test_cancelLoadDataTask_cancelsRequestURL() {
+		let url = URL(string: "https://any-url.com")!
+		let (sut, client) = makeSUT(url: url)
+		
+		var capturedResults = [RemoteCommentLoader.Result]()
+		var task = sut.load { capturedResults.append($0) }
+		
+		task.cancel()
+		
+		XCTAssertEqual(client.cancelledURLs, [url])
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: CommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
