@@ -9,42 +9,6 @@
 import XCTest
 import EssentialFeed
 
-public protocol FeedImageCommentsLoaderTask {
-	func cancel()
-}
-
-public protocol FeedImageCommentsLoader {
-	typealias Result = Swift.Result<Data, Error>
-	
-	func loadImageComments(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageCommentsLoaderTask
-}
-
-public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
-	
-	private let url: URL
-	private let client: HTTPClient
-	
-	public init(url: URL, client: HTTPClient) {
-		self.url = url
-		self.client = client
-	}
-	
-	private final class HTTPClientTaskWrapper: FeedImageCommentsLoaderTask {
-		func cancel() {
-		}
-	}
-	
-	public func loadImageComments(from url: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-		
-		client.get(from: url) { [weak self] result in
-			guard self != nil else { return }
-			
-			completion(.success("".data(using: .utf8)!))
-		}
-		return HTTPClientTaskWrapper()
-	}
-}
-
 class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
