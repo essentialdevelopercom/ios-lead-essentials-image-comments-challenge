@@ -19,6 +19,10 @@ struct ImageCommentLoadingViewModel {
 
 struct ImageCommentErrorViewModel {
 	public let message: String?
+	
+	static var clear: ImageCommentErrorViewModel {
+		return ImageCommentErrorViewModel(message: nil)
+	}
 }
 
 protocol ImageCommentView {
@@ -54,7 +58,7 @@ class ImageCommentPresenter {
 	}
 	
 	public func didStartLoadingComments() {
-		errorView.display(ImageCommentErrorViewModel(message: nil))
+		errorView.display(.clear)
 		loadingView.display(ImageCommentLoadingViewModel(isLoading: true))
 	}
 	
