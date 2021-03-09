@@ -7,3 +7,4 @@
 */
 
 "COMMENT_VIEW_TITLE" = "Σχόλια";
+"COMMENT_VIEW_ERROR_MESSAGE" = "Δεν ήταν δυνατή η σύνδεση στον διακομιστή";

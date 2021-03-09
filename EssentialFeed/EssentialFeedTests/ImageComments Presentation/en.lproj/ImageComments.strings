@@ -7,3 +7,4 @@
 */
 
 "COMMENT_VIEW_TITLE" = "Comments";
+"COMMENT_VIEW_ERROR_MESSAGE" = "Couldn't connect to server";

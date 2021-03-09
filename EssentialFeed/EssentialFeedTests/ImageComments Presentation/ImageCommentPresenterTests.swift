@@ -39,6 +39,10 @@ class ImageCommentPresenter {
 		return NSLocalizedString("COMMENT_VIEW_TITLE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentPresenter.self), comment: "Title for the comments view")
 	}
 	
+	public static var errorMessage: String {
+		return NSLocalizedString("COMMENT_VIEW_ERROR_MESSAGE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentPresenter.self), comment: "Error message for the comments view")
+	}
+	
 	private let commentView: ImageCommentView
 	private let loadingView: ImageCommentLoadingView
 	private let errorView: ImageCommentErrorView
@@ -61,7 +65,7 @@ class ImageCommentPresenter {
 	
 	public func didFinishLoadingComments(with error: Error) {
 		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
-		errorView.display(ImageCommentErrorViewModel(message: "Error"))
+		errorView.display(ImageCommentErrorViewModel(message: ImageCommentPresenter.errorMessage))
 	}
 	
 }
@@ -102,7 +106,7 @@ class ImageCommentPresenterTests: XCTestCase {
 		])
 	}
 	
-	func test_didFinishLoadingCommentsWithError_displaysErrorAndStopsLoading() {
+	func test_didFinishLoadingCommentsWithError_displaysLocalizedErrorAndStopsLoading() {
 		let (sut, view) = makeSUT()
 		let error = NSError(domain: "error", code: 0)
 		
@@ -110,7 +114,7 @@ class ImageCommentPresenterTests: XCTestCase {
 		
 		XCTAssertEqual(view.messages, [
 			.display(isLoading: false),
-			.display(message: "Error")
+			.display(message: localized("COMMENT_VIEW_ERROR_MESSAGE"))
 		])
 	}
 	
