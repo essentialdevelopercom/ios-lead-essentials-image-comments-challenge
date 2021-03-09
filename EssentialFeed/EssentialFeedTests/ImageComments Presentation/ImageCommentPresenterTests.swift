@@ -9,8 +9,28 @@
 import XCTest
 import EssentialFeed
 
-protocol ImageCommentView {
+struct ImageCommentViewModel {
 	
+}
+
+struct ImageCommentLoadingViewModel {
+	public let isLoading: Bool
+}
+
+struct ImageCommentErrorViewModel {
+	public let message: String?
+}
+
+protocol ImageCommentView {
+	func display(_ viewModel: ImageCommentViewModel)
+}
+
+protocol ImageCommentLoadingView {
+	func display(_ viewModel: ImageCommentLoadingViewModel)
+}
+
+protocol ImageCommentErrorView {
+	func display(_ viewModel: ImageCommentErrorViewModel)
 }
 
 class ImageCommentPresenter {
@@ -20,9 +40,18 @@ class ImageCommentPresenter {
 	}
 	
 	private let commentView: ImageCommentView
+	private let loadingView: ImageCommentLoadingView
+	private let errorView: ImageCommentErrorView
 	
-	public init(commentView: ImageCommentView) {
+	public init(commentView: ImageCommentView, loadingView: ImageCommentLoadingView, errorView: ImageCommentErrorView) {
 		self.commentView = commentView
+		self.loadingView = loadingView
+		self.errorView = errorView
+	}
+	
+	public func didStartLoadingComments() {
+		errorView.display(ImageCommentErrorViewModel(message: nil))
+		loadingView.display(ImageCommentLoadingViewModel(isLoading: true))
 	}
 	
 }
@@ -39,10 +68,20 @@ class ImageCommentPresenterTests: XCTestCase {
 		XCTAssert(view.messages.isEmpty, "Expected no view messages")
 	}
 	
+	func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didStartLoadingComments()
+		XCTAssertEqual(view.messages, [
+			.display(message: nil),
+			.display(isLoading: true)
+		])
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> (sut: ImageCommentPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentPresenter(commentView: view)
+		let sut = ImageCommentPresenter(commentView: view, loadingView: view, errorView: view)
 		trackForMemoryLeaks(view)
 		trackForMemoryLeaks(sut)
 		return (sut, view)
@@ -58,13 +97,26 @@ class ImageCommentPresenterTests: XCTestCase {
 		return value
 	}
 	
-	private class ViewSpy: ImageCommentView {
+	private class ViewSpy: ImageCommentView, ImageCommentLoadingView, ImageCommentErrorView {
 		
 		enum Message: Hashable {
-			
+			case display(message: String?)
+			case display(isLoading: Bool)
 		}
 		
 		private(set) var messages = Set<Message>()
+		
+		func display(_ viewModel: ImageCommentViewModel) {
+			
+		}
+		
+		func display(_ viewModel: ImageCommentLoadingViewModel) {
+			messages.insert(.display(isLoading: viewModel.isLoading))
+		}
+		
+		func display(_ viewModel: ImageCommentErrorViewModel) {
+			messages.insert(.display(message: viewModel.message))
+		}
 		
 	}
 
