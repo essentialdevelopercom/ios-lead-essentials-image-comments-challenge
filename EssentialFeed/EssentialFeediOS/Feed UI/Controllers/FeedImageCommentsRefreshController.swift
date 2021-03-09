@@ -7,30 +7,29 @@
 //
 
 import UIKit
-import EssentialFeed
 
 public final class FeedImageCommentsRefreshController: NSObject {
-	private(set) lazy var view: UIRefreshControl = {
-		let view = UIRefreshControl()
-		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-		return view
-	}()
+	private(set) lazy var view = binded(UIRefreshControl())
 	
-	private let commentsLoader: FeedImageCommentsLoader
+	private let viewModel: FeedImageCommentsViewModel
 	
-	public init(commentsLoader: FeedImageCommentsLoader) {
-		self.commentsLoader = commentsLoader
+	public init(viewModel: FeedImageCommentsViewModel) {
+		self.viewModel = viewModel
 	}
 	
-	var onRefresh: (([FeedImageComment]) -> Void)?
+	private func binded(_ view: UIRefreshControl) -> UIRefreshControl {
+		viewModel.onChange = { [weak view] viewModel in
+			if viewModel.isLoading {
+				view?.beginRefreshing()
+			} else {
+				view?.endRefreshing()
+			}
+		}
+		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+		return view
+	}
 	
 	@objc func refresh() {
-		view.beginRefreshing()
-		commentsLoader.load { [weak self] result in
-			if let comments = try? result.get() {
-				self?.onRefresh?(comments)
-			}
-			self?.view.endRefreshing()
-		}
+		viewModel.loadComments()
 	}
 }

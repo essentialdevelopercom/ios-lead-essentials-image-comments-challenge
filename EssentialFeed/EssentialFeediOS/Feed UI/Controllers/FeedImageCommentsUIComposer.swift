@@ -16,7 +16,17 @@ public final class FeedImageCommentsUIComposer {
 		let bundle = Bundle(for: FeedViewController.self)
 		let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
 		let commentsController = storyboard.instantiateViewController(identifier: "FeedImageCommentsController") as! FeedImageCommentsController
-		commentsController.refreshController = FeedImageCommentsRefreshController(commentsLoader: commentsLoader)
+		let commentsViewModel = FeedImageCommentsViewModel(commentsLoader: commentsLoader)
+		commentsViewModel.onCommentsLoaded = adaptCommentsToCellControllers(forwardingTo: commentsController)
+		commentsController.refreshController = FeedImageCommentsRefreshController(viewModel: commentsViewModel)
 		return commentsController
+	}
+	
+	private static func adaptCommentsToCellControllers(forwardingTo controller: FeedImageCommentsController) -> (([FeedImageComment]) -> Void) {
+		return { [weak controller] comments in
+			controller?.cellControllers = comments.map {
+				FeedImageCommentCellController(model: $0)
+			}
+		}
 	}
 }
