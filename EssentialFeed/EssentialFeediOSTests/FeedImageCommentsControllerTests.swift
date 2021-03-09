@@ -75,12 +75,8 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsController, loader: LoaderSpy) {
-		let bundle = Bundle(for: FeedViewController.self)
-		let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
 		let loader = LoaderSpy()
-//		let sut = FeedImageCommentsController(loader: loader)
-		let sut = storyboard.instantiateViewController(identifier: "FeedImageCommentsController") as! FeedImageCommentsController
-		sut.refreshController = FeedImageCommentsRefreshController(commentsLoader: loader)
+		let sut = FeedImageCommentsUIComposer.commentsComposedWith(commentsLoader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
