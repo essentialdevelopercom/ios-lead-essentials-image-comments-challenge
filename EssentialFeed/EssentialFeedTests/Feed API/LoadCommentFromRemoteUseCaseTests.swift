@@ -70,45 +70,41 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_requestDataFromRemoteDeliversClientError() {
-		let url = URL(string: "https://another-url.com")!
-		let (sut, client) = makeSUT(url: url)
-		let expectedResult = RemoteCommentLoader.Result.failure(.connectivity)
-		let exp = expectation(description: "Wait for load completion")
+		let (sut, client) = makeSUT()
 		
-		sut.load { (receivedResult) in
-			XCTAssertEqual(receivedResult, expectedResult)
-			exp.fulfill()
-		}
-		
-		client.complete(with: RemoteCommentLoader.Error.connectivity)
-		
-		wait(for: [exp], timeout: 1.0)
+		expect(sut, client: client, expectedResult: .failure(.connectivity), action: {
+			client.complete(with: RemoteCommentLoader.Error.connectivity)
+		})
 	}
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
-		let url = URL(string: "https://another-url.com")!
-		let (sut, client) = makeSUT(url: url)
+		let (sut, client) = makeSUT()
 		let statusCodes = [199, 201, 300, 400, 500]
 		
 		statusCodes.enumerated().forEach { index, code in
-			let exp = expectation(description: "Wait for load completion")
-			let expectedResult = RemoteCommentLoader.Result.failure(.invalidData)
-			
-			sut.load { (receivedResult) in
-				XCTAssertEqual(receivedResult, expectedResult)
-				exp.fulfill()
+			expect(sut, client: client, expectedResult: .failure(.invalidData)) {
+				client.complete(withStatusCode: code, data: Data.init(), at: index)
 			}
-
-			client.complete(withStatusCode: code, data: Data.init(), at: index)
-			
-			wait(for: [exp], timeout: 1.0)
 		}
 	}
 	
 	func test_load_deliversInvalidDataErrorOn200HTTPResponseWithEmptyData() {
-		let url = URL(string: "https://another-url.com")!
-		let (sut, client) = makeSUT(url: url)
-		let expectedResult = RemoteCommentLoader.Result.failure(.invalidData)
+		let (sut, client) = makeSUT()
+		
+		expect(sut, client: client, expectedResult: .failure(.invalidData)) {
+			client.complete(withStatusCode: 200, data: Data())
+		}
+	}
+	
+	// MARK: - Helpers
+	private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteCommentLoader, spy: HTTPClientSpy) {
+		let client = HTTPClientSpy()
+		let sut = RemoteCommentLoader(url: url, client: client)
+		
+		return (sut, client)
+	}
+
+	private func expect(_ sut: RemoteCommentLoader, client: HTTPClientSpy, expectedResult: RemoteCommentLoader.Result, action: () -> Void) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		sut.load { (receivedResult) in
@@ -116,17 +112,8 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 			exp.fulfill()
 		}
 		
-		client.complete(withStatusCode: 200, data: Data())
+		action()
 		
 		wait(for: [exp], timeout: 1.0)
 	}
 }
-
-// MARK: - Helpers
-private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteCommentLoader, spy: HTTPClientSpy) {
-	let client = HTTPClientSpy()
-	let sut = RemoteCommentLoader(url: url, client: client)
-	
-	return (sut, client)
-}
-
