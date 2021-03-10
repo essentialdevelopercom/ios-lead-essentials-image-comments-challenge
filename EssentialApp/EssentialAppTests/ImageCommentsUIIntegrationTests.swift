@@ -61,6 +61,13 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
+	func test_loadImageCommentIndicator_isVisibleWhileLoading() {
+		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -101,6 +108,10 @@ extension ImageCommentsViewController {
 	
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 	
 }
