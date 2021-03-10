@@ -21,6 +21,17 @@ class FeedCommentsPresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
+	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didStartLoadingComments()
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: .none),
+			.display(isLoading: true)
+		])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {

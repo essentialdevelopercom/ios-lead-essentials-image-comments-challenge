@@ -29,4 +29,9 @@ public final class FeedImageCommentsPresenter {
 			 bundle: Bundle(for: FeedImageCommentsPresenter.self),
 			 comment: "Title for the comments view")
 	}
+	
+	public func didStartLoadingComments() {
+		errorView.display(.noError)
+		loadingView.display(FeedLoadingViewModel(isLoading: true))
+	}
 }
