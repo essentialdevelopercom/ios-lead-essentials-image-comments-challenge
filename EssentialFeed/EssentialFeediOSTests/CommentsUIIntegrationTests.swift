@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeed
 import EssentialFeediOS
 
-final class CommentsControllerTests: XCTestCase {
+final class CommentsUIIntegrationTests: XCTestCase {
 	
 	func test_loadCommentsAction_requestsCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
