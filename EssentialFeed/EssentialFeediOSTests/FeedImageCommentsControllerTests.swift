@@ -1,5 +1,5 @@
 //
-//  FeedImageCommentsControllerTests.swift
+//  CommentsControllerTests.swift
 //  EssentialFeediOSTests
 //
 //  Created by Anton Ilinykh on 07.03.2021.
@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeed
 import EssentialFeediOS
 
-final class FeedImageCommentsControllerTests: XCTestCase {
+final class CommentsControllerTests: XCTestCase {
 	
 	func test_loadCommentsAction_requestsCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
@@ -74,28 +74,28 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsController, loader: LoaderSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: CommentsController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedImageCommentsUIComposer.commentsComposedWith(commentsLoader: loader)
+		let sut = CommentsUIComposer.commentsComposedWith(commentsLoader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
 	
-	private func assert(_ sut: FeedImageCommentsController, isRendering comments: [FeedImageComment], file: StaticString = #file, line: UInt = #line) {
-		guard sut.numberOfRenderedFeedImageCommentViews == comments.count else {
-			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedFeedImageCommentViews) instead", file: file, line: line)
+	private func assert(_ sut: CommentsController, isRendering comments: [Comment], file: StaticString = #file, line: UInt = #line) {
+		guard sut.numberOfRenderedCommentViews == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedCommentViews) instead", file: file, line: line)
 		}
 		comments.enumerated().forEach { index, comment in
 			assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
 		}
 	}
 	
-	private func assertThat(_ sut: FeedImageCommentsController, hasViewConfiguredFor comment: FeedImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
-		let view = sut.feedImageCommentView(at: index)
+	private func assertThat(_ sut: CommentsController, hasViewConfiguredFor comment: Comment, at index: Int, file: StaticString = #file, line: UInt = #line) {
+		let view = sut.CommentView(at: index)
 		
-		guard let cell = view as? FeedImageCommentCell else {
-			return XCTFail("Expected \(FeedImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		guard let cell = view as? CommentCell else {
+			return XCTFail("Expected \(CommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
 		XCTAssertEqual(cell.author, comment.author.username, "Expected author to be \(comment.author.username) for comment at index \(index)", file: file, line: line)
@@ -103,21 +103,21 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 		XCTAssertEqual(cell.comment, comment.message, "Expected message to be \(comment.message) for comment at index \(index)", file: file, line: line)
 	}
 	
-	private func makeComment(id: UUID = UUID(), message: String = "message", createdAt: String = "now", author: String = "author") -> FeedImageComment {
-		return FeedImageComment(id: id, message: message, createdAt: createdAt, author: FeedImageComment.Author(username: author))
+	private func makeComment(id: UUID = UUID(), message: String = "message", createdAt: String = "now", author: String = "author") -> Comment {
+		return Comment(id: id, message: message, createdAt: createdAt, author: Comment.Author(username: author))
 	}
 	
-	class LoaderSpy: FeedImageCommentsLoader {
-		private var completions = [(FeedImageCommentsLoader.Result) -> Void]()
+	class LoaderSpy: CommentsLoader {
+		private var completions = [(CommentsLoader.Result) -> Void]()
 		var loadCallCount: Int {
 			return completions.count
 		}
 		
-		func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) {
+		func load(completion: @escaping (CommentsLoader.Result) -> Void) {
 			completions.append(completion)
 		}
 		
-		func completeCommentsLoading(with comments: [FeedImageComment] = [], at: Int) {
+		func completeCommentsLoading(with comments: [Comment] = [], at: Int) {
 			completions[at](.success(comments))
 		}
 		
@@ -128,7 +128,7 @@ final class FeedImageCommentsControllerTests: XCTestCase {
 	}
 }
 
-private extension FeedImageCommentsController {
+private extension CommentsController {
 	func simulateUserInitiatedCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
@@ -137,18 +137,18 @@ private extension FeedImageCommentsController {
 		return refreshControl?.isRefreshing == true
 	}
 	
-	var numberOfRenderedFeedImageCommentViews: Int {
+	var numberOfRenderedCommentViews: Int {
 		return tableView.numberOfRows(inSection: 0)
 	}
 	
-	func feedImageCommentView(at index: Int) -> UITableViewCell? {
+	func CommentView(at index: Int) -> UITableViewCell? {
 		let ds = tableView.dataSource
 		let indexPath = IndexPath(row: index, section: 0)
 		return ds?.tableView(tableView, cellForRowAt: indexPath)
 	}
 }
 
-private extension FeedImageCommentCell {
+private extension CommentCell {
 	var author: String? {
 		return authorLabel.text
 	}

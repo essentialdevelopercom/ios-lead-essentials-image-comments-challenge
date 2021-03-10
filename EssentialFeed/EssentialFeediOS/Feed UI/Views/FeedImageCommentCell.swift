@@ -1,5 +1,5 @@
 //
-//  FeedImageCommentCell.swift
+//  CommentCell.swift
 //  EssentialFeediOS
 //
 //  Created by Anton Ilinykh on 05.03.2021.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class FeedImageCommentCell: UITableViewCell {
+public final class CommentCell: UITableViewCell {
 	@IBOutlet private(set) public var authorLabel: UILabel!
 	@IBOutlet private(set) public var dateLabel: UILabel!
 	@IBOutlet private(set) public var commentLabel: UILabel!

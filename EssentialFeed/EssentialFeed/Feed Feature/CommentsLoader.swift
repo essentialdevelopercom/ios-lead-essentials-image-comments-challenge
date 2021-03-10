@@ -1,5 +1,5 @@
 //
-//  FeedImageCommentsLoader.swift
+//  CommentsLoader.swift
 //  EssentialFeed
 //
 //  Created by Anton Ilinykh on 03.03.2021.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-public protocol FeedImageCommentsLoader {
-	typealias Result = Swift.Result<[FeedImageComment], Error>
+public protocol CommentsLoader {
+	typealias Result = Swift.Result<[Comment], Error>
 	
 	func load(completion: @escaping (Result) -> Void) -> Void
 }

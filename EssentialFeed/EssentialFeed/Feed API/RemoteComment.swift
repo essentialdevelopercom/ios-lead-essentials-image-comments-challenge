@@ -1,5 +1,5 @@
 //
-//  RemoteFeedImageComment.swift
+//  RemoteComment.swift
 //  EssentialFeed
 //
 //  Created by Anton Ilinykh on 05.03.2021.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct RemoteFeedImageComment: Decodable {
+struct RemoteComment: Decodable {
 	struct Author: Decodable {
 		let username: String
 	}

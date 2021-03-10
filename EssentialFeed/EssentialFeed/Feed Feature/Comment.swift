@@ -1,5 +1,5 @@
 //
-//  FeedImageComment.swift
+//  Comment.swift
 //  EssentialFeed
 //
 //  Created by Anton Ilinykh on 03.03.2021.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct FeedImageComment: Equatable {
+public struct Comment: Equatable {
 	
 	public struct Author: Equatable {
 		public let username: String

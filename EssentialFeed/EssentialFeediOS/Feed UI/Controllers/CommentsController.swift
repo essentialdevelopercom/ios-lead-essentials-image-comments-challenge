@@ -1,5 +1,5 @@
 //
-//  FeedImageCommentsController.swift
+//  CommentsController.swift
 //  EssentialFeediOS
 //
 //  Created by Anton Ilinykh on 05.03.2021.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol FeedImageCommentsControllerDelegate {
+protocol CommentsControllerDelegate {
 	func didRequestCommentsRefresh()
 }
 
-public final class FeedImageCommentsController: UITableViewController, FeedImageCommentLoadingView {
-	var delegate: FeedImageCommentsControllerDelegate?
+public final class CommentsController: UITableViewController, CommentLoadingView {
+	var delegate: CommentsControllerDelegate?
 	
-	var cellControllers = [FeedImageCommentCellController]() {
+	var cellControllers = [CommentCellController]() {
 		didSet { tableView.reloadData() }
 	}
 	
@@ -29,7 +29,7 @@ public final class FeedImageCommentsController: UITableViewController, FeedImage
 		delegate?.didRequestCommentsRefresh()
 	}
 	
-	func display(_ viewModel: FeedImageCommentLoadingViewModel) {
+	func display(_ viewModel: CommentLoadingViewModel) {
 		if viewModel.isLoading {
 			refreshControl?.beginRefreshing()
 		} else {

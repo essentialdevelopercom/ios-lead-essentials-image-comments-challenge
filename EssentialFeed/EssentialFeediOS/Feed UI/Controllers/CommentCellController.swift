@@ -1,5 +1,5 @@
 //
-//  FeedImageCommentCellController.swift
+//  CommentCellController.swift
 //  EssentialFeediOS
 //
 //  Created by Anton Ilinykh on 09.03.2021.
@@ -9,19 +9,19 @@
 import UIKit
 import EssentialFeed
 
-public final class FeedImageCommentCellController {
-	private let model: FeedImageComment
+public final class CommentCellController {
+	private let model: Comment
 	
-	init(model: FeedImageComment) {
+	init(model: Comment) {
 		self.model = model
 	}
 	
 	func view(for tableView: UITableView) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "FeedImageCommentCell") as! FeedImageCommentCell
+		let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell") as! CommentCell
 		return binded(cell)
 	}
 	
-	private func binded(_ cell: FeedImageCommentCell) -> FeedImageCommentCell {
+	private func binded(_ cell: CommentCell) -> CommentCell {
 		cell.authorLabel.text = model.author.username
 		cell.dateLabel.text = model.createdAt
 		cell.commentLabel.text = model.message

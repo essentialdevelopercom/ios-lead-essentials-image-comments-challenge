@@ -1,5 +1,5 @@
 //
-//  RemoteFeedImageCommentsLoader.swift
+//  RemoteCommentsLoader.swift
 //  EssentialFeed
 //
 //  Created by Anton Ilinykh on 03.03.2021.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
+public final class RemoteCommentsLoader: CommentsLoader {
 	
 	private let client: HTTPClient
 	private let url: URL
@@ -18,7 +18,7 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 		case invalidData
 	}
 	
-	public typealias Result = FeedImageCommentsLoader.Result
+	public typealias Result = CommentsLoader.Result
 	
 	public init(client: HTTPClient, url: URL) {
 		self.client = client
@@ -31,7 +31,7 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 			
 			switch result {
 			case let .success((data, response)):
-				completion(RemoteFeedImageCommentsLoader.map(data, response))
+				completion(RemoteCommentsLoader.map(data, response))
 			case .failure(_):
 				completion(.failure(Error.connectivity))
 			}
@@ -40,7 +40,7 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 	
 	private static func map(_ data: Data, _ response: HTTPURLResponse) -> Result {
 		do {
-			let items = try FeedImageCommentsMapper.map(data, response)
+			let items = try CommentsMapper.map(data, response)
 			return .success(items.toModels())
 		} catch {
 			return .failure(error)
@@ -48,23 +48,23 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 	}
 }
 
-private extension Array where Element == RemoteFeedImageComment {
-	func toModels() -> [FeedImageComment] {
-		return map { FeedImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: FeedImageComment.Author(username: $0.author.username)) }
+private extension Array where Element == RemoteComment {
+	func toModels() -> [Comment] {
+		return map { Comment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: Comment.Author(username: $0.author.username)) }
 	}
 }
 
-private class FeedImageCommentsMapper {
+private class CommentsMapper {
 	private struct Root: Decodable {
-		var items: [RemoteFeedImageComment]
+		var items: [RemoteComment]
 	}
 	
-	static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [RemoteFeedImageComment] {
+	static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [RemoteComment] {
 		guard
 			response.isOK,
 			let root = try? JSONDecoder().decode(Root.self, from: data)
 		else {
-			throw RemoteFeedImageCommentsLoader.Error.invalidData
+			throw RemoteCommentsLoader.Error.invalidData
 		}
 		
 		return root.items
