@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ImageCommentsErrorViewModel{
+public struct ImageCommentsErrorViewModel {
 	public let message: String?
 	
 	public static var noError: ImageCommentsErrorViewModel {

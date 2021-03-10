@@ -35,7 +35,7 @@ private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageComment
 
 
 
-class ImageCommentsPresenterTests: XCTestCase{
+class ImageCommentsPresenterTests: XCTestCase {
 	func test_title_isLocalized() {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}

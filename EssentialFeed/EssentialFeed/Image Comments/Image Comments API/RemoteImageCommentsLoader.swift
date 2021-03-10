@@ -9,7 +9,7 @@
 import Foundation
 
 
-public final class RemoteImageCommentsLoader: ImageCommentsLoader{
+public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
 	
@@ -43,8 +43,8 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader{
 		}
 	}
 	
-	private final class DataMapper{
-		struct Root: Decodable{
+	private final class DataMapper {
+		struct Root: Decodable {
 			let items: [RemoteImageComment]
 		}
 		
@@ -65,14 +65,14 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader{
 	}
 	
 	@discardableResult
-	public func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask{
+	public func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url){ [weak self] result in
 			if self == nil {return}
 			
 			let completionResult: RemoteImageCommentsLoader.Result
 			
-			switch result{
+			switch result {
 			case .success((let data, let response)):
 				completionResult = RemoteImageCommentsLoader.map(data, from: response)
 			case .failure(_):

@@ -12,7 +12,7 @@ public protocol ImageCommentsLoaderTask {
 	func cancel()
 }
 
-public protocol ImageCommentsLoader{
+public protocol ImageCommentsLoader {
 	typealias Result = Swift.Result<[ImageComment], Error>
 	
 	@discardableResult

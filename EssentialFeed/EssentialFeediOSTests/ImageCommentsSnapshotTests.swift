@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeediOS
 import EssentialFeed
 
-class ImageCommentsSnapshotTests: XCTestCase{
+class ImageCommentsSnapshotTests: XCTestCase {
 	func test_emptyFeed() {
 		let sut = makeSUT()
 		

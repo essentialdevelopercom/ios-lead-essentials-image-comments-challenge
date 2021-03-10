@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ImageCommentsViewModel{
+public struct ImageCommentsViewModel {
 	public let imageComments: [PresentableImageComment]
 	
 	public init(imageComments: [PresentableImageComment]){
@@ -17,7 +17,7 @@ public struct ImageCommentsViewModel{
 }
 
 
-public struct PresentableImageComment: Hashable{
+public struct PresentableImageComment: Hashable {
 	public let message: String
 	public let createdAt: String
 	public let username: String

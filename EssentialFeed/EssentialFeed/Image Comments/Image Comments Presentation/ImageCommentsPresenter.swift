@@ -51,7 +51,7 @@ public final class ImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingImageComments(with imageComments: [ImageComment]) {
-		let presentableImageComments = imageComments.map{
+		let presentableImageComments = imageComments.map {
 			PresentableImageComment(message: $0.message, createdAt: formatDate(since: $0.createdAt), username: $0.author.username)
 		}
 		imageCommentsView.display(ImageCommentsViewModel(imageComments: presentableImageComments))

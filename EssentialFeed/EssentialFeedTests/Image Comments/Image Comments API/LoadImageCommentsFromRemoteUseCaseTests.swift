@@ -11,7 +11,7 @@ import EssentialFeed
 
 
 
-class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
+class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase {
 	func test_init_doesNotRequestDataFromURL() {
 		let (_, client) = makeSUT()
 		
@@ -142,7 +142,7 @@ class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
 		return (sut, client)
 	}
 	
-	private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result{
+	private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result {
 		.failure(error)
 	}
 	

@@ -8,6 +8,6 @@
 
 import Foundation
 
-public struct ImageCommentsLoadingViewModel{
+public struct ImageCommentsLoadingViewModel {
 	public let isLoading: Bool
 }

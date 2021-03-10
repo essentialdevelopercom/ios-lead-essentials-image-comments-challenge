@@ -10,8 +10,8 @@ import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
-final class ImageCommentsUIComposer{
-	static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewController{
+final class ImageCommentsUIComposer {
+	static func imageCommentsComposedWith(loader: @escaping () -> ImageCommentsLoader.Publisher, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) -> ImageCommentsViewController {
 		
 		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(imageCommentsLoader: loader)
 		

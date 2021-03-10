@@ -11,7 +11,7 @@ import EssentialFeed
 import EssentialFeediOS
 import Combine
 
-final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDelegate{
+final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDelegate {
 	let loader: () -> ImageCommentsLoader.Publisher
 	var presenter: ImageCommentsPresenter?
 	

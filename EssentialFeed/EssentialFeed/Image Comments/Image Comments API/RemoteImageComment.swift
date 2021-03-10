@@ -14,7 +14,7 @@ struct RemoteImageComment: Decodable {
 	let createdAt: Date
 	let author: RemoteImageCommentAuthor
 	
-	enum CodingKeys: String, CodingKey{
+	enum CodingKeys: String, CodingKey {
 		case id
 		case message
 		case createdAt = "created_at"

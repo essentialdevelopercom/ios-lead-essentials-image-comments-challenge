@@ -120,11 +120,11 @@ class FeedAcceptanceTests: XCTestCase {
 		]])
 	}
 	
-	private func feedURLString() -> String{
+	private func feedURLString() -> String {
 		EssentialFeedEndpoint.feed.url.absoluteString
 	}
 	
-	private func imageCommentsURLString(for uuidString: String) -> String{
+	private func imageCommentsURLString(for uuidString: String) -> String {
 		EssentialFeedEndpoint.imageComments(id: UUID(uuidString: uuidString)!).url.absoluteString
 	}
 	

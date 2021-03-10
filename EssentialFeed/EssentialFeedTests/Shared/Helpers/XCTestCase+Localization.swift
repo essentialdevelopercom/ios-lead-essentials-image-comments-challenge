@@ -8,7 +8,7 @@
 
 import XCTest
 
-extension XCTestCase{
+extension XCTestCase {
 	
 	func checkLocalizedStrings_haveKeysAndValuesForAllSupportedLocalizations(for table:String, in bundle: Bundle, file: StaticString = #filePath, line: UInt = #line){
 		

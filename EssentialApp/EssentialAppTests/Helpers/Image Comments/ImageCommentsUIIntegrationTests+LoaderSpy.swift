@@ -9,8 +9,8 @@
 import Foundation
 import EssentialFeed
 
-extension ImageCommentsUIIntegrationTests{
-	class LoaderSpy: ImageCommentsLoader{
+extension ImageCommentsUIIntegrationTests {
+	class LoaderSpy: ImageCommentsLoader {
 		
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		
@@ -29,7 +29,7 @@ extension ImageCommentsUIIntegrationTests{
 		
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			imageCommentsRequests.append(completion)
-			return TaskSpy{ [weak self] in
+			return TaskSpy { [weak self] in
 				self?.cancelCount += 1
 			}
 		}

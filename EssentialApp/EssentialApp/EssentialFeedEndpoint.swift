@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct EssentialFeedAPI{
-	enum Endpoint{
+struct EssentialFeedAPI {
+	enum Endpoint {
 		case feed
 		case imageComments(id: UUID)
 		
@@ -25,7 +25,7 @@ struct EssentialFeedAPI{
 	
 	let baseURL: URL
 	
-	func url(for endpoint: EssentialFeedAPI.Endpoint) -> URL{
+	func url(for endpoint: EssentialFeedAPI.Endpoint) -> URL {
 		baseURL.appendingPathComponent(endpoint.path)
 	}
 	
