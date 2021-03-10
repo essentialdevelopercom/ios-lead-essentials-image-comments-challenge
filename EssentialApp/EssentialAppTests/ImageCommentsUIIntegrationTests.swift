@@ -12,11 +12,46 @@ import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
+final class ImageCommentsAdapter: ImageCommentsViewControllerDelegate, ImageCommentsView {
+	let imageLoader: ImageCommentsLoader
+	var presenter: ImageCommentsPresenter?
+	
+	init(imageLoader: ImageCommentsLoader) {
+		self.imageLoader = imageLoader
+	}
+	
+	func display(_ viewModel: ImageCommentsViewModel) {
+		
+	}
+	
+	func didRequestImageCommentsRefresh() {
+		_ = imageLoader.loadImageComments(from: anyURL()) { _ in }
+	}
+}
+
 final class ImageCommentsUIComposer {
 	static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let viewController = ImageCommentsViewController()
-		viewController.title = ImageCommentsPresenter.title
-		return viewController
+		let presentationAdapter = ImageCommentsAdapter(imageLoader: imageCommentsLoader)
+		
+		let imageController = makeImageCommentsViewController(
+			delegate: presentationAdapter,
+			title: ImageCommentsPresenter.title)
+		
+		presentationAdapter.presenter = ImageCommentsPresenter(
+			commentsView: presentationAdapter,
+			loadingView: imageController,
+			errorView: imageController)
+		
+		return imageController
+	}
+	
+	private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate, title: String) -> ImageCommentsViewController {
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let imageController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		imageController.delegate = delegate
+		imageController.title = title
+		return imageController
 	}
 }
 
@@ -30,6 +65,14 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
 	
+	func test_loadImageCommentsAction_requestImageCommentsFromLoader() {
+		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 0, "Expected no loading requests before view is loaded")
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 1, "Expected a loading request once view is loaded")
+	}
+	
 	// MARK: - Helper
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -40,12 +83,23 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private class LoaderSpy: ImageCommentsLoader {
+	private class LoaderSpy: ImageCommentsLoader, ImageCommentsViewControllerDelegate {
 		private struct Task: ImageCommmentsLoaderTask {
 			func cancel() { }
 		}
 		
+		private(set) var completions = [(URL, (ImageCommentsLoader.Result) -> Void)]()
+		
+		var loadImageCommentsCallCount: Int {
+			completions.count
+		}
+		
+		func didRequestImageCommentsRefresh() {
+			_ = loadImageComments(from: anyURL()) { _ in }
+		}
+		
 		func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
+			completions.append((url, completion))
 			return Task()
 		}
 	}
