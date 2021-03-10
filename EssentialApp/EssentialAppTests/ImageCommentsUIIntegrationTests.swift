@@ -16,7 +16,7 @@ class ImageCommentsViewController : UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		loader?.load { _ in }
+		refresh()
 	}
 	
 	public func refresh() {
