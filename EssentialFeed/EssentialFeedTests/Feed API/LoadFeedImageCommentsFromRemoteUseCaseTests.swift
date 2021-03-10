@@ -66,12 +66,12 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_loadImageCommentsFromURL_deliversReceivedNonEmptyDataOn200HTTPResponse() {
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
-		let nonEmptyData = Data("non-empty data".utf8)
 		
-		expect(sut, toCompleteWith: .success(nonEmptyData), when: {
-			client.complete(withStatusCode: 200, data: nonEmptyData)
+		expect(sut, toCompleteWith: failure(.invalidData), when: {
+			let invalidJSON = Data("invalid json".utf8)
+			client.complete(withStatusCode: 200, data: invalidJSON)
 		})
 	}
 	

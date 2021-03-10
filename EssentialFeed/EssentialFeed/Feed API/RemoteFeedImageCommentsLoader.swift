@@ -16,6 +16,8 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 		case invalidData
 	}
 	
+	public typealias Result = FeedImageCommentsLoader.Result
+	
 	public init(client: HTTPClient) {
 		self.client = client
 	}
@@ -52,9 +54,24 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 				.mapError { _ in Error.connectivity }
 				.flatMap { (data, response) in
 					let isValidResponse = response.isOK && !data.isEmpty
-					return isValidResponse ? .success(data) : .failure(Error.invalidData)
+					return isValidResponse ? RemoteFeedImageCommentsLoader.map(data, from: response) : .failure(Error.invalidData)
 				})
 		}
 		return task
+	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		do {
+			let items = try FeedImageCommentsMapper.map(data, from: response)
+			return .success(items.toModels())
+		} catch {
+			return .failure(error)
+		}
+	}
+}
+
+private extension Array where Element == RemoteFeedImageCommentItem {
+	func toModels() -> [FeedImageComment] {
+		return map { FeedImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: .init(username: $0.author.username)) }
 	}
 }
