@@ -8,13 +8,17 @@
 
 import UIKit
 
+protocol FeedImageCommentsRefreshControllerDelegate {
+	func didRequestCommentsRefresh()
+}
+
 final class FeedImageCommentsRefreshController: NSObject, FeedImageCommentLoadingView {
 	private(set) lazy var view = loadView()
 	
-	private let loadFeed: () -> Void
+	private let delegate: FeedImageCommentsRefreshControllerDelegate
 	
-	init(loadFeed: @escaping () -> Void) {
-		self.loadFeed = loadFeed
+	init(delegate: FeedImageCommentsRefreshControllerDelegate) {
+		self.delegate = delegate
 	}
 	
 	func display(_ viewModel: FeedImageCommentLoadingViewModel) {
@@ -32,6 +36,6 @@ final class FeedImageCommentsRefreshController: NSObject, FeedImageCommentLoadin
 	}
 	
 	@objc func refresh() {
-		loadFeed()
+		delegate.didRequestCommentsRefresh()
 	}
 }

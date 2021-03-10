@@ -15,7 +15,7 @@ public final class FeedImageCommentsUIComposer {
 	public static func commentsComposedWith(commentsLoader: FeedImageCommentsLoader) -> FeedImageCommentsController {
 		let presenter = FeedImageCommentsPresenter()
 		let presentationAdapter = FeedImageCommentsLoaderPresentationAdapter(loader: commentsLoader, presenter: presenter)
-		let refreshController = FeedImageCommentsRefreshController(loadFeed: presentationAdapter.loadFeed)
+		let refreshController = FeedImageCommentsRefreshController(delegate: presentationAdapter)
 		let commentsController = makeCommentsController()
 		presenter.loadingView = WeakRefVirtualProxy(refreshController)
 		presenter.commentsView = FeedImageCommentsAdapter(controller: commentsController)
@@ -59,7 +59,7 @@ private final class FeedImageCommentsAdapter: FeedImageCommentView {
 	}
 }
 
-private final class FeedImageCommentsLoaderPresentationAdapter {
+private final class FeedImageCommentsLoaderPresentationAdapter: FeedImageCommentsRefreshControllerDelegate {
 	private let loader: FeedImageCommentsLoader
 	private let presenter: FeedImageCommentsPresenter
 	
@@ -68,7 +68,7 @@ private final class FeedImageCommentsLoaderPresentationAdapter {
 		self.presenter = presenter
 	}
 	
-	func loadFeed() {
+	func didRequestCommentsRefresh() {
 		presenter.didStartLoadingComments()
 		
 		loader.load { [weak self] result in
