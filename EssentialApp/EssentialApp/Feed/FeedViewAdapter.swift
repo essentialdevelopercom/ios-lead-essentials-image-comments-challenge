@@ -9,9 +9,9 @@ import EssentialFeediOS
 final class FeedViewAdapter: FeedView {
 	private weak var controller: FeedViewController?
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
-	private let didSelectImage: (FeedImage) -> ()
+	private let didSelectImage: (FeedImage) -> Void
 	
-	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, didSelectImage: @escaping (FeedImage) -> ()) {
+	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, didSelectImage: @escaping (FeedImage) -> Void) {
 		self.controller = controller
 		self.imageLoader = imageLoader
 		self.didSelectImage = didSelectImage
