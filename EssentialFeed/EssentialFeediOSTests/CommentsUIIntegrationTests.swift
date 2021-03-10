@@ -80,6 +80,20 @@ final class CommentsUIIntegrationTests: XCTestCase {
 		assert(sut, isRendering: [comment0])
 	}
 	
+	func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		let exp = expectation(description: "Wait for loading completes")
+		DispatchQueue.global().async {
+			loader.completeCommentsLoading(with: [], at: 0)
+			exp.fulfill()
+		}
+		
+		wait(for: [exp], timeout: 1.0)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: CommentsController, loader: LoaderSpy) {

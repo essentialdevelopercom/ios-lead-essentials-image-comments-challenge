@@ -13,7 +13,7 @@ public final class CommentsUIComposer {
 	private init() {}
 	
 	public static func commentsComposedWith(commentsLoader: CommentsLoader) -> CommentsController {
-		let presentationAdapter = CommentsLoaderPresentationAdapter(loader: commentsLoader)
+		let presentationAdapter = CommentsLoaderPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader))
 		let commentsController = makeCommentsController()
 		commentsController.delegate = presentationAdapter
 		let presenter = CommentsPresenter(
@@ -42,6 +42,30 @@ private final class WeakRefVirtualProxy<T: AnyObject> {
 extension WeakRefVirtualProxy: CommentLoadingView where T: CommentLoadingView {
 	func display(_ viewModel: CommentLoadingViewModel) {
 		object?.display(viewModel)
+	}
+}
+
+private final class MainQueueDispatchDecorator<T> {
+	private let decoratee: T
+	
+	init(decoratee: T) {
+		self.decoratee = decoratee
+	}
+	
+	private func dispatch(completion: @escaping () -> Void) {
+		guard Thread.isMainThread else {
+			return DispatchQueue.main.async(execute: completion)
+		}
+		
+		completion()
+	}
+}
+
+extension MainQueueDispatchDecorator: CommentsLoader where T == CommentsLoader {
+	func load(completion: @escaping (CommentsLoader.Result) -> Void) {
+		decoratee.load { [weak self] result in
+			self?.dispatch { completion(result) }
+		}
 	}
 }
 
