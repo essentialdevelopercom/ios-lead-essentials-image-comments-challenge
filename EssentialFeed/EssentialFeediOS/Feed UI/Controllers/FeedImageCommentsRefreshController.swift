@@ -11,10 +11,10 @@ import UIKit
 final class FeedImageCommentsRefreshController: NSObject, FeedImageCommentLoadingView {
 	private(set) lazy var view = loadView()
 	
-	private let presenter: FeedImageCommentsPresenter
+	private let loadFeed: () -> Void
 	
-	init(presenter: FeedImageCommentsPresenter) {
-		self.presenter = presenter
+	init(loadFeed: @escaping () -> Void) {
+		self.loadFeed = loadFeed
 	}
 	
 	func display(_ viewModel: FeedImageCommentLoadingViewModel) {
@@ -32,6 +32,6 @@ final class FeedImageCommentsRefreshController: NSObject, FeedImageCommentLoadin
 	}
 	
 	@objc func refresh() {
-		presenter.loadComments()
+		loadFeed()
 	}
 }
