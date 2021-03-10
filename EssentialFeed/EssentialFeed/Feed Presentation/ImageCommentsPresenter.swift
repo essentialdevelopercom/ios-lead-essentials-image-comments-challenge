@@ -41,7 +41,7 @@ public class ImageCommentsPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
-	public func didFinishLoadingFeed(with error: Error) {
+	public func didFinishLoadingComments(with error: Error) {
 		errorView.display(ImageCommentsErrorViewModel(message: imageCommentsLoadError))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}

@@ -50,4 +50,18 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	@IBAction private func refresh() {
 		delegate?.didRequestImageCommentsRefresh()
 	}
+	
+	// MARK: - Table View DataSource
+	public override func numberOfSections(in tableView: UITableView) -> Int {
+		1
+	}
+	
+	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		tableModel.count
+	}
+	
+	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		UITableViewCell()
+	}
+	
 }

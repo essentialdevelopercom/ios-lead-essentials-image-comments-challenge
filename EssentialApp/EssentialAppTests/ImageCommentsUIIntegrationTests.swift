@@ -23,8 +23,14 @@ final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegat
 	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		_ = imageLoader.loadImageComments(from: anyURL()) { [presenter] _ in
-			presenter?.didFinishLoadingComments(with: [])
+		_ = imageLoader.loadImageComments(from: anyURL()) { [presenter] result in
+			switch result {
+			case let .success(comments):
+				presenter?.didFinishLoadingComments(with: comments)
+				
+			case let .failure(error):
+				presenter?.didFinishLoadingComments(with: error)
+			}
 		}
 	}
 }
@@ -101,6 +107,23 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected to disable loading indicator while loading completes with an error")
 	}
 	
+	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedComments() {
+		let comment1 = makeImageComment()
+		let comment2 = makeImageComment()
+		let imageComments = [comment1, comment2]
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews(), 0, "Expected no rendered comment views")
+				
+		loader.completeImageCommentsLoading(with: [comment1], at: 0)
+		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews(), 1, "Expected to render one view")
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeImageCommentsLoading(with: imageComments, at: 1)
+		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews(), 2, "Expected to render one view")
+	}
+	
 	// MARK: - Helper
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -109,6 +132,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	private func makeImageComment() -> ImageComment {
+		ImageComment(id: UUID(), message: "a message", createdAt: Date(), author: ImageComment.Author(username: "an username"))
 	}
 	
 	private class LoaderSpy: ImageCommentsLoader, ImageCommentsViewControllerDelegate {
@@ -138,6 +165,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		func completeImageCommentsLoadingWithError(at index: Int) {
 			completions[index].handler(.failure(anyNSError()))
 		}
+		
+		func completeImageCommentsLoading(with comments: [ImageComment], at index: Int) {
+			completions[index].handler(.success(comments))
+		}
 	}
 	
 }
@@ -162,4 +193,10 @@ private extension ImageCommentsViewController {
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
+	
+	func numberOfRenderedImageCommentsViews() -> Int {
+		tableView.numberOfRows(inSection: commentsSectionIndex)
+	}
+	
+	private var commentsSectionIndex: Int { 0 }
 }
