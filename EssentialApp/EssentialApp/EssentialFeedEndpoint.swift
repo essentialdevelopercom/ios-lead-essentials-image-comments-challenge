@@ -8,17 +8,28 @@
 
 import Foundation
 
-enum EssentialFeedEndpoint{
-	case feed
-	case imageComments(id: UUID)
-	
-	var url: URL {
-		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-		switch self {
-		case .feed:
-			return baseURL.appendingPathComponent("v1/feed")
-		case .imageComments(let id):
-			return baseURL.appendingPathComponent("v1/image/\(id)/comments")
+struct EssentialFeedAPI{
+	enum Endpoint{
+		case feed
+		case imageComments(id: UUID)
+		
+		var path: String {
+			switch self {
+			case .feed:
+				return "v1/feed"
+			case .imageComments(let id):
+				return "v1/image/\(id)/comments"
+			}
 		}
 	}
+	
+	let baseURL: URL
+	
+	func url(for endpoint: EssentialFeedAPI.Endpoint) -> URL{
+		baseURL.appendingPathComponent(endpoint.path)
+	}
+	
+	
 }
+
+
