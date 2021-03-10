@@ -96,6 +96,7 @@
 		73B434BF25F921AF00099924 /* CommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6EB725F798360001ED91 /* CommentsUIComposer.swift */; };
 		73B434C825F9226200099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4347325F8037100099924 /* CommentsPresenter.swift */; };
 		73B434D325F956BE00099924 /* Comments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 73B434D525F956BE00099924 /* Comments.strings */; };
+		73B434E525F962AE00099924 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,6 +215,7 @@
 		73B434D425F956BE00099924 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Comments.strings; sourceTree = "<group>"; };
 		73B434DE25F9576700099924 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Comments.strings; sourceTree = "<group>"; };
 		73B434DF25F9576900099924 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Comments.strings"; sourceTree = "<group>"; };
+		73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -545,6 +547,7 @@
 			children = (
 				73B4347325F8037100099924 /* CommentsPresenter.swift */,
 				730D6EB725F798360001ED91 /* CommentsUIComposer.swift */,
+				73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */,
 				08EFB82A22D4A5F600A46837 /* Controllers */,
 				08EFB82C22D4A60300A46837 /* Views */,
 			);
@@ -810,6 +813,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				086AEFBE23A7E75400EE8933 /* UITableView+HeaderSizing.swift in Sources */,
+				73B434E525F962AE00099924 /* MainQueueDispatchDecorator.swift in Sources */,
 				730D6E7F25F2868E0001ED91 /* CommentsController.swift in Sources */,
 				08A3F2B2232AA1C200127C15 /* ErrorView.swift in Sources */,
 				08A3F2BB232BA64700127C15 /* UIRefreshControl+Helpers.swift in Sources */,
