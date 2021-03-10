@@ -30,6 +30,7 @@ class ImageCommentsViewController : UITableViewController {
 				self?.refreshControl?.endRefreshing()
 				break
 			case .failure:
+				self?.refreshControl?.endRefreshing()
 				break
 			}
 		}
@@ -80,6 +81,9 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.simulateUserInitiatedReload()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
+		
+		loader.completeImageCommentLoadingWithError(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
 	}
 	
 	// MARK: - Helpers
@@ -120,6 +124,11 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		func completeImageCommentLoading(at index: Int = 0) {
 			completions[index](.success([]))
+		}
+		
+		func completeImageCommentLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "error", code: 0)
+			completions[index](.failure(error))
 		}
 		
 	}
