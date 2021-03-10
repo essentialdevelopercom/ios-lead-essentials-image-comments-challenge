@@ -11,13 +11,21 @@ import EssentialFeed
 
 class ImageCommentsViewController : UITableViewController {
 	
+	public var loader: ImageCommentLoader?
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		loader?.load { _ in }
+	}
 }
 
 class ImageCommentsUIComposer {
 	
-	static func imageComments() -> ImageCommentsViewController {
+	static func imageCommentsComposedWith(loader: ImageCommentLoader) -> ImageCommentsViewController {
 		let viewController = ImageCommentsViewController()
 		viewController.title = ImageCommentPresenter.title
+		viewController.loader = loader
 		return viewController
 	}
 	
@@ -26,15 +34,23 @@ class ImageCommentsUIComposer {
 class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	func test_imageCommentsView_hasTitle() {
-		let sut = makeSUT()
+		let (sut, _) = makeSUT()
 		
 		XCTAssertEqual(sut.title, localized("COMMENT_VIEW_TITLE"))
 	}
 	
+	func test_loadImageCommentActions_requestImageCommentsFromLoader() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.loadCallCount, 1)
+	}
+	
 	// MARK: - Helpers
-	private func makeSUT() -> ImageCommentsViewController {
-		let sut = ImageCommentsUIComposer.imageComments()
-		return sut
+	private func makeSUT() -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+		let loader = LoaderSpy()
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
+		return (sut, loader)
 	}
 	
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -45,6 +61,23 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+	
+	private class LoaderSpy: ImageCommentLoader {
+		
+		var loadCallCount: Int = 0
+		
+		private struct TaskSpy: ImageCommentLoaderDataTask {
+			func cancel() {
+				
+			}
+		}
+		
+		func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) -> ImageCommentLoaderDataTask {
+			loadCallCount += 1
+			return TaskSpy()
+		}
+		
 	}
 
 }
