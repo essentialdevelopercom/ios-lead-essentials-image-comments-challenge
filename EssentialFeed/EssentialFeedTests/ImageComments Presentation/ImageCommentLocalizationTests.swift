@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import EssentialFeed
 
 class ImageCommentLocalizationTests: XCTestCase {
 
