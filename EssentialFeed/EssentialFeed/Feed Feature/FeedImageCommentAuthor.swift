@@ -10,4 +10,8 @@ import Foundation
 
 public struct FeedImageCommentAuthor: Hashable {
 	public let username: String
+	
+	public init(username: String) {
+		self.username = username
+	}
 }

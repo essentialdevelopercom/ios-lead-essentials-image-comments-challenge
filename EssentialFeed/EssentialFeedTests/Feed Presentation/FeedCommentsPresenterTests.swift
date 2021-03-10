@@ -32,6 +32,18 @@ class FeedCommentsPresenterTests: XCTestCase {
 		])
 	}
 	
+	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let comments = uniqueImageFeedComments()
+		
+		sut.didFinishLoadingComments(with: comments)
+		
+		XCTAssertEqual(view.messages, [
+			.display(comments: comments),
+			.display(isLoading: false)
+		])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
