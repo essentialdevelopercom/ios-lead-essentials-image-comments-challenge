@@ -16,10 +16,14 @@ class ImageCommentsViewController : UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+		refreshControl?.beginRefreshing()
+		
 		refresh()
 	}
 	
-	public func refresh() {
+	@objc public func refresh() {
 		loader?.load { _ in }
 	}
 }
@@ -96,7 +100,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 extension ImageCommentsViewController {
 	
 	func simulateUserInitiatedReload() {
-		refresh()
+		refreshControl?.simulatePullToRefresh()
 	}
 	
 }
