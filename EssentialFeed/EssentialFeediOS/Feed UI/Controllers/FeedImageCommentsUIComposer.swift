@@ -14,13 +14,12 @@ public final class FeedImageCommentsUIComposer {
 	
 	public static func commentsComposedWith(commentsLoader: FeedImageCommentsLoader) -> FeedImageCommentsController {
 		let presentationAdapter = FeedImageCommentsLoaderPresentationAdapter(loader: commentsLoader)
-		let refreshController = FeedImageCommentsRefreshController(delegate: presentationAdapter)
 		let commentsController = makeCommentsController()
+		commentsController.delegate = presentationAdapter
 		let presenter = FeedImageCommentsPresenter(
 			commentsView: FeedImageCommentsAdapter(controller: commentsController),
-			loadingView: WeakRefVirtualProxy(refreshController))
+			loadingView: WeakRefVirtualProxy(commentsController))
 		presentationAdapter.presenter = presenter
-		commentsController.refreshController = refreshController
 		return commentsController
 	}
 	
@@ -60,7 +59,7 @@ private final class FeedImageCommentsAdapter: FeedImageCommentView {
 	}
 }
 
-private final class FeedImageCommentsLoaderPresentationAdapter: FeedImageCommentsRefreshControllerDelegate {
+private final class FeedImageCommentsLoaderPresentationAdapter: FeedImageCommentsControllerDelegate {
 	private let loader: FeedImageCommentsLoader
 	var presenter: FeedImageCommentsPresenter?
 	
