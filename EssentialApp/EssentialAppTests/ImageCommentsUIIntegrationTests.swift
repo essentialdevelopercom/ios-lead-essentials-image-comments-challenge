@@ -8,11 +8,11 @@
 
 import XCTest
 import UIKit
-import EssentialApp
+@testable import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
-final class ImageCommentsAdapter: ImageCommentsViewControllerDelegate, ImageCommentsView {
+final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 	let imageLoader: ImageCommentsLoader
 	var presenter: ImageCommentsPresenter?
 	
@@ -20,27 +20,35 @@ final class ImageCommentsAdapter: ImageCommentsViewControllerDelegate, ImageComm
 		self.imageLoader = imageLoader
 	}
 	
-	func display(_ viewModel: ImageCommentsViewModel) {
-		
-	}
-	
 	func didRequestImageCommentsRefresh() {
 		_ = imageLoader.loadImageComments(from: anyURL()) { _ in }
 	}
 }
 
+final class ImageCommentsViewAdapter: ImageCommentsView {
+	private weak var controller: ImageCommentsViewController?
+	
+	init(controller: ImageCommentsViewController) {
+		self.controller = controller
+	}
+	
+	func display(_ viewModel: ImageCommentsViewModel) {
+		
+	}
+}
+
 final class ImageCommentsUIComposer {
 	static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsAdapter(imageLoader: imageCommentsLoader)
+		let presentationAdapter = ImageCommentsPresentationAdapter(imageLoader: imageCommentsLoader)
 		
 		let imageController = makeImageCommentsViewController(
 			delegate: presentationAdapter,
 			title: ImageCommentsPresenter.title)
 		
 		presentationAdapter.presenter = ImageCommentsPresenter(
-			commentsView: presentationAdapter,
-			loadingView: imageController,
-			errorView: imageController)
+			commentsView: ImageCommentsViewAdapter(controller: imageController),
+			loadingView: WeakRefVirtualProxy(imageController),
+			errorView: WeakRefVirtualProxy(imageController))
 		
 		return imageController
 	}

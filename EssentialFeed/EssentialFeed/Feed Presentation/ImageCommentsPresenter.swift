@@ -8,22 +8,22 @@
 
 import Foundation
 
-public protocol ImageCommentsLoadingView: class {
+public protocol ImageCommentsLoadingView {
 	func display(_ viewModel: ImageCommentsLoadingViewModel)
 }
 
-public protocol ImageCommentsErrorView: class {
+public protocol ImageCommentsErrorView {
 	func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
-public protocol ImageCommentsView: class {
+public protocol ImageCommentsView {
 	func display(_ viewModel: ImageCommentsViewModel)
 }
 
 public class ImageCommentsPresenter {
-	private weak var commentsView: ImageCommentsView?
-	private weak var loadingView: ImageCommentsLoadingView?
-	private weak var errorView: ImageCommentsErrorView?
+	private let commentsView: ImageCommentsView
+	private let loadingView: ImageCommentsLoadingView
+	private let errorView: ImageCommentsErrorView
 	
 	public init(commentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
 		self.commentsView = commentsView
@@ -32,18 +32,18 @@ public class ImageCommentsPresenter {
 	}
 	
 	public func didStartLoadingComments() {
-		errorView?.display(ImageCommentsErrorViewModel(message: .none))
-		loadingView?.display(ImageCommentsLoadingViewModel(isLoading: true))
+		errorView.display(ImageCommentsErrorViewModel(message: .none))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 	}
 	
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
-		commentsView?.display(ImageCommentsViewModel(comments: comments))
-		loadingView?.display(ImageCommentsLoadingViewModel(isLoading: false))
+		commentsView.display(ImageCommentsViewModel(comments: comments))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingFeed(with error: Error) {
-		errorView?.display(ImageCommentsErrorViewModel(message: imageCommentsLoadError))
-		loadingView?.display(ImageCommentsLoadingViewModel(isLoading: false))
+		errorView.display(ImageCommentsErrorViewModel(message: imageCommentsLoadError))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
 	private var imageCommentsLoadError: String {
