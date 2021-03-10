@@ -27,12 +27,11 @@ class ImageCommentsViewController : UITableViewController {
 		loader?.load { [weak self] result in
 			switch result {
 			case .success:
-				self?.refreshControl?.endRefreshing()
 				break
 			case .failure:
-				self?.refreshControl?.endRefreshing()
 				break
 			}
+			self?.refreshControl?.endRefreshing()
 		}
 	}
 }
