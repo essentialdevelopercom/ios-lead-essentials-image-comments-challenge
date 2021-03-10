@@ -95,6 +95,7 @@
 		73587FDC25F00E6F00B55A8D /* CommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */; };
 		73B434BF25F921AF00099924 /* CommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6EB725F798360001ED91 /* CommentsUIComposer.swift */; };
 		73B434C825F9226200099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4347325F8037100099924 /* CommentsPresenter.swift */; };
+		73B434D325F956BE00099924 /* Comments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 73B434D525F956BE00099924 /* Comments.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -210,6 +211,9 @@
 		73587FD125F0016C00B55A8D /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLoader.swift; sourceTree = "<group>"; };
 		73B4347325F8037100099924 /* CommentsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenter.swift; sourceTree = "<group>"; };
+		73B434D425F956BE00099924 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Comments.strings; sourceTree = "<group>"; };
+		73B434DE25F9576700099924 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Comments.strings; sourceTree = "<group>"; };
+		73B434DF25F9576900099924 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Comments.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -518,6 +522,7 @@
 				730D6EC825F7BA410001ED91 /* CommentCellController.swift */,
 				730D6E7E25F2868E0001ED91 /* CommentsController.swift */,
 				08BB7EAA22C1425100F8B83C /* FeedViewController.swift */,
+				73B434D525F956BE00099924 /* Comments.strings */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -710,6 +715,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
+				73B434D325F956BE00099924 /* Comments.strings in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -858,6 +864,16 @@
 				087148B3232BE90D00D6BE1A /* el */,
 			);
 			name = Feed.strings;
+			sourceTree = "<group>";
+		};
+		73B434D525F956BE00099924 /* Comments.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				73B434D425F956BE00099924 /* en */,
+				73B434DE25F9576700099924 /* el */,
+				73B434DF25F9576900099924 /* pt-BR */,
+			);
+			name = Comments.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

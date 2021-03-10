@@ -21,7 +21,7 @@ public final class CommentsController: UITableViewController, CommentLoadingView
 	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
-			
+		title = CommentsPresenter.title
 		refresh()
 	}
 	

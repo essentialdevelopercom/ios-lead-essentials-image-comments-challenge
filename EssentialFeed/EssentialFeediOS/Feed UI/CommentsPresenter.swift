@@ -6,6 +6,7 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
+import Foundation
 import EssentialFeed
 
 struct CommentLoadingViewModel {
@@ -31,6 +32,13 @@ final class CommentsPresenter {
 	init(commentsView: CommentView, loadingView: CommentLoadingView) {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
+	}
+	
+	static var title: String {
+		return NSLocalizedString("COMMENTS_VIEW_TITLE",
+			tableName: "Comments",
+			bundle: Bundle(for: CommentsPresenter.self),
+			comment: "Title for the comments view")
 	}
 	
 	func didStartLoadingComments() {

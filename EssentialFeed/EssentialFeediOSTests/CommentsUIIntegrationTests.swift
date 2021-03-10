@@ -12,6 +12,14 @@ import EssentialFeediOS
 
 final class CommentsUIIntegrationTests: XCTestCase {
 	
+	func test_commentsView_hasTitle() {
+		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.title, localized("COMMENTS_VIEW_TITLE"))
+	}
+	
 	func test_loadCommentsAction_requestsCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadCallCount, 0, "Expecting no loading requests before loadView is called")
@@ -80,6 +88,16 @@ final class CommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+		let table = "Comments"
+		let bundle = Bundle(for: CommentsController.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
 	}
 	
 	private func assert(_ sut: CommentsController, isRendering comments: [Comment], file: StaticString = #file, line: UInt = #line) {
