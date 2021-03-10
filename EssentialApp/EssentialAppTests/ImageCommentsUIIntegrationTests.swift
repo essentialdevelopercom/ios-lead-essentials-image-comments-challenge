@@ -18,6 +18,10 @@ class ImageCommentsViewController : UITableViewController {
 		
 		loader?.load { _ in }
 	}
+	
+	public func refresh() {
+		loader?.load { _ in }
+	}
 }
 
 class ImageCommentsUIComposer {
@@ -44,6 +48,9 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.loadCallCount, 1)
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.loadCallCount, 2)
 	}
 	
 	// MARK: - Helpers
@@ -80,4 +87,12 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 	}
 
+}
+
+extension ImageCommentsViewController {
+	
+	func simulateUserInitiatedReload() {
+		refresh()
+	}
+	
 }
