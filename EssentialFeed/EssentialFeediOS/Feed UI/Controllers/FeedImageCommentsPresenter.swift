@@ -25,22 +25,19 @@ protocol FeedImageCommentView {
 }
 
 final class FeedImageCommentsPresenter {
-	private let commentsLoader: FeedImageCommentsLoader
-	
-	public init(commentsLoader: FeedImageCommentsLoader) {
-		self.commentsLoader = commentsLoader
-	}
-	
 	var commentsView: FeedImageCommentView?
 	var loadingView: FeedImageCommentLoadingView?
 	
-	func loadComments() {
+	func didStartLoadingComments() {
 		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: true))
-		commentsLoader.load { [weak self] result in
-			if let comments = try? result.get() {
-				self?.commentsView?.display(FeedImageCommentViewModel(comments: comments))
-			}
-			self?.loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
-		}
+	}
+	
+	func didFinishLoadingComments(comments: [FeedImageComment]) {
+		commentsView?.display(FeedImageCommentViewModel(comments: comments))
+		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
+	}
+	
+	func didFinishLoadingComments(with error: Error) {
+		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 }
