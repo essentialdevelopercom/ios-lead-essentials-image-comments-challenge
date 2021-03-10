@@ -13,18 +13,18 @@ public final class ImageCommentCell: UITableViewCell {
 	
 }
 
+public final class ImageCommentCellController {
+	public init() {}
+}
+
 public protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
 }
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView, ImageCommentsLoadingView {
 	
-	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		
-	}
-	
-	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		
+	private var tableModel = [ImageCommentCellController]() {
+		didSet { tableView.reloadData() }
 	}
 	
 	public var delegate: ImageCommentsViewControllerDelegate?
@@ -35,7 +35,19 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		refresh()
 	}
 	
-	private func refresh() {
+	public func display(_ cellControllers: [ImageCommentCellController]) {
+		tableModel = cellControllers
+	}
+	
+	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		refreshControl?.update(isRefreshing: viewModel.isLoading)
+	}
+	
+	public func display(_ viewModel: ImageCommentsErrorViewModel) {
+		
+	}
+	
+	@IBAction private func refresh() {
 		delegate?.didRequestImageCommentsRefresh()
 	}
 }

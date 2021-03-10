@@ -21,7 +21,11 @@ final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegat
 	}
 	
 	func didRequestImageCommentsRefresh() {
-		_ = imageLoader.loadImageComments(from: anyURL()) { _ in }
+		presenter?.didStartLoadingComments()
+		
+		_ = imageLoader.loadImageComments(from: anyURL()) { [presenter] _ in
+			presenter?.didFinishLoadingComments(with: [])
+		}
 	}
 }
 
@@ -33,7 +37,7 @@ final class ImageCommentsViewAdapter: ImageCommentsView {
 	}
 	
 	func display(_ viewModel: ImageCommentsViewModel) {
-		
+		controller?.display(viewModel.comments.map { _ in ImageCommentCellController() })
 	}
 }
 
@@ -81,6 +85,22 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadImageCommentsCallCount, 1, "Expected a loading request once view is loaded")
 	}
 	
+	func test_loadingImageCommentsIndicator_isVisibleWhileLoadingComments() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+		
+		loader.completeImageCommentsLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected to disable loading indicator while loading completes with success")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
+		
+		loader.completeImageCommentsLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected to disable loading indicator while loading completes with an error")
+	}
+	
 	// MARK: - Helper
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -96,7 +116,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			func cancel() { }
 		}
 		
-		private(set) var completions = [(URL, (ImageCommentsLoader.Result) -> Void)]()
+		private(set) var completions = [(url: URL, handler: (ImageCommentsLoader.Result) -> Void)]()
 		
 		var loadImageCommentsCallCount: Int {
 			completions.count
@@ -109,6 +129,14 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
 			completions.append((url, completion))
 			return Task()
+		}
+		
+		func completeImageCommentsLoading(at index: Int) {
+			completions[index].handler(.success([]))
+		}
+		
+		func completeImageCommentsLoadingWithError(at index: Int) {
+			completions[index].handler(.failure(anyNSError()))
 		}
 	}
 	
@@ -123,5 +151,15 @@ private extension ImageCommentsUIIntegrationTests {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+}
+
+private extension ImageCommentsViewController {
+	var isShowingLoadingIndicator: Bool {
+		refreshControl?.isRefreshing ?? false
+	}
+	
+	func simulateUserInitiatedReload() {
+		refreshControl?.simulatePullToRefresh()
 	}
 }
