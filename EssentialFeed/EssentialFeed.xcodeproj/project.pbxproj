@@ -93,6 +93,7 @@
 		B553AB8525F70A20004DDE1A /* ImageCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553AB8425F70A20004DDE1A /* ImageCommentLoader.swift */; };
 		B553ABC325F70E5E004DDE1A /* ImageCommentPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B553ABC225F70E5E004DDE1A /* ImageCommentPresenterTests.swift */; };
 		B555E2BE25F79A29001FE66F /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = B555E2C025F79A29001FE66F /* ImageComments.strings */; };
+		B555E2CC25F8E9FA001FE66F /* ImageCommentLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E2CB25F8E9FA001FE66F /* ImageCommentLocalizationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -208,6 +209,7 @@
 		B555E2BF25F79A29001FE66F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		B555E2C525F79A2A001FE66F /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		B555E2C625F79A2B001FE66F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
+		B555E2CB25F8E9FA001FE66F /* ImageCommentLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentLocalizationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -584,6 +586,7 @@
 		B553ABC125F70E2D004DDE1A /* ImageComments Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				B555E2CB25F8E9FA001FE66F /* ImageCommentLocalizationTests.swift */,
 				B553ABC225F70E5E004DDE1A /* ImageCommentPresenterTests.swift */,
 				B555E2C025F79A29001FE66F /* ImageComments.strings */,
 			);
@@ -838,6 +841,7 @@
 				089C40D42216C37400DE552E /* CacheFeedUseCaseTests.swift in Sources */,
 				086044FC233E1A3B005ECD22 /* FeedImageDataStoreSpy.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
+				B555E2CC25F8E9FA001FE66F /* ImageCommentLocalizationTests.swift in Sources */,
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
 				086BE481223270A3004CDC26 /* LoadFeedFromCacheUseCaseTests.swift in Sources */,
