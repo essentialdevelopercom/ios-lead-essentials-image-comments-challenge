@@ -13,12 +13,13 @@ public final class FeedImageCommentsUIComposer {
 	private init() {}
 	
 	public static func commentsComposedWith(commentsLoader: FeedImageCommentsLoader) -> FeedImageCommentsController {
-		let presenter = FeedImageCommentsPresenter()
-		let presentationAdapter = FeedImageCommentsLoaderPresentationAdapter(loader: commentsLoader, presenter: presenter)
+		let presentationAdapter = FeedImageCommentsLoaderPresentationAdapter(loader: commentsLoader)
 		let refreshController = FeedImageCommentsRefreshController(delegate: presentationAdapter)
 		let commentsController = makeCommentsController()
-		presenter.loadingView = WeakRefVirtualProxy(refreshController)
-		presenter.commentsView = FeedImageCommentsAdapter(controller: commentsController)
+		let presenter = FeedImageCommentsPresenter(
+			commentsView: FeedImageCommentsAdapter(controller: commentsController),
+			loadingView: WeakRefVirtualProxy(refreshController))
+		presentationAdapter.presenter = presenter
 		commentsController.refreshController = refreshController
 		return commentsController
 	}
@@ -61,23 +62,22 @@ private final class FeedImageCommentsAdapter: FeedImageCommentView {
 
 private final class FeedImageCommentsLoaderPresentationAdapter: FeedImageCommentsRefreshControllerDelegate {
 	private let loader: FeedImageCommentsLoader
-	private let presenter: FeedImageCommentsPresenter
+	var presenter: FeedImageCommentsPresenter?
 	
-	init(loader: FeedImageCommentsLoader, presenter: FeedImageCommentsPresenter) {
+	init(loader: FeedImageCommentsLoader) {
 		self.loader = loader
-		self.presenter = presenter
 	}
 	
 	func didRequestCommentsRefresh() {
-		presenter.didStartLoadingComments()
+		presenter?.didStartLoadingComments()
 		
 		loader.load { [weak self] result in
 			switch result {
 			case let .success(comments):
-				self?.presenter.didFinishLoadingComments(comments: comments)
+				self?.presenter?.didFinishLoadingComments(comments: comments)
 				
 			case let .failure(error):
-				self?.presenter.didFinishLoadingComments(with: error)
+				self?.presenter?.didFinishLoadingComments(with: error)
 			}
 		}
 	}

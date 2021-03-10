@@ -25,19 +25,24 @@ protocol FeedImageCommentView {
 }
 
 final class FeedImageCommentsPresenter {
-	var commentsView: FeedImageCommentView?
-	var loadingView: FeedImageCommentLoadingView?
+	private let commentsView: FeedImageCommentView
+	private let loadingView: FeedImageCommentLoadingView
+	
+	init(commentsView: FeedImageCommentView, loadingView: FeedImageCommentLoadingView) {
+		self.commentsView = commentsView
+		self.loadingView = loadingView
+	}
 	
 	func didStartLoadingComments() {
-		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: true))
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: true))
 	}
 	
 	func didFinishLoadingComments(comments: [FeedImageComment]) {
-		commentsView?.display(FeedImageCommentViewModel(comments: comments))
-		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
+		commentsView.display(FeedImageCommentViewModel(comments: comments))
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 	
 	func didFinishLoadingComments(with error: Error) {
-		loadingView?.display(FeedImageCommentLoadingViewModel(isLoading: false))
+		loadingView.display(FeedImageCommentLoadingViewModel(isLoading: false))
 	}
 }
