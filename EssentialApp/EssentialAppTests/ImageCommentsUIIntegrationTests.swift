@@ -18,12 +18,12 @@ class ImageCommentsViewController : UITableViewController {
 		
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-		refreshControl?.beginRefreshing()
 		
 		refresh()
 	}
 	
 	@objc public func refresh() {
+		refreshControl?.beginRefreshing()
 		loader?.load { [weak self] result in
 			switch result {
 			case .success:
@@ -77,6 +77,9 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		loader.completeImageCommentLoading(at: 0)
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
 	}
 	
 	// MARK: - Helpers
