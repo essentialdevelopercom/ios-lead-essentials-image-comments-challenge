@@ -24,7 +24,15 @@ class ImageCommentsViewController : UITableViewController {
 	}
 	
 	@objc public func refresh() {
-		loader?.load { _ in }
+		loader?.load { [weak self] result in
+			switch result {
+			case .success:
+				self?.refreshControl?.endRefreshing()
+				break
+			case .failure:
+				break
+			}
+		}
 	}
 }
 
@@ -62,10 +70,13 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentIndicator_isVisibleWhileLoading() {
-		let (sut, _) = makeSUT()
+		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+		
+		loader.completeImageCommentLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
 	}
 	
 	// MARK: - Helpers
@@ -87,7 +98,11 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private class LoaderSpy: ImageCommentLoader {
 		
-		var loadCallCount: Int = 0
+		var completions = [(ImageCommentLoader.Result) -> Void]()
+		
+		var loadCallCount: Int {
+			return completions.count
+		}
 		
 		private struct TaskSpy: ImageCommentLoaderDataTask {
 			func cancel() {
@@ -95,9 +110,13 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			}
 		}
 		
-		func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) -> ImageCommentLoaderDataTask {
-			loadCallCount += 1
+		func load(completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderDataTask {
+			completions.append(completion)
 			return TaskSpy()
+		}
+		
+		func completeImageCommentLoading(at index: Int = 0) {
+			completions[index](.success([]))
 		}
 		
 	}
