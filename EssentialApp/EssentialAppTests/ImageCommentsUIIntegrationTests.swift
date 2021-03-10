@@ -45,12 +45,16 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	func test_loadImageCommentActions_requestImageCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.loadCallCount, 0)
 		
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.loadCallCount, 1)
 		
 		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(loader.loadCallCount, 2)
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
 	// MARK: - Helpers
