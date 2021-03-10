@@ -13,20 +13,47 @@ public final class FeedImageCommentsUIComposer {
 	private init() {}
 	
 	public static func commentsComposedWith(commentsLoader: FeedImageCommentsLoader) -> FeedImageCommentsController {
-		let bundle = Bundle(for: FeedViewController.self)
-		let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
-		let commentsController = storyboard.instantiateViewController(identifier: "FeedImageCommentsController") as! FeedImageCommentsController
-		let commentsViewModel = FeedImageCommentsViewModel(commentsLoader: commentsLoader)
-		commentsViewModel.onCommentsLoaded = adaptCommentsToCellControllers(forwardingTo: commentsController)
-		commentsController.refreshController = FeedImageCommentsRefreshController(viewModel: commentsViewModel)
+		let presenter = FeedImageCommentsPresenter(commentsLoader: commentsLoader)
+		let refreshController = FeedImageCommentsRefreshController(presenter: presenter)
+		let commentsController = makeCommentsController()
+		presenter.loadingView = WeakRefVirtualProxy(refreshController)
+		presenter.commentsView = FeedImageCommentsAdapter(controller: commentsController)
+		commentsController.refreshController = refreshController
 		return commentsController
 	}
 	
-	private static func adaptCommentsToCellControllers(forwardingTo controller: FeedImageCommentsController) -> (([FeedImageComment]) -> Void) {
-		return { [weak controller] comments in
-			controller?.cellControllers = comments.map {
-				FeedImageCommentCellController(model: $0)
-			}
+	private static func makeCommentsController() -> FeedImageCommentsController {
+		let bundle = Bundle(for: FeedViewController.self)
+		let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
+		let commentsController = storyboard.instantiateViewController(identifier: "FeedImageCommentsController") as! FeedImageCommentsController
+		return commentsController
+	}
+}
+
+private final class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+	
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakRefVirtualProxy: FeedImageCommentLoadingView where T: FeedImageCommentLoadingView {
+	func display(_ viewModel: FeedImageCommentLoadingViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+private final class FeedImageCommentsAdapter: FeedImageCommentView {
+	private weak var controller: FeedImageCommentsController?
+	
+	init(controller: FeedImageCommentsController) {
+		self.controller = controller
+	}
+	
+	func display(_ viewModel: FeedImageCommentViewModel) {
+		controller?.cellControllers = viewModel.comments.map {
+			FeedImageCommentCellController(model: $0)
 		}
 	}
 }
