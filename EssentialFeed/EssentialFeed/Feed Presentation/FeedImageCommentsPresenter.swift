@@ -17,6 +17,13 @@ public final class FeedImageCommentsPresenter {
 	private let loadingView: FeedLoadingView
 	private let errorView: FeedErrorView
 	
+	private var feedImageCommentsLoadError: String {
+		return NSLocalizedString("FEED_VIEW_CONNECTION_ERROR",
+			 tableName: "Feed",
+			 bundle: Bundle(for: FeedPresenter.self),
+			 comment: "Error message displayed when we can't load the image feed comments from the server")
+	}
+	
 	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView) {
 		self.feedImageCommentsView = feedImageCommentsView
 		self.loadingView = loadingView
@@ -37,6 +44,11 @@ public final class FeedImageCommentsPresenter {
 	
 	public func didFinishLoadingComments(with comments: [FeedImageComment]) {
 		feedImageCommentsView.display(FeedImageCommentsViewModel(comments: comments))
+		loadingView.display(FeedLoadingViewModel(isLoading: false))
+	}
+	
+	public func didFinishLoadingComments(with error: Error) {
+		errorView.display(.error(message: feedImageCommentsLoadError))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 }
