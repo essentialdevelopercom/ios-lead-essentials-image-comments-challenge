@@ -145,6 +145,10 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		loader.completeImageCommentLoading(with: [comment0.model], at: 0)
 		assertThat(sut, isRendering: [comment0.viewModel])
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeImageCommentLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model, comment4.model], at: 0)
+		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel, comment2.viewModel, comment3.viewModel, comment4.viewModel])
 	}
 	
 	// MARK: - Helpers
