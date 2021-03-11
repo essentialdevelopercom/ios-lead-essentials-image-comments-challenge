@@ -84,6 +84,27 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		
+		let item1 = makeItem(id: UUID(),
+							 message: "a message",
+							 createdAt: "2020-05-20T11:24:59+0000".ISO8601Date,
+							 username: "a username")
+		
+		let item2 = makeItem(id: UUID(),
+							 message: "a message",
+							 createdAt: "2020-05-19T14:23:53+0000".ISO8601Date,
+							 username: "another username")
+		
+		let items = [item1.model, item2.model]
+		
+		expect(sut, toCompleteWith: .success(items), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	func test_cancelLoadImageCommentsURLTask_cancelsClientURLRequest() {
 		let (sut, client) = makeSUT()
 		let url = URL(string: "https://a-given-url.com")!
@@ -142,6 +163,18 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
+	private func makeItem(id: UUID, message: String, createdAt: Date, username: String) -> (model: FeedImageComment, json: [String: Any]) {
+		let item = FeedImageComment(id: id, message: message, createdAt: createdAt, author: .init(username: username))
+		let json = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.ISO8601String,
+			"author": ["username": username]
+		].compactMapValues { $0 }
+		
+		return (item, json)
+	}
+
 	private func expect(_ sut: RemoteFeedImageCommentsLoader, toCompleteWith expectedResult: FeedImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let url = URL(string: "https://a-given-url.com")!
 		let exp = expectation(description: "Wait for load completion")
@@ -167,5 +200,21 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		action()
 		
 		wait(for: [exp], timeout: 1.0)
+	}
+}
+
+private extension Date {
+	var ISO8601String: String {
+		let formatter = ISO8601DateFormatter()
+		formatter.formatOptions = .withInternetDateTime
+		return formatter.string(from: self)
+	}
+}
+
+private extension String {
+	var ISO8601Date: Date {
+		let formatter = ISO8601DateFormatter()
+		formatter.formatOptions = .withInternetDateTime
+		return formatter.date(from: self)!
 	}
 }

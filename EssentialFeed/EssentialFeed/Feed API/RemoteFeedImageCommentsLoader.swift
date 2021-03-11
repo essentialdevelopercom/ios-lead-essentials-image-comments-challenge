@@ -72,6 +72,14 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 
 private extension Array where Element == RemoteFeedImageCommentItem {
 	func toModels() -> [FeedImageComment] {
-		return map { FeedImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: .init(username: $0.author.username)) }
+		return map { FeedImageComment(id: $0.id, message: $0.message, createdAt: $0.ISO8601Date, author: .init(username: $0.author.username)) }
+	}
+}
+
+private extension RemoteFeedImageCommentItem {
+	var ISO8601Date: Date {
+		let formatter = ISO8601DateFormatter()
+		formatter.formatOptions = .withInternetDateTime
+		return formatter.date(from: createdAt)!
 	}
 }
