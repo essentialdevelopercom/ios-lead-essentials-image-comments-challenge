@@ -62,6 +62,8 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(comments, "Expected top view to be the image comments UI")
 		XCTAssertEqual(comments?.numberOfRenderedImageCommentViews(), 3)
 		XCTAssertEqual((comments?.imageCommentView(at: 0) as? ImageCommentCell)?.messageText, "comment message 0")
+		XCTAssertEqual((comments?.imageCommentView(at: 1) as? ImageCommentCell)?.messageText, "comment message 1")
+		XCTAssertEqual((comments?.imageCommentView(at: 2) as? ImageCommentCell)?.messageText, "comment message 2")
 	}
 	
 	// MARK: - Helpers
