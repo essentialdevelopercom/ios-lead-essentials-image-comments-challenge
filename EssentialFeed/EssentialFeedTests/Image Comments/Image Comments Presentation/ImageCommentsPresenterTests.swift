@@ -10,31 +10,6 @@ import XCTest
 import EssentialFeed
 
 
-private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
-	
-	enum Message: Hashable {
-		case display(errorMessage: String?)
-		case display(isLoading: Bool)
-		case display(imageComments: [PresentableImageComment])
-	}
-	
-	private(set) var messages = Set<Message>()
-	
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		messages.insert(.display(isLoading: viewModel.isLoading))
-	}
-	
-	func display(_ viewModel: ImageCommentsErrorViewModel) {
-		messages.insert(.display(errorMessage: viewModel.message))
-	}
-	
-	func display(_ viewModel: ImageCommentsViewModel) {
-		messages.insert(.display(imageComments: viewModel.imageComments))
-	}
-}
-
-
-
 class ImageCommentsPresenterTests: XCTestCase {
 	func test_title_isLocalized() {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
@@ -117,5 +92,27 @@ class ImageCommentsPresenterTests: XCTestCase {
 		}
 		return value
 	}
+}
+
+
+private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
+	enum Message: Hashable {
+		case display(errorMessage: String?)
+		case display(isLoading: Bool)
+		case display(imageComments: [PresentableImageComment])
+	}
 	
+	private(set) var messages = Set<Message>()
+	
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		messages.insert(.display(isLoading: viewModel.isLoading))
+	}
+	
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
+		messages.insert(.display(errorMessage: viewModel.message))
+	}
+	
+	func display(_ viewModel: ImageCommentsViewModel) {
+		messages.insert(.display(imageComments: viewModel.imageComments))
+	}
 }

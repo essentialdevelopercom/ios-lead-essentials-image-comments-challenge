@@ -28,8 +28,6 @@ struct EssentialFeedAPI {
 	func url(for endpoint: EssentialFeedAPI.Endpoint) -> URL {
 		baseURL.appendingPathComponent(endpoint.path)
 	}
-	
-	
 }
 
 

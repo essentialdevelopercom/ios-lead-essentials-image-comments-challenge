@@ -132,7 +132,6 @@ class FeedAcceptanceTests: XCTestCase {
 		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 		return EssentialFeedAPI(baseURL: baseURL)
 	}
-	
 }
 
 

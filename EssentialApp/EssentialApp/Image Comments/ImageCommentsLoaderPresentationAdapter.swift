@@ -42,5 +42,4 @@ final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDeleg
 				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
 			})
 	}
-	
 }
