@@ -9,15 +9,22 @@
 import XCTest
 import EssentialFeed
 
-class ImageCommentsViewController : UITableViewController {
+class ImageCommentsViewController : UITableViewController, ImageCommentView, ImageCommentLoadingView, ImageCommentErrorView {
 	
+	public var presenter: ImageCommentPresenter?
 	public var loader: ImageCommentLoader?
+	
+	private var tableModel = [ImageCommentViewModel]() {
+		didSet { tableView.reloadData() }
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+		
+		tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "\(ImageCommentCell.self)")
 		
 		refresh()
 	}
@@ -26,7 +33,8 @@ class ImageCommentsViewController : UITableViewController {
 		refreshControl?.beginRefreshing()
 		loader?.load { [weak self] result in
 			switch result {
-			case .success:
+			case let .success(imageComments):
+				self?.presenter?.didFinishLoadingComments(with: imageComments)
 				break
 			case .failure:
 				break
@@ -34,12 +42,42 @@ class ImageCommentsViewController : UITableViewController {
 			self?.refreshControl?.endRefreshing()
 		}
 	}
+	
+	func display(_ viewModel: ImageCommentsViewModel) {
+		tableModel = viewModel.comments
+	}
+	
+	func display(_ viewModel: ImageCommentLoadingViewModel) {
+		
+	}
+	
+	func display(_ viewModel: ImageCommentErrorViewModel) {
+		
+	}
+	
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return tableModel.count
+	}
+	
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let model = tableModel[indexPath.row]
+		
+		let cell = tableView.dequeueReusableCell(withIdentifier: "\(ImageCommentCell.self)") as! ImageCommentCell
+		cell.configure(model)
+		return cell
+	}
 }
 
 class ImageCommentCell: UITableViewCell {
 	let message = UILabel()
 	let created = UILabel()
 	let username = UILabel()
+	
+	func configure(_ viewModel: ImageCommentViewModel) {
+		message.text = viewModel.message
+		created.text = viewModel.created
+		username.text = viewModel.username
+	}
 }
 
 class ImageCommentsUIComposer {
@@ -48,6 +86,7 @@ class ImageCommentsUIComposer {
 		let viewController = ImageCommentsViewController()
 		viewController.title = ImageCommentPresenter.title
 		viewController.loader = loader
+		viewController.presenter = ImageCommentPresenter(commentView: viewController, loadingView: viewController, errorView: viewController)
 		return viewController
 	}
 	
@@ -92,10 +131,20 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentCompletion_rendersSuccessfullyLoadedImageComments() {
-		let (sut, _) = makeSUT()
+		let (sut, loader) = makeSUT()
+		
+		let fixedDate = Date()
+		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: (fixedDate.adding(seconds: -30), "30 seconds ago"), username: "username0")
+		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: (fixedDate.adding(seconds: -30 * 60), "30 minutes ago"), username: "username1")
+		let comment2 = makeImageComment(id: UUID(), message: "message2", createdAt: (fixedDate.adding(days: -1), "1 day ago"), username: "username2")
+		let comment3 = makeImageComment(id: UUID(), message: "message3", createdAt: (fixedDate.adding(days: -2), "2 days ago"), username: "username3")
+		let comment4 = makeImageComment(id: UUID(), message: "message4", createdAt: (fixedDate.adding(days: -7), "1 week ago"), username: "username4")
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
+		
+		loader.completeImageCommentLoading(with: [comment0.model], at: 0)
+		assertThat(sut, isRendering: [comment0.viewModel])
 	}
 	
 	// MARK: - Helpers
@@ -103,6 +152,16 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		let loader = LoaderSpy()
 		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
 		return (sut, loader)
+	}
+	
+	private func makeImageComment(id: UUID, message: String, createdAt: (date: Date, formatted: String), username: String) -> (model: ImageComment, viewModel: ImageCommentViewModel) {
+		let model = ImageComment(
+			id: id,
+			message: message,
+			createdAt: createdAt.date,
+			author: ImageCommentAuthor(username: username))
+		let viewModel = ImageCommentViewModel(message: message, created: createdAt.formatted, username: username)
+		return (model, viewModel)
 	}
 	
 	func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageCommentViewModel], file: StaticString = #filePath, line: UInt = #line) {
@@ -164,8 +223,8 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			return TaskSpy()
 		}
 		
-		func completeImageCommentLoading(at index: Int = 0) {
-			completions[index](.success([]))
+		func completeImageCommentLoading(with imageComments: [ImageComment] = [], at index: Int = 0) {
+			completions[index](.success(imageComments))
 		}
 		
 		func completeImageCommentLoadingWithError(at index: Int = 0) {
@@ -210,4 +269,15 @@ extension ImageCommentCell {
 	var messageText: String? { return message.text }
 	var createdText: String? { return created.text }
 	var usernameText: String? { return username.text }
+}
+
+extension Date {
+	
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+	}
+	
+	func adding(seconds: TimeInterval) -> Date {
+		return self + seconds
+	}
 }
