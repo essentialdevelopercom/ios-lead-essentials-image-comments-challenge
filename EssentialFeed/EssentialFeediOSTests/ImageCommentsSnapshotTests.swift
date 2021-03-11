@@ -30,6 +30,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_ERROR_dark")
 	}
 	
+	func test_imageCommentsWithLongErrorMessage() {
+		let sut = makeSUT()
+		
+		sut.display(ImageCommentErrorViewModel(message: "This is a\nlong error message\nwith multiple lines"))
+		
+		record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_LONG_ERROR_light")
+		record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_LONG_ERROR_dark")
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> ImageCommentsViewController {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
