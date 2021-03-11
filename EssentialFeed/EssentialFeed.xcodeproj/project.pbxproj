@@ -98,6 +98,10 @@
 		73B434D325F956BE00099924 /* Comments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 73B434D525F956BE00099924 /* Comments.strings */; };
 		73B434E525F962AE00099924 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */; };
 		73B434EF25FA00FC00099924 /* CommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */; };
+		73B434F525FA26CC00099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434F425FA26CC00099924 /* CommentsPresenter.swift */; };
+		73B434FB25FA271B00099924 /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */; };
+		73B4350125FA276600099924 /* CommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4350025FA276600099924 /* CommentErrorViewModel.swift */; };
+		73B4350725FA279400099924 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4350625FA279400099924 /* CommentViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,6 +222,10 @@
 		73B434DF25F9576900099924 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Comments.strings"; sourceTree = "<group>"; };
 		73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenterTests.swift; sourceTree = "<group>"; };
+		73B434F425FA26CC00099924 /* CommentsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenter.swift; sourceTree = "<group>"; };
+		73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoadingViewModel.swift; sourceTree = "<group>"; };
+		73B4350025FA276600099924 /* CommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentErrorViewModel.swift; sourceTree = "<group>"; };
+		73B4350625FA279400099924 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -383,12 +391,16 @@
 		087148B4232BEA9100D6BE1A /* Feed Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				087148B5232BEAAF00D6BE1A /* FeedPresenter.swift */,
-				087148B8232BEBD800D6BE1A /* FeedViewModel.swift */,
-				087148BA232BEC1200D6BE1A /* FeedLoadingViewModel.swift */,
+				73B4350025FA276600099924 /* CommentErrorViewModel.swift */,
+				73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */,
+				73B434F425FA26CC00099924 /* CommentsPresenter.swift */,
+				73B4350625FA279400099924 /* CommentViewModel.swift */,
 				087148BC232BEC6700D6BE1A /* FeedErrorViewModel.swift */,
 				087148C1232BFC7100D6BE1A /* FeedImagePresenter.swift */,
 				087148C3232BFCF100D6BE1A /* FeedImageViewModel.swift */,
+				087148BA232BEC1200D6BE1A /* FeedLoadingViewModel.swift */,
+				087148B5232BEAAF00D6BE1A /* FeedPresenter.swift */,
+				087148B8232BEBD800D6BE1A /* FeedViewModel.swift */,
 				087148B1232BE90A00D6BE1A /* Feed.strings */,
 			);
 			path = "Feed Presentation";
@@ -743,6 +755,7 @@
 				73587FDC25F00E6F00B55A8D /* CommentsLoader.swift in Sources */,
 				08C4E986233E139400D939F8 /* LocalFeedImageDataLoader.swift in Sources */,
 				08285AFB228C17B8000A8987 /* CoreDataHelpers.swift in Sources */,
+				73B4350725FA279400099924 /* CommentViewModel.swift in Sources */,
 				08C0880E21E4EF2900ACFB30 /* FeedItemsMapper.swift in Sources */,
 				080EDF0E21B6DCB600813479 /* FeedLoader.swift in Sources */,
 				08868938221DAA01007BC3E7 /* RemoteFeedItem.swift in Sources */,
@@ -764,15 +777,18 @@
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
 				08897BEF233A1C8E0029F5E4 /* HTTPURLResponse+StatusCode.swift in Sources */,
+				73B434F525FA26CC00099924 /* CommentsPresenter.swift in Sources */,
 				08285AFD228C1843000A8987 /* ManagedCache.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
 				087148BD232BEC6700D6BE1A /* FeedErrorViewModel.swift in Sources */,
 				08897BE623390F4E0029F5E4 /* FeedImageDataLoader.swift in Sources */,
 				087148BB232BEC1200D6BE1A /* FeedLoadingViewModel.swift in Sources */,
+				73B434FB25FA271B00099924 /* CommentLoadingViewModel.swift in Sources */,
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataLoader.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
 				08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */,
 				73587FC825F000F600B55A8D /* RemoteCommentsLoader.swift in Sources */,
+				73B4350125FA276600099924 /* CommentErrorViewModel.swift in Sources */,
 				08285AFF228C1874000A8987 /* ManagedFeedImage.swift in Sources */,
 				730D6E7125F210B50001ED91 /* RemoteComment.swift in Sources */,
 			);

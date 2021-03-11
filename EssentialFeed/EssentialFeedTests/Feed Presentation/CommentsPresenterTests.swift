@@ -9,64 +9,6 @@
 import XCTest
 import EssentialFeed
 
-struct CommentLoadingViewModel {
-	let isLoading: Bool
-}
-
-struct CommentErrorViewModel {
-	let message: String?
-}
-
-struct CommentViewModel {
-	let comments: [Comment]
-}
-
-protocol CommentLoadingView {
-	func display(_ viewModel: CommentLoadingViewModel)
-}
-
-protocol CommentErrorView {
-	func display(_ viewModel: CommentErrorViewModel)
-}
-
-protocol CommentView {
-	func display(_ viewModel: CommentViewModel)
-}
-
-final class CommentsPresenter {
-	private let errorView: CommentErrorView
-	private let loadingView: CommentLoadingView
-	private let commentsView: CommentView
-	
-	private var commentsLoadError: String {
-		return NSLocalizedString("COMMENTS_VIEW_CONNECTION_ERROR",
-			 tableName: "Feed",
-			 bundle: Bundle(for: FeedPresenter.self),
-			 comment: "Error message displayed when we can't load the comments from the server")
-	}
-	
-	init(errorView: CommentErrorView, loadingView: CommentLoadingView, commentsView: CommentView) {
-		self.errorView = errorView
-		self.loadingView = loadingView
-		self.commentsView = commentsView
-	}
-	
-	func didStartLoadingComments() {
-		errorView.display(CommentErrorViewModel(message: .none))
-		loadingView.display(CommentLoadingViewModel(isLoading: true))
-	}
-	
-	func didFinishLoadingComments(comments: [Comment]) {
-		commentsView.display(CommentViewModel(comments: comments))
-		loadingView.display(CommentLoadingViewModel(isLoading: false))
-	}
-	
-	func didFinishLoadingComments(with error: Error) {
-		errorView.display(CommentErrorViewModel(message: commentsLoadError))
-		loadingView.display(CommentLoadingViewModel(isLoading: false))
-	}
-}
-
 class CommentsPresenterTests: XCTestCase {
 	
 	func test_init_doesNotSendMessagesToView() {
