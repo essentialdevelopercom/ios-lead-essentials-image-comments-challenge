@@ -97,6 +97,7 @@
 		73B434C825F9226200099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4347325F8037100099924 /* CommentsPresenter.swift */; };
 		73B434D325F956BE00099924 /* Comments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 73B434D525F956BE00099924 /* Comments.strings */; };
 		73B434E525F962AE00099924 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */; };
+		73B434EF25FA00FC00099924 /* CommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -216,6 +217,7 @@
 		73B434DE25F9576700099924 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Comments.strings; sourceTree = "<group>"; };
 		73B434DF25F9576900099924 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Comments.strings"; sourceTree = "<group>"; };
 		73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
+		73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenterTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -373,6 +375,7 @@
 				08CFB1A8230C20B7008608CB /* FeedLocalizationTests.swift */,
 				087148AB232BDF6900D6BE1A /* FeedPresenterTests.swift */,
 				087148BF232BF27700D6BE1A /* FeedImagePresenterTests.swift */,
+				73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */,
 			);
 			path = "Feed Presentation";
 			sourceTree = "<group>";
@@ -785,6 +788,7 @@
 				087148AC232BDF6900D6BE1A /* FeedPresenterTests.swift in Sources */,
 				08897BE8233910040029F5E4 /* LoadFeedImageDataFromRemoteUseCaseTests.swift in Sources */,
 				08DDC13A21BEA99E00F490ED /* LoadFeedFromRemoteUseCaseTests.swift in Sources */,
+				73B434EF25FA00FC00099924 /* CommentsPresenterTests.swift in Sources */,
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				087546922272381700542C32 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */,
 				086044FE233E1A90005ECD22 /* CacheFeedImageDataUseCaseTests.swift in Sources */,
