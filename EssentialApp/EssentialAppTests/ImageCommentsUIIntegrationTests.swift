@@ -151,6 +151,24 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel, comment2.viewModel, comment3.viewModel, comment4.viewModel])
 	}
 	
+	func test_loadImageCommentCompletion_rendersSuccessfullyLoadedEmptyImageCommentsAfterNonEmptyImageComments() {
+		let (sut, loader) = makeSUT()
+		
+		let fixedDate = Date()
+		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: (fixedDate.adding(seconds: -30), "30 seconds ago"), username: "username0")
+		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: (fixedDate.adding(seconds: -30 * 60), "30 minutes ago"), username: "username1")
+		
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+		
+		loader.completeImageCommentLoading(with: [comment0.model, comment1.model], at: 0)
+		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel])
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeImageCommentLoading(with: [], at: 0)
+		assertThat(sut, isRendering: [])
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
