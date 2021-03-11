@@ -33,19 +33,48 @@ class RemoteCommentLoader {
 				completion(.failure(.connectivity))
 				
 			case let .success((data, response)):
-				if response.statusCode != 200 {
-					completion(.failure(.invalidData))
-				} else {
-					if let json = try? JSONSerialization.jsonObject(with: data) {
-						completion(.success([]))
-					} else {
-						completion(.failure(.invalidData))
-					}
-				}
+				completion(RemoteCommentLoader.map(data, response: response))
 			}
 		}
 	}
+	
+	static func map(_ data: Data, response: HTTPURLResponse) -> Result {
+		do {
+			let remoteComments = try CommentMapper.map(data, from: response)
+			let comments = remoteComments.map { Comment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: CommentAuthor(username: $0.author.username))
+			}
+			
+			return .success(comments)
+		} catch {
+			return .failure(RemoteCommentLoader.Error.invalidData)
+		}
+	}
 }
+
+struct RemoteComment: Decodable {
+	let id: UUID
+	let message: String
+	let created_at: Date
+	let author: CommentAuthor
+}
+
+class CommentMapper {
+	private struct Root: Decodable {
+		let items: [RemoteComment]
+	}
+
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteComment] {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		
+		guard response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) else {
+			throw RemoteCommentLoader.Error.invalidData
+		}
+		
+		return root.items
+	}
+}
+
 
 class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 	func test_init_doesNotRequestDataOnInit() {
@@ -100,6 +129,15 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
+	func test_load_deliversReceivedNonEmptyDataOn200HTTTPResponse() {
+		let (sut, client) = makeSUT()
+		let (model, json) = makeCommentData()
+
+		expect(sut, client: client, expectedResult: .success(model)) {
+			client.complete(withStatusCode: 200, data: json)
+		}
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteCommentLoader, spy: HTTPClientSpy) {
 		let client = HTTPClientSpy()
@@ -119,5 +157,49 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		action()
 		
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	private func makeCommentData() -> ([Comment], Data) {
+		let date1 = ISO8601DateFormatter().date(from: "2020-05-20T11:24:59+0000")!
+		let commentAuthor1 = CommentAuthor(username: "a username")
+		let comment1 = Comment(
+			id: UUID(),
+			message: "a comment message",
+			createdAt: date1,
+			author: commentAuthor1
+		)
+		
+		let comment1JSON: [String: Any] = [
+			"id": comment1.id.uuidString,
+			"message": comment1.message,
+			"created_at": "2020-05-20T11:24:59+0000",
+			"author": [
+				"username": comment1.author.username
+			]
+		]
+
+		let date2 = ISO8601DateFormatter().date(from: "2020-05-19T14:23:53+0000")!
+		let commentAuthor2 = CommentAuthor(username: "another username")
+		let comment2 = Comment(
+			id: UUID(),
+			message: "another comment message",
+			createdAt: date2,
+			author: commentAuthor2
+		)
+
+		let comment2JSON: [String: Any] = [
+			"id": comment2.id.uuidString,
+			"message": comment2.message,
+			"created_at": "2020-05-19T14:23:53+0000",
+			"author": [
+				"username": comment2.author.username
+			]
+		]
+
+		let commentsArray = [comment1, comment2]
+		let commentsJSON = ["items" : [comment1JSON, comment2JSON]]
+		let commentsData = try! JSONSerialization.data(withJSONObject: commentsJSON)
+
+		return (commentsArray, commentsData)
 	}
 }
