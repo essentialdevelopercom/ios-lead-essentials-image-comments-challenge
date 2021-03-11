@@ -36,6 +36,12 @@ class ImageCommentsViewController : UITableViewController {
 	}
 }
 
+class ImageCommentCell: UITableViewCell {
+	let message = UILabel()
+	let created = UILabel()
+	let username = UILabel()
+}
+
 class ImageCommentsUIComposer {
 	
 	static func imageCommentsComposedWith(loader: ImageCommentLoader) -> ImageCommentsViewController {
@@ -85,11 +91,48 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
 	}
 	
+	func test_loadImageCommentCompletion_rendersSuccessfullyLoadedImageComments() {
+		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
 		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
 		return (sut, loader)
+	}
+	
+	func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageCommentViewModel], file: StaticString = #filePath, line: UInt = #line) {
+		sut.view.enforceLayoutCycle()
+		
+		guard sut.numberOfRenderedImageCommentViews() == imageComments.count else {
+			return XCTFail("Expected \(imageComments.count) image comments, got \(sut.numberOfRenderedImageCommentViews()) instead.", file: file, line: line)
+		}
+		
+		imageComments.enumerated().forEach { index, imageComment in
+			assertThat(sut, hasViewConfiguredFor: imageComment, at: index, file: file, line: line)
+		}
+		
+		executeRunLoopToCleanUpReferences()
+	}
+	
+	func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor imageComment: ImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+		let view = sut.imageCommentView(at: index)
+		
+		guard let cell = view as? ImageCommentCell else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+		
+		XCTAssertEqual(cell.messageText, imageComment.message, "for view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.createdText, imageComment.created, "for view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.usernameText, imageComment.username, "for view at index (\(index))", file: file, line: line)
+	}
+	
+	private func executeRunLoopToCleanUpReferences() {
+		RunLoop.current.run(until: Date())
 	}
 	
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -140,8 +183,31 @@ extension ImageCommentsViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
+	func numberOfRenderedImageCommentViews() -> Int {
+		return tableView.numberOfRows(inSection: imageCommentsSection)
+	}
+	
+	func imageCommentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedImageCommentViews() > row else {
+			return nil
+		}
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: imageCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	var imageCommentsSection: Int {
+		return 0
+	}
+	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}
 	
+}
+
+extension ImageCommentCell {
+	var messageText: String? { return message.text }
+	var createdText: String? { return created.text }
+	var usernameText: String? { return username.text }
 }
