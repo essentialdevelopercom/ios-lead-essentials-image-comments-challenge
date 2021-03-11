@@ -94,8 +94,6 @@
 		73587FD225F0016C00B55A8D /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FD125F0016C00B55A8D /* Comment.swift */; };
 		73587FDC25F00E6F00B55A8D /* CommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */; };
 		73B434BF25F921AF00099924 /* CommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6EB725F798360001ED91 /* CommentsUIComposer.swift */; };
-		73B434C825F9226200099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4347325F8037100099924 /* CommentsPresenter.swift */; };
-		73B434D325F956BE00099924 /* Comments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 73B434D525F956BE00099924 /* Comments.strings */; };
 		73B434E525F962AE00099924 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */; };
 		73B434EF25FA00FC00099924 /* CommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */; };
 		73B434F525FA26CC00099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434F425FA26CC00099924 /* CommentsPresenter.swift */; };
@@ -216,10 +214,6 @@
 		73587FC725F000F600B55A8D /* RemoteCommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentsLoader.swift; sourceTree = "<group>"; };
 		73587FD125F0016C00B55A8D /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLoader.swift; sourceTree = "<group>"; };
-		73B4347325F8037100099924 /* CommentsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenter.swift; sourceTree = "<group>"; };
-		73B434D425F956BE00099924 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Comments.strings; sourceTree = "<group>"; };
-		73B434DE25F9576700099924 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Comments.strings; sourceTree = "<group>"; };
-		73B434DF25F9576900099924 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Comments.strings"; sourceTree = "<group>"; };
 		73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenterTests.swift; sourceTree = "<group>"; };
 		73B434F425FA26CC00099924 /* CommentsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenter.swift; sourceTree = "<group>"; };
@@ -539,7 +533,6 @@
 				730D6EC825F7BA410001ED91 /* CommentCellController.swift */,
 				730D6E7E25F2868E0001ED91 /* CommentsController.swift */,
 				08BB7EAA22C1425100F8B83C /* FeedViewController.swift */,
-				73B434D525F956BE00099924 /* Comments.strings */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -560,7 +553,6 @@
 		08FC5AA622D5F33000148E12 /* Feed UI */ = {
 			isa = PBXGroup;
 			children = (
-				73B4347325F8037100099924 /* CommentsPresenter.swift */,
 				730D6EB725F798360001ED91 /* CommentsUIComposer.swift */,
 				73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */,
 				08EFB82A22D4A5F600A46837 /* Controllers */,
@@ -733,7 +725,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
-				73B434D325F956BE00099924 /* Comments.strings in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -845,7 +836,6 @@
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				730D6EC925F7BA410001ED91 /* CommentCellController.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
-				73B434C825F9226200099924 /* CommentsPresenter.swift in Sources */,
 				08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -888,16 +878,6 @@
 				087148B3232BE90D00D6BE1A /* el */,
 			);
 			name = Feed.strings;
-			sourceTree = "<group>";
-		};
-		73B434D525F956BE00099924 /* Comments.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				73B434D425F956BE00099924 /* en */,
-				73B434DE25F9576700099924 /* el */,
-				73B434DF25F9576900099924 /* pt-BR */,
-			);
-			name = Comments.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
