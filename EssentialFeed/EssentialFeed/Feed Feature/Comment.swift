@@ -8,9 +8,9 @@
 
 import Foundation
 
-public struct Comment: Equatable {
+public struct Comment: Hashable {
 	
-	public struct Author: Equatable {
+	public struct Author: Hashable {
 		public let username: String
 		
 		public init(username: String) {
