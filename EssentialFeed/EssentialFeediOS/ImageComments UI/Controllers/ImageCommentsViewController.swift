@@ -9,10 +9,13 @@
 import UIKit
 import EssentialFeed
 
+public protocol ImageCommentsViewControllerDelegate {
+	func didRequestImageCommentsRefresh()
+}
+
 public class ImageCommentsViewController : UITableViewController, ImageCommentView, ImageCommentLoadingView, ImageCommentErrorView {
 	
-	public var presenter: ImageCommentPresenter?
-	public var loader: ImageCommentLoader?
+	public var delegate: ImageCommentsViewControllerDelegate?
 	
 	public let errorView = UILabel()
 	
@@ -32,17 +35,7 @@ public class ImageCommentsViewController : UITableViewController, ImageCommentVi
 	}
 	
 	@objc public func refresh() {
-		presenter?.didStartLoadingComments()
-		loader?.load { [weak self] result in
-			switch result {
-			case let .success(imageComments):
-				self?.presenter?.didFinishLoadingComments(with: imageComments)
-				break
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingComments(with: error)
-				break
-			}
-		}
+		delegate?.didRequestImageCommentsRefresh()
 	}
 	
 	public func display(_ viewModel: ImageCommentsViewModel) {
