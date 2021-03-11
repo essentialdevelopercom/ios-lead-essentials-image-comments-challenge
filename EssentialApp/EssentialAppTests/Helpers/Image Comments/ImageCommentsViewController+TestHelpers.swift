@@ -15,7 +15,6 @@ extension ImageCommentCell {
 	var usernameText: String?{ usernameLabel.text }
 }
 
-
 extension ImageCommentsViewController {
 	
 	func errorMessage() -> String? {
