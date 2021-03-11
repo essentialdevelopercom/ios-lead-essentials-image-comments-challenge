@@ -92,7 +92,10 @@ class ImageCommentsUIComposer {
 		let viewController = ImageCommentsViewController()
 		viewController.title = ImageCommentPresenter.title
 		viewController.loader = loader
-		viewController.presenter = ImageCommentPresenter(commentView: viewController, loadingView: viewController, errorView: viewController)
+		viewController.presenter = ImageCommentPresenter(
+			commentView: WeakRefVirtualProxy(viewController),
+			loadingView: WeakRefVirtualProxy(viewController),
+			errorView: WeakRefVirtualProxy(viewController))
 		return viewController
 	}
 	
@@ -207,6 +210,8 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	private func makeSUT() -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
 		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
+		trackForMemoryLeaks(loader)
+		trackForMemoryLeaks(sut)
 		return (sut, loader)
 	}
 	
@@ -287,9 +292,36 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			let error = NSError(domain: "error", code: 0)
 			completions[index](.failure(error))
 		}
-		
 	}
+	
+	
 
+}
+
+final class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+	
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentErrorView where T: ImageCommentErrorView {
+	func display(_ viewModel: ImageCommentErrorViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentLoadingView where T: ImageCommentLoadingView {
+	func display(_ viewModel: ImageCommentLoadingViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentView where T: ImageCommentView {
+	func display(_ model: ImageCommentsViewModel) {
+		object?.display(model)
+	}
 }
 
 extension ImageCommentsViewController {
