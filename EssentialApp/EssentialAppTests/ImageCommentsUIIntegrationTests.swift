@@ -32,7 +32,6 @@ class ImageCommentsViewController : UITableViewController, ImageCommentView, Ima
 	}
 	
 	@objc public func refresh() {
-		refreshControl?.beginRefreshing()
 		presenter?.didStartLoadingComments()
 		loader?.load { [weak self] result in
 			switch result {
@@ -43,7 +42,6 @@ class ImageCommentsViewController : UITableViewController, ImageCommentView, Ima
 				self?.presenter?.didFinishLoadingComments(with: error)
 				break
 			}
-			self?.refreshControl?.endRefreshing()
 		}
 	}
 	
@@ -52,7 +50,11 @@ class ImageCommentsViewController : UITableViewController, ImageCommentView, Ima
 	}
 	
 	func display(_ viewModel: ImageCommentLoadingViewModel) {
-		
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
 	}
 	
 	func display(_ viewModel: ImageCommentErrorViewModel) {
