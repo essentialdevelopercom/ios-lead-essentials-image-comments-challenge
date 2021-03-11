@@ -8,6 +8,7 @@
 
 import XCTest
 import EssentialFeed
+import EssentialFeediOS
 
 class ImageCommentsViewController : UITableViewController, ImageCommentView, ImageCommentLoadingView, ImageCommentErrorView {
 	
@@ -71,18 +72,6 @@ class ImageCommentsViewController : UITableViewController, ImageCommentView, Ima
 		let cell = tableView.dequeueReusableCell(withIdentifier: "\(ImageCommentCell.self)") as! ImageCommentCell
 		cell.configure(model)
 		return cell
-	}
-}
-
-class ImageCommentCell: UITableViewCell {
-	let message = UILabel()
-	let created = UILabel()
-	let username = UILabel()
-	
-	func configure(_ viewModel: ImageCommentViewModel) {
-		message.text = viewModel.message
-		created.text = viewModel.created
-		username.text = viewModel.username
 	}
 }
 
