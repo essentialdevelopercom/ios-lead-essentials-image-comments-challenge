@@ -6,44 +6,55 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
 public class ImageCommentsUIComposer {
 	
 	public static func imageCommentsComposedWith(loader: ImageCommentLoader) -> ImageCommentsViewController {
-		let viewController = ImageCommentsViewController()
-		viewController.title = ImageCommentPresenter.title
-		viewController.delegate = ImageCommentLoaderPresentationAdapter(
-			loader: loader,
-			presenter: ImageCommentPresenter(
-				commentView: WeakRefVirtualProxy(viewController),
-				loadingView: WeakRefVirtualProxy(viewController),
-				errorView: WeakRefVirtualProxy(viewController)))
+		let presentationAdapter = ImageCommentLoaderPresentationAdapter(loader: loader)
 		
-		return viewController
+		let controller = makeImageCommentsViewController(
+			title: ImageCommentPresenter.title,
+			delegate: presentationAdapter)
+		
+		presentationAdapter.presenter = ImageCommentPresenter(
+			commentView: WeakRefVirtualProxy(controller),
+			loadingView: WeakRefVirtualProxy(controller),
+			errorView: WeakRefVirtualProxy(controller))
+		
+		return controller
+	}
+	
+	
+	private static func makeImageCommentsViewController(title: String, delegate: ImageCommentsViewControllerDelegate) -> ImageCommentsViewController {
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let controller = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		controller.title = title
+		controller.delegate = delegate
+		return controller
 	}
 	
 	private class ImageCommentLoaderPresentationAdapter : ImageCommentsViewControllerDelegate {
 		
 		public var loader: ImageCommentLoader
-		public var presenter: ImageCommentPresenter
+		public var presenter: ImageCommentPresenter?
 		
-		public init(loader: ImageCommentLoader, presenter: ImageCommentPresenter) {
+		public init(loader: ImageCommentLoader) {
 			self.loader = loader
-			self.presenter = presenter
 		}
 		
 		public func didRequestImageCommentsRefresh() {
-			presenter.didStartLoadingComments()
+			presenter?.didStartLoadingComments()
 			loader.load { [weak self] result in
 				switch result {
 				case let .success(imageComments):
-					self?.presenter.didFinishLoadingComments(with: imageComments)
+					self?.presenter?.didFinishLoadingComments(with: imageComments)
 					break
 				case let .failure(error):
-					self?.presenter.didFinishLoadingComments(with: error)
+					self?.presenter?.didFinishLoadingComments(with: error)
 					break
 				}
 			}

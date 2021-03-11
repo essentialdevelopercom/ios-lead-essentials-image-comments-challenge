@@ -104,6 +104,7 @@
 		B555E30E25F8EC28001FE66F /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = B555E2C025F79A29001FE66F /* ImageComments.strings */; };
 		B555E31F25FA9514001FE66F /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E31E25FA9514001FE66F /* ImageCommentCell.swift */; };
 		B555E32A25FA9586001FE66F /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E32925FA9586001FE66F /* ImageCommentsViewController.swift */; };
+		B555E33825FA9A14001FE66F /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B555E33725FA9A14001FE66F /* ImageComments.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -230,6 +231,7 @@
 		B555E30425F8EAE3001FE66F /* ImageCommentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentPresenter.swift; sourceTree = "<group>"; };
 		B555E31E25FA9514001FE66F /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
 		B555E32925FA9586001FE66F /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
+		B555E33725FA9A14001FE66F /* ImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -643,6 +645,7 @@
 			isa = PBXGroup;
 			children = (
 				B555E31E25FA9514001FE66F /* ImageCommentCell.swift */,
+				B555E33725FA9A14001FE66F /* ImageComments.storyboard */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -820,6 +823,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
+				B555E33825FA9A14001FE66F /* ImageComments.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
