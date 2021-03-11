@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import EssentialFeed
 
 protocol CommentsControllerDelegate {
 	func didRequestCommentsRefresh()
 }
 
-public final class CommentsController: UITableViewController, CommentLoadingView {
+public final class CommentsController: UITableViewController, CommentErrorView, CommentLoadingView {
 	var delegate: CommentsControllerDelegate?
 	
 	var cellControllers = [CommentCellController]() {
@@ -29,12 +30,16 @@ public final class CommentsController: UITableViewController, CommentLoadingView
 		delegate?.didRequestCommentsRefresh()
 	}
 	
-	func display(_ viewModel: CommentLoadingViewModel) {
+	public func display(_ viewModel: CommentLoadingViewModel) {
 		if viewModel.isLoading {
 			refreshControl?.beginRefreshing()
 		} else {
 			refreshControl?.endRefreshing()
 		}
+	}
+	
+	public func display(_ viewModel: CommentErrorViewModel) {
+		
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

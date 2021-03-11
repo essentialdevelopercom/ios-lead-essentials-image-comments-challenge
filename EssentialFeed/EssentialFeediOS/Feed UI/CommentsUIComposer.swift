@@ -17,8 +17,9 @@ public final class CommentsUIComposer {
 		let commentsController = makeCommentsController()
 		commentsController.delegate = presentationAdapter
 		let presenter = CommentsPresenter(
-			commentsView: CommentsAdapter(controller: commentsController),
-			loadingView: WeakRefVirtualProxy(commentsController))
+			errorView: WeakRefVirtualProxy(commentsController),
+			loadingView: WeakRefVirtualProxy(commentsController),
+			commentsView: CommentsAdapter(controller: commentsController))
 		presentationAdapter.presenter = presenter
 		return commentsController
 	}
@@ -41,6 +42,12 @@ private final class WeakRefVirtualProxy<T: AnyObject> {
 
 extension WeakRefVirtualProxy: CommentLoadingView where T: CommentLoadingView {
 	func display(_ viewModel: CommentLoadingViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+extension WeakRefVirtualProxy: CommentErrorView where T: CommentErrorView {
+	func display(_ viewModel: CommentErrorViewModel) {
 		object?.display(viewModel)
 	}
 }
