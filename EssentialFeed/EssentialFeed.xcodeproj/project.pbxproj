@@ -103,6 +103,7 @@
 		B555E30525F8EAE3001FE66F /* ImageCommentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E30425F8EAE3001FE66F /* ImageCommentPresenter.swift */; };
 		B555E30E25F8EC28001FE66F /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = B555E2C025F79A29001FE66F /* ImageComments.strings */; };
 		B555E31F25FA9514001FE66F /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E31E25FA9514001FE66F /* ImageCommentCell.swift */; };
+		B555E32A25FA9586001FE66F /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E32925FA9586001FE66F /* ImageCommentsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -228,6 +229,7 @@
 		B555E2FE25F8EADD001FE66F /* ImageCommentErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentErrorView.swift; sourceTree = "<group>"; };
 		B555E30425F8EAE3001FE66F /* ImageCommentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentPresenter.swift; sourceTree = "<group>"; };
 		B555E31E25FA9514001FE66F /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
+		B555E32925FA9586001FE66F /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -631,6 +633,7 @@
 		B555E31C25FA94EC001FE66F /* ImageComments UI */ = {
 			isa = PBXGroup;
 			children = (
+				B555E32825FA9582001FE66F /* Controllers */,
 				B555E31D25FA94F9001FE66F /* Views */,
 			);
 			path = "ImageComments UI";
@@ -642,6 +645,14 @@
 				B555E31E25FA9514001FE66F /* ImageCommentCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		B555E32825FA9582001FE66F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B555E32925FA9586001FE66F /* ImageCommentsViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -923,6 +934,7 @@
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
+				B555E32A25FA9586001FE66F /* ImageCommentsViewController.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
 				08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */,
 			);
