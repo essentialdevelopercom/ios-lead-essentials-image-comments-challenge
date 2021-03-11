@@ -12,4 +12,8 @@ public struct ImageCommentErrorViewModel {
 	static var clear: ImageCommentErrorViewModel {
 		return ImageCommentErrorViewModel(message: nil)
 	}
+	
+	public init(message: String?) {
+		self.message = message
+	}
 }

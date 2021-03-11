@@ -21,6 +21,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGECOMMENTS_dark")
 	}
 	
+	func test_imageCommentsWithErrorMessage() {
+		let sut = makeSUT()
+		
+		sut.display(ImageCommentErrorViewModel(message: "Couldn't connect to server"))
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_ERROR_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_ERROR_dark")
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> ImageCommentsViewController {
 		let bundle = Bundle(for: ImageCommentsViewController.self)

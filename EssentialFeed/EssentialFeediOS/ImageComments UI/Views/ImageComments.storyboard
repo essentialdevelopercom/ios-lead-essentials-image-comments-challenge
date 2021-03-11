@@ -15,9 +15,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="sfq-gb-lhp" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7oa-nD-L1l">
+                                    <rect key="frame" x="0.0" y="8" width="414" height="18"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="7oa-nD-L1l" secondAttribute="bottom" constant="8" id="2D5-A9-lcM"/>
+                                <constraint firstItem="7oa-nD-L1l" firstAttribute="leading" secondItem="sfq-gb-lhp" secondAttribute="leading" id="ADf-fI-mbC"/>
+                                <constraint firstItem="7oa-nD-L1l" firstAttribute="top" secondItem="sfq-gb-lhp" secondAttribute="top" constant="8" id="Ldq-mk-Z9h"/>
+                                <constraint firstAttribute="trailing" secondItem="7oa-nD-L1l" secondAttribute="trailing" id="aeo-zB-FTd"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="label" destination="7oa-nD-L1l" id="aGo-s5-Lg0"/>
+                            </connections>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="6vU-uw-7Ee">
-                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="62" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6vU-uw-7Ee" id="usx-am-Wa5">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -30,6 +52,9 @@
                             <outlet property="delegate" destination="3Pp-8b-z6Q" id="SQ9-sb-mcF"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="errorView" destination="sfq-gb-lhp" id="gqu-vB-PfK"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qTb-2n-jZv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

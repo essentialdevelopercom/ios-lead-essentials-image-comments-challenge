@@ -17,7 +17,7 @@ public class ImageCommentsViewController : UITableViewController, ImageCommentVi
 	
 	public var delegate: ImageCommentsViewControllerDelegate?
 	
-	public let errorView = UILabel()
+	@IBOutlet var errorView: ErrorView!
 	
 	private var tableModel = [ImageCommentViewModel]() {
 		didSet { tableView.reloadData() }
@@ -51,7 +51,7 @@ public class ImageCommentsViewController : UITableViewController, ImageCommentVi
 	}
 	
 	public func display(_ viewModel: ImageCommentErrorViewModel) {
-		errorView.text = viewModel.message
+		errorView.message = viewModel.message
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -232,7 +232,7 @@ extension ImageCommentsViewController {
 	}
 	
 	var errorMessage: String? {
-		return errorView.text
+		return errorView.message
 	}
 	
 	var isShowingLoadingIndicator: Bool {
