@@ -43,9 +43,4 @@ final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDeleg
 			})
 	}
 	
-	func didRequestImageCommentsCancel() {
-		cancellable?.cancel()
-	}
-	
-	
 }

@@ -64,7 +64,6 @@ public final class ImageCommentsPresenter {
 					 bundle: Bundle(for: FeedPresenter.self),
 					 comment: "Error message displayed when we can't load the image comments from the server")
 		
-		
 		errorView.display(ImageCommentsErrorViewModel(message: errorMessage))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}

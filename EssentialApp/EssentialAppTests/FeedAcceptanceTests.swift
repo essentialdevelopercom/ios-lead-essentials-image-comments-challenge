@@ -121,11 +121,16 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	private func feedURLString() -> String {
-		EssentialFeedEndpoint.feed.url.absoluteString
+		return api().url(for: .feed).absoluteString
 	}
 	
 	private func imageCommentsURLString(for uuidString: String) -> String {
-		EssentialFeedEndpoint.imageComments(id: UUID(uuidString: uuidString)!).url.absoluteString
+		api().url(for: .imageComments(id: UUID(uuidString: uuidString)!)).absoluteString
+	}
+	
+	private func api() -> EssentialFeedAPI{
+		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+		return EssentialFeedAPI(baseURL: baseURL)
 	}
 	
 }

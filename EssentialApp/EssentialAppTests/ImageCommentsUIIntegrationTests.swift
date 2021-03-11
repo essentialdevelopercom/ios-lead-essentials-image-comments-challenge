@@ -116,15 +116,20 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	
-	func test_cancelCommentsLoading_whenViewWillDisappear() {
-			let (sut, loader) = makeSUT()
-
-			sut.loadViewIfNeeded()
-			XCTAssertEqual(loader.cancelCount, 0)
-						   
-			sut.viewWillDisappear(false)
-			XCTAssertEqual(loader.cancelCount, 1)
+	func test_cancelCommentsLoading_whenViewIsDeallocated() {
+		let loader = LoaderSpy()
+		var sut: ImageCommentsViewController?
+			
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader.loadPublisher)
+			sut?.loadViewIfNeeded()
 		}
+		
+		XCTAssertEqual(loader.cancelCount, 0)
+					   
+		sut = nil
+		XCTAssertEqual(loader.cancelCount, 1)
+	}
 
 	
 	// MARK: - Helpers

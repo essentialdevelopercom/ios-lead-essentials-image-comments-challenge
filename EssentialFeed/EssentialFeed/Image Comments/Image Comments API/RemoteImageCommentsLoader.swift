@@ -93,7 +93,6 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 	}
 }
 
-
 private extension Array where Element == RemoteImageComment {
 	func toModels() -> [ImageComment] {
 		return map {ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: ImageCommentAuthor(username: $0.author.username))}

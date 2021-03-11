@@ -169,5 +169,5 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
 		action()
 		wait(for: [exp], timeout: 1.0)
 	}
-	
+
 }
