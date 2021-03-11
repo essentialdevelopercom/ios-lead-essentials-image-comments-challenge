@@ -9,8 +9,35 @@
 import XCTest
 import EssentialFeed
 
+struct CommentLoadingViewModel {
+	let isLoading: Bool
+}
+
+struct CommentErrorViewModel {
+	let message: String?
+}
+
+protocol CommentLoadingView {
+	func display(_ viewModel: CommentLoadingViewModel)
+}
+
+protocol CommentErrorView {
+	func display(_ viewModel: CommentErrorViewModel)
+}
+
 final class CommentsPresenter {
+	private let errorView: CommentErrorView
+	private let loadingView: CommentLoadingView
 	
+	init(errorView: CommentErrorView, loadingView: CommentLoadingView) {
+		self.errorView = errorView
+		self.loadingView = loadingView
+	}
+	
+	func didStartLoadingComments() {
+		errorView.display(CommentErrorViewModel(message: .none))
+		loadingView.display(CommentLoadingViewModel(isLoading: true))
+	}
 }
 
 class CommentsPresenterTests: XCTestCase {
@@ -21,15 +48,38 @@ class CommentsPresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
+	func test_didStartLoadingComments_displaysNoErrorMessageAndStartsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didStartLoadingComments()
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: .none),
+			.display(isLoading: true)
+		])
+	}
+	
 	//MARK: - Helpers
 	
 	private func makeSUT() -> (CommentsPresenter, ViewSPY) {
 		let view = ViewSPY()
-		let presenter = CommentsPresenter()
+		let presenter = CommentsPresenter(errorView: view, loadingView: view)
 		return (presenter, view)
 	}
 	
-	private final class ViewSPY {
-		var messages = [Any]()
+	private final class ViewSPY: CommentErrorView, CommentLoadingView {
+		enum Message: Hashable {
+			case display(errorMessage: String?)
+			case display(isLoading: Bool)
+		}
+		private(set) var messages = Set<Message>()
+		
+		func display(_ viewModel: CommentErrorViewModel) {
+			messages.insert(.display(errorMessage: viewModel.message))
+		}
+		
+		func display(_ viewModel: CommentLoadingViewModel) {
+			messages.insert(.display(isLoading: viewModel.isLoading))
+		}
 	}
 }
