@@ -105,6 +105,7 @@
 		B555E31F25FA9514001FE66F /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E31E25FA9514001FE66F /* ImageCommentCell.swift */; };
 		B555E32A25FA9586001FE66F /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E32925FA9586001FE66F /* ImageCommentsViewController.swift */; };
 		B555E33825FA9A14001FE66F /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B555E33725FA9A14001FE66F /* ImageComments.storyboard */; };
+		B555E33E25FA9C46001FE66F /* ImageCommentsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B555E33D25FA9C46001FE66F /* ImageCommentsSnapshotTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -232,6 +233,7 @@
 		B555E31E25FA9514001FE66F /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
 		B555E32925FA9586001FE66F /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
 		B555E33725FA9A14001FE66F /* ImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
+		B555E33D25FA9C46001FE66F /* ImageCommentsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsSnapshotTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -528,6 +530,7 @@
 				08D917AF22B92A5D003BC31B /* Info.plist */,
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
+				B555E33D25FA9C46001FE66F /* ImageCommentsSnapshotTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -952,6 +955,7 @@
 				086AEFB923A7DFA400EE8933 /* FeedSnapshotTests.swift in Sources */,
 				0800314923B6909A00720217 /* XCTestCase+Snapshot.swift in Sources */,
 				0800314723B68FAB00720217 /* UIViewController+Snapshot.swift in Sources */,
+				B555E33E25FA9C46001FE66F /* ImageCommentsSnapshotTests.swift in Sources */,
 				086AEFBC23A7E5C300EE8933 /* UIImage+TestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
