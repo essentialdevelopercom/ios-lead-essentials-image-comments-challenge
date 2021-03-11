@@ -7,23 +7,9 @@
 //
 
 import XCTest
+import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
-
-class ImageCommentsUIComposer {
-	
-	static func imageCommentsComposedWith(loader: ImageCommentLoader) -> ImageCommentsViewController {
-		let viewController = ImageCommentsViewController()
-		viewController.title = ImageCommentPresenter.title
-		viewController.loader = loader
-		viewController.presenter = ImageCommentPresenter(
-			commentView: WeakRefVirtualProxy(viewController),
-			loadingView: WeakRefVirtualProxy(viewController),
-			errorView: WeakRefVirtualProxy(viewController))
-		return viewController
-	}
-	
-}
 
 class ImageCommentsUIIntegrationTests: XCTestCase {
 
@@ -220,32 +206,6 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	
 
-}
-
-final class WeakRefVirtualProxy<T: AnyObject> {
-	private weak var object: T?
-	
-	init(_ object: T) {
-		self.object = object
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentErrorView where T: ImageCommentErrorView {
-	func display(_ viewModel: ImageCommentErrorViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentLoadingView where T: ImageCommentLoadingView {
-	func display(_ viewModel: ImageCommentLoadingViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentView where T: ImageCommentView {
-	func display(_ model: ImageCommentsViewModel) {
-		object?.display(model)
-	}
 }
 
 extension ImageCommentsViewController {
