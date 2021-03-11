@@ -38,6 +38,13 @@ final class CommentsPresenter {
 	private let loadingView: CommentLoadingView
 	private let commentsView: CommentView
 	
+	private var commentsLoadError: String {
+		return NSLocalizedString("COMMENTS_VIEW_CONNECTION_ERROR",
+			 tableName: "Feed",
+			 bundle: Bundle(for: FeedPresenter.self),
+			 comment: "Error message displayed when we can't load the comments from the server")
+	}
+	
 	init(errorView: CommentErrorView, loadingView: CommentLoadingView, commentsView: CommentView) {
 		self.errorView = errorView
 		self.loadingView = loadingView
@@ -51,6 +58,11 @@ final class CommentsPresenter {
 	
 	func didFinishLoadingComments(comments: [Comment]) {
 		commentsView.display(CommentViewModel(comments: comments))
+		loadingView.display(CommentLoadingViewModel(isLoading: false))
+	}
+	
+	func didFinishLoadingComments(with error: Error) {
+		errorView.display(CommentErrorViewModel(message: commentsLoadError))
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
 }
@@ -86,7 +98,28 @@ class CommentsPresenterTests: XCTestCase {
 		])
 	}
 	
+	func test_didFinishLoadingCommentsWithError_displaysLocalizedErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingComments(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: localized("COMMENTS_VIEW_CONNECTION_ERROR")),
+			.display(isLoading: false)
+		])
+	}
+	
 	//MARK: - Helpers
+	
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "Feed"
+		let bundle = Bundle(for: FeedPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
+	}
 	
 	private func makeSUT() -> (CommentsPresenter, ViewSPY) {
 		let view = ViewSPY()
