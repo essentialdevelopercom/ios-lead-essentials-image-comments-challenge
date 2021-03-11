@@ -14,6 +14,8 @@ class ImageCommentsViewController : UITableViewController, ImageCommentView, Ima
 	public var presenter: ImageCommentPresenter?
 	public var loader: ImageCommentLoader?
 	
+	public let errorView = UILabel()
+	
 	private var tableModel = [ImageCommentViewModel]() {
 		didSet { tableView.reloadData() }
 	}
@@ -31,12 +33,14 @@ class ImageCommentsViewController : UITableViewController, ImageCommentView, Ima
 	
 	@objc public func refresh() {
 		refreshControl?.beginRefreshing()
+		presenter?.didStartLoadingComments()
 		loader?.load { [weak self] result in
 			switch result {
 			case let .success(imageComments):
 				self?.presenter?.didFinishLoadingComments(with: imageComments)
 				break
-			case .failure:
+			case let .failure(error):
+				self?.presenter?.didFinishLoadingComments(with: error)
 				break
 			}
 			self?.refreshControl?.endRefreshing()
@@ -52,7 +56,7 @@ class ImageCommentsViewController : UITableViewController, ImageCommentView, Ima
 	}
 	
 	func display(_ viewModel: ImageCommentErrorViewModel) {
-		
+		errorView.text = viewModel.message
 	}
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -185,6 +189,18 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel])
 	}
 	
+	func test_loadImageCommentCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeImageCommentLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("COMMENT_VIEW_ERROR_MESSAGE"))
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeImageCommentLoading(at: 1)
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -295,6 +311,10 @@ extension ImageCommentsViewController {
 	
 	var imageCommentsSection: Int {
 		return 0
+	}
+	
+	var errorMessage: String? {
+		return errorView.text
 	}
 	
 	var isShowingLoadingIndicator: Bool {
