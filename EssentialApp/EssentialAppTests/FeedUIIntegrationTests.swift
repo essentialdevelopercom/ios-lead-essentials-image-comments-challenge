@@ -323,10 +323,10 @@ final class FeedUIIntegrationTests: XCTestCase {
 
 		let exp = expectation(description: "Wait for feed image selection")
 		
-		let (sut, loader) = makeSUT { image in
+		let (sut, loader) = makeSUT(didSelectImage: { image in
 			XCTAssertEqual(image, image0)
 			exp.fulfill()
-		}
+		})
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [image0, image1], at: 0)
