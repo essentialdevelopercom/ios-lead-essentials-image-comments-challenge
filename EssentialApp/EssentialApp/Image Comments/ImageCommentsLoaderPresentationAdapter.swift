@@ -12,11 +12,11 @@ import EssentialFeediOS
 import Combine
 
 final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDelegate {
-	let loader: () -> ImageCommentsLoader.Publisher
+	
 	var presenter: ImageCommentsPresenter?
 	
+	private let loader: () -> ImageCommentsLoader.Publisher
 	private var cancellable: Cancellable?
-	
 	private var loaderTask:ImageCommentsLoaderTask?
 	
 	init(imageCommentsLoader: @escaping () -> ImageCommentsLoader.Publisher){

@@ -12,7 +12,6 @@ import EssentialFeed
 import EssentialFeediOS
 @testable import EssentialApp
 
-
 final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_imageCommentsView_hasTitle() {
 		let (sut,_) = makeSUT()

@@ -9,7 +9,7 @@ import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
-	var navigationController: UINavigationController?
+	private var navigationController: UINavigationController?
 	
 	private var api = EssentialFeedAPI(baseURL:  URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!)
 	
