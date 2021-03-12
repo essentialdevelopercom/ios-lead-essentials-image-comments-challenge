@@ -67,14 +67,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.makeKeyAndVisible()
 	}
 	
-	func navigateToImageComments(feedImage: FeedImage) {
-		let loader = RemoteImageCommentLoader(url: URL(string: "https://a-url.com")!, client: httpClient)
+	func sceneWillResignActive(_ scene: UIScene) {
+		localFeedLoader.validateCache { _ in }
+	}
+	
+	private func navigateToImageComments(feedImage: FeedImage) {
+		let loader = makeRemoteImageCommentLoader(feedImageID: feedImage.id)
 		let controller = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader)
 		navigationController?.pushViewController(controller, animated: true)
 	}
 	
-	func sceneWillResignActive(_ scene: UIScene) {
-		localFeedLoader.validateCache { _ in }
+	private func makeRemoteImageCommentLoader(feedImageID id: UUID) -> RemoteImageCommentLoader {
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image\(id)/comments")!
+		return RemoteImageCommentLoader(url: url, client: httpClient)
 	}
 	
 	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
