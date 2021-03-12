@@ -28,6 +28,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_ERROR_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_ERROR_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraLarge)), named: "IMAGECOMMENTS_WITH_ERROR_light_extraLarge")
 	}
 	
 	func test_imageCommentsWithLongErrorMessage() {
@@ -37,6 +38,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_LONG_ERROR_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_LONG_ERROR_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraLarge)), named: "IMAGECOMMENTS_WITH_LONG_ERROR_light_extraLarge")
 	}
 	
 	func test_imageCommentsWithContent() {
@@ -53,6 +55,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_CONTENT_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_CONTENT_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraLarge)), named: "IMAGECOMMENTS_WITH_CONTENT_light_extraLarge")
 	}
 	
 	// MARK: - Helpers
