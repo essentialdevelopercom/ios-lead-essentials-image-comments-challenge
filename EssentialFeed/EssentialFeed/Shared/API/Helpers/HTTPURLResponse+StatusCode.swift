@@ -10,4 +10,8 @@ extension HTTPURLResponse {
 	var isOK: Bool {
 		return statusCode == HTTPURLResponse.OK_200
 	}
+	
+	func isValid(for validResponseRange: ClosedRange<Int>) -> Bool{
+		validResponseRange.contains(statusCode)
+	}
 }

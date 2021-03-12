@@ -161,10 +161,3 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		return value
 	}
 }
-
-
-
-
-
-
-

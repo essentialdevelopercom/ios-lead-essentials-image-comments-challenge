@@ -43,6 +43,7 @@
 		DA61169325C845A7002332CB /* ImageCommentsViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA61169225C845A7002332CB /* ImageCommentsViewController+TestHelpers.swift */; };
 		DA61169925C846C5002332CB /* ImageCommentsUIIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA61169825C846C5002332CB /* ImageCommentsUIIntegrationTests+Assertions.swift */; };
 		DA61169C25C84729002332CB /* ImageCommentsUIIntegrationTests+LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA61169B25C84729002332CB /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */; };
+		DAA4F62025FB438C00D74AEA /* EssentialFeedAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA4F61F25FB438C00D74AEA /* EssentialFeedAPITests.swift */; };
 		DADA865525C1BC76002A1714 /* ImageCommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADA865425C1BC76002A1714 /* ImageCommentsUIIntegrationTests.swift */; };
 		DAF3EE0225C9A9E4008938FE /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3EE0125C9A9E4008938FE /* ImageCommentsUIComposer.swift */; };
 		DAF3EE0A25C9ABAB008938FE /* Date+Adding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF3EE0925C9ABAB008938FE /* Date+Adding.swift */; };
@@ -115,6 +116,7 @@
 		DA61169225C845A7002332CB /* ImageCommentsViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsViewController+TestHelpers.swift"; sourceTree = "<group>"; };
 		DA61169825C846C5002332CB /* ImageCommentsUIIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 		DA61169B25C84729002332CB /* ImageCommentsUIIntegrationTests+LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsUIIntegrationTests+LoaderSpy.swift"; sourceTree = "<group>"; };
+		DAA4F61F25FB438C00D74AEA /* EssentialFeedAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedAPITests.swift; sourceTree = "<group>"; };
 		DADA865425C1BC76002A1714 /* ImageCommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		DAF3EE0125C9A9E4008938FE /* ImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIComposer.swift; sourceTree = "<group>"; };
 		DAF3EE0925C9ABAB008938FE /* Date+Adding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Adding.swift"; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
 				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
 				DADA865425C1BC76002A1714 /* ImageCommentsUIIntegrationTests.swift */,
+				DAA4F61F25FB438C00D74AEA /* EssentialFeedAPITests.swift */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -395,6 +398,7 @@
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
 				DA61169925C846C5002332CB /* ImageCommentsUIIntegrationTests+Assertions.swift in Sources */,
+				DAA4F62025FB438C00D74AEA /* EssentialFeedAPITests.swift in Sources */,
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				DAF3EE0A25C9ABAB008938FE /* Date+Adding.swift in Sources */,
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,

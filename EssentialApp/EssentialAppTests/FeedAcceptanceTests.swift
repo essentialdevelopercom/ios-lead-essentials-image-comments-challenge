@@ -135,5 +135,3 @@ class FeedAcceptanceTests: XCTestCase {
 		return EssentialFeedAPI(baseURL: baseURL)
 	}
 }
-
-

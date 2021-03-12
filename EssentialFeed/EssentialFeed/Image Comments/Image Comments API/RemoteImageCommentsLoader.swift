@@ -49,12 +49,13 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 		}
 		
 		static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
+			let validResponseRange = (200...299)
 			let decoder = JSONDecoder()
 			decoder.dateDecodingStrategy = .iso8601
-			guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+			guard response.isValid(for: validResponseRange), let root = try? decoder.decode(Root.self, from: data) else {
 				throw RemoteImageCommentsLoader.Error.invalidData
 			}
-			
+
 			return root.items
 		}
 	}

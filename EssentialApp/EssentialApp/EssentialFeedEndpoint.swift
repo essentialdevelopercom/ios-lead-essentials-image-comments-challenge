@@ -29,5 +29,3 @@ struct EssentialFeedAPI {
 		baseURL.appendingPathComponent(endpoint.path)
 	}
 }
-
-
