@@ -77,9 +77,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		navigationController?.pushViewController(controller, animated: true)
 	}
 	
-	private func makeRemoteImageCommentLoader(feedImageID id: UUID) -> RemoteImageCommentLoader {
+	private func makeRemoteImageCommentLoader(feedImageID id: UUID) -> ImageCommentLoader {
 		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!
-		return RemoteImageCommentLoader(url: url, client: httpClient)
+		return ImageCommentLoaderMainQueueDispatchDecorator(
+			decoratee: RemoteImageCommentLoader(
+				url: url,
+				client: httpClient))
 	}
 	
 	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
@@ -97,5 +100,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					.loadImageDataPublisher(from: url)
 					.caching(to: localImageLoader, using: url)
 			})
+	}
+	
+	private class ImageCommentLoaderMainQueueDispatchDecorator : ImageCommentLoader {
+		
+		let decoratee: ImageCommentLoader
+		
+		public init(decoratee: ImageCommentLoader) {
+			self.decoratee = decoratee
+		}
+		
+		func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) -> ImageCommentLoaderDataTask {
+			decoratee.load { result in
+				DispatchQueue.main.async {
+					completion(result)
+				}
+			}
+		}
 	}
 }
