@@ -174,13 +174,9 @@
 			children = (
 				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
 				0895DA88234B3B950031BB2D /* SceneDelegate.swift */,
-				0835BF6C24850F9800A793D2 /* CombineHelpers.swift */,
-				08073B42238D2DF900A75DC6 /* FeedUIComposer.swift */,
-				B555E33325FA95EC001FE66F /* ImageCommentsUIComposer.swift */,
-				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
-				08073B3F238D2DF900A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift */,
-				08073B41238D2DF900A75DC6 /* FeedLoaderPresentationAdapter.swift */,
-				08073B43238D2DFA00A75DC6 /* FeedViewAdapter.swift */,
+				B555E34425FB94C6001FE66F /* Helpers */,
+				B555E34325FB94BB001FE66F /* Feed UI */,
+				B555E34525FB94CB001FE66F /* ImageComments UI */,
 				0895DA8F234B3B970031BB2D /* Assets.xcassets */,
 				0895DA91234B3B970031BB2D /* LaunchScreen.storyboard */,
 				0895DA94234B3B970031BB2D /* Info.plist */,
@@ -208,6 +204,34 @@
 				0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B555E34325FB94BB001FE66F /* Feed UI */ = {
+			isa = PBXGroup;
+			children = (
+				08073B42238D2DF900A75DC6 /* FeedUIComposer.swift */,
+				08073B3F238D2DF900A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift */,
+				08073B41238D2DF900A75DC6 /* FeedLoaderPresentationAdapter.swift */,
+				08073B43238D2DFA00A75DC6 /* FeedViewAdapter.swift */,
+			);
+			path = "Feed UI";
+			sourceTree = "<group>";
+		};
+		B555E34425FB94C6001FE66F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0835BF6C24850F9800A793D2 /* CombineHelpers.swift */,
+				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B555E34525FB94CB001FE66F /* ImageComments UI */ = {
+			isa = PBXGroup;
+			children = (
+				B555E33325FA95EC001FE66F /* ImageCommentsUIComposer.swift */,
+			);
+			path = "ImageComments UI";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
