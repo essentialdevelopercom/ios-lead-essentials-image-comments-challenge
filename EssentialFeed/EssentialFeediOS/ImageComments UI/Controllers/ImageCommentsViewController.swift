@@ -29,8 +29,6 @@ public class ImageCommentsViewController : UITableViewController, ImageCommentVi
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
 		
-		tableView.register(ImageCommentCell.self, forCellReuseIdentifier: "\(ImageCommentCell.self)")
-		
 		refresh()
 	}
 	
@@ -67,7 +65,7 @@ public class ImageCommentsViewController : UITableViewController, ImageCommentVi
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let model = tableModel[indexPath.row]
 		
-		let cell = tableView.dequeueReusableCell(withIdentifier: "\(ImageCommentCell.self)") as! ImageCommentCell
+		let cell: ImageCommentCell = tableView.dequeueReusableCell()
 		cell.configure(model)
 		return cell
 	}

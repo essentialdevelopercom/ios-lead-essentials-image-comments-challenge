@@ -38,13 +38,55 @@
                             </connections>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="6vU-uw-7Ee">
-                                <rect key="frame" x="0.0" y="62" width="414" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="147" id="6vU-uw-7Ee" customClass="ImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="62" width="414" height="147"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6vU-uw-7Ee" id="usx-am-Wa5">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="147"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UNh-X5-I1h" userLabel="Label Username">
+                                            <rect key="frame" x="20" y="11" width="43.5" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="fe1-xs-6C2"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WVy-AQ-fcb" userLabel="Label Created">
+                                            <rect key="frame" x="356.5" y="11" width="37.5" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="y10-fz-xLF"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is a comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H0Y-Rc-x17" userLabel="Label Message">
+                                            <rect key="frame" x="20" y="32" width="374" height="96.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="H0Y-Rc-x17" secondAttribute="bottom" constant="7.5" id="0af-dc-CFZ"/>
+                                        <constraint firstItem="WVy-AQ-fcb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="UNh-X5-I1h" secondAttribute="trailing" priority="999" id="0gX-yi-7xl"/>
+                                        <constraint firstItem="UNh-X5-I1h" firstAttribute="top" secondItem="usx-am-Wa5" secondAttribute="topMargin" id="3vp-2K-oDZ"/>
+                                        <constraint firstItem="H0Y-Rc-x17" firstAttribute="trailing" secondItem="usx-am-Wa5" secondAttribute="trailingMargin" id="8Ob-wb-n4T"/>
+                                        <constraint firstItem="WVy-AQ-fcb" firstAttribute="trailing" secondItem="usx-am-Wa5" secondAttribute="trailingMargin" id="Fdh-Yh-pJa"/>
+                                        <constraint firstItem="WVy-AQ-fcb" firstAttribute="top" secondItem="usx-am-Wa5" secondAttribute="topMargin" id="OiS-6T-alI"/>
+                                        <constraint firstItem="UNh-X5-I1h" firstAttribute="leading" secondItem="usx-am-Wa5" secondAttribute="leadingMargin" id="Qny-k0-Ies"/>
+                                        <constraint firstItem="H0Y-Rc-x17" firstAttribute="top" secondItem="UNh-X5-I1h" secondAttribute="bottom" id="SCb-s8-Ket"/>
+                                        <constraint firstItem="H0Y-Rc-x17" firstAttribute="leading" secondItem="usx-am-Wa5" secondAttribute="leadingMargin" id="vM5-Sj-Sqd"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="labelCreated" destination="WVy-AQ-fcb" id="bVi-qu-khV"/>
+                                    <outlet property="labelMessage" destination="H0Y-Rc-x17" id="Btc-OH-KL6"/>
+                                    <outlet property="labelUsername" destination="UNh-X5-I1h" id="oSc-Sj-F3f"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -58,7 +100,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qTb-2n-jZv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="189" y="85"/>
+            <point key="canvasLocation" x="188.40579710144928" y="84.375"/>
         </scene>
     </scenes>
     <resources>

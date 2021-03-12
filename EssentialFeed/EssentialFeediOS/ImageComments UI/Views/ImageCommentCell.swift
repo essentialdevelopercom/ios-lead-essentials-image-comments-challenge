@@ -10,13 +10,13 @@ import UIKit
 import EssentialFeed
 
 public class ImageCommentCell: UITableViewCell {
-	public let message = UILabel()
-	public let created = UILabel()
-	public let username = UILabel()
+	@IBOutlet public var labelMessage: UILabel!
+	@IBOutlet public var labelCreated: UILabel!
+	@IBOutlet public var labelUsername: UILabel!
 	
 	public func configure(_ viewModel: ImageCommentViewModel) {
-		message.text = viewModel.message
-		created.text = viewModel.created
-		username.text = viewModel.username
+		labelMessage.text = viewModel.message
+		labelCreated.text = viewModel.created
+		labelUsername.text = viewModel.username
 	}
 }

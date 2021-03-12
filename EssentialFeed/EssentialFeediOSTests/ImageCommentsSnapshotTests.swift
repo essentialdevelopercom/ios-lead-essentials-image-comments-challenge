@@ -39,6 +39,22 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_LONG_ERROR_dark")
 	}
 	
+	func test_imageCommentsWithContent() {
+		let sut = makeSUT()
+		
+		let viewModel = ImageCommentsViewModel(comments: [
+			ImageCommentViewModel(message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus bibendum eu quam et hendrerit. Aliquam erat volutpat. Duis eleifend eros sagittis, tincidunt ex rutrum, malesuada ante. In turpis orci, accumsan et consequat et, commodo eu mauris. Morbi sagittis sodales velit, at faucibus erat euismod sed. Cras commodo, nisi sed scelerisque.", created: "30 seconds ago", username: "username0"),
+			ImageCommentViewModel(message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut.", created: "30 minutes ago", username: "username1"),
+			ImageCommentViewModel(message: "💯", created: "1 day ago", username: "username2"),
+			ImageCommentViewModel(message: "This is great!", created: "2 days ago", username: "username3")
+		])
+		
+		sut.display(viewModel)
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_CONTENT_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_CONTENT_dark")
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> ImageCommentsViewController {
 		let bundle = Bundle(for: ImageCommentsViewController.self)

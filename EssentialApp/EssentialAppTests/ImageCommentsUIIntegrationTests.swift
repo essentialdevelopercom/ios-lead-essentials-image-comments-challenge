@@ -242,9 +242,9 @@ extension ImageCommentsViewController {
 }
 
 extension ImageCommentCell {
-	var messageText: String? { return message.text }
-	var createdText: String? { return created.text }
-	var usernameText: String? { return username.text }
+	var messageText: String? { return labelMessage.text }
+	var createdText: String? { return labelCreated.text }
+	var usernameText: String? { return labelUsername.text }
 }
 
 extension Date {
