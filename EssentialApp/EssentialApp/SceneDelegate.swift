@@ -78,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	private func makeRemoteImageCommentLoader(feedImageID id: UUID) -> RemoteImageCommentLoader {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image\(id)/comments")!
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!
 		return RemoteImageCommentLoader(url: url, client: httpClient)
 	}
 	
