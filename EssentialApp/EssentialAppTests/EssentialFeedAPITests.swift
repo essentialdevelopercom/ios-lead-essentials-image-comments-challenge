@@ -11,7 +11,7 @@ import XCTest
 
 class EssentialFeedAPITests: XCTestCase {
 
-	func test_feedEndpoint_isCorrect(){
+	func test_feedEndpoint_isCorrect() {
 		let baseURL = URL(string: "https://base-url.com")!
 		let sut = EssentialFeedAPI(baseURL: baseURL)
 		
@@ -20,7 +20,7 @@ class EssentialFeedAPITests: XCTestCase {
 		XCTAssertEqual(sut.url(for: .feed) , expectedURL)
 	}
 	
-	func test_commentsEndpoint_isCorrect(){
+	func test_commentsEndpoint_isCorrect() {
 		let baseURL = URL(string: "https://base-url.com")!
 		let commentId = UUID(uuidString: "CE86A1DE-11C8-407B-B1C7-39B8BFA124F1")!
 		let sut = EssentialFeedAPI(baseURL: baseURL)
