@@ -102,20 +102,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			})
 	}
 	
-	private class ImageCommentLoaderMainQueueDispatchDecorator : ImageCommentLoader {
-		
-		let decoratee: ImageCommentLoader
-		
-		public init(decoratee: ImageCommentLoader) {
-			self.decoratee = decoratee
-		}
-		
-		func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) -> ImageCommentLoaderDataTask {
-			decoratee.load { result in
-				DispatchQueue.main.async {
-					completion(result)
-				}
-			}
-		}
-	}
 }
