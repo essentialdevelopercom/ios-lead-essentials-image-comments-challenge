@@ -307,7 +307,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [makeImage()])
-		_ = sut.simulateFeedImageViewVisible(at: 0)
+		sut.simulateFeedImageViewVisible(at: 0)
 		
 		let exp = expectation(description: "Wait for background queue")
 		DispatchQueue.global().async {
@@ -317,11 +317,24 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	func test_didSelectFeedImage_callsOnSelectClosure() {
+		let exp = expectation(description: "Wait for onSelect")
+		let (sut, loader) = makeSUT(onSelect: { _ in
+			exp.fulfill()
+		})
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [makeImage()])
+		sut.simulateFeedImageSelection(at: 0)
+		
+		wait(for: [exp], timeout: 1.0)
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(onSelect: @escaping (FeedImage) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, onSelect: onSelect)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
