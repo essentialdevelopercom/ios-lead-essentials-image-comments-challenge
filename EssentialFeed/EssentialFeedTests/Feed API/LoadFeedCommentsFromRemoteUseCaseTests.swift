@@ -26,7 +26,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let url = URL(string: "https://a-given-url.com")!
+		let url = anyURL()
 		let (sut, client) = makeSUT()
 		
 		sut.load(url: url)
@@ -35,7 +35,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadTwice_requestsDataFromURLTwice() {
-		let url = URL(string: "https://a-given-url.com")!
+		let url = anyURL()
 		let (sut, client) = makeSUT()
 		
 		sut.load(url: url)
