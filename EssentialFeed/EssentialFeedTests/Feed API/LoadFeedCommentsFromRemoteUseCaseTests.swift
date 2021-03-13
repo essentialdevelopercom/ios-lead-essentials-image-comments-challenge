@@ -10,6 +10,7 @@ class RemoteFeedCommentsLoader {
 	
 	public enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 	
 	private let client: HTTPClient
@@ -18,8 +19,13 @@ class RemoteFeedCommentsLoader {
 	}
 	
 	func load(url: URL, completion: @escaping (Result<[FeedComment], Error>)->()) {
-		client.get(from: url, completion: { _ in
-			completion(.failure(.connectivity))
+		client.get(from: url, completion: { result in
+			switch result {
+			case .success:
+				completion(.failure(.invalidData))
+			case .failure:
+				completion(.failure(.connectivity))
+			}
 		})
 	}
 }
@@ -67,6 +73,29 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		client.complete(with: anyNSError())
 		wait(for: [exp], timeout: 1)
+	}
+	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		
+		let samples = [199, 201, 300, 400, 500]
+		
+		samples.enumerated().forEach { index, code in
+			let exp = expectation(description: "Wait for load completion")
+			sut.load(url: anyURL()) { result in
+				switch result {
+				case .success:
+					XCTFail("Expected failure, received success: \(result)")
+				case .failure(let error):
+					XCTAssertEqual(.invalidData, error)
+				}
+				exp.fulfill()
+			}
+			let json = ["items": []]
+			let data = try! JSONSerialization.data(withJSONObject: json)
+			client.complete(withStatusCode: code, data: data, at: index)
+			wait(for: [exp], timeout: 1)
+		}
 	}
 	
 	// MARK: - Helpers
