@@ -8,5 +8,5 @@ import Foundation
 protocol FeedCommentsLoader {
 	typealias Result = Swift.Result<[FeedComment], Error>
 	
-	func load(completion: @escaping (Result) -> Void)
+	func load(url: URL, completion: @escaping (Result) -> Void)
 }
