@@ -22,8 +22,10 @@ class RemoteFeedCommentsLoader {
 		client.get(from: url, completion: { result in
 			switch result {
 			case .success(let (data, response)):
-				if response.statusCode == 200, let _ = try? JSONDecoder().decode(Root.self, from: data) {
-					completion(.success([]))
+				let decoder = JSONDecoder()
+				decoder.dateDecodingStrategy = .iso8601
+				if response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) {
+					completion(.success(root.items.map({FeedComment(id: $0.id, message: $0.message, date: $0.created_at, authorName: $0.author.username)})))
 				}else{
 					completion(.failure(.invalidData))
 				}
@@ -42,7 +44,6 @@ private struct RemoteFeedComment: Decodable {
 	let id: UUID
 	let message: String
 	let created_at: Date
-	let image: URL
 	let author: RemoteAuthor
 }
 
@@ -113,6 +114,40 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		expect(sut: sut, toCompleteWith: .success([])) {
 			let json = ["items": []]
+			let data = try! JSONSerialization.data(withJSONObject: json)
+			client.complete(withStatusCode: 200, data: data)
+		}
+	}
+	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		
+		let dateFormatter = ISO8601DateFormatter()
+		let uuid1 = UUID()
+		let jsonDate1 = "2020-05-20T11:24:59+0000"
+		let date1 = dateFormatter.date(from: jsonDate1)!
+		let comment1 = FeedComment(id: uuid1, message: "a message", date: date1, authorName: "an author name")
+		
+		let uuid2 = UUID()
+		let jsonDate2 = "2020-05-19T14:23:53+0000"
+		let date2 = dateFormatter.date(from: jsonDate2)!
+		let comment2 = FeedComment(id: uuid2, message: "another message", date: date2, authorName: "another name")
+		
+		expect(sut: sut, toCompleteWith: .success([comment1, comment2])) {
+			let json = ["items": [
+				["id": uuid1.uuidString,
+				 "message": "a message",
+				 "created_at": jsonDate1,
+				 "author": [
+					"username": "an author name"
+				 ]],
+				["id": uuid2.uuidString,
+				 "message": "another message",
+				 "created_at": jsonDate2,
+				 "author": [
+					"username": "another name"
+				 ]]
+			]]
 			let data = try! JSONSerialization.data(withJSONObject: json)
 			client.complete(withStatusCode: 200, data: data)
 		}
