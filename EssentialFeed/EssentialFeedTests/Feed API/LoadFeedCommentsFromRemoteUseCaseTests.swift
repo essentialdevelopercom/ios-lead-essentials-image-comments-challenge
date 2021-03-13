@@ -93,9 +93,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut: sut, toCompleteWith: .failure(RemoteFeedCommentsLoader.Error.invalidData)) {
-				let json = ["items": []]
-				let data = try! JSONSerialization.data(withJSONObject: json)
-				client.complete(withStatusCode: code, data: data, at: index)
+				client.complete(withStatusCode: code, data: self.emptyItemsData(), at: index)
 			}
 		}
 	}
@@ -113,40 +111,26 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		
 		expect(sut: sut, toCompleteWith: .success([])) {
-			let json = ["items": []]
-			let data = try! JSONSerialization.data(withJSONObject: json)
-			client.complete(withStatusCode: 200, data: data)
+			client.complete(withStatusCode: 200, data: self.emptyItemsData())
 		}
 	}
 	
 	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
 		let (sut, client) = makeSUT()
 		
-		let dateFormatter = ISO8601DateFormatter()
-		let uuid1 = UUID()
-		let jsonDate1 = "2020-05-20T11:24:59+0000"
-		let date1 = dateFormatter.date(from: jsonDate1)!
-		let comment1 = FeedComment(id: uuid1, message: "a message", date: date1, authorName: "an author name")
+		let item1 = makeFeedCommentWithJSON(id: UUID(),
+											message: "a message",
+											date: "2020-05-20T11:24:59+0000",
+											authorName: "an author name")
+		let item2 = makeFeedCommentWithJSON(id: UUID(),
+											message: "another message",
+											date: "2020-05-19T14:23:53+0000",
+											authorName: "another name")
 		
-		let uuid2 = UUID()
-		let jsonDate2 = "2020-05-19T14:23:53+0000"
-		let date2 = dateFormatter.date(from: jsonDate2)!
-		let comment2 = FeedComment(id: uuid2, message: "another message", date: date2, authorName: "another name")
-		
-		expect(sut: sut, toCompleteWith: .success([comment1, comment2])) {
+		expect(sut: sut, toCompleteWith: .success([item1.comment, item2.comment])) {
 			let json = ["items": [
-				["id": uuid1.uuidString,
-				 "message": "a message",
-				 "created_at": jsonDate1,
-				 "author": [
-					"username": "an author name"
-				 ]],
-				["id": uuid2.uuidString,
-				 "message": "another message",
-				 "created_at": jsonDate2,
-				 "author": [
-					"username": "another name"
-				 ]]
+				item1.json,
+				item2.json
 			]]
 			let data = try! JSONSerialization.data(withJSONObject: json)
 			client.complete(withStatusCode: 200, data: data)
@@ -187,5 +171,22 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		default:
 			break
 		}
+	}
+	
+	private func emptyItemsData() -> Data {
+		let json = ["items": []]
+		return try! JSONSerialization.data(withJSONObject: json)
+	}
+	
+	private func makeFeedCommentWithJSON(id: UUID, message: String, date: String, authorName: String) -> (comment: FeedComment, json: [String: Any]) {
+		let dateFormatter = ISO8601DateFormatter()
+		let json: [String: Any] = ["id": id.uuidString,
+								   "message": message,
+								   "created_at": date,
+								   "author": [
+									   "username": authorName
+								   ]]
+		let comment = FeedComment(id: id, message: message, date: dateFormatter.date(from: date)!, authorName: authorName)
+		return (comment, json)
 	}
 }
