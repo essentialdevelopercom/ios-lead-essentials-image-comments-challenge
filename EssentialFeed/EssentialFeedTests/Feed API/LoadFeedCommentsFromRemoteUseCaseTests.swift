@@ -20,19 +20,27 @@ class RemoteFeedCommentsLoader {
 class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_init_doesNotRequestData() {
-		let client = HTTPClientSpy()
-		let _ = RemoteFeedCommentsLoader(client: client)
+		let (_, client) = makeSUT()
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
 	func test_load_requestsDataFromURL() {
 		let url = URL(string: "https://a-given-url.com")!
-		let client = HTTPClientSpy()
-		let sut = RemoteFeedCommentsLoader(client: client)
+		let (sut, client) = makeSUT()
 		
 		sut.load(url: url)
 		
 		XCTAssertEqual(client.requestedURLs, [url])
+	}
+	
+	// MARK: - Helpers
+	
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedCommentsLoader, client: HTTPClientSpy) {
+		let client = HTTPClientSpy()
+		let sut = RemoteFeedCommentsLoader(client: client)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		trackForMemoryLeaks(client, file: file, line: line)
+		return (sut, client)
 	}
 }
