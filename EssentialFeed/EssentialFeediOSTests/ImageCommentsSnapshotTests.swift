@@ -21,16 +21,6 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_EMPTY_dark")
 	}
 	
-	func test_imageCommentsWithErrorMessage() {
-		let sut = makeSUT()
-		
-		sut.display(ImageCommentErrorViewModel(message: "This is an error message"))
-		
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGECOMMENTS_WITH_ERROR_light")
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGECOMMENTS_WITH_ERROR_dark")
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraLarge)), named: "IMAGECOMMENTS_WITH_ERROR_light_extraLarge")
-	}
-	
 	func test_imageCommentsWithLongErrorMessage() {
 		let sut = makeSUT()
 		
