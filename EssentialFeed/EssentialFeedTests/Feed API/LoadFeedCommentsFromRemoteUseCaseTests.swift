@@ -19,7 +19,8 @@ class RemoteFeedCommentsLoader {
 	}
 	
 	func load(url: URL, completion: @escaping (Result<[FeedComment], Error>)->()) {
-		client.get(from: url, completion: { result in
+		client.get(from: url, completion: {[weak self] result in
+			guard let _ = self else { return }
 			switch result {
 			case .success(let (data, response)):
 				let decoder = JSONDecoder()
@@ -135,6 +136,20 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 			let data = try! JSONSerialization.data(withJSONObject: json)
 			client.complete(withStatusCode: 200, data: data)
 		}
+	}
+	
+	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let url = anyURL()
+		let client = HTTPClientSpy()
+		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(client: client)
+		
+		var capturedResults = [Result<[FeedComment], RemoteFeedCommentsLoader.Error>]()
+		sut?.load(url: url) { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(withStatusCode: 200, data: emptyItemsData())
+		
+		XCTAssertTrue(capturedResults.isEmpty)
 	}
 	
 	// MARK: - Helpers
