@@ -37,29 +37,4 @@ public class ImageCommentsUIComposer {
 		return controller
 	}
 	
-	private class ImageCommentLoaderPresentationAdapter : ImageCommentsViewControllerDelegate {
-		
-		public var loader: ImageCommentLoader
-		public var presenter: ImageCommentPresenter?
-		
-		public init(loader: ImageCommentLoader) {
-			self.loader = loader
-		}
-		
-		public func didRequestImageCommentsRefresh() {
-			presenter?.didStartLoadingComments()
-			loader.load { [weak self] result in
-				switch result {
-				case let .success(imageComments):
-					self?.presenter?.didFinishLoadingComments(with: imageComments)
-					break
-				case let .failure(error):
-					self?.presenter?.didFinishLoadingComments(with: error)
-					break
-				}
-			}
-		}
-		
-	}
-	
 }
