@@ -4,9 +4,20 @@
 //
 
 import XCTest
+import EssentialFeed
+
+class RemoteFeedCommentsLoader {
+	init(client: HTTPClient) {
+		
+	}
+}
 
 class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
-	func test() {
+	
+	func test_init_doesNotRequestData() {
+		let client = HTTPClientSpy()
+		let _ = RemoteFeedCommentsLoader(client: client)
 		
+		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 }
