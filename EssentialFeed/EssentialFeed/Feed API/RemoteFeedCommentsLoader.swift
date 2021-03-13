@@ -19,21 +19,38 @@ public class RemoteFeedCommentsLoader {
 	
 	public func load(url: URL, completion: @escaping (Result<[FeedComment], Error>)->()) {
 		client.get(from: url, completion: {[weak self] result in
-			guard let _ = self else { return }
-			switch result {
-			case .success(let (data, response)):
-				let decoder = JSONDecoder()
-				decoder.dateDecodingStrategy = .iso8601
-				if response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) {
-					completion(.success(root.items.map({FeedComment(id: $0.id, message: $0.message, date: $0.created_at, authorName: $0.author.username)})))
-				}else{
-					completion(.failure(.invalidData))
-				}
-			case .failure:
-				completion(.failure(.connectivity))
-			}
+			guard let self = self else { return }
+			self.handle(result, completion)
 		})
 	}
+	
+	private func handle(_ result: HTTPClient.Result, _ completion: @escaping (Result<[FeedComment], Error>)->()) {
+		switch result {
+		case .success(let (data, response)):
+			handleSuccessCase(data, response, completion)
+		case .failure:
+			completion(.failure(.connectivity))
+		}
+	}
+	
+	private func handleSuccessCase(_ data: Data, _ response: HTTPURLResponse, _ completion: @escaping (Result<[FeedComment], Error>)->()) {
+		if response.statusCode == 200, let comments = try? convert(data) {
+			completion(.success(comments))
+		}else{
+			completion(.failure(.invalidData))
+		}
+	}
+	
+	private func convert(_ data: Data) throws -> [FeedComment] {
+		let root = try decoder.decode(Root.self, from: data)
+		return root.items.map({FeedComment(id: $0.id, message: $0.message, date: $0.created_at, authorName: $0.author.username)})
+	}
+	
+	private lazy var decoder: JSONDecoder = {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		return decoder
+	}()
 }
 
 private struct Root: Decodable {
