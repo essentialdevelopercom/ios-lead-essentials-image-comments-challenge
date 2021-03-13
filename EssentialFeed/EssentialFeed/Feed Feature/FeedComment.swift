@@ -5,9 +5,16 @@
 
 import Foundation
 
-struct FeedComment {
-	let id: UUID
-	let message: String
-	let date: Date
-	let authorName: String
+public struct FeedComment {
+	public let id: UUID
+	public let message: String
+	public let date: Date
+	public let authorName: String
+	
+	public init(id: UUID, message: String, date: Date, authorName: String) {
+		self.id = id
+		self.message = message
+		self.date = date
+		self.authorName = authorName
+	}
 }

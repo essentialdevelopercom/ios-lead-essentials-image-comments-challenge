@@ -7,13 +7,20 @@ import XCTest
 import EssentialFeed
 
 class RemoteFeedCommentsLoader {
+	
+	public enum Error: Swift.Error {
+		case connectivity
+	}
+	
 	private let client: HTTPClient
 	init(client: HTTPClient) {
 		self.client = client
 	}
 	
-	func load(url: URL) {
-		client.get(from: url, completion: { _ in })
+	func load(url: URL, completion: @escaping (Result<[FeedComment], Error>)->()) {
+		client.get(from: url, completion: { _ in
+			completion(.failure(.connectivity))
+		})
 	}
 }
 
@@ -29,7 +36,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT()
 		
-		sut.load(url: url)
+		sut.load(url: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -38,10 +45,28 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT()
 		
-		sut.load(url: url)
-		sut.load(url: url)
+		sut.load(url: url) { _ in }
+		sut.load(url: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		
+		let exp = expectation(description: "Wait for load completion")
+		sut.load(url: anyURL()) { result in
+			switch result {
+			case .success:
+				XCTFail("Expected failure, received success: \(result)")
+			case .failure(let error):
+				XCTAssertEqual(.connectivity, error)
+			}
+			exp.fulfill()
+		}
+		
+		client.complete(with: anyNSError())
+		wait(for: [exp], timeout: 1)
 	}
 	
 	// MARK: - Helpers
