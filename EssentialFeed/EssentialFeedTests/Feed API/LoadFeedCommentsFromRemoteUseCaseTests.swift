@@ -21,13 +21,33 @@ class RemoteFeedCommentsLoader {
 	func load(url: URL, completion: @escaping (Result<[FeedComment], Error>)->()) {
 		client.get(from: url, completion: { result in
 			switch result {
-			case .success:
-				completion(.failure(.invalidData))
+			case .success(let (data, response)):
+				if response.statusCode == 200, let _ = try? JSONDecoder().decode(Root.self, from: data) {
+					completion(.success([]))
+				}else{
+					completion(.failure(.invalidData))
+				}
 			case .failure:
 				completion(.failure(.connectivity))
 			}
 		})
 	}
+}
+
+private struct Root: Decodable {
+	let items: [RemoteFeedComment]
+}
+
+private struct RemoteFeedComment: Decodable {
+	let id: UUID
+	let message: String
+	let created_at: Date
+	let image: URL
+	let author: RemoteAuthor
+}
+
+private struct RemoteAuthor: Decodable {
+	let username: String
 }
 
 class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
@@ -85,6 +105,16 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		expect(sut: sut, toCompleteWith: .failure(RemoteFeedCommentsLoader.Error.invalidData)) {
 			let invalidJSON = Data("invalid json".utf8)
 			client.complete(withStatusCode: 200, data: invalidJSON)
+		}
+	}
+	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut: sut, toCompleteWith: .success([])) {
+			let json = ["items": []]
+			let data = try! JSONSerialization.data(withJSONObject: json)
+			client.complete(withStatusCode: 200, data: data)
 		}
 	}
 	
