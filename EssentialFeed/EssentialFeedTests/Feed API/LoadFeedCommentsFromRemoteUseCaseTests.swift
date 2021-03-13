@@ -60,19 +60,9 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 		
-		let exp = expectation(description: "Wait for load completion")
-		sut.load(url: anyURL()) { result in
-			switch result {
-			case .success:
-				XCTFail("Expected failure, received success: \(result)")
-			case .failure(let error):
-				XCTAssertEqual(.connectivity, error)
-			}
-			exp.fulfill()
+		expect(sut: sut, toCompleteWith: .failure(RemoteFeedCommentsLoader.Error.connectivity)) {
+			client.complete(with: anyNSError())
 		}
-		
-		client.complete(with: anyNSError())
-		wait(for: [exp], timeout: 1)
 	}
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
@@ -81,20 +71,11 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let samples = [199, 201, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
-			let exp = expectation(description: "Wait for load completion")
-			sut.load(url: anyURL()) { result in
-				switch result {
-				case .success:
-					XCTFail("Expected failure, received success: \(result)")
-				case .failure(let error):
-					XCTAssertEqual(.invalidData, error)
-				}
-				exp.fulfill()
+			expect(sut: sut, toCompleteWith: .failure(RemoteFeedCommentsLoader.Error.invalidData)) {
+				let json = ["items": []]
+				let data = try! JSONSerialization.data(withJSONObject: json)
+				client.complete(withStatusCode: code, data: data, at: index)
 			}
-			let json = ["items": []]
-			let data = try! JSONSerialization.data(withJSONObject: json)
-			client.complete(withStatusCode: code, data: data, at: index)
-			wait(for: [exp], timeout: 1)
 		}
 	}
 	
@@ -106,5 +87,31 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func expect(sut: RemoteFeedCommentsLoader, toCompleteWith expectedResult: Result<[FeedComment], Error>, on actions: @escaping ()->(), file: StaticString = #filePath, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load completion")
+		
+		sut.load(url: anyURL()) { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case (.success(let receivedComments), .success(let expectedComments)):
+				XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
+			case (.failure(let receivedError), .failure(let expectedError)):
+				XCTAssertEqual(receivedError, expectedError as? RemoteFeedCommentsLoader.Error, file: file, line: line)
+			default:
+				XCTFail("Expected: \(expectedResult), but received: \(receivedResult)", file: file, line: line)
+			}
+			exp.fulfill()
+		}
+		
+		actions()
+		
+		let result = XCTWaiter.wait(for: [exp], timeout: 1.0)
+		switch result {
+		case .timedOut:
+			XCTFail("Timed out waiting for load completion", file: file, line: line)
+		default:
+			break
+		}
 	}
 }

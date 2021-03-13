@@ -5,7 +5,7 @@
 
 import Foundation
 
-public struct FeedComment {
+public struct FeedComment: Equatable {
 	public let id: UUID
 	public let message: String
 	public let date: Date
