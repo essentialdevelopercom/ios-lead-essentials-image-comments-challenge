@@ -21,11 +21,17 @@ class FeedCommentsViewController: UITableViewController {
 		title = feedCommentsTitle
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-		loader.load(url: url, completion: { _ in })
+		loader.load(url: url, completion: {[weak self] _ in
+			self?.refreshControl?.endRefreshing()
+		})
+		refreshControl?.beginRefreshing()
 	}
 	
 	@objc private func refresh() {
-		loader.load(url: url, completion: { _ in })
+		refreshControl?.beginRefreshing()
+		loader.load(url: url, completion: {[weak self] _ in
+			self?.refreshControl?.endRefreshing()
+		})
 	}
 	
 	private var feedCommentsTitle: String {
@@ -61,6 +67,22 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadedUrls, [url, url, url], "Expected yet another loading request once user initiates another reload")
 	}
 	
+	func test_loadingFeedCommentsIndicator_isVisibleWhileLoadingFeedComments() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+		
+		loader.completeCommentsLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
+		
+		sut.simulateUserInitiatedFeedCommentsReload()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
+		
+		loader.completeCommentsLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
@@ -82,9 +104,21 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	class LoaderSpy: FeedCommentsLoader {
-		var loadedUrls: [URL] = []
+		
+		private(set) var loadedUrls: [URL] = []
+		private var commentsRequests: [(FeedCommentsLoader.Result) -> Void] = []
+		
 		func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) {
 			loadedUrls.append(url)
+			commentsRequests.append(completion)
+		}
+		
+		func completeCommentsLoading(with comments: [FeedComment] = [], at index: Int = 0) {
+			commentsRequests[index](.success(comments))
+		}
+		
+		func completeCommentsLoadingWithError(at index: Int = 0) {
+			commentsRequests[index](.failure(anyNSError()))
 		}
 	}
 }
@@ -92,5 +126,9 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 extension FeedCommentsViewController {
 	func simulateUserInitiatedFeedCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 }
