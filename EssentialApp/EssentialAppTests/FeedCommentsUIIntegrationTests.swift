@@ -8,9 +8,11 @@ import EssentialFeed
 
 class FeedCommentsViewController: UITableViewController {
 	
+	private var url: URL!
 	private var loader: FeedCommentsLoader!
-	convenience init(loader: FeedCommentsLoader) {
+	convenience init(url: URL, loader: FeedCommentsLoader) {
 		self.init()
+		self.url = url
 		self.loader = loader
 	}
 	
@@ -19,11 +21,11 @@ class FeedCommentsViewController: UITableViewController {
 		title = feedCommentsTitle
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-		loader.load(url: URL(string: "http://any-url.com")!, completion: { _ in })
+		loader.load(url: url, completion: { _ in })
 	}
 	
 	@objc private func refresh() {
-		loader.load(url: URL(string: "http://any-url.com")!, completion: { _ in })
+		loader.load(url: url, completion: { _ in })
 	}
 	
 	private var feedCommentsTitle: String {
@@ -45,24 +47,25 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedCommentsActions_requestCommentsFromLoader() {
-		let (sut, loader) = makeSUT()
-		XCTAssertEqual(loader.loadFeedCommentsCallCount, 0, "Expected no loading requests before view is loaded")
+		let url = URL(string: "https://comments-url.com")!
+		let (sut, loader) = makeSUT(url: url)
+		XCTAssertEqual(loader.loadedUrls, [], "Expected no loading requests before view is loaded")
 		
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.loadFeedCommentsCallCount, 1, "Expected a loading request once view is loaded")
+		XCTAssertEqual(loader.loadedUrls, [url], "Expected a loading request once view is loaded")
 		
 		sut.simulateUserInitiatedFeedCommentsReload()
-		XCTAssertEqual(loader.loadFeedCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
+		XCTAssertEqual(loader.loadedUrls, [url, url], "Expected another loading request once user initiates a reload")
 		
 		sut.simulateUserInitiatedFeedCommentsReload()
-		XCTAssertEqual(loader.loadFeedCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
+		XCTAssertEqual(loader.loadedUrls, [url, url, url], "Expected yet another loading request once user initiates another reload")
 	}
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedCommentsViewController(loader: loader)
+		let sut = FeedCommentsViewController(url: url, loader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
@@ -79,9 +82,9 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	class LoaderSpy: FeedCommentsLoader {
-		var loadFeedCommentsCallCount = 0
+		var loadedUrls: [URL] = []
 		func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) {
-			loadFeedCommentsCallCount += 1
+			loadedUrls.append(url)
 		}
 	}
 }
