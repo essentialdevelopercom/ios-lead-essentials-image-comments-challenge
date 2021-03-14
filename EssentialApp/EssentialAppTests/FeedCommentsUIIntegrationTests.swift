@@ -18,13 +18,18 @@ class FeedCommentsViewController: UITableViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		initializeUI()
+		refresh()
+	}
+	
+	private func initializeUI() {
 		title = feedCommentsTitle
+		configureRefreshControl()
+	}
+	
+	private func configureRefreshControl() {
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-		loader.load(url: url, completion: {[weak self] _ in
-			self?.refreshControl?.endRefreshing()
-		})
-		refreshControl?.beginRefreshing()
 	}
 	
 	@objc private func refresh() {
