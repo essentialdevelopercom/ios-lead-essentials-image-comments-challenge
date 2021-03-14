@@ -39,7 +39,6 @@
 		0895DAAD234B3F7E0031BB2D /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; };
 		0895DAAE234B3F7E0031BB2D /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		56A74CC425FE21060005C6DF /* FeedCommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A74CC325FE21060005C6DF /* FeedCommentsUIIntegrationTests.swift */; };
-		56A74CC725FE22DD0005C6DF /* FeedComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 56A74CC625FE22DD0005C6DF /* FeedComments.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,7 +104,6 @@
 		08FF35DB2534688B00DB6ABC /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		08FF35DD2534688E00DB6ABC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		56A74CC325FE21060005C6DF /* FeedCommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
-		56A74CC625FE22DD0005C6DF /* FeedComments.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = FeedComments.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,7 +194,6 @@
 				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
 				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
 				56A74CC325FE21060005C6DF /* FeedCommentsUIIntegrationTests.swift */,
-				56A74CC625FE22DD0005C6DF /* FeedComments.strings */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -304,7 +301,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56A74CC725FE22DD0005C6DF /* FeedComments.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
