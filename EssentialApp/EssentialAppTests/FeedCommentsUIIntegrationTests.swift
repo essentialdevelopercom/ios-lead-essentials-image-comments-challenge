@@ -37,8 +37,7 @@ class FeedCommentsViewController: UITableViewController {
 class FeedCommentsUIIntegrationTests: XCTestCase {
 	
 	func test_feedCommentsView_hasTitle() {
-		let loader = LoaderSpy()
-		let sut = FeedCommentsViewController(loader: loader)
+		let (sut, _) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		
@@ -46,8 +45,7 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedCommentsActions_requestCommentsFromLoader() {
-		let loader = LoaderSpy()
-		let sut = FeedCommentsViewController(loader: loader)
+		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadFeedCommentsCallCount, 0, "Expected no loading requests before view is loaded")
 		
 		sut.loadViewIfNeeded()
@@ -61,6 +59,14 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
+	
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
+		let loader = LoaderSpy()
+		let sut = FeedCommentsViewController(loader: loader)
+		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		return (sut, loader)
+	}
 	
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "FeedComments"
