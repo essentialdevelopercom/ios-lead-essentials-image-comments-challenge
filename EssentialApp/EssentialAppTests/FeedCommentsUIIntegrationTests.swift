@@ -4,11 +4,26 @@
 //
 
 import XCTest
+import EssentialFeed
 
-class FeedCommentsViewController: UIViewController {
+class FeedCommentsViewController: UITableViewController {
+	
+	private var loader: FeedCommentsLoader!
+	convenience init(loader: FeedCommentsLoader) {
+		self.init()
+		self.loader = loader
+	}
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = feedCommentsTitle
+		refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+		loader.load(url: URL(string: "http://any-url.com")!, completion: { _ in })
+	}
+	
+	@objc private func refresh() {
+		loader.load(url: URL(string: "http://any-url.com")!, completion: { _ in })
 	}
 	
 	private var feedCommentsTitle: String {
@@ -20,12 +35,29 @@ class FeedCommentsViewController: UIViewController {
 }
 
 class FeedCommentsUIIntegrationTests: XCTestCase {
+	
 	func test_feedCommentsView_hasTitle() {
-		let sut = FeedCommentsViewController()
+		let loader = LoaderSpy()
+		let sut = FeedCommentsViewController(loader: loader)
 		
 		sut.loadViewIfNeeded()
 		
 		XCTAssertEqual(sut.title, localized("FEED_COMMENTS_VIEW_TITLE"))
+	}
+	
+	func test_loadFeedCommentsActions_requestCommentsFromLoader() {
+		let loader = LoaderSpy()
+		let sut = FeedCommentsViewController(loader: loader)
+		XCTAssertEqual(loader.loadFeedCommentsCallCount, 0, "Expected no loading requests before view is loaded")
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.loadFeedCommentsCallCount, 1, "Expected a loading request once view is loaded")
+		
+		sut.simulateUserInitiatedFeedCommentsReload()
+		XCTAssertEqual(loader.loadFeedCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
+		
+		sut.simulateUserInitiatedFeedCommentsReload()
+		XCTAssertEqual(loader.loadFeedCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 	
 	// MARK: - Helpers
@@ -38,5 +70,18 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+	
+	class LoaderSpy: FeedCommentsLoader {
+		var loadFeedCommentsCallCount = 0
+		func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) {
+			loadFeedCommentsCallCount += 1
+		}
+	}
+}
+
+extension FeedCommentsViewController {
+	func simulateUserInitiatedFeedCommentsReload() {
+		refreshControl?.simulatePullToRefresh()
 	}
 }
