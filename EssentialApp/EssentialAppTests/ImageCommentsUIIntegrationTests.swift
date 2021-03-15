@@ -142,6 +142,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [])
 	}
 	
+	func test_loadImageCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let comment1 = makeImageComment()
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeImageCommentsLoading(with: [comment1], at: 0)
+		assertThat(sut, isRendering: [comment1])
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeImageCommentsLoadingWithError(at: 1)
+		assertThat(sut, isRendering: [comment1])
+	}
+	
 	// MARK: - Helper
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
