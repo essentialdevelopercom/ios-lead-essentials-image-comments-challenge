@@ -9,7 +9,7 @@
 import Foundation
 
 public struct ImageCommentAuthor: Hashable {
-	public let username:String
+	public let username: String
 	
 	public init(username: String){
 		self.username = username

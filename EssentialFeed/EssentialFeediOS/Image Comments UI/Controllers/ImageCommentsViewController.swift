@@ -19,7 +19,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	
 	public var delegate: ImageCommentsControllerDelegate?
 	
-	var loaderTask:ImageCommentsLoaderTask?
+	var loaderTask: ImageCommentsLoaderTask?
 	
 	private var imageComments = [PresentableImageComment]() {
 		didSet {

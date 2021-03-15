@@ -17,7 +17,7 @@ final class ImageCommentsLoaderPresentationAdapter: ImageCommentsControllerDeleg
 	
 	private let loader: () -> ImageCommentsLoader.Publisher
 	private var cancellable: Cancellable?
-	private var loaderTask:ImageCommentsLoaderTask?
+	private var loaderTask: ImageCommentsLoaderTask?
 	
 	init(imageCommentsLoader: @escaping () -> ImageCommentsLoader.Publisher){
 		self.loader = imageCommentsLoader

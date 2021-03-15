@@ -10,7 +10,7 @@ import XCTest
 
 extension XCTestCase {
 	
-	func checkLocalizedStrings_haveKeysAndValuesForAllSupportedLocalizations(for table:String, in bundle: Bundle, file: StaticString = #filePath, line: UInt = #line){
+	func checkLocalizedStrings_haveKeysAndValuesForAllSupportedLocalizations(for table: String, in bundle: Bundle, file: StaticString = #filePath, line: UInt = #line){
 		
 		let localizationBundles = allLocalizationBundles(in: bundle, file: file, line: line)
 		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table, file: file, line: line)

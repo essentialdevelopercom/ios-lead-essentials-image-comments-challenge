@@ -116,9 +116,9 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeImageCommentsData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id":UUID().uuidString, "message": "comment message 0", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 0"]],
-			["id":UUID().uuidString, "message": "comment message 1", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 1"]],
-			["id":UUID().uuidString, "message": "comment message 2", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 2"]]
+			["id": UUID().uuidString, "message": "comment message 0", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 0"]],
+			["id": UUID().uuidString, "message": "comment message 1", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 1"]],
+			["id": UUID().uuidString, "message": "comment message 2", "created_at": "2020-05-20T11:24:59+0000", "author": ["username": "a username 2"]]
 		]])
 	}
 	

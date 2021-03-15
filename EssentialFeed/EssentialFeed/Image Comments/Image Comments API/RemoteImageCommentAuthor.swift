@@ -9,5 +9,5 @@
 import Foundation
 
 struct RemoteImageCommentAuthor: Equatable, Decodable {
-	let username:String
+	let username: String
 }
