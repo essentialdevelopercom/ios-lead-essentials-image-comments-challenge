@@ -183,6 +183,7 @@
 		0895DA85234B3B950031BB2D /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
+				DADD2FD225FFA54400B65DEF /* API */,
 				DAF3EDFF25C9A9A6008938FE /* Feed */,
 				DAF3EE0025C9A9B3008938FE /* Image Comments */,
 				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
@@ -192,7 +193,6 @@
 				0895DA8F234B3B970031BB2D /* Assets.xcassets */,
 				0895DA91234B3B970031BB2D /* LaunchScreen.storyboard */,
 				0895DA94234B3B970031BB2D /* Info.plist */,
-				DA4B6F4E25CBD5EF004812EE /* EssentialFeedEndpoint.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -200,13 +200,13 @@
 		0895DA9C234B3B980031BB2D /* EssentialAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				0895DA9F234B3B980031BB2D /* Info.plist */,
 				082C00022359E43F008927D3 /* Helpers */,
+				DADD2FD325FFA56000B65DEF /* API */,
+				DADD2FD525FFA58E00B65DEF /* Image Comments */,
+				DADD2FD425FFA58800B65DEF /* Feed */,
+				0895DA9F234B3B980031BB2D /* Info.plist */,
 				0832C9CF238D2811002314C9 /* SceneDelegateTests.swift */,
 				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
-				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
-				DADA865425C1BC76002A1714 /* ImageCommentsUIIntegrationTests.swift */,
-				DAA4F61F25FB438C00D74AEA /* EssentialFeedAPITests.swift */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -241,6 +241,38 @@
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
 			);
 			path = Feed;
+			sourceTree = "<group>";
+		};
+		DADD2FD225FFA54400B65DEF /* API */ = {
+			isa = PBXGroup;
+			children = (
+				DA4B6F4E25CBD5EF004812EE /* EssentialFeedEndpoint.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		DADD2FD325FFA56000B65DEF /* API */ = {
+			isa = PBXGroup;
+			children = (
+				DAA4F61F25FB438C00D74AEA /* EssentialFeedAPITests.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		DADD2FD425FFA58800B65DEF /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		DADD2FD525FFA58E00B65DEF /* Image Comments */ = {
+			isa = PBXGroup;
+			children = (
+				DADA865425C1BC76002A1714 /* ImageCommentsUIIntegrationTests.swift */,
+			);
+			path = "Image Comments";
 			sourceTree = "<group>";
 		};
 		DAF3EDFF25C9A9A6008938FE /* Feed */ = {

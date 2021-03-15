@@ -143,7 +143,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	private func makeImageComment(message: String, username: String, createdAt: (date: Date, presentable: String)) -> (ImageComment, PresentableImageComment) {
-		
+
 		let imageComment = ImageComment(id: UUID(), message: message, createdAt: createdAt.date, author: ImageCommentAuthor(username: username))
 		
 		let presentableImageComment = PresentableImageComment(message: message, createdAt: createdAt.presentable, username: username)
