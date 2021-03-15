@@ -9,12 +9,35 @@
 import UIKit
 import EssentialFeed
 
-public final class ImageCommentCell: UITableViewCell {
+public struct ImageCommentViewModel {
+	public let authorUsername: String
 	
+	public init(authorUsername: String) {
+		self.authorUsername = authorUsername
+	}
+}
+
+public final class ImageCommentCell: UITableViewCell {
+	public var authorUsername: String = ""
 }
 
 public final class ImageCommentCellController {
-	public init() {}
+	private var cell: ImageCommentCell?
+	private var viewModel: () -> ImageCommentViewModel
+	
+	public init(viewModel: @escaping () -> ImageCommentViewModel) {
+		self.viewModel = viewModel
+	}
+	
+	func view(in tableView: UITableView) -> UITableViewCell {
+		cell = tableView.dequeueReusableCell()
+		display(viewModel())
+		return cell!
+	}
+	
+	private func display(_ viewModel: ImageCommentViewModel) {
+		cell?.authorUsername = viewModel.authorUsername
+	}
 }
 
 public protocol ImageCommentsViewControllerDelegate {
@@ -52,16 +75,16 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 	
 	// MARK: - Table View DataSource
-	public override func numberOfSections(in tableView: UITableView) -> Int {
-		1
-	}
-	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		tableModel.count
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		UITableViewCell()
+		cellController(for: indexPath).view(in: tableView)
+	}
+	
+	private func cellController(for indexPath: IndexPath) -> ImageCommentCellController {
+		tableModel[indexPath.row]
 	}
 	
 }

@@ -43,7 +43,9 @@ final class ImageCommentsViewAdapter: ImageCommentsView {
 	}
 	
 	func display(_ viewModel: ImageCommentsViewModel) {
-		controller?.display(viewModel.comments.map { _ in ImageCommentCellController() })
+		controller?.display(viewModel.comments.map { model in
+			ImageCommentCellController(viewModel: { ImageCommentViewModel(authorUsername: model.author.username) })
+		})
 	}
 }
 
@@ -51,16 +53,16 @@ final class ImageCommentsUIComposer {
 	static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(imageLoader: imageCommentsLoader)
 		
-		let imageController = makeImageCommentsViewController(
+		let commentsController = makeImageCommentsViewController(
 			delegate: presentationAdapter,
 			title: ImageCommentsPresenter.title)
 		
 		presentationAdapter.presenter = ImageCommentsPresenter(
-			commentsView: ImageCommentsViewAdapter(controller: imageController),
-			loadingView: WeakRefVirtualProxy(imageController),
-			errorView: WeakRefVirtualProxy(imageController))
+			commentsView: ImageCommentsViewAdapter(controller: commentsController),
+			loadingView: WeakRefVirtualProxy(commentsController),
+			errorView: WeakRefVirtualProxy(commentsController))
 		
-		return imageController
+		return commentsController
 	}
 	
 	private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate, title: String) -> ImageCommentsViewController {
@@ -110,18 +112,20 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedComments() {
 		let comment1 = makeImageComment()
 		let comment2 = makeImageComment()
-		let imageComments = [comment1, comment2]
+		let comment3 = makeImageComment()
+		let comment4 = makeImageComment()
+		let comment5 = makeImageComment()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews(), 0, "Expected no rendered comment views")
+		assertThat(sut, isRendering: [])
 				
 		loader.completeImageCommentsLoading(with: [comment1], at: 0)
-		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews(), 1, "Expected to render one view")
+		assertThat(sut, isRendering: [comment1])
 		
 		sut.simulateUserInitiatedReload()
-		loader.completeImageCommentsLoading(with: imageComments, at: 1)
-		XCTAssertEqual(sut.numberOfRenderedImageCommentsViews(), 2, "Expected to render one view")
+		loader.completeImageCommentsLoading(with: [comment1, comment2, comment3, comment4, comment5], at: 1)
+		assertThat(sut, isRendering: [comment1, comment2, comment3, comment4, comment5])
 	}
 	
 	// MARK: - Helper
@@ -132,6 +136,37 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	private func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
+		sut.view.enforceLayoutCycle()
+		
+		let numberOfRenderedComments = sut.numberOfRenderedImageCommentsViews()
+		guard numberOfRenderedComments == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(numberOfRenderedComments) instead", file: file, line: line)
+		}
+		
+		comments
+			.enumerated()
+			.forEach { index, comment in
+				assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
+			}
+		
+		executeRunLoopToCleanUpReferences()
+	}
+	
+	private func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor comment: ImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
+		let view = sut.imageCommentView(at: index)
+		
+		guard let cell = view as? ImageCommentCell else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+
+		XCTAssertEqual(cell.authorUsername, comment.author.username, "Expected author username to be \(String(describing: comment.author.username)) for comment view at index (\(index))", file: file, line: line)
+	}
+	
+	private func executeRunLoopToCleanUpReferences() {
+		RunLoop.current.run(until: Date())
 	}
 	
 	private func makeImageComment() -> ImageComment {
@@ -199,4 +234,14 @@ private extension ImageCommentsViewController {
 	}
 	
 	private var commentsSectionIndex: Int { 0 }
+	
+	func imageCommentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedImageCommentsViews() > row else {
+			return nil
+		}
+		
+		let dataSource = tableView.dataSource
+		let index = IndexPath(row: row, section: commentsSectionIndex)
+		return dataSource?.tableView(tableView, cellForRowAt: index)
+	}
 }
