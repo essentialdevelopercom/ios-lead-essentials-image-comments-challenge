@@ -128,6 +128,20 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment1, comment2, comment3, comment4, comment5])
 	}
 	
+	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsListAfterNonEmptyResponse() {
+		let comment1 = makeImageComment()
+		let comment2 = makeImageComment()
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeImageCommentsLoading(with: [comment1, comment2], at: 0)
+		assertThat(sut, isRendering: [comment1, comment2])
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeImageCommentsLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
+	}
+	
 	// MARK: - Helper
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
