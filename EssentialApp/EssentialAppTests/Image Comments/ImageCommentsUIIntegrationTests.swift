@@ -93,7 +93,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		loader.completeImageCommentsLoading(with: [comment0], at: 0	)
+		loader.completeImageCommentsLoading(with: [comment0], at: 0)
 		assertThat(sut, isRendering: [presentable0])
 		
 		sut.simulateUserInitiatedImageCommentsReload()
