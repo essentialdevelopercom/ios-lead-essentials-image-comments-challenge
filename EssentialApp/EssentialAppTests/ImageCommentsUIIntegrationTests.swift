@@ -155,6 +155,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment1])
 	}
 	
+	func test_loadImageCommentsCompletion_redersErrorMessageConErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeImageCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	// MARK: - Helper
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -250,6 +263,10 @@ private extension ImageCommentsUIIntegrationTests {
 private extension ImageCommentsViewController {
 	var isShowingLoadingIndicator: Bool {
 		refreshControl?.isRefreshing ?? false
+	}
+	
+	var errorMessage: String? {
+		errorView?.message
 	}
 	
 	func simulateUserInitiatedReload() {

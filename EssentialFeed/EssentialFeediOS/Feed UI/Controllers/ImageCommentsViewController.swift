@@ -46,6 +46,8 @@ public protocol ImageCommentsViewControllerDelegate {
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView, ImageCommentsLoadingView {
 	
+	@IBOutlet private(set) public var errorView: ErrorView?
+	
 	private var tableModel = [ImageCommentCellController]() {
 		didSet { tableView.reloadData() }
 	}
@@ -67,7 +69,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		
+		errorView?.message = viewModel.message
 	}
 	
 	@IBAction private func refresh() {
