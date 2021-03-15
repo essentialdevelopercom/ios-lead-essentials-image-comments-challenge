@@ -9,7 +9,14 @@ import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
-	private var navigationController: UINavigationController?
+	private lazy var navigationController: UINavigationController = UINavigationController(
+		rootViewController: FeedUIComposer.feedComposedWith(
+			   feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+			   imageLoader: makeLocalImageLoaderWithRemoteFallback,
+			   didSelectImage: { [weak self] image in
+				   self?.navigateToImageComments(feedImage: image)
+			   }
+			   ))
 	
 	private let api = EssentialFeedAPI(baseURL:  URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!)
 	
@@ -56,15 +63,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		navigationController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				didSelectImage: { [weak self] image in
-					self?.navigateToImageComments(feedImage: image)
-				}
-				))
-		
 		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 	}
@@ -93,6 +91,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func navigateToImageComments(feedImage: FeedImage){
 		let loader = RemoteImageCommentsLoader(client: httpClient, url: api.url(for: EssentialFeedAPI.Endpoint.imageComments(id: feedImage.id)))
 		let controller = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader.loadPublisher)
-		navigationController?.pushViewController(controller, animated: true)
+		navigationController.pushViewController(controller, animated: true)
 	}
 }
