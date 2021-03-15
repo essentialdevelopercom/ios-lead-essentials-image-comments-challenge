@@ -11,7 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
 	private var navigationController: UINavigationController?
 	
-	private var api = EssentialFeedAPI(baseURL:  URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!)
+	private let api = EssentialFeedAPI(baseURL:  URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!)
 	
 	private lazy var httpClient: HTTPClient = {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
