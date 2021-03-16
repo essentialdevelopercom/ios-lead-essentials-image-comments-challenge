@@ -9,15 +9,6 @@
 import UIKit
 import EssentialFeed
 
-public struct ImageCommentViewModel {
-	public let authorUsername: String
-	
-	public init(authorUsername: String) {
-		self.authorUsername = authorUsername
-	}
-}
-
-
 public protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
 	func didCancelImageCommentsLoading()
