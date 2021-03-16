@@ -13,20 +13,6 @@ import EssentialFeed
 import EssentialFeediOS
 
 
-final class ImageCommentsViewAdapter: ImageCommentsView {
-	private weak var controller: ImageCommentsViewController?
-	
-	init(controller: ImageCommentsViewController) {
-		self.controller = controller
-	}
-	
-	func display(_ viewModel: ImageCommentsViewModel) {
-		controller?.display(viewModel.comments.map { model in
-			ImageCommentCellController(viewModel: { ImageCommentViewModel(authorUsername: model.author.username) })
-		})
-	}
-}
-
 final class ImageCommentsUIComposer {
 	static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(imageLoader: MainQueueDispatchDecorator(decoratee: imageCommentsLoader))
