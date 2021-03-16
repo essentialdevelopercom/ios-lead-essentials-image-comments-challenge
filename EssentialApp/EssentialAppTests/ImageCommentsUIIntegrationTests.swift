@@ -139,95 +139,9 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
-		sut.view.enforceLayoutCycle()
-		
-		let numberOfRenderedComments = sut.numberOfRenderedImageCommentsViews()
-		guard numberOfRenderedComments == comments.count else {
-			return XCTFail("Expected \(comments.count) comments, got \(numberOfRenderedComments) instead", file: file, line: line)
-		}
-		
-		comments
-			.enumerated()
-			.forEach { index, comment in
-				assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
-			}
-		
-		executeRunLoopToCleanUpReferences()
-	}
-	
-	private func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor comment: ImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
-		let view = sut.imageCommentView(at: index)
-		
-		guard let cell = view as? ImageCommentCell else {
-			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
-		}
-
-		XCTAssertEqual(cell.authorUsername, comment.author.username, "Expected author username to be \(String(describing: comment.author.username)) for comment view at index (\(index))", file: file, line: line)
-	}
-	
-	private func executeRunLoopToCleanUpReferences() {
-		RunLoop.current.run(until: Date())
-	}
-	
 	private func makeImageComment() -> ImageComment {
 		ImageComment(id: UUID(), message: "a message", createdAt: Date(), author: ImageComment.Author(username: "an username"))
 	}
 	
-	private class LoaderSpy: ImageCommentsLoader, ImageCommentsViewControllerDelegate {
-		private struct TaskSpy: ImageCommmentsLoaderTask {
-			let cancelCallback: () -> Void
-			func cancel() { cancelCallback() }
-		}
-		
-		private(set) var commentsRequestHandlers = [(ImageCommentsLoader.Result) -> Void]()
-		var loadImageCommentsCallCount: Int { commentsRequestHandlers.count }
-		
-		private(set) var cancelledURL = [URL]()
-		
-		private let url: URL
-		
-		init(url: URL) {
-			self.url = url
-		}
-		
-		func didRequestImageCommentsRefresh() {
-			_ = loadImageComments { _ in }
-		}
-		
-		func didCancelImageCommentsLoading() {}
-		
-		func loadImageComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
-			commentsRequestHandlers.append(completion)
-			return TaskSpy { [weak self] in
-				guard let self = self else { return }
-				self.cancelledURL.append(self.url)
-			}
-		}
-		
-		func completeImageCommentsLoading(at index: Int) {
-			commentsRequestHandlers[index](.success([]))
-		}
-		
-		func completeImageCommentsLoadingWithError(at index: Int) {
-			commentsRequestHandlers[index](.failure(anyNSError()))
-		}
-		
-		func completeImageCommentsLoading(with comments: [ImageComment], at index: Int) {
-			commentsRequestHandlers[index](.success(comments))
-		}
-	}
-	
 }
 
-private extension ImageCommentsUIIntegrationTests {
-	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
-		let table = "ImageComments"
-		let bundle = Bundle(for: ImageCommentsPresenter.self)
-		let value = bundle.localizedString(forKey: key, value: nil, table: table)
-		if value == key {
-			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
-		}
-		return value
-	}
-}
