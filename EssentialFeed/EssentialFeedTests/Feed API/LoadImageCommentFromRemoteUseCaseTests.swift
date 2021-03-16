@@ -78,7 +78,7 @@ class ImageCommentMapper {
 }
 
 
-class LoadCommentFromRemoteUseCaseTests: XCTestCase {
+class LoadImageCommentFromRemoteUseCaseTests: XCTestCase {
 	func test_init_doesNotRequestDataOnInit() {
 		let (_, client) = makeSUT()
 		
@@ -133,7 +133,7 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_load_deliversReceivedNonEmptyDataOn200HTTTPResponse() {
 		let (sut, client) = makeSUT()
-		let (model, json) = makeCommentData()
+		let (model, json) = makeImageCommentData()
 
 		expect(sut, client: client, expectedResult: .success(model)) {
 			client.complete(withStatusCode: 200, data: json)
@@ -151,7 +151,7 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		})
 		
 		sut = nil
-		client.complete(withStatusCode: 200, data: makeCommentData().1)
+		client.complete(withStatusCode: 200, data: makeImageCommentData().1)
 		
 		XCTAssertTrue(capturedResults.isEmpty)
 	}
@@ -177,7 +177,7 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
-	private func makeCommentData() -> ([ImageComment], Data) {
+	private func makeImageCommentData() -> ([ImageComment], Data) {
 		let date1 = ISO8601DateFormatter().date(from: "2020-05-20T11:24:59+0000")!
 		let commentAuthor1 = ImageCommentAuthor(username: "a username")
 		let comment1 = ImageComment(
