@@ -17,7 +17,7 @@ public protocol ImageCommentsErrorView {
 }
 
 public protocol ImageCommentsView {
-	func display(_ viewModel: ImageCommentsViewModel)
+	func display(_ viewModel: ImageCommentsViewModel, relativeDate: @escaping () -> Date)
 }
 
 public class ImageCommentsPresenter {
@@ -36,8 +36,8 @@ public class ImageCommentsPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 	}
 	
-	public func didFinishLoadingComments(with comments: [ImageComment]) {
-		commentsView.display(ImageCommentsViewModel(comments: comments))
+	public func didFinishLoadingComments(with comments: [ImageComment], relativeDate: @escaping () -> Date) {
+		commentsView.display(ImageCommentsViewModel(comments: comments), relativeDate: relativeDate)
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	

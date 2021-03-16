@@ -11,10 +11,12 @@ import EssentialFeed
 
 public final class ImageCommentCellController {
 	private var cell: ImageCommentCell?
-	private var viewModel: () -> ImageCommentViewModel
+	private let viewModel: () -> ImageCommentViewModel
+	private let relativeDate: () -> Date
 	
-	public init(viewModel: @escaping () -> ImageCommentViewModel) {
+	public init(viewModel: @escaping () -> ImageCommentViewModel, relativeDate: @escaping () -> Date) {
 		self.viewModel = viewModel
+		self.relativeDate = relativeDate
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
@@ -24,6 +26,13 @@ public final class ImageCommentCellController {
 	}
 	
 	private func display(_ viewModel: ImageCommentViewModel) {
-		cell?.authorUsername = viewModel.authorUsername
+		cell?.authorLabel.text = viewModel.authorUsername
+		cell?.messageLabel.text = viewModel.body
+		cell?.relativeDateLabel.text = localizedDate(date: viewModel.date)
+	}
+	
+	private func localizedDate(date: Date) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		return formatter.localizedString(for: date, relativeTo: relativeDate())
 	}
 }

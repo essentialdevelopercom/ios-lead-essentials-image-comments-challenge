@@ -89,6 +89,11 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="w75-aK-4aD" secondAttribute="trailing" id="yxu-jz-S0o"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="authorLabel" destination="N72-Cp-RIR" id="qjs-eQ-uMd"/>
+                                    <outlet property="messageLabel" destination="Nh0-BX-JZq" id="SaE-dp-8cJ"/>
+                                    <outlet property="relativeDateLabel" destination="lrY-x7-XT0" id="vW4-Vq-EyU"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

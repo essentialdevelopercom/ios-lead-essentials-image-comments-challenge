@@ -25,10 +25,11 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingComments_displaysImageCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
 		let comments = uniqueImageComments()
+		let fixedRelativeDate = Date()
+		let (sut, view) = makeSUT()
 		
-		sut.didFinishLoadingComments(with: comments)
+		sut.didFinishLoadingComments(with: comments, relativeDate: { fixedRelativeDate })
 		
 		XCTAssertEqual(view.messages, [
 			.display(comments: comments),
@@ -96,7 +97,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		
 		private(set) var messages = Set<Message>()
 		
-		func display(_ viewModel: ImageCommentsViewModel) {
+		func display(_ viewModel: ImageCommentsViewModel, relativeDate: @escaping () -> Date) {
 			messages.insert(.display(comments: viewModel.comments))
 		}
 		

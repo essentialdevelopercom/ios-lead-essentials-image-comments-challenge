@@ -10,8 +10,12 @@ import Foundation
 
 public struct ImageCommentViewModel {
 	public let authorUsername: String
+	public let date: Date
+	public let body: String
 	
-	public init(authorUsername: String) {
+	public init(authorUsername: String, date: Date, body: String) {
 		self.authorUsername = authorUsername
+		self.date = date
+		self.body = body
 	}
 }

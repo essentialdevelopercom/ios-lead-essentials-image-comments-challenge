@@ -11,8 +11,8 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class ImageCommentsUIComposer {
-	static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(imageLoader: MainQueueDispatchDecorator(decoratee: imageCommentsLoader))
+	static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader, relativeDate: @escaping () -> Date) -> ImageCommentsViewController {
+		let presentationAdapter = ImageCommentsPresentationAdapter(imageLoader: MainQueueDispatchDecorator(decoratee: imageCommentsLoader), relativeDate: relativeDate)
 		
 		let commentsController = makeImageCommentsViewController(
 			delegate: presentationAdapter,

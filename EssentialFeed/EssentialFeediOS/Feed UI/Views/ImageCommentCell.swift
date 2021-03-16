@@ -9,7 +9,9 @@
 import UIKit
 
 public final class ImageCommentCell: UITableViewCell {
-	public var authorUsername: String = ""
+	@IBOutlet private(set) public weak var authorLabel: UILabel!
+	@IBOutlet private(set) public weak var relativeDateLabel: UILabel!
+	@IBOutlet private(set) public weak var messageLabel: UILabel!
 }
 
 

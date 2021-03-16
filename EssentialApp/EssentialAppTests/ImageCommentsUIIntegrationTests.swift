@@ -52,44 +52,47 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let comment3 = makeImageComment()
 		let comment4 = makeImageComment()
 		let comment5 = makeImageComment()
+		let fixedRelativeDate = Date()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		assertThat(sut, isRendering: [])
+		assertThat(sut, isRendering: [], withRelativeDate: { fixedRelativeDate })
 				
 		loader.completeImageCommentsLoading(with: [comment1], at: 0)
-		assertThat(sut, isRendering: [comment1])
+		assertThat(sut, isRendering: [comment1], withRelativeDate: { fixedRelativeDate })
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeImageCommentsLoading(with: [comment1, comment2, comment3, comment4, comment5], at: 1)
-		assertThat(sut, isRendering: [comment1, comment2, comment3, comment4, comment5])
+		assertThat(sut, isRendering: [comment1, comment2, comment3, comment4, comment5], withRelativeDate: { fixedRelativeDate })
 	}
 	
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsListAfterNonEmptyResponse() {
 		let comment1 = makeImageComment()
 		let comment2 = makeImageComment()
+		let fixedRelativeDate = Date()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		loader.completeImageCommentsLoading(with: [comment1, comment2], at: 0)
-		assertThat(sut, isRendering: [comment1, comment2])
+		assertThat(sut, isRendering: [comment1, comment2], withRelativeDate: { fixedRelativeDate })
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeImageCommentsLoading(with: [], at: 1)
-		assertThat(sut, isRendering: [])
+		assertThat(sut, isRendering: [], withRelativeDate: { fixedRelativeDate })
 	}
 	
 	func test_loadImageCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
 		let comment1 = makeImageComment()
+		let fixedRelativeDate = Date()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		loader.completeImageCommentsLoading(with: [comment1], at: 0)
-		assertThat(sut, isRendering: [comment1])
+		assertThat(sut, isRendering: [comment1], withRelativeDate: { fixedRelativeDate })
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeImageCommentsLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [comment1])
+		assertThat(sut, isRendering: [comment1], withRelativeDate: { fixedRelativeDate })
 	}
 	
 	func test_loadImageCommentsCompletion_redersErrorMessageConErrorUntilNextReload() {
@@ -129,18 +132,32 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	func test_ImageCommentsView_formatCommentCreationDateWithRelativeDate() {
+		let commentCreationDate = Date()
+		let imageComment = makeImageComment(createdAt: commentCreationDate)
+		let expectedLocalizedDateString = "10 seconds ago"
+		let fixedRelativeDate = Date().addingTimeInterval(10)
+		let (sut, loader) = makeSUT(relativeDate: { fixedRelativeDate })
+		
+		sut.loadViewIfNeeded()
+		loader.completeImageCommentsLoading(with: [imageComment], at: 0)
+		
+		let cell = sut.imageCommentView(at: 0) as! ImageCommentCell
+		XCTAssertEqual(cell.relativeDateLabel.text, expectedLocalizedDateString, "Expected the date displayed on the cell to always be relative to current date")
+	}
+	
 	// MARK: - Helper
 	
-	private func makeSUT(stubURL: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(stubURL: URL = anyURL(), relativeDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy(url: stubURL)
-		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: loader)
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: loader, relativeDate: relativeDate)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		return (sut, loader)
 	}
 	
-	private func makeImageComment() -> ImageComment {
-		ImageComment(id: UUID(), message: "a message", createdAt: Date(), author: ImageComment.Author(username: "an username"))
+	private func makeImageComment(createdAt date: Date = Date()) -> ImageComment {
+		ImageComment(id: UUID(), message: "a message", createdAt: date, author: ImageComment.Author(username: "an username"))
 	}
 	
 }

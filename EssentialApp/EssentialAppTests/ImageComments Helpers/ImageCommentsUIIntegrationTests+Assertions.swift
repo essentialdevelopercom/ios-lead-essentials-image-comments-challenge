@@ -12,7 +12,7 @@ import EssentialFeed
 import EssentialFeediOS
 
 extension ImageCommentsUIIntegrationTests {
-	func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
+	func assertThat(_ sut: ImageCommentsViewController, isRendering comments: [ImageComment], withRelativeDate relativeDate: () -> Date, file: StaticString = #file, line: UInt = #line) {
 		sut.view.enforceLayoutCycle()
 		
 		let numberOfRenderedComments = sut.numberOfRenderedImageCommentsViews()
@@ -23,20 +23,27 @@ extension ImageCommentsUIIntegrationTests {
 		comments
 			.enumerated()
 			.forEach { index, comment in
-				assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
+				assertThat(sut, hasViewConfiguredFor: comment, withRelativeDate: relativeDate, at: index, file: file, line: line)
 			}
 		
 		executeRunLoopToCleanUpReferences()
 	}
 	
-	func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor comment: ImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
+	func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor comment: ImageComment, withRelativeDate relativeDate: () -> Date, at index: Int, file: StaticString = #file, line: UInt = #line) {
 		let view = sut.imageCommentView(at: index)
 		
 		guard let cell = view as? ImageCommentCell else {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
-		XCTAssertEqual(cell.authorUsername, comment.author.username, "Expected author username to be \(String(describing: comment.author.username)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.authorLabel.text, comment.author.username, "Expected author username to be \(String(describing: comment.author.username)) for comment view at index (\(index))", file: file, line: line)
+		
+		let formatter = RelativeDateTimeFormatter()
+		let localizedDate = formatter.localizedString(for: comment.createdAt, relativeTo: relativeDate())
+		
+		XCTAssertEqual(cell.relativeDateLabel.text, localizedDate, "Expected relative date to be \(String(describing: localizedDate)) for comment view at index (\(index))", file: file, line: line)
+		
+		XCTAssertEqual(cell.messageLabel.text, comment.message, "Expected message to be \(String(describing: comment.message)) for comment view at index (\(index))", file: file, line: line)
 	}
 	
 	private func executeRunLoopToCleanUpReferences() {

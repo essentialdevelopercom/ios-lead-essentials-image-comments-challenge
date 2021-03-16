@@ -6,6 +6,7 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
+import Foundation
 import EssentialFeed
 import EssentialFeediOS
 
@@ -16,9 +17,15 @@ final class ImageCommentsViewAdapter: ImageCommentsView {
 		self.controller = controller
 	}
 	
-	func display(_ viewModel: ImageCommentsViewModel) {
+	func display(_ viewModel: ImageCommentsViewModel, relativeDate: @escaping () -> Date) {
 		controller?.display(viewModel.comments.map { model in
-			ImageCommentCellController(viewModel: { ImageCommentViewModel(authorUsername: model.author.username) })
+			ImageCommentCellController(viewModel: {
+				ImageCommentViewModel(
+					authorUsername: model.author.username,
+					date: model.createdAt,
+					body: model.message)
+			},
+			relativeDate: relativeDate)
 		})
 	}
 }
