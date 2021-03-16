@@ -30,6 +30,12 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		refresh()
 	}
 	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
+	}
+	
 	deinit {
 		cancelImageLoadingTask()
 	}
