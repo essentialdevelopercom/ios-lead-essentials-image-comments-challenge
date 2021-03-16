@@ -10,11 +10,11 @@ import XCTest
 import Foundation
 import EssentialFeed
 
-class RemoteCommentLoader {
+class RemoteImageCommentLoader {
 	let url: URL
 	let httpClient: HTTPClient
 	
-	typealias Result = Swift.Result<[Comment], Error>
+	typealias Result = Swift.Result<[ImageComment], Error>
 	
 	enum Error: Swift.Error {
 		case connectivity
@@ -35,42 +35,42 @@ class RemoteCommentLoader {
 				completion(.failure(.connectivity))
 				
 			case let .success((data, response)):
-				completion(RemoteCommentLoader.map(data, response: response))
+				completion(RemoteImageCommentLoader.map(data, response: response))
 			}
 		}
 	}
 	
 	static func map(_ data: Data, response: HTTPURLResponse) -> Result {
 		do {
-			let remoteComments = try CommentMapper.map(data, from: response)
-			let comments = remoteComments.map { Comment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: CommentAuthor(username: $0.author.username))
+			let remoteComments = try ImageCommentMapper.map(data, from: response)
+			let comments = remoteComments.map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: ImageCommentAuthor(username: $0.author.username))
 			}
 			
 			return .success(comments)
 		} catch {
-			return .failure(RemoteCommentLoader.Error.invalidData)
+			return .failure(RemoteImageCommentLoader.Error.invalidData)
 		}
 	}
 }
 
-struct RemoteComment: Decodable {
+struct RemoteImageComment: Decodable {
 	let id: UUID
 	let message: String
 	let created_at: Date
-	let author: CommentAuthor
+	let author: ImageCommentAuthor
 }
 
-class CommentMapper {
+class ImageCommentMapper {
 	private struct Root: Decodable {
-		let items: [RemoteComment]
+		let items: [RemoteImageComment]
 	}
 
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteComment] {
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		
 		guard response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) else {
-			throw RemoteCommentLoader.Error.invalidData
+			throw RemoteImageCommentLoader.Error.invalidData
 		}
 		
 		return root.items
@@ -108,7 +108,7 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		
 		expect(sut, client: client, expectedResult: .failure(.connectivity), action: {
-			client.complete(with: RemoteCommentLoader.Error.connectivity)
+			client.complete(with: RemoteImageCommentLoader.Error.connectivity)
 		})
 	}
 	
@@ -143,9 +143,9 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
 		let url = URL(string: "https://a-url.com")!
 		let client = HTTPClientSpy()
-		var sut: RemoteCommentLoader? = RemoteCommentLoader(url: url, client: client)
+		var sut: RemoteImageCommentLoader? = RemoteImageCommentLoader(url: url, client: client)
 		
-		var capturedResults = [RemoteCommentLoader.Result]()
+		var capturedResults = [RemoteImageCommentLoader.Result]()
 		sut?.load(completion: { (result) in
 			capturedResults.append(result)
 		})
@@ -157,14 +157,14 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteCommentLoader, spy: HTTPClientSpy) {
+	private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteImageCommentLoader, spy: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let sut = RemoteCommentLoader(url: url, client: client)
+		let sut = RemoteImageCommentLoader(url: url, client: client)
 		
 		return (sut, client)
 	}
 
-	private func expect(_ sut: RemoteCommentLoader, client: HTTPClientSpy, expectedResult: RemoteCommentLoader.Result, action: () -> Void) {
+	private func expect(_ sut: RemoteImageCommentLoader, client: HTTPClientSpy, expectedResult: RemoteImageCommentLoader.Result, action: () -> Void) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		sut.load { (receivedResult) in
@@ -177,10 +177,10 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
-	private func makeCommentData() -> ([Comment], Data) {
+	private func makeCommentData() -> ([ImageComment], Data) {
 		let date1 = ISO8601DateFormatter().date(from: "2020-05-20T11:24:59+0000")!
-		let commentAuthor1 = CommentAuthor(username: "a username")
-		let comment1 = Comment(
+		let commentAuthor1 = ImageCommentAuthor(username: "a username")
+		let comment1 = ImageComment(
 			id: UUID(),
 			message: "a comment message",
 			createdAt: date1,
@@ -197,8 +197,8 @@ class LoadCommentFromRemoteUseCaseTests: XCTestCase {
 		]
 
 		let date2 = ISO8601DateFormatter().date(from: "2020-05-19T14:23:53+0000")!
-		let commentAuthor2 = CommentAuthor(username: "another username")
-		let comment2 = Comment(
+		let commentAuthor2 = ImageCommentAuthor(username: "another username")
+		let comment2 = ImageComment(
 			id: UUID(),
 			message: "another comment message",
 			createdAt: date2,
