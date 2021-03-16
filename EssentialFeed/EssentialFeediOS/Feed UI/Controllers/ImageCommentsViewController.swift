@@ -17,9 +17,6 @@ public struct ImageCommentViewModel {
 	}
 }
 
-public final class ImageCommentCell: UITableViewCell {
-	public var authorUsername: String = ""
-}
 
 public final class ImageCommentCellController {
 	private var cell: ImageCommentCell?
