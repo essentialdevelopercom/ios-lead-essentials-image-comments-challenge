@@ -8,10 +8,14 @@ import EssentialFeed
 public protocol FeedImageCellControllerDelegate {
 	func didRequestImage()
 	func didCancelImageRequest()
+	func didSelectImage()
 }
 
 public final class FeedImageCellController: FeedImageView {
 	private let delegate: FeedImageCellControllerDelegate
+	private lazy var tapGesture: UITapGestureRecognizer = {
+		UITapGestureRecognizer(target: self, action: #selector(didSelectImage))
+	}()
 	private var cell: FeedImageCell?
 	
 	public init(delegate: FeedImageCellControllerDelegate) {
@@ -41,6 +45,12 @@ public final class FeedImageCellController: FeedImageView {
 		cell?.feedImageContainer.isShimmering = viewModel.isLoading
 		cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
 		cell?.onRetry = delegate.didRequestImage
+		cell?.feedImageView.addGestureRecognizer(tapGesture)
+		cell?.feedImageView.isUserInteractionEnabled = true
+	}
+
+	@objc private func didSelectImage() {
+		delegate.didSelectImage()
 	}
 	
 	private func releaseCellForReuse() {
