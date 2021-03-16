@@ -42,6 +42,7 @@ public final class ImageCommentCellController {
 
 public protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
+	func didCancelImageCommentsLoading()
 }
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView, ImageCommentsLoadingView {
@@ -58,6 +59,14 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		super.viewDidLoad()
 		
 		refresh()
+	}
+	
+	deinit {
+		cancelImageLoadingTask()
+	}
+	
+	public func cancelImageLoadingTask() {
+		delegate?.didCancelImageCommentsLoading()
 	}
 	
 	public func display(_ cellControllers: [ImageCommentCellController]) {

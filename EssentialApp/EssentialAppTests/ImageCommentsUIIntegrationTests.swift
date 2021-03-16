@@ -15,6 +15,7 @@ import EssentialFeediOS
 final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 	let imageLoader: ImageCommentsLoader
 	var presenter: ImageCommentsPresenter?
+	private var task: ImageCommmentsLoaderTask?
 	
 	init(imageLoader: ImageCommentsLoader) {
 		self.imageLoader = imageLoader
@@ -23,7 +24,7 @@ final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegat
 	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		_ = imageLoader.loadImageComments { [presenter] result in
+		task = imageLoader.loadImageComments { [presenter] result in
 			switch result {
 			case let .success(comments):
 				presenter?.didFinishLoadingComments(with: comments)
@@ -33,6 +34,11 @@ final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegat
 			}
 		}
 	}
+	
+	func didCancelImageCommentsLoading() {
+		task?.cancel()
+	}
+	
 }
 
 final class ImageCommentsViewAdapter: ImageCommentsView {
@@ -167,7 +173,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
+	
+	func test_imageCommentsView_cancelsCommentsLoadingWhenViewIsNotVisibleAnymore() {
+		let url = URL(string: "http://some-stub-url.com")!
+		let (sut, loader) = makeSUT(stubURL: url)
 
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator to show up")
+		XCTAssertEqual(loader.cancelledURL, [], "Expected no cancelled URL during normal lodaing state")
+		
+		sut.cancelImageLoadingTask()
+		XCTAssertEqual(loader.cancelledURL, [url], "Expected to cancel URL when sut is deinitialized")
+	}
+	
 	func test_loadImageCommentsCompletion_dispatchesFromBackgroundToMainThread() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
@@ -226,15 +244,15 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	private class LoaderSpy: ImageCommentsLoader, ImageCommentsViewControllerDelegate {
-		private struct Task: ImageCommmentsLoaderTask {
-			func cancel() { }
+		private struct TaskSpy: ImageCommmentsLoaderTask {
+			let cancelCallback: () -> Void
+			func cancel() { cancelCallback() }
 		}
 		
-		private(set) var completions = [(url: URL, handler: (ImageCommentsLoader.Result) -> Void)]()
+		private(set) var commentsRequestHandlers = [(ImageCommentsLoader.Result) -> Void]()
+		var loadImageCommentsCallCount: Int { commentsRequestHandlers.count }
 		
-		var loadImageCommentsCallCount: Int {
-			completions.count
-		}
+		private(set) var cancelledURL = [URL]()
 		
 		private let url: URL
 		
@@ -246,21 +264,26 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			_ = loadImageComments { _ in }
 		}
 		
+		func didCancelImageCommentsLoading() {}
+		
 		func loadImageComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
-			completions.append((url, completion))
-			return Task()
+			commentsRequestHandlers.append(completion)
+			return TaskSpy { [weak self] in
+				guard let self = self else { return }
+				self.cancelledURL.append(self.url)
+			}
 		}
 		
 		func completeImageCommentsLoading(at index: Int) {
-			completions[index].handler(.success([]))
+			commentsRequestHandlers[index](.success([]))
 		}
 		
 		func completeImageCommentsLoadingWithError(at index: Int) {
-			completions[index].handler(.failure(anyNSError()))
+			commentsRequestHandlers[index](.failure(anyNSError()))
 		}
 		
 		func completeImageCommentsLoading(with comments: [ImageComment], at index: Int) {
-			completions[index].handler(.success(comments))
+			commentsRequestHandlers[index](.success(comments))
 		}
 	}
 	
