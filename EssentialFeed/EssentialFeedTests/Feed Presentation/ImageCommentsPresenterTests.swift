@@ -26,10 +26,9 @@ class ImageCommentsPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingComments_displaysImageCommentsAndStopsLoading() {
 		let comments = uniqueImageComments()
-		let fixedRelativeDate = Date()
 		let (sut, view) = makeSUT()
 		
-		sut.didFinishLoadingComments(with: comments, relativeDate: { fixedRelativeDate })
+		sut.didFinishLoadingComments(with: comments)
 		
 		XCTAssertEqual(view.messages, [
 			.display(comments: comments),
@@ -56,7 +55,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view)
+		let sut = ImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view, relativeDate: { Date() })
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(view, file: file, line: line)
 		return (sut, view)
@@ -97,7 +96,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		
 		private(set) var messages = Set<Message>()
 		
-		func display(_ viewModel: ImageCommentsViewModel, relativeDate: @escaping () -> Date) {
+		func display(_ viewModel: ImageCommentsViewModel) {
 			messages.insert(.display(comments: viewModel.comments))
 		}
 		
