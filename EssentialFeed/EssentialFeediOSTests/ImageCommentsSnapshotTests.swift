@@ -8,6 +8,7 @@
 
 import XCTest
 import EssentialFeediOS
+import EssentialFeed
 
 class ImageCommentsSnapshotTests: XCTestCase {
 	
@@ -18,6 +19,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_IMAGE_COMMENTS_LIGHT")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENTS_DARK")
+	}
+	
+	func test_commentsWithContent() {
+		let sut = makeSUT()
+		
+		sut.display(commentsWithContent())
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_WITH_CONTENT_LIGHT")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_CONTENT_DARK")
 	}
 	
 	// MARK: - Helpers
@@ -34,6 +44,23 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	
 	private func emptyList() -> [ImageCommentCellController] {
 		[]
+	}
+	
+	private func commentsWithContent() -> [ImageCommentCellController] {
+		[
+			ImageCommentCellController(
+				viewModel: { ImageCommentViewModel(
+					authorUsername: "Ἀριστοτέλης",
+					date: Date().addingTimeInterval(-100000),
+					body: "But we think that knowledge and the ability to understand belong to knowledge rather than experience, and we believe that people of knowledge are smarter than empiricists, because wisdom depends in all cases on knowledge. And it is because they know the cause and they don't; empiricists know the effect but do not know the cause, and theorists know both the effect and the cause.") },
+				relativeDate: { Date() }),
+			ImageCommentCellController(
+				viewModel: { ImageCommentViewModel(
+					authorUsername: "Ἡράκλειτος ὁ Ἐφέσιος",
+					date: Date().addingTimeInterval(-10000000),
+					body: "μάχεσθαι χρὴ τὸν δῆμον ὑπὲρ τοῦ νόμου ὅκωσπερ τείχεος") },
+				relativeDate: { Date() }),
+		]
 	}
 	
 }
