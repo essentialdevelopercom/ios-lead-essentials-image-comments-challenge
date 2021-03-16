@@ -157,18 +157,19 @@ class LoadImageCommentFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteImageCommentLoader, spy: HTTPClientSpy) {
+	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentLoader, spy: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteImageCommentLoader(url: url, client: client)
-		
+		trackForMemoryLeaks(client, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, client)
 	}
 
-	private func expect(_ sut: RemoteImageCommentLoader, client: HTTPClientSpy, expectedResult: RemoteImageCommentLoader.Result, action: () -> Void) {
+	private func expect(_ sut: RemoteImageCommentLoader, client: HTTPClientSpy, expectedResult: RemoteImageCommentLoader.Result, action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		sut.load { (receivedResult) in
-			XCTAssertEqual(receivedResult, expectedResult)
+			XCTAssertEqual(receivedResult, expectedResult, file: file, line: line)
 			exp.fulfill()
 		}
 		
