@@ -12,23 +12,21 @@ import EssentialFeediOS
 
 final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 	let imageLoader: ImageCommentsLoader
-	let relativeDate: () -> Date
 	
 	var presenter: ImageCommentsPresenter?
 	private var task: ImageCommmentsLoaderTask?
 	
-	init(imageLoader: ImageCommentsLoader, relativeDate: @escaping () -> Date) {
+	init(imageLoader: ImageCommentsLoader) {
 		self.imageLoader = imageLoader
-		self.relativeDate = relativeDate
 	}
 	
 	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		task = imageLoader.loadImageComments { [presenter, relativeDate] result in
+		task = imageLoader.loadImageComments { [presenter] result in
 			switch result {
 			case let .success(comments):
-				presenter?.didFinishLoadingComments(with: comments, relativeDate: relativeDate)
+				presenter?.didFinishLoadingComments(with: comments)
 				
 			case let .failure(error):
 				presenter?.didFinishLoadingComments(with: error)

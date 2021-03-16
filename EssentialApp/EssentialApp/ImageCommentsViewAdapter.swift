@@ -17,7 +17,8 @@ final class ImageCommentsViewAdapter: ImageCommentsView {
 		self.controller = controller
 	}
 	
-	func display(_ viewModel: ImageCommentsViewModel, relativeDate: @escaping () -> Date) {
+	func display(_ viewModel: ImageCommentsViewModel) {
+		let relativeDate = viewModel.relativeDate
 		controller?.display(viewModel.comments.map { model in
 			ImageCommentCellController(viewModel: {
 				ImageCommentViewModel(

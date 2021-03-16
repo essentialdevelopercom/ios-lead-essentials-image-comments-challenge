@@ -17,18 +17,20 @@ public protocol ImageCommentsErrorView {
 }
 
 public protocol ImageCommentsView {
-	func display(_ viewModel: ImageCommentsViewModel, relativeDate: @escaping () -> Date)
+	func display(_ viewModel: ImageCommentsViewModel)
 }
 
 public class ImageCommentsPresenter {
 	private let commentsView: ImageCommentsView
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
+	private let relativeDate: () -> Date
 	
-	public init(commentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+	public init(commentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, relativeDate: @escaping () -> Date) {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.relativeDate = relativeDate
 	}
 	
 	public func didStartLoadingComments() {
@@ -36,8 +38,8 @@ public class ImageCommentsPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 	}
 	
-	public func didFinishLoadingComments(with comments: [ImageComment], relativeDate: @escaping () -> Date) {
-		commentsView.display(ImageCommentsViewModel(comments: comments), relativeDate: relativeDate)
+	public func didFinishLoadingComments(with comments: [ImageComment]) {
+		commentsView.display(ImageCommentsViewModel(comments: comments, relativeDate: relativeDate))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
