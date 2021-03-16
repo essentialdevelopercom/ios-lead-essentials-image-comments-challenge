@@ -21,6 +21,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENTS_DARK")
 	}
 	
+	func test_loadingState() {
+		let sut = makeSUT()
+
+		sut.refreshControl?.beginRefreshing()
+
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_LOADING_LIGHT")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_LOADING_DARK")
+	}
+	
 	func test_commentsWithContent() {
 		let sut = makeSUT()
 		
