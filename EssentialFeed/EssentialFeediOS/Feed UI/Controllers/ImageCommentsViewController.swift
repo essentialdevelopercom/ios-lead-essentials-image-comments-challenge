@@ -18,25 +18,6 @@ public struct ImageCommentViewModel {
 }
 
 
-public final class ImageCommentCellController {
-	private var cell: ImageCommentCell?
-	private var viewModel: () -> ImageCommentViewModel
-	
-	public init(viewModel: @escaping () -> ImageCommentViewModel) {
-		self.viewModel = viewModel
-	}
-	
-	func view(in tableView: UITableView) -> UITableViewCell {
-		cell = tableView.dequeueReusableCell()
-		display(viewModel())
-		return cell!
-	}
-	
-	private func display(_ viewModel: ImageCommentViewModel) {
-		cell?.authorUsername = viewModel.authorUsername
-	}
-}
-
 public protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
 	func didCancelImageCommentsLoading()
