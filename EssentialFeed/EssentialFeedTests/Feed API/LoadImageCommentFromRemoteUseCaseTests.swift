@@ -178,46 +178,42 @@ class LoadImageCommentFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	private func makeImageCommentData() -> ([ImageComment], Data) {
-		let date1 = ISO8601DateFormatter().date(from: "2020-05-20T11:24:59+0000")!
-		let commentAuthor1 = ImageCommentAuthor(username: "a username")
-		let comment1 = ImageComment(
-			id: UUID(),
-			message: "a comment message",
-			createdAt: date1,
-			author: commentAuthor1
-		)
-		
-		let comment1JSON: [String: Any] = [
-			"id": comment1.id.uuidString,
-			"message": comment1.message,
-			"created_at": "2020-05-20T11:24:59+0000",
-			"author": [
-				"username": comment1.author.username
-			]
-		]
+		let imageComment1 = makeImageComment("a comment message", createdAt: "2020-05-20T11:24:59+0000", authorUsername: "a username")
+		let imageComment1JSON = makeImageCommentJSON(from: imageComment1)
 
-		let date2 = ISO8601DateFormatter().date(from: "2020-05-19T14:23:53+0000")!
-		let commentAuthor2 = ImageCommentAuthor(username: "another username")
-		let comment2 = ImageComment(
-			id: UUID(),
-			message: "another comment message",
-			createdAt: date2,
-			author: commentAuthor2
-		)
+		let imageComment2 = makeImageComment("another comment message", createdAt: "2020-05-19T14:23:53+0000", authorUsername: "another username")
+		let imageComment2JSON = makeImageCommentJSON(from: imageComment2)
 
-		let comment2JSON: [String: Any] = [
-			"id": comment2.id.uuidString,
-			"message": comment2.message,
-			"created_at": "2020-05-19T14:23:53+0000",
-			"author": [
-				"username": comment2.author.username
-			]
-		]
-
-		let commentsArray = [comment1, comment2]
-		let commentsJSON = ["items" : [comment1JSON, comment2JSON]]
+		let commentsArray = [imageComment1, imageComment2]
+		let commentsJSON = ["items" : [imageComment1JSON, imageComment2JSON]]
 		let commentsData = try! JSONSerialization.data(withJSONObject: commentsJSON)
 
 		return (commentsArray, commentsData)
+	}
+	
+	private func makeImageComment(_ message: String, createdAt: String, authorUsername: String) -> ImageComment {
+		let date = ISO8601DateFormatter().date(from: createdAt)!
+		let commentAuthor = ImageCommentAuthor(username: authorUsername)
+		let imageComment = ImageComment(
+			id: UUID(),
+			message: message,
+			createdAt: date,
+			author: commentAuthor
+		)
+		
+		return imageComment
+	}
+	
+	private func makeImageCommentJSON(from imageComment: ImageComment) -> [String: Any] {
+		let imageCommentJSON: [String: Any] = [
+			"id": imageComment.id.uuidString,
+			"message": imageComment.message,
+			"created_at": ISO8601DateFormatter().string(from: imageComment.createdAt),
+			"author": [
+				"username": imageComment.author.username
+			]
+		]
+		
+		return imageCommentJSON
 	}
 }
