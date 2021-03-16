@@ -37,10 +37,6 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 	
 	deinit {
-		cancelImageLoadingTask()
-	}
-	
-	public func cancelImageLoadingTask() {
 		delegate?.didCancelImageCommentsLoading()
 	}
 	
