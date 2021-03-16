@@ -10,6 +10,7 @@ import Foundation
 
 public class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
+	private let url: URL
 
 	public enum Error: Swift.Error {
 		case connectivity
@@ -18,7 +19,8 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 	
 	public typealias Result = ImageCommentsLoader.Result
 	
-	public init(client: HTTPClient) {
+	public init(url: URL, client: HTTPClient) {
+		self.url = url
 		self.client = client
 	}
 	
@@ -45,7 +47,7 @@ public class RemoteImageCommentsLoader: ImageCommentsLoader {
 		}
 	}
 	
-	public func loadImageComments(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommmentsLoaderTask {
+	public func loadImageComments(completion: @escaping (Result) -> Void) -> ImageCommmentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }

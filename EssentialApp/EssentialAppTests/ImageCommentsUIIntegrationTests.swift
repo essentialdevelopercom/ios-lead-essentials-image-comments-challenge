@@ -23,7 +23,7 @@ final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegat
 	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		_ = imageLoader.loadImageComments(from: anyURL()) { [presenter] result in
+		_ = imageLoader.loadImageComments { [presenter] result in
 			switch result {
 			case let .success(comments):
 				presenter?.didFinishLoadingComments(with: comments)
@@ -182,8 +182,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	// MARK: - Helper
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
-		let loader = LoaderSpy()
+	private func makeSUT(stubURL: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+		let loader = LoaderSpy(url: stubURL)
 		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: loader)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(loader, file: file, line: line)
@@ -236,11 +236,17 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			completions.count
 		}
 		
-		func didRequestImageCommentsRefresh() {
-			_ = loadImageComments(from: anyURL()) { _ in }
+		private let url: URL
+		
+		init(url: URL) {
+			self.url = url
 		}
 		
-		func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
+		func didRequestImageCommentsRefresh() {
+			_ = loadImageComments { _ in }
+		}
+		
+		func loadImageComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
 			completions.append((url, completion))
 			return Task()
 		}
@@ -318,8 +324,8 @@ final class MainQueueDispatchDecorator<T> {
 }
 
 extension MainQueueDispatchDecorator: ImageCommentsLoader where T == ImageCommentsLoader {
-	func loadImageComments(from url: URL, completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
-		decoratee.loadImageComments(from: url) { [weak self] result in
+	func loadImageComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
+		decoratee.loadImageComments { [weak self] result in
 			self?.dispatch { completion(result) }
 		}
 	}
