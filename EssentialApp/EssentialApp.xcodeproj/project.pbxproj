@@ -41,6 +41,7 @@
 		3A318D4F25F7BB87003FFD1A /* ImageCommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A318D4E25F7BB87003FFD1A /* ImageCommentsUIIntegrationTests.swift */; };
 		3A3F72182600CB8600D60D84 /* ImageCommentsPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F72172600CB8600D60D84 /* ImageCommentsPresentationAdapter.swift */; };
 		3A3F721B2600CBEE00D60D84 /* ImageCommentsViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F721A2600CBEE00D60D84 /* ImageCommentsViewAdapter.swift */; };
+		3A3F721E2600CC1D00D60D84 /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F721D2600CC1D00D60D84 /* ImageCommentsUIComposer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 		3A318D4E25F7BB87003FFD1A /* ImageCommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		3A3F72172600CB8600D60D84 /* ImageCommentsPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsPresentationAdapter.swift; sourceTree = "<group>"; };
 		3A3F721A2600CBEE00D60D84 /* ImageCommentsViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewAdapter.swift; sourceTree = "<group>"; };
+		3A3F721D2600CC1D00D60D84 /* ImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIComposer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 				0895DA94234B3B970031BB2D /* Info.plist */,
 				3A3F72172600CB8600D60D84 /* ImageCommentsPresentationAdapter.swift */,
 				3A3F721A2600CBEE00D60D84 /* ImageCommentsViewAdapter.swift */,
+				3A3F721D2600CC1D00D60D84 /* ImageCommentsUIComposer.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
+				3A3F721E2600CC1D00D60D84 /* ImageCommentsUIComposer.swift in Sources */,
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* FeedLoaderPresentationAdapter.swift in Sources */,
 				08073B47238D2DFA00A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift in Sources */,
