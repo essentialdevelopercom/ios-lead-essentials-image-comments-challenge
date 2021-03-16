@@ -317,11 +317,34 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	func test_feedImageView_callsNavigationActionOnImageSelection() {
+		let image0 = makeImage()
+		let image1 = makeImage()
+		
+		let expectedID = image0.id.uuidString
+		var capturedID: String?
+		
+		let exp = expectation(description: "Wait for completion")
+		let (sut, loader) = makeSUT { id in
+			capturedID = id
+			exp.fulfill()
+		}
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [image0, image1], at: 0)
+		
+		sut.simulateFeedImageSelection(at: 0)
+		
+		wait(for: [exp], timeout: 1.0)
+		
+		XCTAssertEqual(capturedID, expectedID, "Expected matching id of the cell model")
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(navigationAction: @escaping (String) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, navigationAction: {_ in})
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, navigationAction: navigationAction)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
