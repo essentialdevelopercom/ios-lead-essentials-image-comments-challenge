@@ -42,6 +42,7 @@
 		3A3F72182600CB8600D60D84 /* ImageCommentsPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F72172600CB8600D60D84 /* ImageCommentsPresentationAdapter.swift */; };
 		3A3F721B2600CBEE00D60D84 /* ImageCommentsViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F721A2600CBEE00D60D84 /* ImageCommentsViewAdapter.swift */; };
 		3A3F721E2600CC1D00D60D84 /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F721D2600CC1D00D60D84 /* ImageCommentsUIComposer.swift */; };
+		3A3F72232600CC9100D60D84 /* ImageCommentsViewController+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3F72222600CC9100D60D84 /* ImageCommentsViewController+Helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		3A3F72172600CB8600D60D84 /* ImageCommentsPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsPresentationAdapter.swift; sourceTree = "<group>"; };
 		3A3F721A2600CBEE00D60D84 /* ImageCommentsViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewAdapter.swift; sourceTree = "<group>"; };
 		3A3F721D2600CC1D00D60D84 /* ImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIComposer.swift; sourceTree = "<group>"; };
+		3A3F72222600CC9100D60D84 /* ImageCommentsViewController+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsViewController+Helpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +205,7 @@
 				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
 				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
 				3A318D4E25F7BB87003FFD1A /* ImageCommentsUIIntegrationTests.swift */,
+				3A3F72212600CC8100D60D84 /* ImageComments Helpers */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -214,6 +217,14 @@
 				0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3A3F72212600CC8100D60D84 /* ImageComments Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				3A3F72222600CC9100D60D84 /* ImageCommentsViewController+Helpers.swift */,
+			);
+			path = "ImageComments Helpers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -350,6 +361,7 @@
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
+				3A3F72232600CC9100D60D84 /* ImageCommentsViewController+Helpers.swift in Sources */,
 				08073B5A238D2E1000A75DC6 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,

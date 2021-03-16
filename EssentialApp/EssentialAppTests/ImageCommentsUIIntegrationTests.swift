@@ -231,34 +231,3 @@ private extension ImageCommentsUIIntegrationTests {
 		return value
 	}
 }
-
-private extension ImageCommentsViewController {
-	var isShowingLoadingIndicator: Bool {
-		refreshControl?.isRefreshing ?? false
-	}
-	
-	var errorMessage: String? {
-		errorView?.message
-	}
-	
-	func simulateUserInitiatedReload() {
-		refreshControl?.simulatePullToRefresh()
-	}
-	
-	func numberOfRenderedImageCommentsViews() -> Int {
-		tableView.numberOfRows(inSection: commentsSectionIndex)
-	}
-	
-	private var commentsSectionIndex: Int { 0 }
-	
-	func imageCommentView(at row: Int) -> UITableViewCell? {
-		guard numberOfRenderedImageCommentsViews() > row else {
-			return nil
-		}
-		
-		let dataSource = tableView.dataSource
-		let index = IndexPath(row: row, section: commentsSectionIndex)
-		return dataSource?.tableView(tableView, cellForRowAt: index)
-	}
-}
-
