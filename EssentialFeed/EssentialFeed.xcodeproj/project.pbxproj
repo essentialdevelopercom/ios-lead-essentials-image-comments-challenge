@@ -278,6 +278,7 @@
 		080EDEFE21B6DA7E00813479 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				4B7596D62602557300D9B606 /* Comment Feature */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
 				0844768D21FCB23900439BE9 /* Helpers */,
 				08C0880F21E4F53000ACFB30 /* Feed API */,
@@ -473,7 +474,6 @@
 				08DDC13921BEA99E00F490ED /* LoadFeedFromRemoteUseCaseTests.swift */,
 				08897BE7233910040029F5E4 /* LoadFeedImageDataFromRemoteUseCaseTests.swift */,
 				082DB86321F763F900A71F69 /* URLSessionHTTPClientTests.swift */,
-				4BB1ED3B25F16E1E0008E33E /* LoadImageCommentFromRemoteUseCaseTests.swift */,
 			);
 			path = "Feed API";
 			sourceTree = "<group>";
@@ -525,6 +525,14 @@
 				08EFB82C22D4A60300A46837 /* Views */,
 			);
 			path = "Feed UI";
+			sourceTree = "<group>";
+		};
+		4B7596D62602557300D9B606 /* Comment Feature */ = {
+			isa = PBXGroup;
+			children = (
+				4BB1ED3B25F16E1E0008E33E /* LoadImageCommentFromRemoteUseCaseTests.swift */,
+			);
+			path = "Comment Feature";
 			sourceTree = "<group>";
 		};
 		4BB1ED2025F169090008E33E /* Comment Feature */ = {
