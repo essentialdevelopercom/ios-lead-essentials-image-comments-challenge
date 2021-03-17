@@ -64,10 +64,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func openCommentsWithId(_ id: String) {
 		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!
-		let imageCommentsLoader = RemoteImageCommentsLoader(url: url, client: httpClient)
+		
 		let imageCommentsViewController = ImageCommentsUIComposer.imageCommentsComposedWith(
-			imageCommentsLoader: imageCommentsLoader,
+			imageCommentsLoader: RemoteImageCommentsLoader(url: url, client: httpClient)
+				.loadPublisher,
 			relativeDate: Date.init)
+		
 		(window?.rootViewController as! UINavigationController)
 			.pushViewController(imageCommentsViewController, animated: true)
 	}

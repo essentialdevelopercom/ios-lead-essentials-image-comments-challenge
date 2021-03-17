@@ -38,7 +38,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	
 	public override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
-		
+
 		delegate?.didCancelImageCommentsLoading()
 	}
 	
