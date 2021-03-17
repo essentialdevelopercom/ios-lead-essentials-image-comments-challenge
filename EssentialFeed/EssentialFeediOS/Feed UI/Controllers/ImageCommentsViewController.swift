@@ -36,7 +36,9 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		tableView.sizeTableHeaderToFit()
 	}
 	
-	deinit {
+	public override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
 		delegate?.didCancelImageCommentsLoading()
 	}
 	
