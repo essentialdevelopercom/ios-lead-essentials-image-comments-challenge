@@ -10,12 +10,9 @@ extension FeedViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
-	/// NOTE: For the clarity, I really see a better option to evaluate `tapGesture` parameter in every CellController.
-	/// Generally `tableModel` is hidden behind private coat (as it should be), so there is another option - directly push state of "some" gesture recognizer, that is attached to every `FeedImageCell`.
 	func simulateFeedImageSelection(at index: Int) {
-		let cell = feedImageView(at: index) as! FeedImageCell
-		
-		cell.feedImageView.gestureRecognizers?.first?.state = .ended
+		let cellController = getCellController(at: index)
+		cellController.didSelectImage()
 	}
 	
 	@discardableResult

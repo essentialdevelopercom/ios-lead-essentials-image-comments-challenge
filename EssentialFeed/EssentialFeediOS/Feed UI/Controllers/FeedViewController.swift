@@ -49,6 +49,10 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 		errorView?.message = viewModel.message
 	}
 	
+	public func getCellController(at index: Int) -> FeedImageCellController {
+		tableModel[index]
+	}
+	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return tableModel.count
 	}

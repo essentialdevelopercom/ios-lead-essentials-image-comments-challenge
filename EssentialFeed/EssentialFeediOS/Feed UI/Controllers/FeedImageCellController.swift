@@ -49,7 +49,7 @@ public final class FeedImageCellController: FeedImageView {
 		cell?.feedImageView.isUserInteractionEnabled = true
 	}
 
-	@objc private func didSelectImage() {
+	@objc public func didSelectImage() {
 		delegate.didSelectImage()
 	}
 	

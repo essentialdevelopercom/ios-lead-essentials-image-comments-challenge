@@ -54,9 +54,10 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	func test_feedImageSelect_callsNavigationActionToImageComments() {
 		let feed = launch(httpClient: .online(response), store: .empty)
+		feed.view.enforceLayoutCycle()
 		
 		feed.simulateFeedImageSelection(at: 0)
-		forceUIUpdate()
+		feed.view.enforceLayoutCycle()
 		
 		XCTAssertNotNil(feed.navigationController?.topViewController as? ImageCommentsViewController, "Expected `ImageViewController` to be shown on the top of view hierarchy")
 	}
@@ -83,11 +84,6 @@ class FeedAcceptanceTests: XCTestCase {
 	private func response(for url: URL) -> (Data, HTTPURLResponse) {
 		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
 		return (makeData(for: url), response)
-	}
-	
-	/// Adds a overhead of 100 miliseconds but gives enough time for distributing notification of state change in UITapGestureRecognizer
-	private func forceUIUpdate() {
-		RunLoop.main.run(until: Date().addingTimeInterval(0.1))
 	}
 	
 	private func makeData(for url: URL) -> Data {
