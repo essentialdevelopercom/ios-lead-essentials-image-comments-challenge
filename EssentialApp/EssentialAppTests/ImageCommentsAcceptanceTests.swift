@@ -19,6 +19,12 @@ class ImageCommentsAcceptanceTests: XCTestCase {
 		XCTAssertEqual(comments.numberOfRenderedImageCommentsViews(), 2)
 	}
 	
+	func test_onAppear_displaysNoCommentsWhenCustomerHasNoConnectivity() {
+		let comments = launch(httpClient: .offline)
+		
+		XCTAssertEqual(comments.numberOfRenderedImageCommentsViews(), 0)
+	}
+	
 	// MARK: - Helpers
 	
 	private func launch(httpClient: HTTPClientStub = .offline) -> ImageCommentsViewController {
