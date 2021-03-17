@@ -46,7 +46,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected to disable loading indicator while loading completes with an error")
 	}
 	
-	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedComments() {
+	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedComments_inExactOrderAsReturnedFromAPI() {
 		let comment1 = makeImageComment()
 		let comment2 = makeImageComment()
 		let comment3 = makeImageComment()
