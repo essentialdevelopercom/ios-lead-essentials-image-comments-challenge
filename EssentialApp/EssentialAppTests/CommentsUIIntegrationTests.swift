@@ -9,6 +9,7 @@
 import XCTest
 import EssentialFeed
 import EssentialFeediOS
+import EssentialApp
 
 final class CommentsUIIntegrationTests: XCTestCase {
 	

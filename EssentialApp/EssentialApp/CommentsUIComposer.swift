@@ -8,6 +8,7 @@
 
 import UIKit
 import EssentialFeed
+import EssentialFeediOS
 
 public final class CommentsUIComposer {
 	private init() {}
@@ -32,26 +33,6 @@ public final class CommentsUIComposer {
 	}
 }
 
-private final class WeakRefVirtualProxy<T: AnyObject> {
-	private weak var object: T?
-	
-	init(_ object: T) {
-		self.object = object
-	}
-}
-
-extension WeakRefVirtualProxy: CommentLoadingView where T: CommentLoadingView {
-	func display(_ viewModel: CommentLoadingViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: CommentErrorView where T: CommentErrorView {
-	func display(_ viewModel: CommentErrorViewModel) {
-		object?.display(viewModel)
-	}
-}
-
 private final class CommentsAdapter: CommentView {
 	private weak var controller: CommentsController?
 	
@@ -60,9 +41,9 @@ private final class CommentsAdapter: CommentView {
 	}
 	
 	func display(_ viewModel: CommentViewModel) {
-		controller?.cellControllers = viewModel.comments.map {
+		controller?.display(viewModel.comments.map {
 			CommentCellController(model: $0)
-		}
+		})
 	}
 }
 

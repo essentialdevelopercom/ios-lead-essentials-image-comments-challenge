@@ -9,14 +9,14 @@
 import UIKit
 import EssentialFeed
 
-protocol CommentsControllerDelegate {
+public protocol CommentsControllerDelegate {
 	func didRequestCommentsRefresh()
 }
 
 public final class CommentsController: UITableViewController, CommentErrorView, CommentLoadingView {
-	var delegate: CommentsControllerDelegate?
+	public var delegate: CommentsControllerDelegate?
 	
-	var cellControllers = [CommentCellController]() {
+	private var tableModel = [CommentCellController]() {
 		didSet { tableView.reloadData() }
 	}
 	
@@ -24,6 +24,10 @@ public final class CommentsController: UITableViewController, CommentErrorView, 
 		super.viewDidLoad()
 		title = CommentsPresenter.title
 		refresh()
+	}
+	
+	public func display(_ cellControllers: [CommentCellController]) {
+		tableModel = cellControllers
 	}
 	
 	@IBAction private func refresh() {
@@ -43,10 +47,10 @@ public final class CommentsController: UITableViewController, CommentErrorView, 
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return cellControllers.count
+		return tableModel.count
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return cellControllers[indexPath.row].view(for: tableView)
+		return tableModel[indexPath.row].view(for: tableView)
 	}
 }

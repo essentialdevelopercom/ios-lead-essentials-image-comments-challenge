@@ -12,7 +12,7 @@ import EssentialFeed
 public final class CommentCellController {
 	private let model: Comment
 	
-	init(model: Comment) {
+	public init(model: Comment) {
 		self.model = model
 	}
 	

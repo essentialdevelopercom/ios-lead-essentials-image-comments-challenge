@@ -86,15 +86,12 @@
 		730D6E7125F210B50001ED91 /* RemoteComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6E7025F210B50001ED91 /* RemoteComment.swift */; };
 		730D6E7F25F2868E0001ED91 /* CommentsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6E7E25F2868E0001ED91 /* CommentsController.swift */; };
 		730D6E8525F287100001ED91 /* FeedImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6E8425F287100001ED91 /* FeedImageCommentCell.swift */; };
-		730D6E9925F509F90001ED91 /* CommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6E9825F509F90001ED91 /* CommentsUIIntegrationTests.swift */; };
 		730D6EA825F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6EA725F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift */; };
 		730D6EC925F7BA410001ED91 /* CommentCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6EC825F7BA410001ED91 /* CommentCellController.swift */; };
 		73587FB025EF744F00B55A8D /* LoadFeedImageCommentsFromRemoteUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FAF25EF744F00B55A8D /* LoadFeedImageCommentsFromRemoteUseCase.swift */; };
 		73587FC825F000F600B55A8D /* RemoteCommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FC725F000F600B55A8D /* RemoteCommentsLoader.swift */; };
 		73587FD225F0016C00B55A8D /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FD125F0016C00B55A8D /* Comment.swift */; };
 		73587FDC25F00E6F00B55A8D /* CommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */; };
-		73B434BF25F921AF00099924 /* CommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D6EB725F798360001ED91 /* CommentsUIComposer.swift */; };
-		73B434E525F962AE00099924 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */; };
 		73B434EF25FA00FC00099924 /* CommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */; };
 		73B434F525FA26CC00099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434F425FA26CC00099924 /* CommentsPresenter.swift */; };
 		73B434FB25FA271B00099924 /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */; };
@@ -206,15 +203,14 @@
 		730D6E7025F210B50001ED91 /* RemoteComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteComment.swift; sourceTree = "<group>"; };
 		730D6E7E25F2868E0001ED91 /* CommentsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsController.swift; sourceTree = "<group>"; };
 		730D6E8425F287100001ED91 /* FeedImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCommentCell.swift; sourceTree = "<group>"; };
-		730D6E9825F509F90001ED91 /* CommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		730D6EA725F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIRefreshControl+TestHelpers.swift"; sourceTree = "<group>"; };
-		730D6EB725F798360001ED91 /* CommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIComposer.swift; sourceTree = "<group>"; };
+		730D6EB725F798360001ED91 /* CommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommentsUIComposer.swift; path = ../../../EssentialApp/EssentialApp/CommentsUIComposer.swift; sourceTree = "<group>"; };
 		730D6EC825F7BA410001ED91 /* CommentCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCellController.swift; sourceTree = "<group>"; };
 		73587FAF25EF744F00B55A8D /* LoadFeedImageCommentsFromRemoteUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedImageCommentsFromRemoteUseCase.swift; sourceTree = "<group>"; };
 		73587FC725F000F600B55A8D /* RemoteCommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommentsLoader.swift; sourceTree = "<group>"; };
 		73587FD125F0016C00B55A8D /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLoader.swift; sourceTree = "<group>"; };
-		73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
+		73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainQueueDispatchDecorator.swift; path = ../../../EssentialApp/EssentialApp/MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenterTests.swift; sourceTree = "<group>"; };
 		73B434F425FA26CC00099924 /* CommentsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenter.swift; sourceTree = "<group>"; };
 		73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoadingViewModel.swift; sourceTree = "<group>"; };
@@ -521,7 +517,6 @@
 				08D917AF22B92A5D003BC31B /* Info.plist */,
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
-				730D6E9825F509F90001ED91 /* CommentsUIIntegrationTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -824,11 +819,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				086AEFBE23A7E75400EE8933 /* UITableView+HeaderSizing.swift in Sources */,
-				73B434E525F962AE00099924 /* MainQueueDispatchDecorator.swift in Sources */,
 				730D6E7F25F2868E0001ED91 /* CommentsController.swift in Sources */,
 				08A3F2B2232AA1C200127C15 /* ErrorView.swift in Sources */,
 				08A3F2BB232BA64700127C15 /* UIRefreshControl+Helpers.swift in Sources */,
-				73B434BF25F921AF00099924 /* CommentsUIComposer.swift in Sources */,
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				730D6E8525F287100001ED91 /* FeedImageCommentCell.swift in Sources */,
@@ -845,7 +838,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				08BB7EA922C138AC00F8B83C /* XCTestCase+MemoryLeakTracking.swift in Sources */,
-				730D6E9925F509F90001ED91 /* CommentsUIIntegrationTests.swift in Sources */,
 				086AEFB923A7DFA400EE8933 /* FeedSnapshotTests.swift in Sources */,
 				0800314923B6909A00720217 /* XCTestCase+Snapshot.swift in Sources */,
 				730D6EA825F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift in Sources */,
