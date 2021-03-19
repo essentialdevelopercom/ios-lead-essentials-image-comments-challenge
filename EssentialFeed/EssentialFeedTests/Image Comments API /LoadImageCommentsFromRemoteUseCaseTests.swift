@@ -27,9 +27,12 @@ class RemoteImageCommentLoader {
 	func load(from url: URL, completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .success((_, response)) where !(200..<300).contains(response.statusCode):
+			case let .success((_, response)):
+				guard (200..<300).contains(response.statusCode) else {
+					return completion(.failure(Error.invalidData))
+				}
 				completion(.failure(Error.invalidData))
-			default:
+			case .failure:
 				completion(.failure(Error.connectivity))
 			}
 		}
@@ -80,6 +83,15 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			})
 		}
+	}
+	
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
+			let invalidJSON = Data("invalid json".utf8)
+			client.complete(withStatusCode: 200, data: invalidJSON)
+		})
 	}
 	
 	// MARK: - Helpers
