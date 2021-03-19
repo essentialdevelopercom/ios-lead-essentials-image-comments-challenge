@@ -13,21 +13,6 @@ struct ImageCommentMapper {
 		let items: [RemoteImageComment]
 	}
 	
-	private struct RemoteImageComment: Decodable {
-		struct Author: Decodable {
-			let username: String
-		}
-		
-		let id: UUID
-		let message: String
-		let createdAt: Date
-		let author: Author
-		
-		var imageComment: ImageComment {
-			ImageComment(id: id, message: message, creationDate: createdAt, author: author.username)
-		}
-	}
-	
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
 		guard response.isWithinSuccessStatusCodes,
 			  let root = try? JSONDecoder()
