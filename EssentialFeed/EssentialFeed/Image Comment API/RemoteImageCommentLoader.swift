@@ -17,14 +17,23 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 		case invalidData
 	}
 	
+	private final class HTTPTaskWrapper: ImageCommentLoaderTask {
+		var wrapped: HTTPClientTask?
+		
+		func cancel() {
+			wrapped?.cancel()
+		}
+	}
+	
 	private let client: HTTPClient
 	
 	public init(client: HTTPClient) {
 		self.client = client
 	}
 	
-	public func load(from url: URL, completion: @escaping (Result) -> Void) {
-		client.get(from: url) { [weak self] result in
+	public func load(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommentLoaderTask {
+		let task = HTTPTaskWrapper()
+		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
 			completion(result
 				.mapError { _ in Error.connectivity }
@@ -33,6 +42,7 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 				}
 			)
 		}
+		return task
 	}
 	
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
