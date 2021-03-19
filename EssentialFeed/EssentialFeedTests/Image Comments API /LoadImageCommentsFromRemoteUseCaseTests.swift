@@ -31,6 +31,10 @@ class RemoteImageCommentLoader {
 		let message: String
 		let createdAt: Date
 		let author: Author
+		
+		var imageComment: ImageComment {
+			ImageComment(id: id, message: message, creationDate: createdAt, author: author.username)
+		}
 	}
 	
 	let client: HTTPClient
@@ -46,8 +50,13 @@ class RemoteImageCommentLoader {
 				guard (200..<300).contains(response.statusCode) else {
 					return completion(.failure(Error.invalidData))
 				}
-				if let _ = try? JSONDecoder().decode(Root.self, from: data) {
-					completion(.success([]))
+				
+				let jsonDecoder = JSONDecoder()
+				jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+				jsonDecoder.dateDecodingStrategy = .iso8601
+				
+				if let root = try? jsonDecoder.decode(Root.self, from: data) {
+					completion(.success(root.items.map(\.imageComment)))
 				} else {
 					completion(.failure(Error.invalidData))
 				}
@@ -122,10 +131,55 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversCommentsOn200HTTPResponseWithCommentsList() {
+		let (sut, client) = makeSUT()
+		
+		let comment1 = makeComment(
+			id: UUID(),
+			message: "a message",
+			creationDate: (timestamp: 1_589_973_899, iso8601Representation: "2020-05-20T11:24:59+0000"),
+			author: "a username"
+		)
+		let comment2 = makeComment(
+			id: UUID(),
+			message: "another message",
+			creationDate: (timestamp: 1_589_898_233, iso8601Representation: "2020-05-19T14:23:53+0000"),
+			author: "another username"
+		)
+		
+		expect(sut: sut, toCompleteWith: .success([comment1.model, comment2.model]), when: {
+			let json = makeCommentsJSON([comment1.json, comment2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	// MARK: - Helpers
 	
 	private func failure(_ error: RemoteImageCommentLoader.Error) -> RemoteImageCommentLoader.Result {
 		return .failure(error)
+	}
+	
+	private func makeComment(
+		id: UUID,
+		message: String,
+		creationDate: (timestamp: TimeInterval, iso8601Representation: String),
+		author: String
+	) -> (model: ImageComment, json: [String: Any]) {
+		let comment = ImageComment(id: id, message: message, creationDate: Date(timeIntervalSince1970: creationDate.timestamp), author: author)
+		let json: [String: Any] = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": creationDate.iso8601Representation,
+			"author": [
+				"username": author
+			]
+		]
+		return (comment, json)
+	}
+	
+	private func makeCommentsJSON(_ comments: [[String: Any]]) -> Data {
+		let json = ["items": comments]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentLoader, client: HTTPClientSpy) {
@@ -142,8 +196,8 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		sut.load(from: url) { receivedResult in
 			switch (receivedResult, expectedResult) {
-			case (.success, .success):
-				break
+			case let (.success(receivedComments), .success(expectedComments)):
+				XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
 			case let (.failure(receivedError as RemoteImageCommentLoader.Error), .failure(expectedError as RemoteImageCommentLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default:
