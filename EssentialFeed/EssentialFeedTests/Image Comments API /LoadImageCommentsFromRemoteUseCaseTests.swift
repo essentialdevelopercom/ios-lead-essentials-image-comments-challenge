@@ -119,6 +119,21 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
 	}
 	
+	func test_load_doesNotDeliverResultAfterCancellingTask() {
+		let (sut, client) = makeSUT()
+		let emptyComments = makeCommentsJSON([])
+		
+		var receivedResults = [RemoteImageCommentLoader.Result]()
+		let task = sut.load(from: anyURL()) { receivedResults.append($0) }
+		task.cancel()
+		
+		client.complete(withStatusCode: 500, data: anyData())
+		client.complete(withStatusCode: 200, data: emptyComments)
+		client.complete(with: anyNSError())
+		
+		XCTAssertTrue(receivedResults.isEmpty, "Expected no received results after cancelling task")
+	}
+	
 	// MARK: - Helpers
 	
 	private func failure(_ error: RemoteImageCommentLoader.Error) -> RemoteImageCommentLoader.Result {
