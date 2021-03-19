@@ -27,16 +27,14 @@ final class ImageCommentViewController: UIViewController {
 
 class ImageCommentViewControllerTest: XCTestCase {
 	func test_init_doesNotLoadFeed() {
-		let loader = LoaderSpy()
-		_ = ImageCommentViewController(loader: loader)
+		let (_, loader) = makeSUT()
 		
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
 	// Load feed when presented
 	func test_viewDidLoad_loadsFeed() {
-		let loader = LoaderSpy()
-		let sut = ImageCommentViewController(loader: loader)
+		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		
@@ -44,6 +42,14 @@ class ImageCommentViewControllerTest: XCTestCase {
 	}
 	
 	// MARK: - Helpers
+	
+	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentViewController, loader: LoaderSpy) {
+		let loader = LoaderSpy()
+		let sut = ImageCommentViewController(loader: loader)
+		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		return (sut, loader)
+	}
 	
 	class LoaderSpy: ImageCommentLoader {
 		private(set) var loadCallCount: Int = 0
