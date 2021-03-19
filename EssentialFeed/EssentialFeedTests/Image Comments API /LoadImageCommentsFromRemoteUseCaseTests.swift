@@ -19,7 +19,18 @@ class RemoteImageCommentLoader {
 	}
 	
 	private struct Root: Decodable {
-		let items: [ImageComment]
+		let items: [RemoteImageComment]
+	}
+	
+	private struct RemoteImageComment: Decodable {
+		struct Author: Decodable {
+			let username: String
+		}
+		
+		let id: UUID
+		let message: String
+		let createdAt: Date
+		let author: Author
 	}
 	
 	let client: HTTPClient
