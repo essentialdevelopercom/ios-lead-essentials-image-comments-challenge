@@ -41,18 +41,6 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 	}
 }
 
-extension JSONDecoder {
-	func withKeyDecodingStrategy(_ strategy: JSONDecoder.KeyDecodingStrategy) -> JSONDecoder {
-		self.keyDecodingStrategy = strategy
-		return self
-	}
-	
-	func withDateDecodingStrategy(_ strategy: JSONDecoder.DateDecodingStrategy) -> JSONDecoder {
-		self.dateDecodingStrategy = strategy
-		return self
-	}
-}
-
 struct ImageCommentMapper {
 	private struct Root: Decodable {
 		let items: [RemoteImageComment]
