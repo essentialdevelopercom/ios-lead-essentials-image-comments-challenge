@@ -10,8 +10,15 @@ import EssentialFeed
 import XCTest
 
 class RemoteImageCommentLoader {
+	
+	let client: HTTPClient
+	
 	init(client: HTTPClient) {
-		
+		self.client = client
+	}
+	
+	func load(from url: URL) {
+		client.get(from: url) { _ in }
 	}
 }
 
@@ -20,6 +27,15 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (_, client) = makeSUT()
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
+	}
+	
+	func test_load_requestsDataFromURL() {
+		let (sut, client) = makeSUT()
+		let url = anyURL()
+		
+		sut.load(from: url)
+		
+		XCTAssertEqual(client.requestedURLs, [url])
 	}
 	
 	// MARK: - Helpers
