@@ -11,14 +11,22 @@ import XCTest
 
 class RemoteImageCommentLoader {
 	
+	typealias Result = Swift.Result<Void, Swift.Error>
+	
+	enum Error: Swift.Error {
+		case connectivity
+	}
+	
 	let client: HTTPClient
 	
 	init(client: HTTPClient) {
 		self.client = client
 	}
 	
-	func load(from url: URL) {
-		client.get(from: url) { _ in }
+	func load(from url: URL, completion: @escaping (Result) -> Void) {
+		client.get(from: url) { _ in
+			completion(.failure(Error.connectivity))
+		}
 	}
 }
 
@@ -33,7 +41,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let url = anyURL()
 		
-		sut.load(from: url)
+		sut.load(from: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -42,10 +50,19 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let url = anyURL()
 		
-		sut.load(from: url)
-		sut.load(from: url)
+		sut.load(from: url) { _ in }
+		sut.load(from: url) { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_deliversConnectivityErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		let error = anyNSError()
+		
+		expect(sut: sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.connectivity)) {
+			client.complete(with: error)
+		}
 	}
 	
 	// MARK: - Helpers
@@ -56,5 +73,23 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func expect(sut: RemoteImageCommentLoader, toCompleteWith expectedResult: RemoteImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+		let url = anyURL()
+		let exp = expectation(description: "Wait for load completion")
+		
+		sut.load(from: url) { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.failure(receivedError as RemoteImageCommentLoader.Error), .failure(expectedError as RemoteImageCommentLoader.Error)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+			default:
+				XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+			}
+			exp.fulfill()
+		}
+		action()
+		
+		wait(for: [exp], timeout: 1.0)
 	}
 }
