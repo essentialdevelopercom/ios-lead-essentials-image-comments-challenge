@@ -17,6 +17,34 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 		case invalidData
 	}
 	
+	private let client: HTTPClient
+	
+	public init(client: HTTPClient) {
+		self.client = client
+	}
+	
+	public func load(from url: URL, completion: @escaping (Result) -> Void) {
+		client.get(from: url) { [weak self] result in
+			guard self != nil else { return }
+			switch result {
+			case let .success((data, response)):
+				do {
+					let comments = try ImageCommentMapper.map(data, from: response)
+					completion(.success(comments))
+				} catch {
+					completion(.failure(error))
+				}
+			case .failure:
+				completion(.failure(Error.connectivity))
+			}
+		}
+	}
+}
+
+struct ImageCommentMapper {
+	
+	private static var acceptedStatusCodeRange = 200..<300
+	
 	private struct Root: Decodable {
 		let items: [RemoteImageComment]
 	}
@@ -36,33 +64,19 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 		}
 	}
 	
-	private let client: HTTPClient
-	
-	public init(client: HTTPClient) {
-		self.client = client
-	}
-	
-	public func load(from url: URL, completion: @escaping (Result) -> Void) {
-		client.get(from: url) { [weak self] result in
-			guard self != nil else { return }
-			switch result {
-			case let .success((data, response)):
-				guard (200..<300).contains(response.statusCode) else {
-					return completion(.failure(Error.invalidData))
-				}
-				
-				let jsonDecoder = JSONDecoder()
-				jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-				jsonDecoder.dateDecodingStrategy = .iso8601
-				
-				if let root = try? jsonDecoder.decode(Root.self, from: data) {
-					completion(.success(root.items.map(\.imageComment)))
-				} else {
-					completion(.failure(Error.invalidData))
-				}
-			case .failure:
-				completion(.failure(Error.connectivity))
-			}
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
+		guard acceptedStatusCodeRange.contains(response.statusCode) else {
+			throw RemoteImageCommentLoader.Error.invalidData
 		}
+		
+		let jsonDecoder = JSONDecoder()
+		jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+		jsonDecoder.dateDecodingStrategy = .iso8601
+		
+		guard let root = try? jsonDecoder.decode(Root.self, from: data) else {
+			throw RemoteImageCommentLoader.Error.invalidData
+		}
+		
+		return root.items.map(\.imageComment)
 	}
 }
