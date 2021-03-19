@@ -60,12 +60,16 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let error = anyNSError()
 		
-		expect(sut: sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.connectivity)) {
+		expect(sut: sut, toCompleteWith: failure(.connectivity)) {
 			client.complete(with: error)
 		}
 	}
 	
 	// MARK: - Helpers
+	
+	private func failure(_ error: RemoteImageCommentLoader.Error) -> RemoteImageCommentLoader.Result {
+		return .failure(error)
+	}
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
