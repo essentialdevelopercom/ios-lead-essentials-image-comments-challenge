@@ -41,6 +41,18 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 	}
 }
 
+extension JSONDecoder {
+	func withKeyDecodingStrategy(_ strategy: JSONDecoder.KeyDecodingStrategy) -> JSONDecoder {
+		self.keyDecodingStrategy = strategy
+		return self
+	}
+	
+	func withDateDecodingStrategy(_ strategy: JSONDecoder.DateDecodingStrategy) -> JSONDecoder {
+		self.dateDecodingStrategy = strategy
+		return self
+	}
+}
+
 struct ImageCommentMapper {
 	
 	private static var acceptedStatusCodeRange = 200..<300
@@ -69,11 +81,7 @@ struct ImageCommentMapper {
 			throw RemoteImageCommentLoader.Error.invalidData
 		}
 		
-		let jsonDecoder = JSONDecoder()
-		jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-		jsonDecoder.dateDecodingStrategy = .iso8601
-		
-		guard let root = try? jsonDecoder.decode(Root.self, from: data) else {
+		guard let root = try? JSONDecoder().withKeyDecodingStrategy(.convertFromSnakeCase).withDateDecodingStrategy(.iso8601).decode(Root.self, from: data) else {
 			throw RemoteImageCommentLoader.Error.invalidData
 		}
 		
