@@ -8,8 +8,8 @@
 
 import Foundation
 
-protocol ImageCommentLoader {
+public protocol ImageCommentLoader {
 	typealias Result = Swift.Result<[ImageComment], Error>
 	
-	func load(completion: @escaping (Result) -> Void)
+	func load(from url: URL, completion: @escaping (Result) -> Void)
 }

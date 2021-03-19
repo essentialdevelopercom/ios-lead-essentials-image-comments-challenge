@@ -9,9 +9,9 @@
 import EssentialFeed
 import XCTest
 
-class RemoteImageCommentLoader {
+class RemoteImageCommentLoader: ImageCommentLoader {
 	
-	typealias Result = Swift.Result<[ImageComment], Swift.Error>
+	typealias Result = ImageCommentLoader.Result
 	
 	enum Error: Swift.Error {
 		case connectivity
