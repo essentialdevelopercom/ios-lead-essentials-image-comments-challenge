@@ -8,13 +8,20 @@
 
 import Foundation
 
-struct ImageComment {
-	struct Author {
-		let username: String
+public struct ImageComment: Decodable {
+	public struct Author: Decodable {
+		public let username: String
 	}
 	
-	let id: UUID
-	let message: String
-	let creationDate: Date
-	let author: Author
+	public let id: UUID
+	public let message: String
+	public let creationDate: Date
+	public let author: Author
+	
+	public init(id: UUID, message: String, creationDate: Date, author: Author) {
+		self.id = id
+		self.message = message
+		self.creationDate = creationDate
+		self.author = author
+	}
 }

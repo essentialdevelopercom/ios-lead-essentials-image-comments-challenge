@@ -11,11 +11,15 @@ import XCTest
 
 class RemoteImageCommentLoader {
 	
-	typealias Result = Swift.Result<Void, Swift.Error>
+	typealias Result = Swift.Result<[ImageComment], Swift.Error>
 	
 	enum Error: Swift.Error {
 		case connectivity
 		case invalidData
+	}
+	
+	private struct Root: Decodable {
+		let items: [ImageComment]
 	}
 	
 	let client: HTTPClient
@@ -27,11 +31,15 @@ class RemoteImageCommentLoader {
 	func load(from url: URL, completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .success((_, response)):
+			case let .success((data, response)):
 				guard (200..<300).contains(response.statusCode) else {
 					return completion(.failure(Error.invalidData))
 				}
-				completion(.failure(Error.invalidData))
+				if let _ = try? JSONDecoder().decode(Root.self, from: data) {
+					completion(.success([]))
+				} else {
+					completion(.failure(Error.invalidData))
+				}
 			case .failure:
 				completion(.failure(Error.connectivity))
 			}
@@ -91,6 +99,15 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
 			let invalidJSON = Data("invalid json".utf8)
 			client.complete(withStatusCode: 200, data: invalidJSON)
+		})
+	}
+	
+	func test_load_deliversNoCommentsOn200HTTPResponseWithEmptyList() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut: sut, toCompleteWith: .success([]), when: {
+			let emptyListJSON = Data(#"{ "items": [] }"#.utf8)
+			client.complete(withStatusCode: 200, data: emptyListJSON)
 		})
 	}
 	
