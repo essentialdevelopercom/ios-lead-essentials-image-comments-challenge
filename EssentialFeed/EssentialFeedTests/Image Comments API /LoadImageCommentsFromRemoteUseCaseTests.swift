@@ -39,7 +39,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let error = anyNSError()
 		
-		expect(sut: sut, toCompleteWith: failure(.connectivity), when: {
+		expect(sut, toCompleteWith: failure(.connectivity), when: {
 			client.complete(with: error)
 		})
 	}
@@ -49,7 +49,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let samples = [199, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
-			expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
 				client.complete(withStatusCode: code, data: anyData(), at: index)
 			})
 		}
@@ -58,7 +58,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
+		expect(sut, toCompleteWith: failure(.invalidData), when: {
 			let invalidJSON = Data("invalid json".utf8)
 			client.complete(withStatusCode: 200, data: invalidJSON)
 		})
@@ -67,7 +67,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversNoCommentsOn200HTTPResponseWithEmptyList() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut: sut, toCompleteWith: .success([]), when: {
+		expect(sut, toCompleteWith: .success([]), when: {
 			let emptyListJSON = makeCommentsJSON([])
 			client.complete(withStatusCode: 200, data: emptyListJSON)
 		})
@@ -89,7 +89,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			author: "another username"
 		)
 		
-		expect(sut: sut, toCompleteWith: .success([comment1.model, comment2.model]), when: {
+		expect(sut, toCompleteWith: .success([comment1.model, comment2.model]), when: {
 			let json = makeCommentsJSON([comment1.json, comment2.json])
 			client.complete(withStatusCode: 200, data: json)
 		})
@@ -97,9 +97,9 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_load_doesNotDeliverResultAfterInstanceHasBeenDeallocated() {
 		let client = HTTPClientSpy()
-		var sut: RemoteImageCommentLoader? = RemoteImageCommentLoader(client: client)
+		var sut: ImageCommentLoader? = RemoteImageCommentLoader(client: client)
 		
-		var capturedResults = [RemoteImageCommentLoader.Result]()
+		var capturedResults = [ImageCommentLoader.Result]()
 		_ = sut?.load(from: anyURL()) { capturedResults.append($0) }
 		
 		sut = nil
@@ -123,7 +123,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let emptyComments = makeCommentsJSON([])
 		
-		var receivedResults = [RemoteImageCommentLoader.Result]()
+		var receivedResults = [ImageCommentLoader.Result]()
 		let task = sut.load(from: anyURL()) { receivedResults.append($0) }
 		task.cancel()
 		
@@ -171,7 +171,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return (sut, client)
 	}
 	
-	private func expect(sut: RemoteImageCommentLoader, toCompleteWith expectedResult: RemoteImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: RemoteImageCommentLoader, toCompleteWith expectedResult: ImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let url = anyURL()
 		let exp = expectation(description: "Wait for load completion")
 		
