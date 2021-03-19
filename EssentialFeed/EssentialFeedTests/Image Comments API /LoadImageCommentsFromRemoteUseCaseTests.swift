@@ -15,6 +15,7 @@ class RemoteImageCommentLoader {
 	
 	enum Error: Swift.Error {
 		case connectivity
+		case invalidData
 	}
 	
 	let client: HTTPClient
@@ -24,8 +25,13 @@ class RemoteImageCommentLoader {
 	}
 	
 	func load(from url: URL, completion: @escaping (Result) -> Void) {
-		client.get(from: url) { _ in
-			completion(.failure(Error.connectivity))
+		client.get(from: url) { result in
+			switch result {
+			case let .success((_, response)) where !(200..<300).contains(response.statusCode):
+				completion(.failure(Error.invalidData))
+			default:
+				completion(.failure(Error.connectivity))
+			}
 		}
 	}
 }
@@ -60,8 +66,19 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 		let error = anyNSError()
 		
-		expect(sut: sut, toCompleteWith: failure(.connectivity)) {
+		expect(sut: sut, toCompleteWith: failure(.connectivity), when: {
 			client.complete(with: error)
+		})
+	}
+	
+	func test_load_deliversInvalidDataErrorOnNon2xxHTTPResponse() {
+		let (sut, client) = makeSUT()
+		let samples = [199, 300, 400, 500]
+		
+		samples.enumerated().forEach { index, code in
+			expect(sut: sut, toCompleteWith: failure(.invalidData), when: {
+				client.complete(withStatusCode: code, data: anyData(), at: index)
+			})
 		}
 	}
 	
@@ -85,6 +102,8 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		sut.load(from: url) { receivedResult in
 			switch (receivedResult, expectedResult) {
+			case (.success, .success):
+				break
 			case let (.failure(receivedError as RemoteImageCommentLoader.Error), .failure(expectedError as RemoteImageCommentLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 			default:
