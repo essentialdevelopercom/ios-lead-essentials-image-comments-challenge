@@ -77,11 +77,11 @@ struct ImageCommentMapper {
 	}
 	
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
-		guard acceptedStatusCodeRange.contains(response.statusCode) else {
-			throw RemoteImageCommentLoader.Error.invalidData
-		}
-		
-		guard let root = try? JSONDecoder().withKeyDecodingStrategy(.convertFromSnakeCase).withDateDecodingStrategy(.iso8601).decode(Root.self, from: data) else {
+		guard acceptedStatusCodeRange.contains(response.statusCode),
+			  let root = try? JSONDecoder()
+				.withKeyDecodingStrategy(.convertFromSnakeCase)
+				.withDateDecodingStrategy(.iso8601)
+				.decode(Root.self, from: data) else {
 			throw RemoteImageCommentLoader.Error.invalidData
 		}
 		
