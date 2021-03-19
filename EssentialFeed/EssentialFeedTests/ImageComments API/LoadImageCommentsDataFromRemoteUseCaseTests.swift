@@ -8,8 +8,17 @@
 
 import XCTest
 
+class RemoteImageCommentsLoader {
+
+}
+
 class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 
-	
+	func test_init_doesNotRequestDataFromURL() {
+		let client = HTTPClientSpy()
+		let _ = RemoteImageCommentsLoader()
+
+		XCTAssertTrue(client.requestedURLs.isEmpty)
+	}
 
 }
