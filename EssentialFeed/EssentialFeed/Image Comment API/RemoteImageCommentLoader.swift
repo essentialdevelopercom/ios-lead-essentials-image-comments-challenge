@@ -54,9 +54,6 @@ extension JSONDecoder {
 }
 
 struct ImageCommentMapper {
-	
-	private static var acceptedStatusCodeRange = 200..<300
-	
 	private struct Root: Decodable {
 		let items: [RemoteImageComment]
 	}
@@ -77,7 +74,7 @@ struct ImageCommentMapper {
 	}
 	
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
-		guard acceptedStatusCodeRange.contains(response.statusCode),
+		guard response.isWithinSuccessStatusCodes,
 			  let root = try? JSONDecoder()
 				.withKeyDecodingStrategy(.convertFromSnakeCase)
 				.withDateDecodingStrategy(.iso8601)
