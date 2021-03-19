@@ -9,65 +9,6 @@
 import EssentialFeed
 import XCTest
 
-class RemoteImageCommentLoader: ImageCommentLoader {
-	
-	typealias Result = ImageCommentLoader.Result
-	
-	enum Error: Swift.Error {
-		case connectivity
-		case invalidData
-	}
-	
-	private struct Root: Decodable {
-		let items: [RemoteImageComment]
-	}
-	
-	private struct RemoteImageComment: Decodable {
-		struct Author: Decodable {
-			let username: String
-		}
-		
-		let id: UUID
-		let message: String
-		let createdAt: Date
-		let author: Author
-		
-		var imageComment: ImageComment {
-			ImageComment(id: id, message: message, creationDate: createdAt, author: author.username)
-		}
-	}
-	
-	let client: HTTPClient
-	
-	init(client: HTTPClient) {
-		self.client = client
-	}
-	
-	func load(from url: URL, completion: @escaping (Result) -> Void) {
-		client.get(from: url) { [weak self] result in
-			guard self != nil else { return }
-			switch result {
-			case let .success((data, response)):
-				guard (200..<300).contains(response.statusCode) else {
-					return completion(.failure(Error.invalidData))
-				}
-				
-				let jsonDecoder = JSONDecoder()
-				jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-				jsonDecoder.dateDecodingStrategy = .iso8601
-				
-				if let root = try? jsonDecoder.decode(Root.self, from: data) {
-					completion(.success(root.items.map(\.imageComment)))
-				} else {
-					completion(.failure(Error.invalidData))
-				}
-			case .failure:
-				completion(.failure(Error.connectivity))
-			}
-		}
-	}
-}
-
 class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_init_doesNotRequestDataFromURL() {
 		let (_, client) = makeSUT()
