@@ -25,17 +25,17 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 	
 	public func load(from url: URL, completion: @escaping (Result) -> Void) {
 		client.get(from: url) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case let .success((data, response)):
-				completion(self.map(data, from: response))
-			case .failure:
-				completion(.failure(Error.connectivity))
-			}
+			guard self != nil else { return }
+			completion(result
+				.mapError { _ in Error.connectivity }
+				.flatMap { (data, response) in
+					RemoteImageCommentLoader.map(data, from: response)
+				}
+			)
 		}
 	}
 	
-	private func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
 		do {
 			let comments = try ImageCommentMapper.map(data, from: response)
 			return .success(comments)
