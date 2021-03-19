@@ -40,36 +40,3 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 		}
 	}
 }
-
-struct ImageCommentMapper {
-	private struct Root: Decodable {
-		let items: [RemoteImageComment]
-	}
-	
-	private struct RemoteImageComment: Decodable {
-		struct Author: Decodable {
-			let username: String
-		}
-		
-		let id: UUID
-		let message: String
-		let createdAt: Date
-		let author: Author
-		
-		var imageComment: ImageComment {
-			ImageComment(id: id, message: message, creationDate: createdAt, author: author.username)
-		}
-	}
-	
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
-		guard response.isWithinSuccessStatusCodes,
-			  let root = try? JSONDecoder()
-				.withKeyDecodingStrategy(.convertFromSnakeCase)
-				.withDateDecodingStrategy(.iso8601)
-				.decode(Root.self, from: data) else {
-			throw RemoteImageCommentLoader.Error.invalidData
-		}
-		
-		return root.items.map(\.imageComment)
-	}
-}
