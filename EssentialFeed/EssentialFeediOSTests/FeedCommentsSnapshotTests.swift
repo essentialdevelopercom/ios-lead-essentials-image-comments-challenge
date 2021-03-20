@@ -34,6 +34,7 @@ class FeedCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8ExtraExtraLarge(style: .dark)), named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_extra_extra_large_dark")
 	}
 	
 	// MARK: - Helpers
