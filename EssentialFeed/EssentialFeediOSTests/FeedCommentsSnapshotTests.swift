@@ -26,6 +26,15 @@ class FeedCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_COMMENTS_WITH_CONTENT_dark")
 	}
 	
+	func test_feedCommentsWithErrorMessage() {
+		let sut = makeSUT()
+		
+		sut.display(.error(message: "This is a\nmulti-line\nerror message"))
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_COMMENTS_WITH_ERROR_MESSAGE_dark")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT() -> FeedCommentsViewController {

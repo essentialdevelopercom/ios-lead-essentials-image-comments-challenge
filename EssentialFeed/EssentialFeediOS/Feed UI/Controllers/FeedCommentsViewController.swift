@@ -29,6 +29,12 @@ public class FeedCommentsViewController: UITableViewController, FeedCommentsView
 		delegate?.didRequestFeedCommentsRefresh()
 	}
 	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
+	}
+	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		tableModel.count
 	}
