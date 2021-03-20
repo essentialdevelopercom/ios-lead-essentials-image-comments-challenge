@@ -65,6 +65,20 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0, comment1, comment2])
 	}
 	
+	func test_loadFeedCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
+		let comment0 = FeedComment(id: UUID(), message: "a message", date: Date(), authorName: "an author name")
+		let comment1 = FeedComment(id: UUID(), message: "another message", date: Date(), authorName: "another author name")
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: [comment0, comment1], at: 0)
+		assertThat(sut, isRendering: [comment0, comment1])
+		
+		sut.simulateUserInitiatedFeedCommentsReload()
+		loader.completeCommentsLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
