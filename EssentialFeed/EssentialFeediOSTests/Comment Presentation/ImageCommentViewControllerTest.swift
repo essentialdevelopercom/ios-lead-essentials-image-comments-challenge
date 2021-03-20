@@ -44,7 +44,7 @@ class ImageCommentViewControllerTest: XCTestCase {
 	}
 	
 	func test_viewDidLoad_displaysLoadingIndicator() {
-		let (sut, loader) = makeSUT()
+		let (sut, _) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		
@@ -62,10 +62,11 @@ class ImageCommentViewControllerTest: XCTestCase {
 	}
 	
 	class LoaderSpy: ImageCommentLoader {
-		private(set) var loadCallCount: Int = 0
+		private var completions = [(LoadImageCommentResult) -> Void]()
+		var loadCallCount: Int { return completions.count }
 		
 		func load(completion: @escaping (LoadImageCommentResult) -> Void) {
-			loadCallCount += 1
+			completions.append(completion)
 		}
 	}
 }
