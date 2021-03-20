@@ -1,14 +1,18 @@
 import UIKit
-import EssentialFeed
 
-public class FeedCommentsViewController: UITableViewController {
+public protocol FeedCommentsViewControllerDelegate {
+	func didRequestFeedCommentsRefresh()
+}
+
+public class FeedCommentsViewController: UITableViewController, FeedCommentsView, FeedCommentsLoadingView, FeedCommentsErrorView {
 	
     @IBOutlet private(set) public weak var errorView: ErrorView!
     
-    private var comments: [FeedComment] = []
+	public var delegate: FeedCommentsViewControllerDelegate?
 	
-	public var url: URL!
-	public var loader: FeedCommentsLoader!
+	private var tableModel = [FeedCommentViewModel]() {
+		didSet { tableView.reloadData() }
+	}
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
@@ -17,84 +21,36 @@ public class FeedCommentsViewController: UITableViewController {
 	}
 	
 	private func initializeUI() {
-		title = feedCommentsTitle
-		configureRefreshControl()
-	}
-	
-	private func configureRefreshControl() {
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
 	}
 	
 	@objc private func refresh() {
-		errorView.message = nil
-		refreshControl?.beginRefreshing()
-		loader.load(url: url, completion: {[weak self] result in
-			self?.dispatchToMainThreadOptionally {[weak self] in
-				self?.handle(result: result)
-			}
-		})
-	}
-	
-	private func dispatchToMainThreadOptionally(_ completion: @escaping ()->()) {
-		if Thread.isMainThread {
-			completion()
-		}else{
-			DispatchQueue.main.async {
-				completion()
-			}
-		}
-	}
-	
-	private func handle(result: Result<[FeedComment], Error>) {
-		endRefreshing()
-		configureTableOrError(result: result)
-	}
-	
-	private func endRefreshing() {
-		refreshControl?.endRefreshing()
-	}
-	
-	private func configureTableOrError(result: Result<[FeedComment], Error>) {
-		switch result {
-		case .success(let loadedComments):
-			comments = loadedComments
-			tableView.reloadData()
-		case .failure:
-			errorView.message = errorText
-		}
-	}
-	
-	private var feedCommentsTitle: String {
-		return NSLocalizedString("FEED_COMMENTS_VIEW_TITLE",
-			 tableName: "FeedComments",
-			 bundle: Bundle(for: FeedCommentsViewController.self),
-			 comment: "Title for feed comments view")
-	}
-	
-	private var errorText: String {
-		return NSLocalizedString("FEED_COMMENTS_VIEW_CONNECTION_ERROR",
-			 tableName: "FeedComments",
-			 bundle: Bundle(for: FeedCommentsViewController.self),
-			 comment: "Error text for comments loading problem")
+		delegate?.didRequestFeedCommentsRefresh()
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		comments.count
+		tableModel.count
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let comment = comments[indexPath.row]
+		let comment = tableModel[indexPath.row]
 		let cell = FeedCommentCell()
-		cell.authorNameLabel.text = comment.authorName
+		cell.authorNameLabel.text = comment.name
 		cell.messageLabel.text = comment.message
-		cell.dateLabel.text = dateFormatter.localizedString(for: comment.date, relativeTo: Date())
+		cell.dateLabel.text = comment.formattedDate
 		return cell
 	}
 	
-	private lazy var dateFormatter: RelativeDateTimeFormatter = {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		return formatter
-	}()
+	public func display(_ viewModel: FeedCommentsViewModel) {
+		tableModel = viewModel.comments
+	}
+	
+	public func display(_ viewModel: FeedCommentsLoadingViewModel) {
+		refreshControl?.update(isRefreshing: viewModel.isLoading)
+	}
+	
+	public func display(_ viewModel: FeedCommentsErrorViewModel) {
+		errorView?.message = viewModel.message
+	}
 }

@@ -4,6 +4,7 @@
 //
 
 import XCTest
+import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
@@ -121,10 +122,7 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let bundle = Bundle(for: FeedCommentsViewController.self)
-		let sut = UIStoryboard(name: "FeedComments", bundle: bundle).instantiateViewController(identifier: "FeedCommentsViewController") as! FeedCommentsViewController
-		sut.url = url
-		sut.loader = loader
+		let sut = FeedCommentsUIComposer.commentsComposedWith(url: url, feedCommentsLoader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
