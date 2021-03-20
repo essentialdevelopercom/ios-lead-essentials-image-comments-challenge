@@ -92,11 +92,27 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0])
 	}
 	
+	func test_loadFeedCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("FEED_COMMENTS_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateUserInitiatedFeedCommentsReload()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedCommentsViewController(url: url, loader: loader)
+		let bundle = Bundle(for: FeedCommentsViewController.self)
+		let sut = UIStoryboard(name: "FeedComments", bundle: bundle).instantiateViewController(identifier: "FeedCommentsViewController") as! FeedCommentsViewController
+		sut.url = url
+		sut.loader = loader
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
@@ -190,5 +206,9 @@ extension FeedCommentsViewController {
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: feedCommentsSection)
 		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	var errorMessage: String? {
+		return errorView?.message
 	}
 }

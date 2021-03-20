@@ -3,14 +3,12 @@ import EssentialFeed
 
 public class FeedCommentsViewController: UITableViewController {
 	
-	private var comments: [FeedComment] = []
-	private var url: URL!
-	private var loader: FeedCommentsLoader!
-	public convenience init(url: URL, loader: FeedCommentsLoader) {
-		self.init()
-		self.url = url
-		self.loader = loader
-	}
+    @IBOutlet private(set) public weak var errorView: ErrorView!
+    
+    private var comments: [FeedComment] = []
+	
+	public var url: URL!
+	public var loader: FeedCommentsLoader!
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
@@ -29,12 +27,17 @@ public class FeedCommentsViewController: UITableViewController {
 	}
 	
 	@objc private func refresh() {
+		errorView.message = nil
 		refreshControl?.beginRefreshing()
 		loader.load(url: url, completion: {[weak self] result in
-			self?.refreshControl?.endRefreshing()
-			if let comments = try? result.get() {
-				self?.comments = comments
-				self?.tableView.reloadData()
+			guard let self = self else { return }
+			self.refreshControl?.endRefreshing()
+			switch result {
+			case .success(let comments):
+				self.comments = comments
+				self.tableView.reloadData()
+			case .failure:
+				self.errorView.message = self.errorText
 			}
 		})
 	}
@@ -44,6 +47,13 @@ public class FeedCommentsViewController: UITableViewController {
 			 tableName: "FeedComments",
 			 bundle: Bundle(for: FeedCommentsViewController.self),
 			 comment: "Title for feed comments view")
+	}
+	
+	private var errorText: String {
+		return NSLocalizedString("FEED_COMMENTS_VIEW_CONNECTION_ERROR",
+			 tableName: "FeedComments",
+			 bundle: Bundle(for: FeedCommentsViewController.self),
+			 comment: "Error text for comments loading problem")
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
