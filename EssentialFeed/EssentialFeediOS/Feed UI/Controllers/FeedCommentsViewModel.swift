@@ -17,4 +17,10 @@ public struct FeedCommentViewModel {
 	public let name: String
 	public let message: String
 	public let formattedDate: String
+	
+	public init(name: String, message: String, formattedDate: String) {
+		self.name = name
+		self.message = message
+		self.formattedDate = formattedDate
+	}
 }

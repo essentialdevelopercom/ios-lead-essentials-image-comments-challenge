@@ -21,7 +21,6 @@ public class FeedCommentsViewController: UITableViewController, FeedCommentsView
 	}
 	
 	private func initializeUI() {
-		tableView.separatorStyle = .none
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
 	}
@@ -36,7 +35,7 @@ public class FeedCommentsViewController: UITableViewController, FeedCommentsView
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let comment = tableModel[indexPath.row]
-		let cell = FeedCommentCell()
+		let cell: FeedCommentCell = tableView.dequeueReusableCell()
 		cell.authorNameLabel.text = comment.name
 		cell.messageLabel.text = comment.message
 		cell.dateLabel.text = comment.formattedDate
