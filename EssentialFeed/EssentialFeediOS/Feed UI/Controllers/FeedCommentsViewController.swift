@@ -21,6 +21,7 @@ public class FeedCommentsViewController: UITableViewController, FeedCommentsView
 	}
 	
 	private func initializeUI() {
+		tableView.separatorStyle = .none
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
 	}

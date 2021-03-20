@@ -7,6 +7,10 @@ import Foundation
 
 public struct FeedCommentsViewModel {
 	public let comments: [FeedCommentViewModel]
+	
+	public init(comments: [FeedCommentViewModel]) {
+		self.comments = comments
+	}
 }
 
 public struct FeedCommentViewModel {
