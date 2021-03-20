@@ -97,7 +97,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let client = HTTPClientSpy()
 		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(client: client)
 		
-		var capturedResults = [Result<[FeedComment], RemoteFeedCommentsLoader.Error>]()
+		var capturedResults = [Result<[FeedComment], Error>]()
 		sut?.load(url: url) { capturedResults.append($0) }
 		
 		sut = nil
@@ -124,7 +124,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 			case (.success(let receivedComments), .success(let expectedComments)):
 				XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)
 			case (.failure(let receivedError), .failure(let expectedError)):
-				XCTAssertEqual(receivedError, expectedError as? RemoteFeedCommentsLoader.Error, file: file, line: line)
+				XCTAssertEqual(receivedError as? RemoteFeedCommentsLoader.Error, expectedError as? RemoteFeedCommentsLoader.Error, file: file, line: line)
 			default:
 				XCTFail("Expected: \(expectedResult), but received: \(receivedResult)", file: file, line: line)
 			}

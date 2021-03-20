@@ -5,7 +5,7 @@
 
 import Foundation
 
-public class RemoteFeedCommentsLoader {
+public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 	
 	public enum Error: Swift.Error {
 		case connectivity
@@ -17,27 +17,27 @@ public class RemoteFeedCommentsLoader {
 		self.client = client
 	}
 	
-	public func load(url: URL, completion: @escaping (Result<[FeedComment], Error>)->()) {
+	public func load(url: URL, completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
 		client.get(from: url, completion: {[weak self] result in
 			guard let self = self else { return }
 			self.handle(result, completion)
 		})
 	}
 	
-	private func handle(_ result: HTTPClient.Result, _ completion: @escaping (Result<[FeedComment], Error>)->()) {
+	private func handle(_ result: HTTPClient.Result, _ completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
 		switch result {
 		case .success(let (data, response)):
 			handleSuccessCase(data, response, completion)
 		case .failure:
-			completion(.failure(.connectivity))
+			completion(.failure(Error.connectivity))
 		}
 	}
 	
-	private func handleSuccessCase(_ data: Data, _ response: HTTPURLResponse, _ completion: @escaping (Result<[FeedComment], Error>)->()) {
+	private func handleSuccessCase(_ data: Data, _ response: HTTPURLResponse, _ completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
 		if response.statusCode == 200, let comments = try? convert(data) {
 			completion(.success(comments))
 		}else{
-			completion(.failure(.invalidData))
+			completion(.failure(Error.invalidData))
 		}
 	}
 	
