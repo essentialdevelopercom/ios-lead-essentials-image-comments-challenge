@@ -48,8 +48,16 @@ class ImageCommentViewControllerTest: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+		XCTAssertEqual(sut.isShowingLoadingIndicator, true)
 	}
+	
+//	func test_viewDidLoad_failToLoadFeed() {
+//		let (sut, _) = makeSUT()
+//		
+//		sut.loadViewIfNeeded()
+//		
+//		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+//	}
 	
 	// MARK: - Helpers
 	
@@ -71,3 +79,8 @@ class ImageCommentViewControllerTest: XCTestCase {
 	}
 }
 
+private extension ImageCommentViewController {
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
+	}
+}
