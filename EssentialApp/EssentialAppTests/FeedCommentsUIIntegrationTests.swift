@@ -49,9 +49,9 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedCommentsCompletion_rendersSuccessfullyLoadedFeedComments() {
-		let comment0 = makeComment()
-		let comment1 = makeComment()
-		let comment2 = makeComment()
+		let comment0 = makeComment(date: Date().adding(days: -1))
+		let comment1 = makeComment(date: Date().adding(hours: -1))
+		let comment2 = makeComment(date: Date().adding(mins: -3))
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
@@ -183,7 +183,16 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(cell.authorName, comment.authorName, "Expected author name to be \(String(describing: comment.authorName)) for comment view at index (\(index))", file: file, line: line)
 		
 		XCTAssertEqual(cell.message, comment.message, "Expected message to be \(String(describing: comment.message)) for comment view at index (\(index)", file: file, line: line)
+		
+		let expectedDateString = dateFormatter.localizedString(for: comment.date, relativeTo: Date())
+		XCTAssertEqual(cell.dateText, expectedDateString, "Expected date text to be \(expectedDateString) for comment view at index (\(index)", file: file, line: line)
 	}
+	
+	private lazy var dateFormatter: RelativeDateTimeFormatter = {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		return formatter
+	}()
 	
 	private func executeRunLoopToCleanUpReferences() {
 		RunLoop.current.run(until: Date())
@@ -222,5 +231,19 @@ extension FeedCommentsViewController {
 	
 	var errorMessage: String? {
 		return errorView?.message
+	}
+}
+
+extension Date {
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+	}
+	
+	func adding(hours: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .hour, value: hours, to: self)!
+	}
+	
+	func adding(mins: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .minute, value: mins, to: self)!
 	}
 }

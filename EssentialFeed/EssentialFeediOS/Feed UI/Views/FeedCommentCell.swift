@@ -9,6 +9,7 @@ public final class FeedCommentCell: UITableViewCell {
 	
 	let authorNameLabel = UILabel()
 	let messageLabel = UILabel()
+	let dateLabel = UILabel()
 	
 	public var authorName: String? {
 		return authorNameLabel.text
@@ -18,4 +19,7 @@ public final class FeedCommentCell: UITableViewCell {
 		return messageLabel.text
 	}
 	
+	public var dateText: String? {
+		return dateLabel.text
+	}
 }

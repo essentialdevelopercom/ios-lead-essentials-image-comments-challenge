@@ -88,6 +88,13 @@ public class FeedCommentsViewController: UITableViewController {
 		let cell = FeedCommentCell()
 		cell.authorNameLabel.text = comment.authorName
 		cell.messageLabel.text = comment.message
+		cell.dateLabel.text = dateFormatter.localizedString(for: comment.date, relativeTo: Date())
 		return cell
 	}
+	
+	private lazy var dateFormatter: RelativeDateTimeFormatter = {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		return formatter
+	}()
 }
