@@ -30,7 +30,13 @@ public class FeedCommentsViewController: UITableViewController {
 		errorView.message = nil
 		refreshControl?.beginRefreshing()
 		loader.load(url: url, completion: {[weak self] result in
-			self?.handle(result: result)
+			if Thread.isMainThread {
+				self?.handle(result: result)
+			}else{
+				DispatchQueue.main.async {
+					self?.handle(result: result)
+				}
+			}
 		})
 	}
 	
