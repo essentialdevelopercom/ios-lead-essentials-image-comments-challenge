@@ -19,6 +19,7 @@ public protocol FeedCommentsErrorView {
 }
 
 public final class FeedCommentsPresenter {
+	
 	private let feedCommentsView: FeedCommentsView
 	private let loadingView: FeedCommentsLoadingView
 	private let errorView: FeedCommentsErrorView
@@ -42,15 +43,9 @@ public final class FeedCommentsPresenter {
 	}
 	
 	public func didFinishLoadingFeedComments(with comments: [FeedComment]) {
-		feedCommentsView.display(FeedCommentsViewModel(comments: comments.map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: dateFormatter.localizedString(for: $0.date, relativeTo: Date()))})))
+		feedCommentsView.display(FeedCommentsViewModel(comments: comments.toViewModels))
 		loadingView.display(FeedCommentsLoadingViewModel(isLoading: false))
 	}
-	
-	private lazy var dateFormatter: RelativeDateTimeFormatter = {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		return formatter
-	}()
 	
 	public func didFinishLoadingFeedComments(with error: Error) {
 		errorView.display(.error(message: commentsLoadError))
@@ -64,3 +59,12 @@ public final class FeedCommentsPresenter {
 			 comment: "Error text for comments loading problem")
 	}
 }
+
+extension Array where Element == FeedComment {
+	var toViewModels: [FeedCommentViewModel] {
+		map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: Self.formatter.localizedString(for: $0.date, relativeTo: Date()))})
+	}
+	
+	private static let formatter = RelativeDateTimeFormatter()
+}
+ 
