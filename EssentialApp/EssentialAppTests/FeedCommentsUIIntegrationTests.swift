@@ -49,9 +49,9 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedCommentsCompletion_rendersSuccessfullyLoadedFeedComments() {
-		let comment0 = FeedComment(id: UUID(), message: "a message", date: Date(), authorName: "an author name")
-		let comment1 = FeedComment(id: UUID(), message: "another message", date: Date(), authorName: "another author name")
-		let comment2 = FeedComment(id: UUID(), message: "some message", date: Date(), authorName: "some author name")
+		let comment0 = makeComment()
+		let comment1 = makeComment()
+		let comment2 = makeComment()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
@@ -66,8 +66,8 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
-		let comment0 = FeedComment(id: UUID(), message: "a message", date: Date(), authorName: "an author name")
-		let comment1 = FeedComment(id: UUID(), message: "another message", date: Date(), authorName: "another author name")
+		let comment0 = makeComment()
+		let comment1 = makeComment()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
@@ -146,6 +146,10 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	
 	private func executeRunLoopToCleanUpReferences() {
 		RunLoop.current.run(until: Date())
+	}
+	
+	private func makeComment(message: String = "any message", date: Date = Date(), authorName: String = "any name") -> FeedComment {
+		return FeedComment(id: UUID(), message: message, date: date, authorName: authorName)
 	}
 }
 
