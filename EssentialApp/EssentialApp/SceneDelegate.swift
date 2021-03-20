@@ -56,14 +56,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.rootViewController = UINavigationController(
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback, open: {[weak self] commentId in
-					guard let self = self else { return }
-					let commentsURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(commentId.uuidString)/comments")!
-					let commentsViewController = FeedCommentsUIComposer.commentsComposedWith(url: commentsURL, feedCommentsLoader: RemoteFeedCommentsLoader(client: self.httpClient))
-					self.navigationController?.pushViewController(commentsViewController, animated: true)
-				}))
+				imageLoader: makeLocalImageLoaderWithRemoteFallback, open: self.openCommentsScreen))
 		
 		window?.makeKeyAndVisible()
+	}
+	
+	private func openCommentsScreen(feedImageId: UUID) {
+		let commentsURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImageId.uuidString)/comments")!
+		let commentsViewController = FeedCommentsUIComposer.commentsComposedWith(url: commentsURL, feedCommentsLoader: RemoteFeedCommentsLoader(client: self.httpClient))
+		navigationController?.pushViewController(commentsViewController, animated: true)
 	}
 	
 	private var navigationController: UINavigationController? {
