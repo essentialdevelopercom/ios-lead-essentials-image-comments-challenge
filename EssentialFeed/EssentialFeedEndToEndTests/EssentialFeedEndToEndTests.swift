@@ -14,9 +14,9 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 		switch getImageCommentsResult() {
 		case let .success(comments):
 			XCTAssertEqual(comments.count, 3, "Expected 3 comments in test comments list result")
-			XCTAssertEqual(comments[0], self.expectedComment(at: 0))
-			XCTAssertEqual(comments[1], self.expectedComment(at: 1))
-			XCTAssertEqual(comments[2], self.expectedComment(at: 2))
+			XCTAssertEqual(comments[0], expectedComment(at: 0))
+			XCTAssertEqual(comments[1], expectedComment(at: 1))
+			XCTAssertEqual(comments[2], expectedComment(at: 2))
 		case let .failure(error):
 			XCTFail("Expected successful comments list result, got \(error) instead")
 		default:
