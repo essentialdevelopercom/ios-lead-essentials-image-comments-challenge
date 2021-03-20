@@ -29,17 +29,11 @@ final class ImageCommentViewController: UITableViewController {
 }
 
 class ImageCommentViewControllerTest: XCTestCase {
-	func test_init_doesNotLoadFeed() {
-		let (_, loader) = makeSUT()
-		
-		XCTAssertEqual(loader.loadCallCount, 0)
-	}
-	
-	func test_viewDidLoad_loadsFeed() {
+	func test_loadCommentActions_requestCommentFromLoader() {
 		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.loadCallCount, 0)
 		
 		sut.loadViewIfNeeded()
-		
 		XCTAssertEqual(loader.loadCallCount, 1)
 	}
 	
