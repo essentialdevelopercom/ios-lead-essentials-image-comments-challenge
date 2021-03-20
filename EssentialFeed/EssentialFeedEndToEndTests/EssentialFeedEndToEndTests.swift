@@ -11,9 +11,7 @@ import XCTest
 
 class EssentialFeedAPIEndToEndTests: XCTestCase {
 	func test_endToEndTestServerGETImageCommentsResult_matchesFixedTestCommentsData() {
-		let session = URLSession(configuration: .ephemeral)
-		let client = URLSessionHTTPClient(session: session)
-		let loader = RemoteImageCommentLoader(client: client)
+		let loader = makeRemoteImageCommentLoader()
 		
 		let exp = expectation(description: "Wait for load completion")
 		let url = URL(string: "https://gist.githubusercontent.com/Angel5215/0a68e5ad1057231a825d70e6b233ac67/raw/dec7ca63f69708ab7735deaa21cbc6283e45cf16/test-comments-list.json")!
@@ -35,6 +33,15 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
+	
+	private func makeRemoteImageCommentLoader(file: StaticString = #filePath, line: UInt = #line) -> ImageCommentLoader {
+		let session = URLSession(configuration: .ephemeral)
+		let client = URLSessionHTTPClient(session: session)
+		let loader = RemoteImageCommentLoader(client: client)
+		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(client, file: file, line: line)
+		return loader
+	}
 	
 	private func expectedComment(at index: Int) -> ImageComment {
 		return ImageComment(
