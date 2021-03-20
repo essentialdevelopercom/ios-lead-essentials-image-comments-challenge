@@ -10,7 +10,7 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-final class ImageCommentViewController: UIViewController {
+final class ImageCommentViewController: UITableViewController {
 	private var loader: ImageCommentLoader?
 	
 	convenience init(loader: ImageCommentLoader) {
@@ -20,6 +20,9 @@ final class ImageCommentViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		refreshControl = UIRefreshControl()
+		refreshControl?.beginRefreshing()
 		
 		loader?.load { _ in }
 	}
@@ -32,13 +35,20 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
-	// Load feed when presented
 	func test_viewDidLoad_loadsFeed() {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		
 		XCTAssertEqual(loader.loadCallCount, 1)
+	}
+	
+	func test_viewDidLoad_displaysLoadingIndicator() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 	}
 	
 	// MARK: - Helpers
