@@ -3,6 +3,7 @@ import EssentialFeed
 
 public class FeedCommentsViewController: UITableViewController {
 	
+	private var comments: [FeedComment] = []
 	private var url: URL!
 	private var loader: FeedCommentsLoader!
 	public convenience init(url: URL, loader: FeedCommentsLoader) {
@@ -29,8 +30,12 @@ public class FeedCommentsViewController: UITableViewController {
 	
 	@objc private func refresh() {
 		refreshControl?.beginRefreshing()
-		loader.load(url: url, completion: {[weak self] _ in
+		loader.load(url: url, completion: {[weak self] result in
 			self?.refreshControl?.endRefreshing()
+			if let comments = try? result.get() {
+				self?.comments = comments
+				self?.tableView.reloadData()
+			}
 		})
 	}
 	
@@ -39,5 +44,17 @@ public class FeedCommentsViewController: UITableViewController {
 			 tableName: "FeedComments",
 			 bundle: Bundle(for: FeedCommentsViewController.self),
 			 comment: "Title for feed comments view")
+	}
+	
+	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		comments.count
+	}
+	
+	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let comment = comments[indexPath.row]
+		let cell = FeedCommentCell()
+		cell.authorNameLabel.text = comment.authorName
+		cell.messageLabel.text = comment.message
+		return cell
 	}
 }

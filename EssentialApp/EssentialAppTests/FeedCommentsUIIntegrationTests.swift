@@ -48,6 +48,23 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	}
 	
+	func test_loadFeedCommentsCompletion_rendersSuccessfullyLoadedFeedComments() {
+		let comment0 = FeedComment(id: UUID(), message: "a message", date: Date(), authorName: "an author name")
+		let comment1 = FeedComment(id: UUID(), message: "another message", date: Date(), authorName: "another author name")
+		let comment2 = FeedComment(id: UUID(), message: "some message", date: Date(), authorName: "some author name")
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+		
+		loader.completeCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
+		
+		sut.simulateUserInitiatedFeedCommentsReload()
+		loader.completeCommentsLoading(with: [comment0, comment1, comment2], at: 1)
+		assertThat(sut, isRendering: [comment0, comment1, comment2])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
@@ -86,6 +103,36 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 			commentsRequests[index](.failure(anyNSError()))
 		}
 	}
+	
+	func assertThat(_ sut: FeedCommentsViewController, isRendering comments: [FeedComment], file: StaticString = #filePath, line: UInt = #line) {
+		sut.view.enforceLayoutCycle()
+		
+		guard sut.numberOfRenderedFeedCommentViews() == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedFeedCommentViews()) instead.", file: file, line: line)
+		}
+		
+		comments.enumerated().forEach { index, comment in
+			assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
+		}
+		
+		executeRunLoopToCleanUpReferences()
+	}
+	
+	func assertThat(_ sut: FeedCommentsViewController, hasViewConfiguredFor comment: FeedComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+		let view = sut.feedCommentView(at: index)
+		
+		guard let cell = view as? FeedCommentCell else {
+			return XCTFail("Expected \(FeedCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+		
+		XCTAssertEqual(cell.authorName, comment.authorName, "Expected author name to be \(String(describing: comment.authorName)) for comment view at index (\(index))", file: file, line: line)
+		
+		XCTAssertEqual(cell.message, comment.message, "Expected message to be \(String(describing: comment.message)) for comment view at index (\(index)", file: file, line: line)
+	}
+	
+	private func executeRunLoopToCleanUpReferences() {
+		RunLoop.current.run(until: Date())
+	}
 }
 
 extension FeedCommentsViewController {
@@ -95,5 +142,22 @@ extension FeedCommentsViewController {
 	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
+	}
+	
+	func numberOfRenderedFeedCommentViews() -> Int {
+		return tableView.numberOfRows(inSection: feedCommentsSection)
+	}
+	
+	private var feedCommentsSection: Int {
+		return 0
+	}
+	
+	func feedCommentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedFeedCommentViews() > row else {
+			return nil
+		}
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: feedCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 }
