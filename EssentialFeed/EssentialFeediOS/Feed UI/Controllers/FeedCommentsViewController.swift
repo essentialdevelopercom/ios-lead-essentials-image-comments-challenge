@@ -30,14 +30,20 @@ public class FeedCommentsViewController: UITableViewController {
 		errorView.message = nil
 		refreshControl?.beginRefreshing()
 		loader.load(url: url, completion: {[weak self] result in
-			if Thread.isMainThread {
+			self?.dispatchToMainThreadOptionally {[weak self] in
 				self?.handle(result: result)
-			}else{
-				DispatchQueue.main.async {
-					self?.handle(result: result)
-				}
 			}
 		})
+	}
+	
+	private func dispatchToMainThreadOptionally(_ completion: @escaping ()->()) {
+		if Thread.isMainThread {
+			completion()
+		}else{
+			DispatchQueue.main.async {
+				completion()
+			}
+		}
 	}
 	
 	private func handle(result: Result<[FeedComment], Error>) {
