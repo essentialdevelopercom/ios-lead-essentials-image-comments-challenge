@@ -48,7 +48,7 @@ class ImageCommentViewControllerTest: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(sut.isShowingLoadingIndicator, true)
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
 //	func test_viewDidLoad_failToLoadFeed() {
