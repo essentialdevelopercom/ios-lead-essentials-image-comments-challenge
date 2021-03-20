@@ -30,4 +30,8 @@ extension HTTPClientStub {
 	static func online(_ stub: @escaping (URL) -> (Data, HTTPURLResponse)) -> HTTPClientStub {
 		HTTPClientStub { url in .success(stub(url)) }
 	}
+	
+	static func online(_ dataFactory: @escaping (URL) -> Data, _ responseFactory: @escaping (URL) -> HTTPURLResponse) -> HTTPClientStub {
+		HTTPClientStub { url in .success((dataFactory(url), responseFactory(url))) }
+	}
 }
