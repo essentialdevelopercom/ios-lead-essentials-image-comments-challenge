@@ -11,25 +11,17 @@ import XCTest
 
 class EssentialFeedAPIEndToEndTests: XCTestCase {
 	func test_endToEndTestServerGETImageCommentsResult_matchesFixedTestCommentsData() {
-		let loader = makeRemoteImageCommentLoader()
-		
-		let exp = expectation(description: "Wait for load completion")
-		let url = URL(string: "https://gist.githubusercontent.com/Angel5215/0a68e5ad1057231a825d70e6b233ac67/raw/dec7ca63f69708ab7735deaa21cbc6283e45cf16/test-comments-list.json")!
-		
-		_ = loader.load(from: url) { [unowned self] result in
-			switch result {
-			case let .success(comments):
-				XCTAssertEqual(comments.count, 3, "Expected 3 comments in test comments list result")
-				XCTAssertEqual(comments[0], self.expectedComment(at: 0))
-				XCTAssertEqual(comments[1], self.expectedComment(at: 1))
-				XCTAssertEqual(comments[2], self.expectedComment(at: 2))
-			case let .failure(error):
-				XCTFail("Expected successful comment list result, got \(error) instead")
-			}
-			exp.fulfill()
+		switch getImageCommentsResult() {
+		case let .success(comments):
+			XCTAssertEqual(comments.count, 3, "Expected 3 comments in test comments list result")
+			XCTAssertEqual(comments[0], self.expectedComment(at: 0))
+			XCTAssertEqual(comments[1], self.expectedComment(at: 1))
+			XCTAssertEqual(comments[2], self.expectedComment(at: 2))
+		case let .failure(error):
+			XCTFail("Expected successful comments list result, got \(error) instead")
+		default:
+			XCTFail("Expected successful comments list result, got no result instead")
 		}
-		
-		wait(for: [exp], timeout: 5.0)
 	}
 	
 	// MARK: - Helpers
@@ -41,6 +33,24 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return loader
+	}
+	
+	private func getImageCommentsResult() -> ImageCommentLoader.Result? {
+		let loader = makeRemoteImageCommentLoader()
+		let exp = expectation(description: "Wait for load completion")
+		
+		var receivedResult: ImageCommentLoader.Result?
+		_ = loader.load(from: testURL()) { result in
+			receivedResult = result
+			exp.fulfill()
+		}
+		wait(for: [exp], timeout: 5.0)
+		
+		return receivedResult
+	}
+	
+	private func testURL() -> URL {
+		URL(string: "https://gist.githubusercontent.com/Angel5215/0a68e5ad1057231a825d70e6b233ac67/raw/dec7ca63f69708ab7735deaa21cbc6283e45cf16/test-comments-list.json")!
 	}
 	
 	private func expectedComment(at index: Int) -> ImageComment {
