@@ -30,16 +30,27 @@ public class FeedCommentsViewController: UITableViewController {
 		errorView.message = nil
 		refreshControl?.beginRefreshing()
 		loader.load(url: url, completion: {[weak self] result in
-			guard let self = self else { return }
-			self.refreshControl?.endRefreshing()
-			switch result {
-			case .success(let comments):
-				self.comments = comments
-				self.tableView.reloadData()
-			case .failure:
-				self.errorView.message = self.errorText
-			}
+			self?.handle(result: result)
 		})
+	}
+	
+	private func handle(result: Result<[FeedComment], Error>) {
+		endRefreshing()
+		configureTableOrError(result: result)
+	}
+	
+	private func endRefreshing() {
+		refreshControl?.endRefreshing()
+	}
+	
+	private func configureTableOrError(result: Result<[FeedComment], Error>) {
+		switch result {
+		case .success(let loadedComments):
+			comments = loadedComments
+			tableView.reloadData()
+		case .failure:
+			errorView.message = errorText
+		}
 	}
 	
 	private var feedCommentsTitle: String {
