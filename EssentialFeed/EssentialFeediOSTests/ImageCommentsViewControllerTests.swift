@@ -94,6 +94,15 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 	}
 	
+	func test_pullToRefresh_hidesLoadingSpinnerOnLoaderCompletion() {
+		let url = URL(string: "https://any-url.com")!
+		let (sut, loader) = makeSUT(url: url)
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		loader.completeCommentsLoading()
+		
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+	}
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
