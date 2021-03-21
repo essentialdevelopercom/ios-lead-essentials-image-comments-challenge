@@ -26,12 +26,12 @@ class ImageCommentsViewController: UITableViewController {
 		
 		refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		refreshControl?.beginRefreshing()
-		
+
 		load()
 	}
 	
 	@objc private func load() {
+		refreshControl?.beginRefreshing()
 		_ = loader?.load(from: url) { [weak self] _ in
 			self?.refreshControl?.endRefreshing()
 		}
@@ -39,69 +39,38 @@ class ImageCommentsViewController: UITableViewController {
 }
 
 class ImageCommentsViewControllerTests: XCTestCase {
-	func test_init_doesNotLoadComments() {
+	func test_loadCommentsActions_requestsLoadingCommentsFromURL() {
 		let url = URL(string: "https://any-url.com")!
-		let (_, loader) = makeSUT(url: url)
+		let (sut, loader) = makeSUT(url: url)
+		XCTAssertTrue(loader.requestedURLs.isEmpty, "Expected no loading requests upon creation")
 		
-		XCTAssertTrue(loader.requestedURLs.isEmpty)
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.requestedURLs, [url], "Expected a single loading request when view has loaded")
+		
+		sut.simulateUserInitiatedReloading()
+		XCTAssertEqual(loader.requestedURLs, [url, url], "Expected a second loading request once user initiates a reload")
+		
+		sut.simulateUserInitiatedReloading()
+		XCTAssertEqual(loader.requestedURLs, [url, url, url], "Expected a third loading request once user initiates another reload")
 	}
 	
-	func test_viewDidLoad_loadsComments() {
+	func test_loadingSpinner_isVisibleWhileLoadingComments() {
 		let url = URL(string: "https://any-url.com")!
 		let (sut, loader) = makeSUT(url: url)
 		
 		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingSpinner, "Expected loading spinner to be shown when view has loaded")
 		
-		XCTAssertEqual(loader.requestedURLs, [url])
-	}
-	
-	func test_userInitiatedReloading_loadsComments() {
-		let url = URL(string: "https://any-url.com")!
-		let (sut, loader) = makeSUT(url: url)
-		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(at: 0)
+		XCTAssertFalse(sut.isShowingLoadingSpinner, "Expected loading spinner to stop animating upon loader completion")
 		
 		sut.simulateUserInitiatedReloading()
-		XCTAssertEqual(loader.requestedURLs, [url, url])
+		XCTAssertTrue(sut.isShowingLoadingSpinner, "Expected loading spinner to start animating once user requests a reload")
 		
-		sut.simulateUserInitiatedReloading()
-		XCTAssertEqual(loader.requestedURLs, [url, url, url])
+		loader.completeCommentsLoading(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingSpinner, "Expected loading spinner to stop animating upon loader completion")
 	}
 	
-	func test_viewDidLoad_showsLoadingSpinner() {
-		let url = URL(string: "https://any-url.com")!
-		let (sut, _) = makeSUT(url: url)
-		
-		sut.loadViewIfNeeded()
-		XCTAssertTrue(sut.isShowingLoadingSpinner)
-	}
-	
-	func test_viewDidLoad_hidesLoadingSpinnerOnLoaderCompletion() {
-		let url = URL(string: "https://any-url.com")!
-		let (sut, loader) = makeSUT(url: url)
-		
-		sut.loadViewIfNeeded()
-		loader.completeCommentsLoading()
-		
-		XCTAssertFalse(sut.isShowingLoadingSpinner)
-	}
-	
-	func test_userInitiatedReloading_showsLoadingSpinner() {
-		let url = URL(string: "https://any-url.com")!
-		let (sut, _) = makeSUT(url: url)
-		
-		sut.simulateUserInitiatedReloading()
-		
-		XCTAssertTrue(sut.isShowingLoadingSpinner)	}
-	
-	func test_userInitiatedReloading_hidesLoadingSpinnerOnLoaderCompletion() {
-		let url = URL(string: "https://any-url.com")!
-		let (sut, loader) = makeSUT(url: url)
-		
-		sut.simulateUserInitiatedReloading()
-		loader.completeCommentsLoading()
-		
-		XCTAssertFalse(sut.isShowingLoadingSpinner)
-	}
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -132,8 +101,8 @@ class ImageCommentsViewControllerTests: XCTestCase {
 			return Task()
 		}
 		
-		func completeCommentsLoading() {
-			completions[0](.success([]))
+		func completeCommentsLoading(at index: Int = 0) {
+			completions[index](.success([]))
 		}
 	}
 }
