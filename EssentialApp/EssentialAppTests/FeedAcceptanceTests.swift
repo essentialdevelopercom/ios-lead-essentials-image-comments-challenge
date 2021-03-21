@@ -52,7 +52,7 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
-	func test_feedImageSelect_callsNavigationActionToImageComments() {
+	func test_feedImageSelect_callsimageSelectionToImageComments() {
 		let feed = launch(httpClient: .online(response), store: .empty)
 		feed.view.enforceLayoutCycle()
 		

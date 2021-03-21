@@ -11,14 +11,14 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
 	private let model: FeedImage
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
 	private var cancellable: Cancellable?
-	private let navigationAction: (String) -> Void
+	private let imageSelection: (String) -> Void
 	
 	var presenter: FeedImagePresenter<View, Image>?
 	
-	init(model: FeedImage, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, navigationAction: @escaping (String) -> Void) {
+	init(model: FeedImage, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, imageSelection: @escaping (String) -> Void) {
 		self.model = model
 		self.imageLoader = imageLoader
-		self.navigationAction = navigationAction
+		self.imageSelection = imageSelection
 	}
 	
 	func didRequestImage() {
@@ -43,7 +43,7 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
 	}
 	
 	func didSelectImage() {
-		navigationAction(model.id.uuidString)
+		imageSelection(model.id.uuidString)
 	}
 	
 	func didCancelImageRequest() {
