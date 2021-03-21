@@ -72,7 +72,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		let (sut, _) = makeSUT(url: url)
 		
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+		XCTAssertTrue(sut.isShowingLoadingSpinner)
 	}
 	
 	func test_viewDidLoad_hidesLoadingSpinnerOnLoaderCompletion() {
@@ -82,7 +82,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		loader.completeCommentsLoading()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+		XCTAssertFalse(sut.isShowingLoadingSpinner)
 	}
 	
 	func test_userInitiatedReloading_showsLoadingSpinner() {
@@ -91,8 +91,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		
 		sut.simulateUserInitiatedReloading()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
-	}
+		XCTAssertTrue(sut.isShowingLoadingSpinner)	}
 	
 	func test_userInitiatedReloading_hidesLoadingSpinnerOnLoaderCompletion() {
 		let url = URL(string: "https://any-url.com")!
@@ -101,7 +100,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		sut.simulateUserInitiatedReloading()
 		loader.completeCommentsLoading()
 		
-		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+		XCTAssertFalse(sut.isShowingLoadingSpinner)
 	}
 	// MARK: - Helpers
 	
@@ -139,6 +138,10 @@ class ImageCommentsViewControllerTests: XCTestCase {
 }
 
 extension ImageCommentsViewController {
+	var isShowingLoadingSpinner: Bool {
+		refreshControl?.isRefreshing == true
+	}
+	
 	func simulateUserInitiatedReloading() {
 		refreshControl?.simulatePullToRefresh()
 	}
