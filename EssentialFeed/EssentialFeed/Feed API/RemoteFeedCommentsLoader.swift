@@ -39,7 +39,7 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 	private func handleSuccessCase(_ data: Data, _ response: HTTPURLResponse, _ completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
 		if response.statusCode == 200, let comments = try? convert(data) {
 			completion(.success(comments))
-		}else{
+		} else {
 			completion(.failure(Error.invalidData))
 		}
 	}
