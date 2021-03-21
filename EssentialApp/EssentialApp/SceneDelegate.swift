@@ -57,13 +57,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				imageSelection: openCommentsWithId))
+				imageSelection: navigateToComment))
 		
 		window?.makeKeyAndVisible()
 	}
 	
-	func openCommentsWithId(_ id: String) {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!
+	func navigateToComment(_ feedImage: FeedImage) {
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImage.id)/comments")!
 		
 		let imageCommentsViewController = ImageCommentsUIComposer.imageCommentsComposedWith(
 			imageCommentsLoader: RemoteImageCommentsLoader(url: url, client: httpClient)

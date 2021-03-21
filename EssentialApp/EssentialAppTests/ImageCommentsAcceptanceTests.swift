@@ -32,7 +32,7 @@ class ImageCommentsAcceptanceTests: XCTestCase {
 		let sut = SceneDelegate(httpClient: httpClient, store: store)
 		sut.window = UIWindow()
 		sut.configureWindow()
-		sut.openCommentsWithId(anyID)
+		sut.navigateToComment(makeFeedImage)
 		RunLoop.main.run(until: Date())
 		
 		let nav = sut.window?.rootViewController as? UINavigationController
@@ -48,8 +48,12 @@ class ImageCommentsAcceptanceTests: XCTestCase {
 		makeImageCommentsData()
 	}
 	
-	private var anyID: String {
-		"77a9c2d5-5e77-45d5-bf7b-4d17b0ab3321"
+	private var makeFeedImage: FeedImage {
+		FeedImage(
+			id: UUID(),
+			description: "test description",
+			location: "some location",
+			url: anyURL())
 	}
 	
 	private func makeImageCommentsData() -> Data {
