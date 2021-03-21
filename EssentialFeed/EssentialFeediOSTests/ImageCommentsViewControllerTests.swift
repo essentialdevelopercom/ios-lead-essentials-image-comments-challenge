@@ -34,13 +34,13 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertTrue(sut.isShowingLoadingSpinner, "Expected loading spinner to be shown when view has loaded")
 		
 		loader.completeCommentsLoading(at: 0)
-		XCTAssertFalse(sut.isShowingLoadingSpinner, "Expected loading spinner to stop animating upon loader completion")
+		XCTAssertFalse(sut.isShowingLoadingSpinner, "Expected loading spinner to stop animating upon loader successfult completion")
 		
 		sut.simulateUserInitiatedReloading()
 		XCTAssertTrue(sut.isShowingLoadingSpinner, "Expected loading spinner to start animating once user requests a reload")
 		
-		loader.completeCommentsLoading(at: 1)
-		XCTAssertFalse(sut.isShowingLoadingSpinner, "Expected loading spinner to stop animating upon loader completion")
+		loader.completeCommentsLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingSpinner, "Expected loading spinner to stop animating upon loader completion with error")
 	}
 	
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
