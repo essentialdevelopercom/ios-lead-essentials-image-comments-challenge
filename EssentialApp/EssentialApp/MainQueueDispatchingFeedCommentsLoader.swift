@@ -17,7 +17,7 @@ final class MainQueueDispatchingFeedCommentsLoader: FeedCommentsLoader {
 		adaptee.load(url: url) { result in
 			if Thread.isMainThread {
 				completion(result)
-			}else{
+			} else {
 				DispatchQueue.main.async {
 					completion(result)
 				}
