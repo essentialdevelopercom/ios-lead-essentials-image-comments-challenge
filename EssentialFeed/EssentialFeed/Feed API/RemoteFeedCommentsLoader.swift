@@ -12,13 +12,15 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 		case invalidData
 	}
 	
+	private var task: HTTPClientTask?
+	
 	private let client: HTTPClient
 	public init(client: HTTPClient) {
 		self.client = client
 	}
 	
 	public func load(url: URL, completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
-		client.get(from: url, completion: {[weak self] result in
+		task = client.get(from: url, completion: {[weak self] result in
 			guard let self = self else { return }
 			self.handle(result, completion)
 		})
@@ -51,6 +53,10 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 		decoder.dateDecodingStrategy = .iso8601
 		return decoder
 	}()
+	
+	deinit {
+		task?.cancel()
+	}
 }
 
 private struct Root: Decodable {
