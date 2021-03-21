@@ -12,30 +12,34 @@ import UIKit
 
 class ImageCommentsViewController: UIViewController {
 	
-	private var loader: ImageCommentsViewControllerTests.LoaderSpy?
+	private var url: URL!
+	private var loader: ImageCommentLoader?
 	
-	convenience init(loader: ImageCommentsViewControllerTests.LoaderSpy) {
+	convenience init(url: URL, loader: ImageCommentLoader) {
 		self.init()
+		self.url = url
 		self.loader = loader
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		loader?.load()
+		_ = loader?.load(from: url) { _ in }
 	}
 }
 
 class ImageCommentsViewControllerTests: XCTestCase {
 	func test_init_doesNotLoadComments() {
 		let loader = LoaderSpy()
-		_ = ImageCommentsViewController(loader: loader)
+		let url = URL(string: "https://any-url.com")!
+		_ = ImageCommentsViewController(url: url, loader: loader)
 		
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 	
 	func test_viewDidLoad_loadsComments() {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsViewController(loader: loader)
+		let url = URL(string: "https://any-url.com")!
+		let sut = ImageCommentsViewController(url: url, loader: loader)
 		
 		sut.loadViewIfNeeded()
 		
@@ -44,11 +48,16 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	class LoaderSpy {
+	class LoaderSpy: ImageCommentLoader {
 		private(set) var loadCallCount = 0
 		
-		func load() {
+		struct Task: ImageCommentLoaderTask {
+			func cancel() { }
+		}
+		
+		func load(from url: URL, completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
 			loadCallCount += 1
+			return Task()
 		}
 	}
 }
