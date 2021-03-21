@@ -130,7 +130,7 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "FeedComments"
-		let bundle = Bundle(for: FeedCommentsViewController.self)
+		let bundle = Bundle(for: FeedCommentsPresenter.self)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
 		if value == key {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)

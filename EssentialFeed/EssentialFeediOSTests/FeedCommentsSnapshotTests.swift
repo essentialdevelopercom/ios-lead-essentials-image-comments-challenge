@@ -4,6 +4,7 @@
 //
 
 import XCTest
+import EssentialFeed
 import EssentialFeediOS
 
 class FeedCommentsSnapshotTests: XCTestCase {
