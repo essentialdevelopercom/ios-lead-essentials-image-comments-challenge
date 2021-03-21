@@ -32,7 +32,9 @@ class ImageCommentsViewController: UITableViewController {
 	}
 	
 	@objc private func load() {
-		_ = loader?.load(from: url) { _ in }
+		_ = loader?.load(from: url) { [weak self] _ in
+			self?.refreshControl?.endRefreshing()
+		}
 	}
 }
 
@@ -73,6 +75,16 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 	}
 	
+	func test_viewDidLoad_hidesLoadingSpinnerOnLoaderCompletion() {
+		let url = URL(string: "https://any-url.com")!
+		let (sut, loader) = makeSUT(url: url)
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading()
+		
+		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -86,13 +98,24 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	class LoaderSpy: ImageCommentLoader {
 		private(set) var loadCallCount = 0
 		
+		private var messages = [(url: URL, completion: (ImageCommentLoader.Result) -> Void)]()
+		
+		private var completions: [(ImageCommentLoader.Result) -> Void] {
+			messages.map { $0.completion }
+		}
+		
 		struct Task: ImageCommentLoaderTask {
 			func cancel() { }
 		}
 		
 		func load(from url: URL, completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
+			messages.append((url, completion))
 			loadCallCount += 1
 			return Task()
+		}
+		
+		func completeCommentsLoading() {
+			completions[0](.success([]))
 		}
 	}
 }
