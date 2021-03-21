@@ -128,7 +128,7 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "FeedComments"
 		let bundle = Bundle(for: FeedCommentsPresenter.self)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
@@ -138,7 +138,7 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		return value
 	}
 	
-	class LoaderSpy: FeedCommentsLoader {
+	private class LoaderSpy: FeedCommentsLoader {
 		
 		private(set) var loadedUrls: [URL] = []
 		private var commentsRequests: [(FeedCommentsLoader.Result) -> Void] = []
@@ -157,7 +157,7 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		}
 	}
 	
-	func assertThat(_ sut: FeedCommentsViewController, isRendering comments: [FeedComment], file: StaticString = #filePath, line: UInt = #line) {
+	private func assertThat(_ sut: FeedCommentsViewController, isRendering comments: [FeedComment], file: StaticString = #filePath, line: UInt = #line) {
 		sut.view.enforceLayoutCycle()
 		
 		guard sut.numberOfRenderedFeedCommentViews() == comments.count else {
@@ -171,7 +171,7 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		executeRunLoopToCleanUpReferences()
 	}
 	
-	func assertThat(_ sut: FeedCommentsViewController, hasViewConfiguredFor comment: FeedComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+	private func assertThat(_ sut: FeedCommentsViewController, hasViewConfiguredFor comment: FeedComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.feedCommentView(at: index)
 		
 		guard let cell = view as? FeedCommentCell else {
@@ -232,7 +232,7 @@ extension FeedCommentsViewController {
 	}
 }
 
-extension Date {
+private extension Date {
 	func adding(days: Int) -> Date {
 		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}

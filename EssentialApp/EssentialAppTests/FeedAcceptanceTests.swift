@@ -65,7 +65,7 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(commentsViewController)
 		
 		commentsViewController.view.layoutIfNeeded()
-		XCTAssertEqual(commentsViewController.numberOfRenderedFeedCommentViews(), 2)
+		XCTAssertEqual(commentsViewController.numberOfRenderedFeedCommentViews(), 2, "Expected 2 loaded comments on FeedCommentsViewController viewDidLoad, because HTTPClientStub is configured to return 2 comments for selected uuid1")
 	}
 	
 	// MARK: - Helpers
@@ -135,7 +135,7 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 }
 
-extension FeedViewController {
+private extension FeedViewController {
 	func simulateFeedCommentDidSelect(at index: Int) {
 		tableView(tableView, didSelectRowAt: IndexPath(row: index, section: feedImagesSection))
 		RunLoop.current.run(until: Date())
