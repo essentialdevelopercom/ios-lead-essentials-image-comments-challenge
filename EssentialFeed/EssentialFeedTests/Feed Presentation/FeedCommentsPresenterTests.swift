@@ -71,6 +71,28 @@ class FeedCommentsPresenter {
 			 bundle: Bundle(for: FeedCommentsPresenter.self),
 			 comment: "Title for feed comments view")
 	}
+	
+	public func didStartLoadingFeedComments() {
+		errorView.display(.noError)
+		loadingView.display(FeedCommentsLoadingViewModel(isLoading: true))
+	}
+	
+	public func didFinishLoadingFeedComments(with comments: [FeedComment]) {
+		feedCommentsView.display(FeedCommentsViewModel(comments: comments.toViewModels))
+		loadingView.display(FeedCommentsLoadingViewModel(isLoading: false))
+	}
+	
+	public func didFinishLoadingFeedComments(with error: Error) {
+		errorView.display(.error(message: commentsLoadError))
+		loadingView.display(FeedCommentsLoadingViewModel(isLoading: false))
+	}
+	
+	private var commentsLoadError: String {
+		return NSLocalizedString("FEED_COMMENTS_VIEW_CONNECTION_ERROR",
+			 tableName: "FeedComments",
+			 bundle: Bundle(for: FeedCommentsPresenter.self),
+			 comment: "Error text for comments loading problem")
+	}
 }
 
 class FeedCommentsPresenterTests: XCTestCase {
@@ -83,6 +105,40 @@ class FeedCommentsPresenterTests: XCTestCase {
 		let (_, view) = makeSUT()
 		
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
+	}
+	
+	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didStartLoadingFeedComments()
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: .none),
+			.display(isLoading: true)
+		])
+	}
+	
+	func test_didFinishLoadingFeedComments_displaysFeedCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let comments = [uniqueFeedComment(), uniqueFeedComment()]
+		
+		sut.didFinishLoadingFeedComments(with: comments)
+		
+		XCTAssertEqual(view.messages, [
+			.display(feedComments: comments.toViewModels),
+			.display(isLoading: false)
+		])
+	}
+	
+	func test_didFinishLoadingFeedCommentsWithError_displaysLocalizedErrorMessageAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingFeedComments(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: localized("FEED_COMMENTS_VIEW_CONNECTION_ERROR")),
+			.display(isLoading: false)
+		])
 	}
 	
 	// MARK: - Helpers
@@ -126,4 +182,16 @@ class FeedCommentsPresenterTests: XCTestCase {
 			messages.insert(.display(errorMessage: viewModel.message))
 		}
 	}
+	
+	func uniqueFeedComment() -> FeedComment {
+		return FeedComment(id: UUID(), message: "any message", date: Date(), authorName: "any name")
+	}
+}
+
+extension Array where Element == FeedComment {
+	var toViewModels: [FeedCommentViewModel] {
+		map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: Self.formatter.localizedString(for: $0.date, relativeTo: Date()))})
+	}
+	
+	private static let formatter = RelativeDateTimeFormatter()
 }
