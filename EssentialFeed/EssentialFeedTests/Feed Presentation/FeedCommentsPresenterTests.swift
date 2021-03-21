@@ -94,12 +94,12 @@ class FeedCommentsPresenterTests: XCTestCase {
 		}
 	}
 	
-	func uniqueFeedComment() -> FeedComment {
+	private func uniqueFeedComment() -> FeedComment {
 		return FeedComment(id: UUID(), message: "any message", date: Date(), authorName: "any name")
 	}
 }
 
-extension Array where Element == FeedComment {
+private extension Array where Element == FeedComment {
 	var toViewModels: [FeedCommentViewModel] {
 		map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: Self.formatter.localizedString(for: $0.date, relativeTo: Date()))})
 	}
