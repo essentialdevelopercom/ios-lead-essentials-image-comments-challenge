@@ -55,15 +55,15 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 1)
 	}
 	
-	func test_pullToRefresh_loadsComments() {
+	func test_userInitiatedReloading_loadsComments() {
 		let url = URL(string: "https://any-url.com")!
 		let (sut, loader) = makeSUT(url: url)
 		sut.loadViewIfNeeded()
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReloading()
 		XCTAssertEqual(loader.loadCallCount, 2)
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReloading()
 		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
@@ -85,20 +85,20 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
 	}
 	
-	func test_pullToRefresh_showsLoadingSpinner() {
+	func test_userInitiatedReloading_showsLoadingSpinner() {
 		let url = URL(string: "https://any-url.com")!
 		let (sut, _) = makeSUT(url: url)
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReloading()
 		
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 	}
 	
-	func test_pullToRefresh_hidesLoadingSpinnerOnLoaderCompletion() {
+	func test_userInitiatedReloading_hidesLoadingSpinnerOnLoaderCompletion() {
 		let url = URL(string: "https://any-url.com")!
 		let (sut, loader) = makeSUT(url: url)
 		
-		sut.refreshControl?.simulatePullToRefresh()
+		sut.simulateUserInitiatedReloading()
 		loader.completeCommentsLoading()
 		
 		XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
@@ -135,6 +135,12 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		func completeCommentsLoading() {
 			completions[0](.success([]))
 		}
+	}
+}
+
+extension ImageCommentsViewController {
+	func simulateUserInitiatedReloading() {
+		refreshControl?.simulatePullToRefresh()
 	}
 }
 
