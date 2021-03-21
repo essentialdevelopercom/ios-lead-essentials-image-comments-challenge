@@ -10,7 +10,7 @@ import EssentialFeed
 import XCTest
 import UIKit
 
-class ImageCommentsViewController: UIViewController {
+class ImageCommentsViewController: UITableViewController {
 	
 	private var url: URL!
 	private var loader: ImageCommentLoader?
@@ -23,6 +23,14 @@ class ImageCommentsViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+		
+		load()
+	}
+	
+	@objc private func load() {
 		_ = loader?.load(from: url) { _ in }
 	}
 }
@@ -42,6 +50,18 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		
 		XCTAssertEqual(loader.loadCallCount, 1)
+	}
+	
+	func test_pullToRefresh_loadsComments() {
+		let url = URL(string: "https://any-url.com")!
+		let (sut, loader) = makeSUT(url: url)
+		sut.loadViewIfNeeded()
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		XCTAssertEqual(loader.loadCallCount, 2)
+		
+		sut.refreshControl?.simulatePullToRefresh()
+		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
 	// MARK: - Helpers
@@ -67,3 +87,20 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		}
 	}
 }
+
+extension UIControl {
+	func simulate(event: UIControl.Event) {
+		allTargets.forEach { target in
+			actions(forTarget: target, forControlEvent: event)?.forEach {
+				(target as NSObject).perform(Selector($0))
+			}
+		}
+	}
+}
+
+extension UIRefreshControl {
+	func simulatePullToRefresh() {
+		simulate(event: .valueChanged)
+	}
+}
+
