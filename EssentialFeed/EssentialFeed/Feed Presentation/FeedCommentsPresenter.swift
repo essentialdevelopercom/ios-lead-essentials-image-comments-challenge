@@ -9,48 +9,12 @@ public protocol FeedCommentsView {
 	func display(_ viewModel: FeedCommentsViewModel)
 }
 
-public struct FeedCommentsViewModel {
-	public let comments: [FeedCommentViewModel]
-	
-	public init(comments: [FeedCommentViewModel]) {
-		self.comments = comments
-	}
-}
-
-public struct FeedCommentViewModel: Hashable {
-	public let name: String
-	public let message: String
-	public let formattedDate: String
-	
-	public init(name: String, message: String, formattedDate: String) {
-		self.name = name
-		self.message = message
-		self.formattedDate = formattedDate
-	}
-}
-
 public protocol FeedCommentsLoadingView {
 	func display(_ viewModel: FeedCommentsLoadingViewModel)
 }
 
-public struct FeedCommentsLoadingViewModel {
-	public let isLoading: Bool
-}
-
 public protocol FeedCommentsErrorView {
 	func display(_ viewModel: FeedCommentsErrorViewModel)
-}
-
-public struct FeedCommentsErrorViewModel {
-	public let message: String?
-	
-	static var noError: FeedCommentsErrorViewModel {
-		return FeedCommentsErrorViewModel(message: nil)
-	}
-	
-	public static func error(message: String) -> FeedCommentsErrorViewModel {
-		return FeedCommentsErrorViewModel(message: message)
-	}
 }
 
 public class FeedCommentsPresenter {
@@ -58,6 +22,7 @@ public class FeedCommentsPresenter {
 	private let feedCommentsView: FeedCommentsView
 	private let loadingView: FeedCommentsLoadingView
 	private let errorView: FeedCommentsErrorView
+	
 	public init(feedCommentsView: FeedCommentsView, loadingView: FeedCommentsLoadingView, errorView: FeedCommentsErrorView) {
 		self.feedCommentsView = feedCommentsView
 		self.loadingView = loadingView
@@ -95,9 +60,11 @@ public class FeedCommentsPresenter {
 }
 
 extension Array where Element == FeedComment {
+	
 	var toViewModels: [FeedCommentViewModel] {
 		map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: Self.formatter.localizedString(for: $0.date, relativeTo: Date()))})
 	}
 	
 	private static let formatter = RelativeDateTimeFormatter()
+	
 }
