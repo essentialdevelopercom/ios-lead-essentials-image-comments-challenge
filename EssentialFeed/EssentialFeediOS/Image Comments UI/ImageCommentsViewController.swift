@@ -41,8 +41,10 @@ public class ImageCommentsViewController: UITableViewController {
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
 		_ = loader?.load(from: url) { [weak self] result in
-			self?.tableModel = (try? result.get()) ?? []
-			self?.tableView.reloadData()
+			if let comments = try? result.get() {
+				self?.tableModel = comments
+				self?.tableView.reloadData()
+			}
 			self?.refreshControl?.endRefreshing()
 		}
 	}

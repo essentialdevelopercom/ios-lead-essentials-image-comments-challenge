@@ -90,6 +90,25 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [pair0, pair1, pair2, pair3, pair4])
 	}
 	
+	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
+		let pair0 = makeCommentDatePair(
+			message: "a message",
+			creationDate: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"),
+			author: "an author",
+			expectedRelativeDate: "2 hours ago"
+		)
+		let (sut, loader) = makeSUT(url: anyURL(), currentDate: { staticDate })
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: [pair0.comment], at: 0)
+		assertThat(sut, isRendering: [pair0])
+		
+		sut.simulateUserInitiatedReloading()
+		loader.completeCommentsLoadingWithError(at: 1)
+		assertThat(sut, isRendering: [pair0])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL, currentDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -165,6 +184,11 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		
 		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
 			completions[index](.success(comments))
+		}
+		
+		func completeCommentsLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "any error", code: 0)
+			completions[index](.failure(error))
 		}
 	}
 }
