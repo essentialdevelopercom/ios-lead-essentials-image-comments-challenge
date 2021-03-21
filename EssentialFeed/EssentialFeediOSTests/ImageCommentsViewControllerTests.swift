@@ -43,7 +43,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		let url = URL(string: "https://any-url.com")!
 		let (_, loader) = makeSUT(url: url)
 		
-		XCTAssertEqual(loader.loadCallCount, 0)
+		XCTAssertTrue(loader.requestedURLs.isEmpty)
 	}
 	
 	func test_viewDidLoad_loadsComments() {
@@ -52,7 +52,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(loader.loadCallCount, 1)
+		XCTAssertEqual(loader.requestedURLs, [url])
 	}
 	
 	func test_userInitiatedReloading_loadsComments() {
@@ -61,10 +61,10 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		
 		sut.simulateUserInitiatedReloading()
-		XCTAssertEqual(loader.loadCallCount, 2)
+		XCTAssertEqual(loader.requestedURLs, [url, url])
 		
 		sut.simulateUserInitiatedReloading()
-		XCTAssertEqual(loader.loadCallCount, 3)
+		XCTAssertEqual(loader.requestedURLs, [url, url, url])
 	}
 	
 	func test_viewDidLoad_showsLoadingSpinner() {
@@ -113,12 +113,14 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	}
 	
 	class LoaderSpy: ImageCommentLoader {
-		private(set) var loadCallCount = 0
-		
 		private var messages = [(url: URL, completion: (ImageCommentLoader.Result) -> Void)]()
 		
 		private var completions: [(ImageCommentLoader.Result) -> Void] {
 			messages.map { $0.completion }
+		}
+		
+		var requestedURLs: [URL] {
+			messages.map { $0.url }
 		}
 		
 		struct Task: ImageCommentLoaderTask {
@@ -127,7 +129,6 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		
 		func load(from url: URL, completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
 			messages.append((url, completion))
-			loadCallCount += 1
 			return Task()
 		}
 		
