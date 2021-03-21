@@ -46,59 +46,48 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
 		
-		let comment0 = makeComment(
+		let pair0 = makeCommentDatePair(
 			message: "a message",
 			creationDate: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"),
-			author: "an author"
+			author: "an author",
+			expectedRelativeDate: "2 hours ago"
 		)
-		let expectedRelativeDate0 = "2 hours ago"
-		
-		let comment1 = makeComment(
+		let pair1 = makeCommentDatePair(
 			message: "another message",
 			creationDate: makeDateFromTimestamp(1_605_713_544, description: "2020-11-18 15:32:24 +0000"),
-			author: "a second author"
+			author: "a second author",
+			expectedRelativeDate: "1 day ago"
 		)
-		let expectedRelativeDate1 = "1 day ago"
-		
-		let comment2 = makeComment(
+		let pair2 = makeCommentDatePair(
 			message: "another message",
 			creationDate: makeDateFromTimestamp(1_604_571_429, description: "2020-11-05 10:17:09 +0000"),
-			author: "a third author"
+			author: "a third author",
+			expectedRelativeDate: "2 weeks ago"
 		)
-		let expectedRelativeDate2 = "2 weeks ago"
-		
-		let comment3 = makeComment(
+		let pair3 = makeCommentDatePair(
 			message: "a fourth message",
 			creationDate: makeDateFromTimestamp(1_602_510_149, description: "2020-10-12 13:42:29 +0000"),
-			author: "another author"
+			author: "another author",
+			expectedRelativeDate: "1 month ago"
 		)
-		let expectedRelativeDate3 = "1 month ago"
-		
-		let comment4 = makeComment(
+		let pair4 = makeCommentDatePair(
 			message: "a fifth message",
 			creationDate: makeDateFromTimestamp(1_488_240_000, description: "2017-02-28 00:00:00 +0000"),
-			author: "a fifth author"
+			author: "a fifth author",
+			expectedRelativeDate: "3 years ago"
 		)
-		let expectedRelativeDate4 = "3 years ago"
-		
 		
 		let (sut, loader) = makeSUT(url: anyURL(), currentDate: { staticDate })
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
-		loader.completeCommentsLoading(with: [comment0], at: 0)
-		assertThat(sut, isRendering: [(comment0, expectedRelativeDate0)])
+		loader.completeCommentsLoading(with: [pair0.comment], at: 0)
+		assertThat(sut, isRendering: [pair0])
 		
 		sut.simulateUserInitiatedReloading()
-		loader.completeCommentsLoading(with: [comment0, comment1, comment2, comment3, comment4], at: 1)
-		assertThat(sut, isRendering: [
-			(comment0, expectedRelativeDate0),
-			(comment1, expectedRelativeDate1),
-			(comment2, expectedRelativeDate2),
-			(comment3, expectedRelativeDate3),
-			(comment4, expectedRelativeDate4)
-		])
+		loader.completeCommentsLoading(with: [pair0.comment, pair1.comment, pair2.comment, pair3.comment, pair4.comment], at: 1)
+		assertThat(sut, isRendering: [pair0, pair1, pair2, pair3, pair4])
 	}
 	
 	// MARK: - Helpers
@@ -147,6 +136,11 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	
 	private func makeComment(message: String, creationDate: Date, author: String) -> ImageComment {
 		ImageComment(id: UUID(), message: message, creationDate: creationDate, author: author)
+	}
+	
+	private func makeCommentDatePair(message: String, creationDate: Date, author: String, expectedRelativeDate: String) -> (comment: ImageComment, relativeDate: String) {
+		let comment = makeComment(message: message, creationDate: creationDate, author: author)
+		return (comment, expectedRelativeDate)
 	}
 	
 	class LoaderSpy: ImageCommentLoader {
