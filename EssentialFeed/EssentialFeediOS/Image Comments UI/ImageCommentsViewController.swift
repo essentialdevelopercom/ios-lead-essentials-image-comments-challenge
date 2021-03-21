@@ -19,7 +19,7 @@ public class ImageCommentsViewController: UITableViewController {
 	private var url: URL!
 	private var currentDate: (() -> Date)!
 	private var loader: ImageCommentLoader?
-	private var tasks = [ImageCommentLoaderTask?]()
+	private var task: ImageCommentLoaderTask?
 	
 	private var tableModel = [ImageComment]()
 	
@@ -31,7 +31,7 @@ public class ImageCommentsViewController: UITableViewController {
 	}
 	
 	deinit {
-		tasks.forEach { $0?.cancel() }
+		task?.cancel()
 	}
 	
 	public override func viewDidLoad() {
@@ -45,13 +45,14 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
-		tasks.append(loader?.load(from: url) { [weak self] result in
+		task = loader?.load(from: url) { [weak self] result in
 			if let comments = try? result.get() {
 				self?.tableModel = comments
 				self?.tableView.reloadData()
 			}
 			self?.refreshControl?.endRefreshing()
-		})
+			self?.task = nil
+		}
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

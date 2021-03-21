@@ -109,7 +109,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [pair0])
 	}
 	
-	func test_loadComments_cancelsRequestsWhenNavigatingBack() {
+	func test_loadComments_cancelsRunningRequestWhenNavigatingBack() {
 		let loader = LoaderSpy()
 		let url = URL(string: "https://any-url.com")!
 		var sut: ImageCommentsViewController?
@@ -120,10 +120,43 @@ class ImageCommentsViewControllerTests: XCTestCase {
 			
 			sut?.loadViewIfNeeded()
 			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after view is loaded")
+			
+			loader.completeCommentsLoading(at: 0)
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished successfully")
+			
+			sut?.simulateUserInitiatedReloading()
+			loader.completeCommentsLoadingWithError(at: 1)
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished with an error")
+			
+			sut?.simulateUserInitiatedReloading()
 		}
 		
 		sut = nil
 		XCTAssertEqual(loader.cancelledURLs, [url], "Expected cancelling request after user navigates back from comments screen")
+	}
+	
+	func test_loadComments_doesNotCancelAlreadyFinishedRequests() {
+		let loader = LoaderSpy()
+		let url = URL(string: "https://any-url.com")!
+		var sut: ImageCommentsViewController?
+		
+		autoreleasepool {
+			sut = ImageCommentsViewController(url: url, currentDate: Date.init, loader: loader)
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests upon creation")
+			
+			sut?.loadViewIfNeeded()
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after view is loaded")
+			
+			loader.completeCommentsLoading(at: 0)
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished successfully")
+			
+			sut?.simulateUserInitiatedReloading()
+			loader.completeCommentsLoadingWithError(at: 1)
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished with an error")
+		}
+		
+		sut = nil
+		XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests as all requests were finished before deallocating screen")
 	}
 	
 	// MARK: - Helpers
