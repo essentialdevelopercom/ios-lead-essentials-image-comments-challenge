@@ -7,36 +7,9 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
 import XCTest
 import UIKit
-
-class ImageCommentsViewController: UITableViewController {
-	
-	private var url: URL!
-	private var loader: ImageCommentLoader?
-	
-	convenience init(url: URL, loader: ImageCommentLoader) {
-		self.init()
-		self.url = url
-		self.loader = loader
-	}
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-
-		load()
-	}
-	
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
-		_ = loader?.load(from: url) { [weak self] _ in
-			self?.refreshControl?.endRefreshing()
-		}
-	}
-}
 
 class ImageCommentsViewControllerTests: XCTestCase {
 	func test_loadCommentsActions_requestsLoadingCommentsFromURL() {
