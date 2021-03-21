@@ -109,6 +109,23 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [pair0])
 	}
 	
+	func test_loadComments_cancelsRequestsWhenNavigatingBack() {
+		let loader = LoaderSpy()
+		let url = URL(string: "https://any-url.com")!
+		var sut: ImageCommentsViewController?
+		
+		autoreleasepool {
+			sut = ImageCommentsViewController(url: url, currentDate: Date.init, loader: loader)
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests upon creation")
+			
+			sut?.loadViewIfNeeded()
+			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after view is loaded")
+		}
+		
+		sut = nil
+		XCTAssertEqual(loader.cancelledURLs, [url], "Expected cancelling request after user navigates back from comments screen")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL, currentDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -173,13 +190,24 @@ class ImageCommentsViewControllerTests: XCTestCase {
 			messages.map { $0.url }
 		}
 		
-		struct Task: ImageCommentLoaderTask {
-			func cancel() { }
+		var cancelledURLs = [URL]()
+		
+		final class Task: ImageCommentLoaderTask {
+			private let callback: () -> Void
+			init(callback: @escaping () -> Void) {
+				self.callback = callback
+			}
+			
+			func cancel() {
+				callback()
+			}
 		}
 		
 		func load(from url: URL, completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
 			messages.append((url, completion))
-			return Task()
+			return Task { [weak self] in
+				self?.cancelledURLs.append(url)
+			}
 		}
 		
 		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
