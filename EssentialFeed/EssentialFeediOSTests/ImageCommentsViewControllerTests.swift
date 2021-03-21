@@ -109,7 +109,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [pair0])
 	}
 	
-	func test_loadComments_cancelsRunningRequestWhenNavigatingBack() {
+	func test_loadComments_cancelsAnyRunningRequestsWhenNavigatingBack() {
 		let loader = LoaderSpy()
 		let url = URL(string: "https://any-url.com")!
 		var sut: ImageCommentsViewController?
