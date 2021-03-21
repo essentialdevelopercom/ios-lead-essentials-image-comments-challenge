@@ -118,6 +118,19 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertEqual(client.cancelledURLs, [url])
 	}
 	
+	func test_finishedRequestShouldNotBeCancelledOnDeallocation() {
+		let url = anyURL()
+		let client = HTTPClientSpy()
+		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(client: client)
+		
+		sut?.load(url: url, completion: { _ in })
+		client.complete(withStatusCode: 200, data: emptyItemsData())
+		
+		sut = nil
+		
+		XCTAssertEqual(client.cancelledURLs, [])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedCommentsLoader, client: HTTPClientSpy) {
