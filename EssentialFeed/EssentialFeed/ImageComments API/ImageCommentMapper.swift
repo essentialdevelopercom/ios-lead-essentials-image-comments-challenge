@@ -18,11 +18,14 @@ final class ImageCommentMapper {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		
-		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+		guard isOk(response), let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteImageCommentLoader.Error.invalidData
 		}
 		
 		return root.items
 	}
 	
+	private static func isOk(_ response: HTTPURLResponse) -> Bool {
+		(200...299).contains(response.statusCode)
+	}
 }

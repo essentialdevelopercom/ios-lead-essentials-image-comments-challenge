@@ -44,7 +44,7 @@ class RemoteImageCommentLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOnNon200HTTPResponse() {
+	func test_load_deliversErrorOnNon2xxHTTPResponse() {
 		let (sut, client) = makeSUT()
 		
 		let codes = [199, 201, 300, 400, 500]
@@ -56,25 +56,33 @@ class RemoteImageCommentLoaderTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
 		let invalidJSONData = "invalid json".data(using: .utf8)!
 		
-		expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.invalidData)) {
-			client.complete(withStatusCode: 200, data: invalidJSONData)
+		let codes = [200, 201, 250, 280, 299]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.invalidData)) {
+				client.complete(withStatusCode: codes[0], data: invalidJSONData, at: index)
+			}
 		}
 	}
 	
-	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+	func test_load_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() {
 		let (sut, client) = makeSUT()
 		let emptyListJSONData = "{\"items\": []}".data(using: .utf8)!
 		
-		expect(sut, toCompleteWith: .success([])) {
-			client.complete(withStatusCode: 200, data: emptyListJSONData)
+		let codes = [200, 201, 250, 280, 299]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([])) {
+				client.complete(withStatusCode: code, data: emptyListJSONData, at: index)
+			}
 		}
 	}
 	
-	func test_load_deliversItemsOn200HTTPResponseWithJSONList() {
+	func test_load_deliversItemsOn2xxHTTPResponseWithJSONList() {
 		let (sut, client) = makeSUT()
 		
 		let item1 = makeItem(
@@ -92,9 +100,14 @@ class RemoteImageCommentLoaderTests: XCTestCase {
 		let json = ["items": [item1.json, item2.json]]
 		let jsonData = try! JSONSerialization.data(withJSONObject: json)
 		
-		expect(sut, toCompleteWith: .success([item1.model, item2.model])) {
-			client.complete(withStatusCode: 200, data: jsonData)
+		let codes = [200, 201, 250, 280, 299]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([item1.model, item2.model])) {
+				client.complete(withStatusCode: code, data: jsonData, at: index)
+			}
 		}
+		
 	}
 	
 	func test_load_doesNotDeliverResultsAfterSUTInstanceHasBeenDeallocated() {

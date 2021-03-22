@@ -517,9 +517,9 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
-				B555E31C25FA94EC001FE66F /* ImageComments UI */,
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
+				B555E31C25FA94EC001FE66F /* ImageComments UI */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";
