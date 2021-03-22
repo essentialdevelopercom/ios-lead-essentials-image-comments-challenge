@@ -88,6 +88,12 @@
                             <outlet property="delegate" destination="3Pp-8b-z6Q" id="SQ9-sb-mcF"/>
                         </connections>
                     </tableView>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="o2B-35-FFi">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refresh" destination="3Pp-8b-z6Q" eventType="valueChanged" id="BKT-bB-Wl0"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="sfq-gb-lhp" id="gqu-vB-PfK"/>
                     </connections>
