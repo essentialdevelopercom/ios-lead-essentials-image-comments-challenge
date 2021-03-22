@@ -19,7 +19,19 @@ class RemoteImageCommentsLoader {
 	}
 
 	func load(completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
-		client.get(from: url, completion: completion)
+		client.get(from: url) { result in
+			switch result {
+			case let .success((data, response)):
+				guard response.statusCode == 200 else {
+					completion(.failure(NSError(domain: "invalid status code", code: 0)))
+					return
+				}
+				completion(.success((data, response)))
+
+			case let .failure(error):
+				completion(.failure(error))
+			}
+		}
 	}
 }
 
@@ -68,6 +80,29 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 			exp.fulfill()
 		}
 		client.complete(with: clientError)
+
+		wait(for: [exp], timeout: 1.0)
+	}
+
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+
+		let clientError = NSError(domain: "Test", code: 0)
+		let statusCode = 201
+
+		let exp = expectation(description: "Wait for load completion")
+		sut.load { result in
+			switch result {
+			case let .failure(error as NSError):
+				XCTAssertEqual(error.code, clientError.code)
+
+			default:
+				XCTFail("Expected result \(clientError) got \(result) instead")
+			}
+
+			exp.fulfill()
+		}
+		client.complete(withStatusCode: statusCode, data: "".data(using: .utf8)!)
 
 		wait(for: [exp], timeout: 1.0)
 	}
