@@ -24,13 +24,13 @@ public class ImageCommentsPresenter {
 	private let commentsView: ImageCommentsView
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
-	private let relativeDate: () -> Date
+	private let timeFormatConfiguration: TimeFormatConfiguration
 	
-	public init(commentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, relativeDate: @escaping () -> Date) {
+	public init(commentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, timeFormatConfiguration: TimeFormatConfiguration) {
 		self.commentsView = commentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
-		self.relativeDate = relativeDate
+		self.timeFormatConfiguration = timeFormatConfiguration
 	}
 	
 	public func didStartLoadingComments() {
@@ -39,7 +39,11 @@ public class ImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
-		commentsView.display(ImageCommentsViewModel(comments: comments, relativeDate: relativeDate))
+		commentsView.display(ImageCommentsViewModel(
+			comments: ImageCommentsViewModelMapper.map(
+				comments,
+				timeFormatConfiguration: timeFormatConfiguration)
+		))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	

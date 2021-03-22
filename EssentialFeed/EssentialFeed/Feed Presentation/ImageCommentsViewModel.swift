@@ -9,7 +9,5 @@
 import Foundation
 
 public struct ImageCommentsViewModel {
-	public let comments: [ImageComment]
-	public let relativeDate: () -> Date
+	public let comments: [ImageCommentViewModel]
 }
-

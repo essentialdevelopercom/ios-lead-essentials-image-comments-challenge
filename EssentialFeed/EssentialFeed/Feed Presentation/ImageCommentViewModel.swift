@@ -8,14 +8,16 @@
 
 import Foundation
 
-public struct ImageCommentViewModel {
+public struct ImageCommentViewModel: Hashable {
+	public let id: String
 	public let authorUsername: String
-	public let date: Date
-	public let body: String
+	public let createdAt: String
+	public let message: String
 	
-	public init(authorUsername: String, date: Date, body: String) {
+	public init(id: String, authorUsername: String, createdAt: String, message: String) {
+		self.id = id
 		self.authorUsername = authorUsername
-		self.date = date
-		self.body = body
+		self.createdAt = createdAt
+		self.message = message
 	}
 }

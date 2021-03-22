@@ -71,20 +71,23 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	private func commentsWithContent() -> [ImageCommentCellController] {
 		[
 			ImageCommentViewModel(
+				id: UUID().uuidString,
 				authorUsername: "Ἀριστοτέλης",
-				date: Date().addingTimeInterval(-100000),
-				body: "But we think that knowledge and the ability to understand belong to knowledge rather than experience, and we believe that people of knowledge are smarter than empiricists, because wisdom depends in all cases on knowledge. And it is because they know the cause and they don't; empiricists know the effect but do not know the cause, and theorists know both the effect and the cause."),
+				createdAt: "2020-10-09T11:24:59+0000",
+				message: "But we think that knowledge and the ability to understand belong to knowledge rather than experience, and we believe that people of knowledge are smarter than empiricists, because wisdom depends in all cases on knowledge. And it is because they know the cause and they don't; empiricists know the effect but do not know the cause, and theorists know both the effect and the cause."),
 			ImageCommentViewModel(
+				id: UUID().uuidString,
 				authorUsername: "Ἡράκλειτος ὁ Ἐφέσιος",
-				date: Date().addingTimeInterval(-10000000),
-				body: "μάχεσθαι χρὴ τὸν δῆμον ὑπὲρ τοῦ νόμου ὅκωσπερ τείχεος"),
+				createdAt: "2020-10-01T04:23:53+0000",
+				message: "μάχεσθαι χρὴ τὸν δῆμον ὑπὲρ τοῦ νόμου ὅκωσπερ τείχεος"),
 			ImageCommentViewModel(
+				id: UUID().uuidString,
 				authorUsername: "This is a username that could exist",
-				date: Date().addingTimeInterval(-100000000),
-				body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dui faucibus in ornare quam viverra orci. Purus semper eget duis at tellus. Eros in cursus turpis massa tincidunt dui ut. Nam at lectus urna duis. Malesuada fames ac turpis egestas integer eget aliquet. Sed enim ut sem viverra aliquet. Commodo nulla facilisi nullam vehicula ipsum. Nisl nunc mi ipsum faucibus. Odio morbi quis commodo odio. Tellus molestie nunc non blandit massa. Condimentum id venenatis a condimentum vitae sapien pellentesque.")
+				createdAt: "2020-09-26T11:22:59+0000",
+				message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dui faucibus in ornare quam viverra orci. Purus semper eget duis at tellus. Eros in cursus turpis massa tincidunt dui ut. Nam at lectus urna duis. Malesuada fames ac turpis egestas integer eget aliquet. Sed enim ut sem viverra aliquet. Commodo nulla facilisi nullam vehicula ipsum. Nisl nunc mi ipsum faucibus. Odio morbi quis commodo odio. Tellus molestie nunc non blandit massa. Condimentum id venenatis a condimentum vitae sapien pellentesque.")
 			]
 		.map { model in
-			ImageCommentCellController(viewModel: { model }, relativeDate: { Date() })
+			ImageCommentCellController(viewModel: { model })
 		}
 	}
 	

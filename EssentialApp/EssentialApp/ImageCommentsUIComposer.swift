@@ -11,7 +11,7 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class ImageCommentsUIComposer {
-	static func imageCommentsComposedWith(imageCommentsLoader: @escaping () -> ImageCommentsLoader.Publisher, relativeDate: @escaping () -> Date = Date.init) -> ImageCommentsViewController {
+	static func imageCommentsComposedWith(imageCommentsLoader: @escaping () -> ImageCommentsLoader.Publisher, timeFormatConfiguration: TimeFormatConfiguration = .default) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(imageLoader:
 			imageCommentsLoader)
 		
@@ -23,7 +23,7 @@ final class ImageCommentsUIComposer {
 			commentsView: ImageCommentsViewAdapter(controller: commentsController),
 			loadingView: WeakRefVirtualProxy(commentsController),
 			errorView: WeakRefVirtualProxy(commentsController),
-			relativeDate: relativeDate)
+			timeFormatConfiguration: timeFormatConfiguration)
 		
 		return commentsController
 	}
@@ -37,3 +37,12 @@ final class ImageCommentsUIComposer {
 		return imageController
 	}
 }
+
+extension TimeFormatConfiguration {
+	static var `default`: TimeFormatConfiguration {
+		TimeFormatConfiguration(
+			relativeDate: Date.init,
+			locale: .autoupdatingCurrent)
+	}
+}
+

@@ -26,12 +26,13 @@ class ImageCommentsPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingComments_displaysImageCommentsAndStopsLoading() {
 		let comments = uniqueImageComments()
-		let (sut, view) = makeSUT()
+		let configuration = Self.makeTimeFormatConfiguration(date: Date())
+		let (sut, view) = makeSUT(timeFormatConfiguration: configuration)
 		
 		sut.didFinishLoadingComments(with: comments)
 		
 		XCTAssertEqual(view.messages, [
-			.display(comments: comments),
+			.display(comments: ImageCommentsViewModelMapper.map(comments, timeFormatConfiguration: configuration)),
 			.display(isLoading: false)
 		])
 	}
@@ -51,22 +52,55 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
 	
+	func test_viewModelMapper_formatImageCommentToViewModel() {
+		let fixedRelativeDate = Date()
+		let comment1 = ImageComment(
+			id: UUID(),
+			message: "a message",
+			createdAt: fixedRelativeDate.adding(seconds: -60),
+			author: ImageComment.Author(username: "a username")
+		)
+		
+		let comment2 = 	ImageComment(
+			id: UUID(),
+			message: "some other message",
+			createdAt: fixedRelativeDate.adding(seconds: -180),
+			author: ImageComment.Author(username: "some other username")
+		)
+		
+		let configuration = Self.makeTimeFormatConfiguration(date: fixedRelativeDate)
+		let (sut, view) = makeSUT(timeFormatConfiguration: configuration)
+		
+		sut.didFinishLoadingComments(with: [comment1, comment2])
+		
+		let expectedViewModels = ImageCommentsViewModelMapper.map([comment1, comment2], timeFormatConfiguration: configuration)
+		
+		XCTAssertEqual(view.messages, [
+			.display(comments: expectedViewModels),
+			.display(isLoading: false)
+		])
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(timeFormatConfiguration: TimeFormatConfiguration = makeTimeFormatConfiguration(date: Date()), file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view, relativeDate: { Date() })
+		let sut = ImageCommentsPresenter(commentsView: view, loadingView: view, errorView: view, timeFormatConfiguration: timeFormatConfiguration)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(view, file: file, line: line)
 		return (sut, view)
 	}
 	
-	private func uniqueComment() -> ImageComment {
+	private static func makeTimeFormatConfiguration(date: Date) -> TimeFormatConfiguration {
+		TimeFormatConfiguration(relativeDate: { date }, locale: Locale(identifier: "en_US_POSIX"))
+	}
+	
+	private func uniqueComment(date: Date = Date()) -> ImageComment {
 		ImageComment(
 			id: UUID(),
-			message: "",
-			createdAt: Date(),
-			author: ImageComment.Author(username: "")
+			message: "any message",
+			createdAt: date,
+			author: ImageComment.Author(username: "any username")
 		)
 	}
 	
@@ -89,7 +123,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 		enum Message: Hashable {
-			case display(comments: [ImageComment])
+			case display(comments: [ImageCommentViewModel])
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
 		}
