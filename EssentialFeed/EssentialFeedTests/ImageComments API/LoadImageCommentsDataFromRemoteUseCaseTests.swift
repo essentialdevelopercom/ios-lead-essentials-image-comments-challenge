@@ -87,22 +87,26 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 
+
 		let clientError = NSError(domain: "Test", code: 0)
-		let statusCode = 201
+		let statusCodes = [199, 201, 300, 400, 500]
 
 		let exp = expectation(description: "Wait for load completion")
-		sut.load { result in
-			switch result {
-			case let .failure(error as NSError):
-				XCTAssertEqual(error.code, clientError.code)
+		exp.expectedFulfillmentCount = statusCodes.count
+		statusCodes.enumerated().forEach { index, code in
+			sut.load { result in
+				switch result {
+				case let .failure(error as NSError):
+					XCTAssertEqual(error.code, clientError.code)
 
-			default:
-				XCTFail("Expected result \(clientError) got \(result) instead")
+				default:
+					XCTFail("Expected result \(clientError) got \(result) instead")
+				}
+
+				exp.fulfill()
 			}
-
-			exp.fulfill()
+			client.complete(withStatusCode: code, data: "".data(using: .utf8)!)
 		}
-		client.complete(withStatusCode: statusCode, data: "".data(using: .utf8)!)
 
 		wait(for: [exp], timeout: 1.0)
 	}
