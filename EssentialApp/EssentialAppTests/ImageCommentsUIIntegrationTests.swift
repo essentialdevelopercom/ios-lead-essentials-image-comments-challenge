@@ -151,7 +151,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			id: UUID(),
 			message: "a message",
 			createdAt: date,
-			author: ImageComment.Author(username: "an username"))
+			username: "an username")
 	}
 	
 	private static func makeTimeFormatConfiguration(date: Date) -> TimeFormatConfiguration {

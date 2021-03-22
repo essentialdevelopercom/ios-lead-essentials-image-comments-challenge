@@ -12,20 +12,12 @@ public struct ImageComment: Hashable {
 	public let id: UUID
 	public let message: String
 	public let createdAt: Date
-	public let author: Author
+	public let username: String
 	
-	public struct Author: Hashable {
-		public let username: String
-		
-		public init(username: String) {
-			self.username = username
-		}
-	}
-	
-	public init(id: UUID, message: String, createdAt: Date, author: ImageComment.Author) {
+	public init(id: UUID, message: String, createdAt: Date, username: String) {
 		self.id = id
 		self.message = message
 		self.createdAt = createdAt
-		self.author = author
+		self.username = username
 	}
 }

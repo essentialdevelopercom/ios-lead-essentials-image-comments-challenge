@@ -58,14 +58,14 @@ class ImageCommentsPresenterTests: XCTestCase {
 			id: UUID(),
 			message: "a message",
 			createdAt: fixedRelativeDate.adding(seconds: -60),
-			author: ImageComment.Author(username: "a username")
+			username: "a username"
 		)
 		
 		let comment2 = 	ImageComment(
 			id: UUID(),
 			message: "some other message",
 			createdAt: fixedRelativeDate.adding(seconds: -180),
-			author: ImageComment.Author(username: "some other username")
+			username: "some other username"
 		)
 		
 		let configuration = Self.makeTimeFormatConfiguration(date: fixedRelativeDate)
@@ -100,7 +100,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 			id: UUID(),
 			message: "any message",
 			createdAt: date,
-			author: ImageComment.Author(username: "any username")
+			username: "any username"
 		)
 	}
 	

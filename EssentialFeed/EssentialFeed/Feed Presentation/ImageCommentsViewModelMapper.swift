@@ -13,7 +13,7 @@ public class ImageCommentsViewModelMapper {
 		imageComments.map { imageComment in
 			ImageCommentViewModel(
 				id: imageComment.id.uuidString,
-				authorUsername: imageComment.author.username,
+				authorUsername: imageComment.username,
 				createdAt: convert(date: imageComment.createdAt, timeFormatConfiguration: timeFormatConfiguration),
 				message: imageComment.message)
 		}
