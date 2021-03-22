@@ -36,14 +36,14 @@ extension ImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
-		XCTAssertEqual(cell.authorLabel.text, comment.author.username, "Expected author username to be \(String(describing: comment.author.username)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.authorLabel.text, comment.author.username, "Author name at index (\(index))", file: file, line: line)
 		
 		let formatter = RelativeDateTimeFormatter()
 		let localizedDate = formatter.localizedString(for: comment.createdAt, relativeTo: relativeDate())
 		
-		XCTAssertEqual(cell.relativeDateLabel.text, localizedDate, "Expected relative date to be \(String(describing: localizedDate)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.relativeDateLabel.text, localizedDate, "Relative date at index (\(index))", file: file, line: line)
 		
-		XCTAssertEqual(cell.messageLabel.text, comment.message, "Expected message to be \(String(describing: comment.message)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.messageLabel.text, comment.message, "Message at index (\(index))", file: file, line: line)
 	}
 	
 	private func executeRunLoopToCleanUpReferences() {
