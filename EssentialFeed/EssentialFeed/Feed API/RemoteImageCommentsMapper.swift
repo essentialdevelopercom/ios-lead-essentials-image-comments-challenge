@@ -10,10 +10,28 @@ import Foundation
 
 struct RemoteImageCommentsMapper {
 	private struct Root: Decodable {
-		let items: [RemoteImageComment]
+		let items: [Item]
+		
+		struct Item: Decodable {
+			let id: UUID
+			let message: String
+			let created_at: Date
+			let author: Author
+			
+			struct Author: Decodable {
+				let username: String
+			}
+		}
+		
+		var comments: [ImageComment] {
+			items.map{
+				ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: ImageComment.Author(username: $0.author.username))
+			}
+		}
+
 	}
 	
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		
@@ -22,6 +40,6 @@ struct RemoteImageCommentsMapper {
 			throw RemoteImageCommentsLoader.Error.invalidData
 		}
 		
-		return root.items
+		return root.comments
 	}
 }
