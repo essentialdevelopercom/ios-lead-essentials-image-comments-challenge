@@ -188,9 +188,31 @@ Location</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="FqF-09-T6d" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ivb-Ye-AHw">
+                                    <rect key="frame" x="0.0" y="8" width="414" height="28"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstItem="ivb-Ye-AHw" firstAttribute="top" secondItem="FqF-09-T6d" secondAttribute="top" constant="8" id="5AV-VC-dCG"/>
+                                <constraint firstAttribute="bottom" secondItem="ivb-Ye-AHw" secondAttribute="bottom" constant="8" id="DLN-8o-SdB"/>
+                                <constraint firstItem="ivb-Ye-AHw" firstAttribute="leading" secondItem="FqF-09-T6d" secondAttribute="leading" id="SyY-gA-cka"/>
+                                <constraint firstAttribute="trailing" secondItem="ivb-Ye-AHw" secondAttribute="trailing" id="ifP-PC-2Bu"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="label" destination="ivb-Ye-AHw" id="UAI-AK-Kia"/>
+                            </connections>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommentCell" id="3cn-dT-Cq1" customClass="CommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="80"/>
+                                <rect key="frame" x="0.0" y="72" width="414" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3cn-dT-Cq1" id="14Q-Ow-J8i">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
@@ -251,6 +273,9 @@ Location</string>
                             <action selector="refresh" destination="fRd-jc-krv" eventType="valueChanged" id="3C8-P5-d5Y"/>
                         </connections>
                     </refreshControl>
+                    <connections>
+                        <outlet property="errorView" destination="FqF-09-T6d" id="q05-eC-qLx"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vLa-RF-AV3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

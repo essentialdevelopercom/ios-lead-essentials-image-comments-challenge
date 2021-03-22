@@ -15,6 +15,7 @@ public protocol CommentsControllerDelegate {
 
 public final class CommentsController: UITableViewController, CommentErrorView, CommentLoadingView {
 	public var delegate: CommentsControllerDelegate?
+	@IBOutlet private(set) public var errorView: ErrorView?
 	
 	private var tableModel = [CommentCellController]() {
 		didSet { tableView.reloadData() }
@@ -24,6 +25,12 @@ public final class CommentsController: UITableViewController, CommentErrorView, 
 		super.viewDidLoad()
 		title = CommentsPresenter.title
 		refresh()
+	}
+	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
 	}
 	
 	public func display(_ cellControllers: [CommentCellController]) {
@@ -43,7 +50,7 @@ public final class CommentsController: UITableViewController, CommentErrorView, 
 	}
 	
 	public func display(_ viewModel: CommentErrorViewModel) {
-		
+		errorView?.message = viewModel.message
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

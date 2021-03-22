@@ -8,4 +8,8 @@
 
 public struct CommentErrorViewModel {
 	public let message: String?
+	
+	public static func error(message: String) -> CommentErrorViewModel {
+		return CommentErrorViewModel(message: message)
+	}
 }
