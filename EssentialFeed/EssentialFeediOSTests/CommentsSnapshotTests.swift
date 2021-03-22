@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import EssentialFeed
 import EssentialFeediOS
 
 class CommentsSnapshotTests: XCTestCase {
@@ -20,6 +21,15 @@ class CommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_COMMENTS_dark")
 	}
 
+	func test_commentsWithContent() {
+		let sut = makeSUT()
+		
+		sut.display(commentsWithContent())
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "COMMENTS_WITH_CONTENT_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_CONTENT_dark")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT() -> CommentsController {
@@ -34,5 +44,20 @@ class CommentsSnapshotTests: XCTestCase {
 	
 	private func emptyComments() -> [CommentCellController] {
 		return []
+	}
+	
+	private func commentsWithContent() -> [CommentCellController] {
+		return anyComments().map {
+			CommentCellController(model: $0)
+		}
+	}
+	
+	private func anyComments() -> [Comment] {
+		return [
+			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. Et sapiente saepe officia consectetur molestiae. Libero earum assumenda qui architecto repellendus ut iste non voluptatem optio", createdAt: "2 weeks ago", author: Comment.Author(username: "Jen")),
+			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis.", createdAt: "1 weak ago", author: Comment.Author(username: "Megan")),
+			Comment(id: UUID(), message: "💯", createdAt: "3 days ago", author: Comment.Author(username: "Jim")),
+			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. ☀️\n.\n.\n.\n.\n.\n.\n✅\nLibero earum assumenda qui architecto repellendus explicabo.", createdAt: "1 hour ago", author: Comment.Author(username: "Brian"))
+		]
 	}
 }
