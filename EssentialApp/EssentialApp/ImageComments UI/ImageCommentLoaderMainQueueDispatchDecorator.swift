@@ -11,7 +11,7 @@ import EssentialFeed
 
 class ImageCommentLoaderMainQueueDispatchDecorator : ImageCommentLoader {
 	
-	let decoratee: ImageCommentLoader
+	private let decoratee: ImageCommentLoader
 	
 	init(decoratee: ImageCommentLoader) {
 		self.decoratee = decoratee
