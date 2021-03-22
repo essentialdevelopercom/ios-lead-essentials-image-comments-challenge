@@ -48,11 +48,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	public func display(_ viewModel: FeedErrorViewModel) {
 		errorView?.message = viewModel.message
 	}
-	
-	public func getCellController(at index: Int) -> FeedImageCellController {
-		tableModel[index]
-	}
-	
+
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return tableModel.count
 	}
@@ -63,6 +59,10 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	
 	public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		cancelCellControllerLoad(forRowAt: indexPath)
+	}
+	
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		cellController(forRowAt: indexPath).didSelectImage()
 	}
 	
 	public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
