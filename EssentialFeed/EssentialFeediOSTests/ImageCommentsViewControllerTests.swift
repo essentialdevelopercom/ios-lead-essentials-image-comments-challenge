@@ -103,6 +103,19 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown when user reloads comments")
 	}
 	
+	func test_errorView_dismissesErrorMessageOnTap() {
+		let (sut, loader) = makeSUT(url: anyURL())
+		
+		sut.loadViewIfNeeded()
+		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown when view is loaded")
+		
+		loader.completeCommentsLoadingWithError()
+		XCTAssertEqual(sut.errorMessage, "Couldn't connect to server", "Expected error message to be shown after loader completes with error")
+		
+		sut.simulateTapOnErrorMessage()
+		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown after tapping on error message")
+	}
+	
 	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
 		let pair0 = makeCommentDatePair(
@@ -284,6 +297,10 @@ extension ImageCommentsViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
+	func simulateTapOnErrorMessage() {
+		errorView.button.simulateTap()
+	}
+	
 	func numberOfRenderedComments() -> Int {
 		tableView.numberOfRows(inSection: commentsSection)
 	}
@@ -322,6 +339,12 @@ extension UIControl {
 extension UIRefreshControl {
 	func simulatePullToRefresh() {
 		simulate(event: .valueChanged)
+	}
+}
+
+extension UIButton {
+	func simulateTap() {
+		simulate(event: .touchUpInside)
 	}
 }
 

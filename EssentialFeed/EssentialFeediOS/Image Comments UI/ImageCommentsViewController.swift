@@ -16,11 +16,28 @@ public class ImageCommentCell: UITableViewCell {
 }
 
 public class CommentErrorView: UIView {
-	private let label = UILabel()
+	private(set) public lazy var button: UIButton = makeButton()
 	
 	public var message: String? {
-		get { return label.text }
-		set { label.text = newValue }
+		get { return button.title(for: .normal) }
+	}
+	
+	private var isVisible: Bool { alpha > 0}
+	
+	func show(message: String) {
+		button.setTitle(message, for: .normal)
+	}
+	
+	@objc func hideMessage() {
+		button.setTitle(nil, for: .normal)
+		alpha = 0
+	}
+	
+	private func makeButton() -> UIButton {
+		let button = UIButton()
+		button.setTitle(nil, for: .normal)
+		button.addTarget(self, action: #selector(hideMessage), for: .touchUpInside)
+		return button
 	}
 }
 
@@ -55,14 +72,14 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
-		self.errorView.message = nil
+		errorView.hideMessage()
 		task = loader?.load(from: url) { [weak self] result in
 			switch result {
 			case let .success(comments):
 				self?.tableModel = comments
 				self?.tableView.reloadData()
 			case .failure:
-				self?.errorView.message = "Couldn't connect to server"
+				self?.errorView.show(message: "Couldn't connect to server")
 			}
 			self?.refreshControl?.endRefreshing()
 			self?.task = nil
