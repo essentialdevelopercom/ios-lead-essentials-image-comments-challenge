@@ -28,6 +28,12 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.loadImageCommentsCallCount, 1, "Expected a loading request once view is loaded")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 	
 	func test_loadingImageCommentsIndicator_isVisibleWhileLoadingComments() {
