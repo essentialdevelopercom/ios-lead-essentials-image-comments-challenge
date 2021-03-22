@@ -30,6 +30,15 @@ class CommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_CONTENT_dark")
 	}
 	
+	func test_commentsWithErrorMessage() {
+		let sut = makeSUT()
+		
+		sut.display(.error(message: "This is a\nmulti-line\nerror message"))
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "COMMENTS_WITH_ERROR_MESSAGE_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "COMMENTS_WITH_ERROR_MESSAGE_dark")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT() -> CommentsController {
