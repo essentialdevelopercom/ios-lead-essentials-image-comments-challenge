@@ -47,6 +47,22 @@ public extension FeedLoader {
 	}
 }
 
+public extension FeedImageCommentsLoader {
+	typealias Publisher = AnyPublisher<[FeedImageComment], Error>
+	
+	func loadPublisher() -> Publisher {
+		var task: FeedImageCommentsLoaderTask?
+		
+		return Deferred {
+			Future { completion in
+				task = self.loadImageComments(completion: completion)
+			}
+		}
+		.handleEvents(receiveCancel: { task?.cancel() })
+		.eraseToAnyPublisher()
+	}
+}
+
 extension Publisher {
 	func fallback(to fallbackPublisher: @escaping () -> AnyPublisher<Output, Failure>) -> AnyPublisher<Output, Failure> {
 		self.catch { _ in fallbackPublisher() }.eraseToAnyPublisher()
