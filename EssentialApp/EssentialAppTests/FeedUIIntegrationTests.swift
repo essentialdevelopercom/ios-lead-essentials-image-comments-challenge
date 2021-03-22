@@ -317,27 +317,21 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
-	func test_feedImageView_callsimageSelectionHandlerOnImageSelection() {
-		let image0 = makeImage()
-		let image1 = makeImage()
-		
-		let expectedFeedImage = image0
-		var capturedFeedImage: FeedImage?
-		
-		let exp = expectation(description: "Wait for completion")
+	func test_onFeedSelection_callsImageSelectionHandlerForExactFeedImage() {
+		let firstImage = makeImage()
+		let secondImage = makeImage()
+		var capturedFeedImages = [FeedImage]()
 		let (sut, loader) = makeSUT { feed in
-			capturedFeedImage = feed
-			exp.fulfill()
+			capturedFeedImages.append(feed)
 		}
-		
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1], at: 0)
+		loader.completeFeedLoading(with: [firstImage, secondImage], at: 0)
 		
 		sut.simulateFeedImageSelection(at: 0)
+		XCTAssertEqual(capturedFeedImages, [firstImage] , "Expected to capture firstImage")
 		
-		wait(for: [exp], timeout: 1.0)
-		
-		XCTAssertEqual(capturedFeedImage, expectedFeedImage, "Expected matching id of the cell model")
+		sut.simulateFeedImageSelection(at: 1)
+		XCTAssertEqual(capturedFeedImages, [firstImage, secondImage], "Expected to capture secondImage this time")
 	}
 	
 	// MARK: - Helpers
