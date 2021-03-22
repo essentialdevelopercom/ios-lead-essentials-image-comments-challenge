@@ -70,8 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		
 		let imageCommentsViewController = ImageCommentsUIComposer.imageCommentsComposedWith(
 			imageCommentsLoader: RemoteImageCommentsLoader(url: url, client: httpClient)
-				.loadPublisher,
-			relativeDate: Date.init)
+				.loadPublisher)
 		
 		navigation.pushViewController(imageCommentsViewController, animated: true)
 	}

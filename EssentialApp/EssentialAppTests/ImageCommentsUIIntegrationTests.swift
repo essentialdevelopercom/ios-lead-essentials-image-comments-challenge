@@ -114,8 +114,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		autoreleasepool {
 			sut = ImageCommentsUIComposer.imageCommentsComposedWith(
-				imageCommentsLoader: loader.loadPublisher,
-				relativeDate: { Date() })
+				imageCommentsLoader: loader.loadPublisher)
 			sut?.loadViewIfNeeded()
 		}
 		
