@@ -18,8 +18,8 @@ class RemoteImageCommentsLoader {
 		self.client = client
 	}
 
-	func load() {
-		client.get(from: url) { _ in }
+	func load(completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
+		client.get(from: url, completion: completion)
 	}
 }
 
@@ -35,7 +35,7 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 
-		sut.load()
+		sut.load { _ in}
 
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -44,10 +44,32 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 
-		sut.load()
-		sut.load()
+		sut.load { _ in }
+		sut.load { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+
+		let clientError = NSError(domain: "Test", code: 0)
+
+		let exp = expectation(description: "Wait for load completion")
+		sut.load { result in
+			switch result {
+			case let .failure(error as NSError):
+				XCTAssertEqual(error.code, clientError.code)
+
+			default:
+				XCTFail("Expected result \(clientError) got \(result) instead")
+			}
+
+			exp.fulfill()
+		}
+		client.complete(with: clientError)
+
+		wait(for: [exp], timeout: 1.0)
 	}
 
 	// MARK: - Helpers
@@ -56,5 +78,4 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		let sut = RemoteImageCommentsLoader(url: url, client: client)
 		return (sut, client)
 	}
-
 }
