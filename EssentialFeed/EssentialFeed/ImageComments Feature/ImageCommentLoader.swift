@@ -13,6 +13,5 @@ public protocol ImageCommentLoaderDataTask {
 public protocol ImageCommentLoader {
 	typealias Result = Swift.Result<[ImageComment], Swift.Error>
 	
-	@discardableResult
 	func load(completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderDataTask
 }

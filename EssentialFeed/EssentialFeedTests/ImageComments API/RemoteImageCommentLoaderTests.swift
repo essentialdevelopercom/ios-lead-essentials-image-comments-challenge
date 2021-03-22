@@ -21,7 +21,7 @@ class RemoteImageCommentLoaderTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -30,8 +30,8 @@ class RemoteImageCommentLoaderTests: XCTestCase {
 		let url = anyURL()
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load() { _ in }
-		sut.load() { _ in }
+		_ = sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -151,7 +151,7 @@ class RemoteImageCommentLoaderTests: XCTestCase {
 	private func expect(_ sut: ImageCommentLoader, toCompleteWith expectedResult: ImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
-		sut.load { receivedResult in
+		_ = sut.load { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)

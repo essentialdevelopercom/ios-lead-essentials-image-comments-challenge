@@ -14,14 +14,20 @@ class ImageCommentLoaderPresentationAdapter : ImageCommentsViewControllerDelegat
 	
 	private var loader: ImageCommentLoader
 	public var presenter: ImageCommentPresenter?
+	private var cancellable: ImageCommentLoaderDataTask?
 	
 	init(loader: ImageCommentLoader) {
 		self.loader = loader
 	}
 	
+	deinit {
+		cancellable?.cancel()
+		cancellable = nil
+	}
+	
 	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
-		loader.load { [weak self] result in
+		cancellable = loader.load { [weak self] result in
 			switch result {
 			case let .success(imageComments):
 				self?.presenter?.didFinishLoadingComments(with: imageComments)
