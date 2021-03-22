@@ -13,6 +13,11 @@ class RemoteImageCommentsLoader {
 	private let url: URL
 	private let client: HTTPClient
 
+	enum Error: Swift.Error {
+		case connectivity
+		case invalidData
+	}
+
 	init(url: URL, client: HTTPClient) {
 		self.url = url
 		self.client = client
@@ -23,13 +28,13 @@ class RemoteImageCommentsLoader {
 			switch result {
 			case let .success((data, response)):
 				guard response.statusCode == 200 else {
-					completion(.failure(NSError(domain: "invalid status code", code: 0)))
+					completion(.failure(Error.invalidData))
 					return
 				}
 				completion(.success((data, response)))
 
-			case let .failure(error):
-				completion(.failure(error))
+			case .failure:
+				completion(.failure(Error.connectivity))
 			}
 		}
 	}
@@ -65,21 +70,19 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 
-		let clientError = NSError(domain: "Test", code: 0)
-
 		let exp = expectation(description: "Wait for load completion")
 		sut.load { result in
 			switch result {
-			case let .failure(error as NSError):
-				XCTAssertEqual(error.code, clientError.code)
+			case let .failure(error):
+				XCTAssertEqual(error, .connectivity)
 
 			default:
-				XCTFail("Expected result \(clientError) got \(result) instead")
+				XCTFail("Expected result \(RemoteImageCommentsLoader.Error.connectivity) got \(result) instead")
 			}
 
 			exp.fulfill()
 		}
-		client.complete(with: clientError)
+		client.complete(with: RemoteImageCommentsLoader.Error.connectivity)
 
 		wait(for: [exp], timeout: 1.0)
 	}
@@ -88,7 +91,6 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		let (sut, client) = makeSUT()
 
 
-		let clientError = NSError(domain: "Test", code: 0)
 		let statusCodes = [199, 201, 300, 400, 500]
 
 		let exp = expectation(description: "Wait for load completion")
@@ -96,11 +98,11 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		statusCodes.enumerated().forEach { index, code in
 			sut.load { result in
 				switch result {
-				case let .failure(error as NSError):
-					XCTAssertEqual(error.code, clientError.code)
+				case let .failure(error):
+					XCTAssertEqual(error, .invalidData)
 
 				default:
-					XCTFail("Expected result \(clientError) got \(result) instead")
+					XCTFail("Expected result \(RemoteImageCommentsLoader.Error.invalidData) got \(result) instead")
 				}
 
 				exp.fulfill()
