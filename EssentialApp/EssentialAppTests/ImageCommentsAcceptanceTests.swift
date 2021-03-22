@@ -17,6 +17,8 @@ class ImageCommentsAcceptanceTests: XCTestCase {
 		let comments = launch(httpClient: .online(response))
 		
 		XCTAssertEqual(comments.numberOfRenderedImageCommentsViews(), 2)
+		XCTAssertEqual(comments.renderedImageCommentMessage(at: 0), messages.first)
+		XCTAssertEqual(comments.renderedImageCommentMessage(at: 1), messages.second)
 	}
 	
 	func test_onAppear_displaysNoCommentsWhenCustomerHasNoConnectivity() {
@@ -56,10 +58,14 @@ class ImageCommentsAcceptanceTests: XCTestCase {
 			url: anyURL())
 	}
 	
+	private var messages: (first: String, second: String) {
+		("test message", "another message")
+	}
+	
 	private func makeImageCommentsData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": "d7e5515d-8dd4-441f-9872-530768d9f3e9", "message": "test message", "created_at" : "2014-12-24T00:00:00+00:00", "author": ["username": "test user"]],
-			["id": "1fb87ef8-c25b-42b8-8ff1-ffc6b32b1687", "message": "test message 2", "created_at" : "2021-01-02T12:13:14+00:00", "author": ["username": "test user 2"]]
+			["id": "d7e5515d-8dd4-441f-9872-530768d9f3e9", "message": messages.first, "created_at" : "2014-12-24T00:00:00+00:00", "author": ["username": "test user"]],
+			["id": "1fb87ef8-c25b-42b8-8ff1-ffc6b32b1687", "message": messages.second, "created_at" : "2021-01-02T12:13:14+00:00", "author": ["username": "test user 2"]]
 		]])
 	}
 	

@@ -26,6 +26,15 @@ extension ImageCommentsViewController {
 		tableView.numberOfRows(inSection: commentsSectionIndex)
 	}
 	
+	func renderedImageCommentMessage(at index: Int) -> String? {
+		simulateImageCommentViewVisible(at: index)?.messageLabel.text
+	}
+	
+	@discardableResult
+	func simulateImageCommentViewVisible(at index: Int) -> ImageCommentCell? {
+		imageCommentView(at: index) as? ImageCommentCell
+	}
+	
 	private var commentsSectionIndex: Int { 0 }
 	
 	func imageCommentView(at row: Int) -> UITableViewCell? {
