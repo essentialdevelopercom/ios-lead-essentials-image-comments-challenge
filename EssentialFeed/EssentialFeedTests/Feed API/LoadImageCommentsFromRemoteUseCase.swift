@@ -155,12 +155,13 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), author: ImageComment.Author) -> (model: ImageComment, json: [String: Any]) {
 		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, author: author)
 		
-		let authorJson = ["username": author.username].compactMapValues{ $0 }
 		let json = [
 			"id": id.uuidString,
 			"message": message,
 			"created_at": createdAt.iso8601String,
-			"author": authorJson
+			"author": [
+				"username": author.username
+			]
 		].compactMapValues { $0 }
 		
 		return (item, json)
