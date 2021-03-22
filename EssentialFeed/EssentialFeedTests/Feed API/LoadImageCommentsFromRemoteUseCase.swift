@@ -81,13 +81,13 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		let item1 = makeItem(
 			id: UUID(),
 			message: "A message",
-			createdAt: Date().adding(seconds: 100),
+			createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
 			author: .init(username: "An username"))
 		
 		let item2 = makeItem(
 			id: UUID(),
 			message: "Another message",
-			createdAt: Date().adding(seconds: -100),
+			createdAt: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
 			author: .init(username: "Another username"))
 		
 		let items = [item1.model, item2.model]
@@ -152,29 +152,18 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		.failure(error)
 	}
 	
-	private func makeItem(id: UUID, message: String, createdAt: Date, author: ImageComment.Author) -> (model: ImageComment, json: [String: Any]) {
-		let date = eraseMilisecondsInformation(from: createdAt)
-		let item = ImageComment(id: id, message: message, createdAt: date, author: author)
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), author: ImageComment.Author) -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, author: author)
 		
 		let authorJson = ["username": author.username].compactMapValues{ $0 }
 		let json = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": iso8601DateFormatter.string(from: date),
+			"created_at": createdAt.iso8601String,
 			"author": authorJson
 		].compactMapValues { $0 }
 		
 		return (item, json)
-	}
-	
-	private func eraseMilisecondsInformation(from date: Date) -> Date {
-		iso8601DateFormatter.date(from: iso8601DateFormatter.string(from: date))!
-	}
-	
-	private var iso8601DateFormatter: DateFormatter {
-		let formatter = DateFormatter()
-		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-		return formatter
 	}
 	
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {

@@ -14,17 +14,14 @@ struct RemoteImageCommentsMapper {
 	}
 	
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		
 		guard response.isOK,
-			  let root = try? iso8601Decoder().decode(Root.self, from: data) else {
+			  let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteImageCommentsLoader.Error.invalidData
 		}
 		
 		return root.items
-	}
-	
-	private static func iso8601Decoder() -> JSONDecoder {
-		let decoder = JSONDecoder()
-		decoder.dateDecodingStrategy = .iso8601
-		return decoder
 	}
 }
