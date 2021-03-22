@@ -34,7 +34,8 @@ class ImageCommentPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
 		let fixedDate = Date()
-		let (sut, view) = makeSUT(currentDate: { fixedDate }, locale: .current)
+		let locale = Locale(identifier: "en_US_POSIX")
+		let (sut, view) = makeSUT(currentDate: { fixedDate }, locale: locale)
 		
 		let comments = [
 			makeComment(id: UUID(), message: "message0", createdAt: fixedDate.adding(seconds: -30), username: "username0"),
