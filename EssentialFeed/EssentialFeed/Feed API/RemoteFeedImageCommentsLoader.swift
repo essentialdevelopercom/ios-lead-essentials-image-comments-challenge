@@ -9,6 +9,7 @@
 import Foundation
 
 public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
+	private let url: URL
 	private let client: HTTPClient
 	
 	public enum Error: Swift.Error {
@@ -18,7 +19,8 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 	
 	public typealias Result = FeedImageCommentsLoader.Result
 	
-	public init(client: HTTPClient) {
+	public init(url: URL, client: HTTPClient) {
+		self.url = url
 		self.client = client
 	}
 	
@@ -45,7 +47,7 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 		}
 	}
 	
-	public func loadImageComments(from url: URL, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+	public func loadImageComments(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
