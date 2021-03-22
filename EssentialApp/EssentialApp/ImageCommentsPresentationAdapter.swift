@@ -37,7 +37,7 @@ final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegat
 			})
 	}
 	
-	func didCancelImageCommentsLoading() {
+	deinit {
 		cancellable?.cancel()
 	}
 	

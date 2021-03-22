@@ -108,14 +108,21 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
-	func test_imageCommentsView_cancelsCommentsLoadingWhenViewIsNotVisibleAnymore() {
-		let (sut, loader) = makeSUT()
+	func test_onDeinit_cancelsCommentsLoading() {
+		let loader = LoaderSpy(url: anyURL())
+		var sut: ImageCommentsViewController?
+		
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(
+				imageCommentsLoader: loader.loadPublisher,
+				relativeDate: { Date() })
+			sut?.loadViewIfNeeded()
+		}
+		
+		XCTAssertEqual(loader.cancelledURL.count, 0, "Loading should not be cancelled yet")
 
-		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.cancelledURL.count, 0, "View should perform loading as normal")
-
-		sut.viewDidDisappear(true)
-		XCTAssertEqual(loader.cancelledURL.count, 1, "View should call delegate's method to notify about dismantle")
+		sut = nil
+		XCTAssertEqual(loader.cancelledURL.count, 1, "Loading should stop as the image view controller itself is deinitialized")
 	}
 	
 	func test_loadImageCommentsCompletion_dispatchesFromBackgroundToMainThread() {
