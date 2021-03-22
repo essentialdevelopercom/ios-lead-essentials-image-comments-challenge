@@ -15,11 +15,21 @@ public class ImageCommentCell: UITableViewCell {
 	public let messageLabel = UILabel()
 }
 
+public class CommentErrorView: UIView {
+	private let label = UILabel()
+	
+	public var message: String? {
+		get { return label.text }
+		set { label.text = newValue }
+	}
+}
+
 public class ImageCommentsViewController: UITableViewController {
 	private var url: URL!
 	private var currentDate: (() -> Date)!
 	private var loader: ImageCommentLoader?
 	private var task: ImageCommentLoaderTask?
+	public let errorView = CommentErrorView()
 	
 	private var tableModel = [ImageComment]()
 	
@@ -45,10 +55,14 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
+		self.errorView.message = nil
 		task = loader?.load(from: url) { [weak self] result in
-			if let comments = try? result.get() {
+			switch result {
+			case let .success(comments):
 				self?.tableModel = comments
 				self?.tableView.reloadData()
+			case .failure:
+				self?.errorView.message = "Couldn't connect to server"
 			}
 			self?.refreshControl?.endRefreshing()
 			self?.task = nil

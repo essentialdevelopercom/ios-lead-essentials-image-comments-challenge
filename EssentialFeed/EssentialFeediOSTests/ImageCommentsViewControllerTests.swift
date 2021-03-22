@@ -90,6 +90,19 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [pair0, pair1, pair2, pair3, pair4])
 	}
 	
+	func test_loadCommentsCompletion_showsErrorMessageOnLoaderError() {
+		let (sut, loader) = makeSUT(url: anyURL())
+		
+		sut.loadViewIfNeeded()
+		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown when view is loaded")
+		
+		loader.completeCommentsLoadingWithError()
+		XCTAssertEqual(sut.errorMessage, "Couldn't connect to server", "Expected error message to be shown after loader completes with error")
+		
+		sut.simulateUserInitiatedReloading()
+		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown when user reloads comments")
+	}
+	
 	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
 		let pair0 = makeCommentDatePair(
@@ -257,6 +270,10 @@ class ImageCommentsViewControllerTests: XCTestCase {
 extension ImageCommentsViewController {
 	private var commentsSection: Int {
 		0
+	}
+	
+	var errorMessage: String? {
+		return errorView.message
 	}
 	
 	var isShowingLoadingSpinner: Bool {
