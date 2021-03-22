@@ -12,14 +12,14 @@ import EssentialFeediOS
 
 class ImageCommentLoaderPresentationAdapter : ImageCommentsViewControllerDelegate {
 	
-	public var loader: ImageCommentLoader
+	private var loader: ImageCommentLoader
 	public var presenter: ImageCommentPresenter?
 	
-	public init(loader: ImageCommentLoader) {
+	init(loader: ImageCommentLoader) {
 		self.loader = loader
 	}
 	
-	public func didRequestImageCommentsRefresh() {
+	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		loader.load { [weak self] result in
 			switch result {
