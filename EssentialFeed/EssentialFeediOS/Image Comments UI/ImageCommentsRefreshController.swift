@@ -9,15 +9,26 @@
 import EssentialFeed
 import UIKit
 
-final class ImageCommentsRefreshController: NSObject {
-	lazy var refreshView: UIRefreshControl = makeRefreshControl()
-	lazy var errorView: CommentErrorView = makeErrorView()
-	
-	private let loader: ImageCommentLoader
+protocol ImageCommentLoadingView: class {
+	func display(isLoading: Bool)
+}
+
+protocol ImageCommentView: class {
+	func display(comments: [ImageComment])
+}
+
+protocol ImageCommentErrorView: class {
+	func display(message: String?)
+}
+
+final class ImageCommentsPresenter {
 	private let url: URL
+	private let loader: ImageCommentLoader
 	private var task: ImageCommentLoaderTask?
 	
-	var onCommentsLoad: ((_ comments: [ImageComment]) -> Void)?
+	weak var loadingView: ImageCommentLoadingView?
+	var commentsView: ImageCommentView?
+	weak var errorView: ImageCommentErrorView?
 	
 	init(url: URL, loader: ImageCommentLoader) {
 		self.url = url
@@ -26,6 +37,54 @@ final class ImageCommentsRefreshController: NSObject {
 	
 	deinit {
 		task?.cancel()
+	}
+	
+	func loadComments() {
+		loadingView?.display(isLoading: true)
+		errorView?.display(message: nil)
+		
+		task = loader.load(from: url) { [weak self] result in
+			switch result {
+			case let .success(comments):
+				self?.commentsView?.display(comments: comments)
+			case .failure:
+				self?.errorView?.display(message: "Couldn't connect to server")
+			}
+			self?.loadingView?.display(isLoading: false)
+			self?.task = nil
+		}
+	}
+}
+
+final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, ImageCommentErrorView {
+	private(set) lazy var refreshView: UIRefreshControl = makeRefreshControl()
+	private(set) lazy var errorView: CommentErrorView = makeErrorView()
+	
+	private let presenter: ImageCommentsPresenter
+	
+	init(presenter: ImageCommentsPresenter) {
+		self.presenter = presenter
+	}
+	
+	@objc
+	func refreshComments() {
+		presenter.loadComments()
+	}
+	
+	func display(isLoading: Bool) {
+		if isLoading {
+			refreshView.beginRefreshing()
+		} else {
+			refreshView.endRefreshing()
+		}
+	}
+	
+	func display(message: String?) {
+		if let message = message {
+			errorView.show(message: message)
+		} else {
+			errorView.hideMessage()
+		}
 	}
 	
 	private func makeRefreshControl() -> UIRefreshControl {
@@ -37,20 +96,5 @@ final class ImageCommentsRefreshController: NSObject {
 	private func makeErrorView() -> CommentErrorView {
 		let view = CommentErrorView()
 		return view
-	}
-	
-	@objc func refreshComments() {
-		refreshView.beginRefreshing()
-		errorView.hideMessage()
-		task = loader.load(from: url) { [weak self] result in
-			switch result {
-			case let .success(comments):
-				self?.onCommentsLoad?(comments)
-			case .failure:
-				self?.errorView.show(message: "Couldn't connect to server")
-			}
-			self?.refreshView.endRefreshing()
-			self?.task = nil
-		}
 	}
 }

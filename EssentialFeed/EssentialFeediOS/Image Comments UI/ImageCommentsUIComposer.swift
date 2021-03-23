@@ -14,13 +14,31 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
-		let refreshController = ImageCommentsRefreshController(url: url, loader: loader)
-		let viewController = ImageCommentsViewController(refreshController: refreshController)
-		refreshController.onCommentsLoad = { [weak viewController] comments in
-			viewController?.tableModel = comments.map {
-				ImageCommentsCellController(model: $0, currentDate: currentDate)
-			}
+		let presenter = ImageCommentsPresenter(url: url, loader: loader)
+		let refreshController = ImageCommentsRefreshController(presenter: presenter)
+		let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
+		let imageCommentsView = ImageCommentsAdapter(controller: imageCommentsViewController, currentDate: currentDate)
+		
+		presenter.loadingView = refreshController
+		presenter.errorView = refreshController
+		presenter.commentsView = imageCommentsView
+		
+		return imageCommentsViewController
+	}
+}
+
+private final class ImageCommentsAdapter: ImageCommentView {
+	weak var controller: ImageCommentsViewController?
+	private let currentDate: () -> Date
+	
+	init(controller: ImageCommentsViewController, currentDate: @escaping () -> Date) {
+		self.controller = controller
+		self.currentDate = currentDate
+	}
+	
+	func display(comments: [ImageComment]) {
+		controller?.tableModel = comments.map { comment in
+			ImageCommentsCellController(model: comment, currentDate: currentDate)
 		}
-		return viewController
 	}
 }
