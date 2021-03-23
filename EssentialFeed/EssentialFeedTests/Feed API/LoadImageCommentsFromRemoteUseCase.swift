@@ -52,7 +52,8 @@ class LoadImageCommentsFromRemoteUseCase: XCTestCase {
 		
 		samples.forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
-				client.complete(withStatusCode: code, data: anyData(), at: index)
+				let emptyJsonList = makeItemsJSON([])
+				client.complete(withStatusCode: code, data: emptyJsonList, at: index)
 			})
 		}
 	}
