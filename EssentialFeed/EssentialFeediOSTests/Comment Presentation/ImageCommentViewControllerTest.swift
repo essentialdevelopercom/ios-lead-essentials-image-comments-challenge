@@ -56,6 +56,9 @@ class ImageCommentViewControllerTest: XCTestCase {
 		
 		refreshAction(sut: sut)
 		XCTAssertEqual(loader.loadCallCount, 2)
+		
+		refreshAction(sut: sut)
+		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
 	// MARK: - Helpers
@@ -82,6 +85,11 @@ class ImageCommentViewControllerTest: XCTestCase {
 		func load(completion: @escaping (LoadImageCommentResult) -> Void) {
 			completions.append(completion)
 		}
+		
+//		func completeCommentLoadingWithError() {
+//			let error = NSError(domain: "an error", code: 0)
+//			completions[0](.failure(error))
+//		}
 	}
 }
 
