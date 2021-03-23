@@ -567,6 +567,33 @@
 			path = "Feed UI";
 			sourceTree = "<group>";
 		};
+		FA6B829726098A9400189E17 /* Composers */ = {
+			isa = PBXGroup;
+			children = (
+				FA6B829026097D3F00189E17 /* ImageCommentsUIComposer.swift */,
+			);
+			name = Composers;
+			sourceTree = "<group>";
+		};
+		FA6B829E26098AB500189E17 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				FA884BDF2606E13300D9AEAF /* ImageCommentsViewController.swift */,
+				FA6B828926097D0E00189E17 /* ImageCommentsCellController.swift */,
+				FA6B828226097CD900189E17 /* ImageCommentsRefreshController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		FA6B829F26098ABD00189E17 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FA6B827B26097C9700189E17 /* CommentErrorView.swift */,
+				FA6B827426097C6A00189E17 /* ImageCommentCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		FA7F5798260487BA00163F15 /* Image Comment API */ = {
 			isa = PBXGroup;
 			children = (
@@ -589,12 +616,9 @@
 		FA884BDE2606E11D00D9AEAF /* Image Comments UI */ = {
 			isa = PBXGroup;
 			children = (
-				FA884BDF2606E13300D9AEAF /* ImageCommentsViewController.swift */,
-				FA6B829026097D3F00189E17 /* ImageCommentsUIComposer.swift */,
-				FA6B828926097D0E00189E17 /* ImageCommentsCellController.swift */,
-				FA6B828226097CD900189E17 /* ImageCommentsRefreshController.swift */,
-				FA6B827B26097C9700189E17 /* CommentErrorView.swift */,
-				FA6B827426097C6A00189E17 /* ImageCommentCell.swift */,
+				FA6B829F26098ABD00189E17 /* Views */,
+				FA6B829E26098AB500189E17 /* Controllers */,
+				FA6B829726098A9400189E17 /* Composers */,
 			);
 			path = "Image Comments UI";
 			sourceTree = "<group>";
