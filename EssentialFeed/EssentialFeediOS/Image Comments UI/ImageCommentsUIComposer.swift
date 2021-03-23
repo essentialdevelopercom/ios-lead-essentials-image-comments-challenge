@@ -34,20 +34,20 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
-		let presenter = ImageCommentsPresenter(url: url, loader: loader)
+		let presenter = ImageCommentsListPresenter(url: url, loader: loader)
 		let refreshController = ImageCommentsRefreshController(presenter: presenter)
 		let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
-		let imageCommentsView = ImageCommentsAdapter(controller: imageCommentsViewController, currentDate: currentDate)
+		let imageCommentsListView = ImageCommentsAdapter(controller: imageCommentsViewController, currentDate: currentDate)
 		
 		presenter.loadingView = WeakReferenceVirtualProxy(refreshController)
 		presenter.errorView = WeakReferenceVirtualProxy(refreshController)
-		presenter.commentsView = imageCommentsView
+		presenter.commentsView = imageCommentsListView
 		
 		return imageCommentsViewController
 	}
 }
 
-private final class ImageCommentsAdapter: ImageCommentView {
+private final class ImageCommentsAdapter: ImageCommentsListView {
 	weak var controller: ImageCommentsViewController?
 	private let currentDate: () -> Date
 	

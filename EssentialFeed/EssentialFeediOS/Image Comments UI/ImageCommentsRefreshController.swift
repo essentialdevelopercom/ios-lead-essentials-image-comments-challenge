@@ -13,7 +13,7 @@ protocol ImageCommentLoadingView {
 	func display(isLoading: Bool)
 }
 
-protocol ImageCommentView {
+protocol ImageCommentsListView {
 	func display(comments: [ImageComment])
 }
 
@@ -21,13 +21,13 @@ protocol ImageCommentErrorView {
 	func display(message: String?)
 }
 
-final class ImageCommentsPresenter {
+final class ImageCommentsListPresenter {
 	private let url: URL
 	private let loader: ImageCommentLoader
 	private var task: ImageCommentLoaderTask?
 	
 	var loadingView: ImageCommentLoadingView?
-	var commentsView: ImageCommentView?
+	var commentsView: ImageCommentsListView?
 	var errorView: ImageCommentErrorView?
 	
 	init(url: URL, loader: ImageCommentLoader) {
@@ -60,9 +60,9 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, I
 	private(set) lazy var refreshView: UIRefreshControl = makeRefreshControl()
 	private(set) lazy var errorView: CommentErrorView = makeErrorView()
 	
-	private let presenter: ImageCommentsPresenter
+	private let presenter: ImageCommentsListPresenter
 	
-	init(presenter: ImageCommentsPresenter) {
+	init(presenter: ImageCommentsListPresenter) {
 		self.presenter = presenter
 	}
 	
