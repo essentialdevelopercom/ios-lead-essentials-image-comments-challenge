@@ -87,9 +87,31 @@ final class ImageCommentsRefreshController: NSObject {
 	}
 }
 
-public class ImageCommentsViewController: UITableViewController {
+final class ImageCommentsCellController {
+	private let model: ImageComment
+	private let currentDate: () -> Date
 	
-	private var currentDate: (() -> Date)!
+	init(model: ImageComment, currentDate: @escaping () -> Date) {
+		self.model = model
+		self.currentDate = currentDate
+	}
+	
+	func view() -> UITableViewCell {
+		let cell = ImageCommentCell()
+		cell.authorLabel.text = model.author
+		cell.messageLabel.text = model.message
+		cell.creationDateLabel.text = formatRelativeDate(for: model.creationDate)
+		return cell
+	}
+	
+	private func formatRelativeDate(for date: Date) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		return formatter.localizedString(for: date, relativeTo: currentDate())
+	}
+}
+
+public class ImageCommentsViewController: UITableViewController {
+	private var currentDate: (() -> Date)?
 	private var refreshController: ImageCommentsRefreshController?
 	
 	private var tableModel = [ImageComment]() {
@@ -121,16 +143,8 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellModel = tableModel[indexPath.row]
-		let cell = ImageCommentCell()
-		cell.authorLabel.text = cellModel.author
-		cell.messageLabel.text = cellModel.message
-		cell.creationDateLabel.text = formatRelativeDate(for: cellModel.creationDate)
-		return cell
-	}
-	
-	private func formatRelativeDate(for date: Date) -> String {
-		let formatter = RelativeDateTimeFormatter()
-		return formatter.localizedString(for: date, relativeTo: currentDate())
+		let cellController = ImageCommentsCellController(model: cellModel, currentDate: currentDate!)
+		return cellController.view()
 	}
 }
 
