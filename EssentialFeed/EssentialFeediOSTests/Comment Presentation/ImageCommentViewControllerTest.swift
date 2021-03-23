@@ -52,6 +52,15 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
+	func test_viewDidLoad_hidesLoadingIndicator() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentLoading()
+		
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
+	}
+	
 	func test_refreshAction_loadCommentsManually() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
