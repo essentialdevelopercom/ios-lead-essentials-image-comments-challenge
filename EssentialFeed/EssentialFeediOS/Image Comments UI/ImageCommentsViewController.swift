@@ -9,12 +9,6 @@
 import EssentialFeed
 import UIKit
 
-public class ImageCommentCell: UITableViewCell {
-	public let authorLabel = UILabel()
-	public let creationDateLabel = UILabel()
-	public let messageLabel = UILabel()
-}
-
 public class CommentErrorView: UIView {
 	private(set) public lazy var button: UIButton = makeButton()
 	
@@ -112,7 +106,7 @@ final class ImageCommentsCellController {
 
 public final class ImageCommentsUIComposer {
 	
-	private init() {} 
+	private init() {}
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
 		let refreshController = ImageCommentsRefreshController(url: url, loader: loader)
