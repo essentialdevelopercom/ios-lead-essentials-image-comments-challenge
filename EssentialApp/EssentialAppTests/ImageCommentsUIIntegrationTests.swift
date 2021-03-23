@@ -108,6 +108,8 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
 		loader.completeImageCommentLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, localized("COMMENT_VIEW_ERROR_MESSAGE"))
 		
