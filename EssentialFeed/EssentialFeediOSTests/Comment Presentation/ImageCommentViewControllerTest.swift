@@ -23,13 +23,15 @@ final class ImageCommentViewController: UITableViewController {
 		
 		refreshControl = UIRefreshControl()
 		refreshControl?.beginRefreshing()
-		refreshControl?.addTarget(self, action: #selector(reloadImageComments), for: .valueChanged)
+		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
 		
-		loader?.load { _ in }
+		load()
 	}
 	
-	@objc func reloadImageComments() {
-		loader?.load { _ in }
+	@objc func load() {
+		loader?.load(completion: { [weak self] result in
+			self?.refreshControl?.endRefreshing()
+		})
 	}
 }
 
@@ -61,6 +63,23 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 3)
 	}
 	
+	func test_refreshAction_displaysLoadingIndicator() {
+		let (sut, _) = makeSUT()
+		
+		refreshAction(sut: sut)
+		
+		XCTAssertTrue(sut.isShowingLoadingIndicator)
+	}
+	
+	func test_refreshAction_hidesLoadingIndicatorWhenDone() {
+		let (sut, loader) = makeSUT()
+		
+		refreshAction(sut: sut)
+		loader.completeCommentLoading()
+		
+		XCTAssertFalse(sut.isShowingLoadingIndicator)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentViewController, loader: LoaderSpy) {
@@ -86,10 +105,9 @@ class ImageCommentViewControllerTest: XCTestCase {
 			completions.append(completion)
 		}
 		
-//		func completeCommentLoadingWithError() {
-//			let error = NSError(domain: "an error", code: 0)
-//			completions[0](.failure(error))
-//		}
+		func completeCommentLoading() {
+			completions[0](.success([]))
+		}
 	}
 }
 
