@@ -34,37 +34,23 @@ protocol ImageCommentErrorView {
 }
 
 final class ImageCommentsListPresenter {
-	private let url: URL
-	private let loader: ImageCommentLoader
-	private var task: ImageCommentLoaderTask?
-	
 	var loadingView: ImageCommentLoadingView?
 	var commentsView: ImageCommentsListView?
 	var errorView: ImageCommentErrorView?
 	
-	init(url: URL, loader: ImageCommentLoader) {
-		self.url = url
-		self.loader = loader
-	}
-	
-	deinit {
-		task?.cancel()
-	}
-	
-	func loadComments() {
+	func didStartLoadingComments() {
 		loadingView?.display(ImageCommentLoadingViewModel(isLoading: true))
 		errorView?.display(ImageCommentErrorViewModel(message: nil))
-		
-		task = loader.load(from: url) { [weak self] result in
-			switch result {
-			case let .success(comments):
-				self?.commentsView?.display(ImageCommentsListViewModel(comments: comments))
-			case .failure:
-				self?.errorView?.display(ImageCommentErrorViewModel(message: "Couldn't connect to server"))
-			}
-			self?.loadingView?.display(ImageCommentLoadingViewModel(isLoading: false))
-			self?.task = nil
-		}
+	}
+	
+	func didFinishLoadingComments(with comments: [ImageComment]) {
+		loadingView?.display(ImageCommentLoadingViewModel(isLoading: false))
+		commentsView?.display(ImageCommentsListViewModel(comments: comments))
+	}
+	
+	func didFinishLoadingComments(with error: Error) {
+		loadingView?.display(ImageCommentLoadingViewModel(isLoading: false))
+		errorView?.display(ImageCommentErrorViewModel(message: "Couldn't connect to server"))
 	}
 }
 
@@ -72,15 +58,15 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, I
 	private(set) lazy var refreshView: UIRefreshControl = makeRefreshControl()
 	private(set) lazy var errorView: CommentErrorView = makeErrorView()
 	
-	private let presenter: ImageCommentsListPresenter
+	private let loadComments: () -> Void
 	
-	init(presenter: ImageCommentsListPresenter) {
-		self.presenter = presenter
+	init(loadComments: @escaping () -> Void) {
+		self.loadComments = loadComments
 	}
 	
 	@objc
 	func refreshComments() {
-		presenter.loadComments()
+		loadComments()
 	}
 	
 	func display(_ viewModel: ImageCommentLoadingViewModel) {

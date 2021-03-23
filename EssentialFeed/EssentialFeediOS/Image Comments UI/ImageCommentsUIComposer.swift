@@ -34,8 +34,9 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
-		let presenter = ImageCommentsListPresenter(url: url, loader: loader)
-		let refreshController = ImageCommentsRefreshController(presenter: presenter)
+		let presenter = ImageCommentsListPresenter()
+		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader, presenter: presenter)
+		let refreshController = ImageCommentsRefreshController(loadComments: presentationAdapter.loadComments)
 		let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
 		let imageCommentsListView = ImageCommentsAdapter(controller: imageCommentsViewController, currentDate: currentDate)
 		
@@ -59,6 +60,37 @@ private final class ImageCommentsAdapter: ImageCommentsListView {
 	func display(_ viewModel: ImageCommentsListViewModel) {
 		controller?.tableModel = viewModel.comments.map { comment in
 			ImageCommentsCellController(model: comment, currentDate: currentDate)
+		}
+	}
+}
+
+private final class ImageCommentsPresentationAdapter {
+	private let url: URL
+	private let loader: ImageCommentLoader
+	private let presenter: ImageCommentsListPresenter
+	
+	private var task: ImageCommentLoaderTask?
+	
+	init(url: URL, loader: ImageCommentLoader, presenter: ImageCommentsListPresenter) {
+		self.url = url
+		self.loader = loader
+		self.presenter = presenter
+	}
+	
+	deinit {
+		task?.cancel()
+	}
+	
+	func loadComments() {
+		presenter.didStartLoadingComments()
+		task = loader.load(from: url) { [weak self] result in
+			switch result {
+			case let .success(comments):
+				self?.presenter.didFinishLoadingComments(with: comments)
+			case let .failure(error):
+				self?.presenter.didFinishLoadingComments(with: error)
+			}
+			self?.task = nil
 		}
 	}
 }
