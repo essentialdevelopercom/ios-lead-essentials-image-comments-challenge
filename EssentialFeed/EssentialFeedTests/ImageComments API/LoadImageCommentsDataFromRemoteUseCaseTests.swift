@@ -9,6 +9,8 @@
 import XCTest
 import EssentialFeed
 
+struct ImageComment: Equatable { }
+
 class RemoteImageCommentsLoader {
 	private let url: URL
 	private let client: HTTPClient
@@ -18,12 +20,14 @@ class RemoteImageCommentsLoader {
 		case invalidData
 	}
 
+	typealias Result = Swift.Result<[ImageComment], Error>
+
 	init(url: URL, client: HTTPClient) {
 		self.url = url
 		self.client = client
 	}
 
-	func load(completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
+	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
 			case let .success((data, response)):
