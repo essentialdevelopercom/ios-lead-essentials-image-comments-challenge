@@ -23,7 +23,7 @@ class RemoteImageCommentsLoader {
 		self.client = client
 	}
 
-	func load(completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) {
+	func load(completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
 		client.get(from: url) { result in
 			switch result {
 			case let .success((data, response)):
@@ -32,7 +32,7 @@ class RemoteImageCommentsLoader {
 					return
 				}
 				if let _ = try? JSONSerialization.jsonObject(with: data) {
-					completion(.success((data, response)))
+					completion(.success([]))
 				} else {
 					completion(.failure(.invalidData))
 				}
@@ -139,10 +139,37 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+
+		let emptyListJSON = makeItemsJSON([])
+
+		let exp = expectation(description: "Wait for load completion")
+		sut.load { result in
+			switch result {
+			case let .success(items):
+				XCTAssertTrue(items.isEmpty)
+
+			default:
+				XCTFail("Expected result \(RemoteImageCommentsLoader.Error.invalidData) got \(result) instead")
+			}
+
+			exp.fulfill()
+		}
+
+		client.complete(withStatusCode: 200, data: emptyListJSON)
+		wait(for: [exp], timeout: 1.0)
+	}
+
 	// MARK: - Helpers
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteImageCommentsLoader(url: url, client: client)
 		return (sut, client)
+	}
+
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
