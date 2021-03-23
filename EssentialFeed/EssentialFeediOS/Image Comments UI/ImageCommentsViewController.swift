@@ -9,22 +9,6 @@
 import EssentialFeed
 import UIKit
 
-public final class ImageCommentsUIComposer {
-	
-	private init() {}
-	
-	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
-		let refreshController = ImageCommentsRefreshController(url: url, loader: loader)
-		let viewController = ImageCommentsViewController(refreshController: refreshController)
-		refreshController.onCommentsLoad = { [weak viewController] comments in
-			viewController?.tableModel = comments.map {
-				ImageCommentsCellController(model: $0, currentDate: currentDate)
-			}
-		}
-		return viewController
-	}
-}
-
 public class ImageCommentsViewController: UITableViewController {
 
 	private var refreshController: ImageCommentsRefreshController?
