@@ -31,10 +31,8 @@ class ImageCommentLoaderPresentationAdapter : ImageCommentsViewControllerDelegat
 			switch result {
 			case let .success(imageComments):
 				self?.presenter?.didFinishLoadingComments(with: imageComments)
-				break
 			case let .failure(error):
 				self?.presenter?.didFinishLoadingComments(with: error)
-				break
 			}
 		}
 	}
