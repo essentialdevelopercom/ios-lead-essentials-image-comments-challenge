@@ -110,30 +110,41 @@ final class ImageCommentsCellController {
 	}
 }
 
+public final class ImageCommentsUIComposer {
+	
+	private init() {} 
+	
+	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
+		let refreshController = ImageCommentsRefreshController(url: url, loader: loader)
+		let viewController = ImageCommentsViewController(refreshController: refreshController)
+		refreshController.onCommentsLoad = { [weak viewController] comments in
+			viewController?.tableModel = comments.map {
+				ImageCommentsCellController(model: $0, currentDate: currentDate)
+			}
+		}
+		return viewController
+	}
+}
+
 public class ImageCommentsViewController: UITableViewController {
-	private var currentDate: (() -> Date)?
+
 	private var refreshController: ImageCommentsRefreshController?
 	
-	private var tableModel = [ImageComment]() {
+	var tableModel = [ImageCommentsCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
 	
-	public convenience init(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) {
+	convenience init(refreshController: ImageCommentsRefreshController) {
 		self.init()
-		self.currentDate = currentDate
-		self.refreshController = ImageCommentsRefreshController(url: url, loader: loader)
+		self.refreshController = refreshController
 	}
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		refreshControl = refreshController?.refreshView
 		tableView.tableHeaderView = refreshController?.errorView
-		
-		refreshController?.onCommentsLoad = { [weak self] comments in
-			self?.tableModel = comments
-		}
 		refreshController?.refreshComments()
 	}
 	
@@ -142,8 +153,7 @@ public class ImageCommentsViewController: UITableViewController {
 	}
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cellModel = tableModel[indexPath.row]
-		let cellController = ImageCommentsCellController(model: cellModel, currentDate: currentDate!)
+		let cellController = tableModel[indexPath.row]
 		return cellController.view()
 	}
 }

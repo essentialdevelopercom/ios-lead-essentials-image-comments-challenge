@@ -141,7 +141,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		var sut: ImageCommentsViewController?
 		
 		autoreleasepool {
-			sut = ImageCommentsViewController(url: url, currentDate: Date.init, loader: loader)
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
 			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests upon creation")
 			
 			sut?.loadViewIfNeeded()
@@ -167,7 +167,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		var sut: ImageCommentsViewController?
 		
 		autoreleasepool {
-			sut = ImageCommentsViewController(url: url, currentDate: Date.init, loader: loader)
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
 			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests upon creation")
 			
 			sut?.loadViewIfNeeded()
@@ -189,7 +189,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 	
 	private func makeSUT(url: URL, currentDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsViewController(url: url, currentDate: currentDate, loader: loader)
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: currentDate, loader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
