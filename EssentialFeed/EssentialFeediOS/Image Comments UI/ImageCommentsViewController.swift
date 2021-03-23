@@ -41,19 +41,18 @@ public class CommentErrorView: UIView {
 	}
 }
 
-public class ImageCommentsViewController: UITableViewController {
-	private var url: URL!
-	private var currentDate: (() -> Date)!
-	private var loader: ImageCommentLoader?
+final class ImageCommentsRefreshController: NSObject {
+	lazy var refreshView: UIRefreshControl = makeRefreshControl()
+	lazy var errorView: CommentErrorView = makeErrorView()
+	
+	private let loader: ImageCommentLoader
+	private let url: URL
 	private var task: ImageCommentLoaderTask?
-	public let errorView = CommentErrorView()
 	
-	private var tableModel = [ImageComment]()
+	var onCommentsLoad: ((_ comments: [ImageComment]) -> Void)?
 	
-	public convenience init(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) {
-		self.init()
+	init(url: URL, loader: ImageCommentLoader) {
 		self.url = url
-		self.currentDate = currentDate
 		self.loader = loader
 	}
 	
@@ -61,29 +60,59 @@ public class ImageCommentsViewController: UITableViewController {
 		task?.cancel()
 	}
 	
-	public override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-
-		load()
+	private func makeRefreshControl() -> UIRefreshControl {
+		let control = UIRefreshControl()
+		control.addTarget(self, action: #selector(refreshComments), for: .valueChanged)
+		return control
 	}
 	
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
+	private func makeErrorView() -> CommentErrorView {
+		let view = CommentErrorView()
+		return view
+	}
+	
+	@objc func refreshComments() {
+		refreshView.beginRefreshing()
 		errorView.hideMessage()
-		task = loader?.load(from: url) { [weak self] result in
+		task = loader.load(from: url) { [weak self] result in
 			switch result {
 			case let .success(comments):
-				self?.tableModel = comments
-				self?.tableView.reloadData()
+				self?.onCommentsLoad?(comments)
 			case .failure:
 				self?.errorView.show(message: "Couldn't connect to server")
 			}
-			self?.refreshControl?.endRefreshing()
+			self?.refreshView.endRefreshing()
 			self?.task = nil
 		}
+	}
+}
+
+public class ImageCommentsViewController: UITableViewController {
+	
+	private var currentDate: (() -> Date)!
+	private var refreshController: ImageCommentsRefreshController?
+	
+	private var tableModel = [ImageComment]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	
+	public convenience init(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) {
+		self.init()
+		self.currentDate = currentDate
+		self.refreshController = ImageCommentsRefreshController(url: url, loader: loader)
+	}
+	
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+		refreshControl = refreshController?.refreshView
+		tableView.tableHeaderView = refreshController?.errorView
+		
+		refreshController?.onCommentsLoad = { [weak self] comments in
+			self?.tableModel = comments
+		}
+		refreshController?.refreshComments()
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

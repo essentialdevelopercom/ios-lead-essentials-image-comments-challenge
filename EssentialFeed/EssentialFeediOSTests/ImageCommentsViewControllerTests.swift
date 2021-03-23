@@ -285,8 +285,12 @@ extension ImageCommentsViewController {
 		0
 	}
 	
+	private var errorView: CommentErrorView? {
+		tableView.tableHeaderView as? CommentErrorView
+	}
+	
 	var errorMessage: String? {
-		return errorView.message
+		return errorView?.message
 	}
 	
 	var isShowingLoadingSpinner: Bool {
@@ -298,7 +302,7 @@ extension ImageCommentsViewController {
 	}
 	
 	func simulateTapOnErrorMessage() {
-		errorView.button.simulateTap()
+		errorView?.button.simulateTap()
 	}
 	
 	func numberOfRenderedComments() -> Int {
