@@ -50,15 +50,11 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
-	func test_pullToRefresh_loadCommentsManually() {
+	func test_refreshAction_loadCommentsManually() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
 		
-		sut.refreshControl?.allTargets.forEach({ (target) in
-			sut.refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach({ (target as NSObject).perform(Selector($0))
-			})
-		})
-		
+		refreshAction(sut: sut)
 		XCTAssertEqual(loader.loadCallCount, 2)
 	}
 	
@@ -70,6 +66,13 @@ class ImageCommentViewControllerTest: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	private func refreshAction(sut: ImageCommentViewController) {
+		sut.refreshControl?.allTargets.forEach({ (target) in
+			sut.refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach({ (target as NSObject).perform(Selector($0))
+			})
+		})
 	}
 	
 	class LoaderSpy: ImageCommentLoader {
