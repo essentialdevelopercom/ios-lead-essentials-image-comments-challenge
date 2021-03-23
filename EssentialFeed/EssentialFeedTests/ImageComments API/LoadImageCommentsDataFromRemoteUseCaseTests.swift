@@ -165,6 +165,8 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteImageCommentsLoader(url: url, client: client)
+		trackForMemoryLeaks(sut)
+		trackForMemoryLeaks(client)
 		return (sut, client)
 	}
 
