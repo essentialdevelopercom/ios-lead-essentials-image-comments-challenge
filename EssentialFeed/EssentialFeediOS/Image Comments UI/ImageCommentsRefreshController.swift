@@ -34,23 +34,29 @@ protocol ImageCommentErrorView {
 }
 
 final class ImageCommentsListPresenter {
-	var loadingView: ImageCommentLoadingView?
-	var commentsView: ImageCommentsListView?
-	var errorView: ImageCommentErrorView?
+	private let loadingView: ImageCommentLoadingView
+	private let commentsView: ImageCommentsListView
+	private let errorView: ImageCommentErrorView
+	
+	init(loadingView: ImageCommentLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentErrorView) {
+		self.loadingView = loadingView
+		self.commentsView = commentsView
+		self.errorView = errorView
+	}
 	
 	func didStartLoadingComments() {
-		loadingView?.display(ImageCommentLoadingViewModel(isLoading: true))
-		errorView?.display(ImageCommentErrorViewModel(message: nil))
+		loadingView.display(ImageCommentLoadingViewModel(isLoading: true))
+		errorView.display(ImageCommentErrorViewModel(message: nil))
 	}
 	
 	func didFinishLoadingComments(with comments: [ImageComment]) {
-		loadingView?.display(ImageCommentLoadingViewModel(isLoading: false))
-		commentsView?.display(ImageCommentsListViewModel(comments: comments))
+		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
+		commentsView.display(ImageCommentsListViewModel(comments: comments))
 	}
 	
 	func didFinishLoadingComments(with error: Error) {
-		loadingView?.display(ImageCommentLoadingViewModel(isLoading: false))
-		errorView?.display(ImageCommentErrorViewModel(message: "Couldn't connect to server"))
+		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
+		errorView.display(ImageCommentErrorViewModel(message: "Couldn't connect to server"))
 	}
 }
 

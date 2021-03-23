@@ -34,15 +34,22 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
-		let presenter = ImageCommentsListPresenter()
-		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader, presenter: presenter)
+		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader)
 		let refreshController = ImageCommentsRefreshController(delegate: presentationAdapter)
 		let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
-		let imageCommentsListView = ImageCommentsAdapter(controller: imageCommentsViewController, currentDate: currentDate)
 		
-		presenter.loadingView = WeakReferenceVirtualProxy(refreshController)
-		presenter.errorView = WeakReferenceVirtualProxy(refreshController)
-		presenter.commentsView = imageCommentsListView
+		let imageCommentsListView = ImageCommentsAdapter(
+			controller: imageCommentsViewController,
+			currentDate: currentDate
+		)
+		
+		let presenter = ImageCommentsListPresenter(
+			loadingView: WeakReferenceVirtualProxy(refreshController),
+			commentsView: imageCommentsListView,
+			errorView: WeakReferenceVirtualProxy(refreshController)
+		)
+		
+		presentationAdapter.presenter = presenter
 		
 		return imageCommentsViewController
 	}
@@ -67,14 +74,13 @@ private final class ImageCommentsAdapter: ImageCommentsListView {
 private final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewControllerDelegate {
 	private let url: URL
 	private let loader: ImageCommentLoader
-	private let presenter: ImageCommentsListPresenter
+	var presenter: ImageCommentsListPresenter?
 	
 	private var task: ImageCommentLoaderTask?
 	
-	init(url: URL, loader: ImageCommentLoader, presenter: ImageCommentsListPresenter) {
+	init(url: URL, loader: ImageCommentLoader) {
 		self.url = url
 		self.loader = loader
-		self.presenter = presenter
 	}
 	
 	deinit {
@@ -82,13 +88,13 @@ private final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewCo
 	}
 	
 	func didRequestLoadingComments() {
-		presenter.didStartLoadingComments()
+		presenter?.didStartLoadingComments()
 		task = loader.load(from: url) { [weak self] result in
 			switch result {
 			case let .success(comments):
-				self?.presenter.didFinishLoadingComments(with: comments)
+				self?.presenter?.didFinishLoadingComments(with: comments)
 			case let .failure(error):
-				self?.presenter.didFinishLoadingComments(with: error)
+				self?.presenter?.didFinishLoadingComments(with: error)
 			}
 			self?.task = nil
 		}
