@@ -60,7 +60,7 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 
-		sut.load { _ in}
+		sut.load { _ in }
 
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -78,47 +78,22 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
 
-		let exp = expectation(description: "Wait for load completion")
-		sut.load { result in
-			switch result {
-			case let .failure(error):
-				XCTAssertEqual(error, .connectivity)
-
-			default:
-				XCTFail("Expected result \(RemoteImageCommentsLoader.Error.connectivity) got \(result) instead")
-			}
-
-			exp.fulfill()
+		expect(sut, toCompleteWith: .failure(RemoteImageCommentsLoader.Error.connectivity)) {
+			let clientError = NSError(domain: "Test", code: 0)
+			client.complete(with: clientError)
 		}
-		client.complete(with: RemoteImageCommentsLoader.Error.connectivity)
-
-		wait(for: [exp], timeout: 1.0)
 	}
 
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
 
-
 		let statusCodes = [199, 201, 300, 400, 500]
 
-		let exp = expectation(description: "Wait for load completion")
-		exp.expectedFulfillmentCount = statusCodes.count
 		statusCodes.enumerated().forEach { index, code in
-			sut.load { result in
-				switch result {
-				case let .failure(error):
-					XCTAssertEqual(error, .invalidData)
-
-				default:
-					XCTFail("Expected result \(RemoteImageCommentsLoader.Error.invalidData) got \(result) instead")
-				}
-
-				exp.fulfill()
+			expect(sut, toCompleteWith: .failure(.invalidData)) {
+				client.complete(withStatusCode: code, data: "".data(using: .utf8)!, at: index)
 			}
-			client.complete(withStatusCode: code, data: "".data(using: .utf8)!)
 		}
-
-		wait(for: [exp], timeout: 1.0)
 	}
 
 	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
@@ -126,21 +101,9 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 
 		let invalidJSON = Data("invalid json".utf8)
 
-		let exp = expectation(description: "Wait for load completion")
-		sut.load { result in
-			switch result {
-			case let .failure(error):
-				XCTAssertEqual(error, .invalidData)
-
-			default:
-				XCTFail("Expected result \(RemoteImageCommentsLoader.Error.invalidData) got \(result) instead")
-			}
-
-			exp.fulfill()
+		expect(sut, toCompleteWith: .failure(.invalidData)) {
+			client.complete(withStatusCode: 200, data: invalidJSON)
 		}
-		client.complete(withStatusCode: 200, data: invalidJSON)
-
-		wait(for: [exp], timeout: 1.0)
 	}
 
 	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
@@ -148,21 +111,9 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 
 		let emptyListJSON = makeItemsJSON([])
 
-		let exp = expectation(description: "Wait for load completion")
-		sut.load { result in
-			switch result {
-			case let .success(items):
-				XCTAssertTrue(items.isEmpty)
-
-			default:
-				XCTFail("Expected result \(RemoteImageCommentsLoader.Error.invalidData) got \(result) instead")
-			}
-
-			exp.fulfill()
+		expect(sut, toCompleteWith: .success([])) {
+			client.complete(withStatusCode: 200, data: emptyListJSON)
 		}
-
-		client.complete(withStatusCode: 200, data: emptyListJSON)
-		wait(for: [exp], timeout: 1.0)
 	}
 
 	// MARK: - Helpers
@@ -172,6 +123,29 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+
+	private func expect(_ sut: RemoteImageCommentsLoader, toCompleteWith expectedResult: RemoteImageCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load completion")
+
+		sut.load { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.success(receivedItems), .success(expectedItems)):
+				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
+
+			case let (.failure(receivedError), .failure(expectedError)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+
+			default:
+				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+			}
+
+			exp.fulfill()
+		}
+
+		action()
+
+		wait(for: [exp], timeout: 1.0)
 	}
 
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
