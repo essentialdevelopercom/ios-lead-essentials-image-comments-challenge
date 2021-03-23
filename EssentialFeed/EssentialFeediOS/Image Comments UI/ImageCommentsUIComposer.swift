@@ -9,6 +9,26 @@
 import EssentialFeed
 import Foundation
 
+final class WeakReferenceVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+	
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakReferenceVirtualProxy: ImageCommentLoadingView where T: ImageCommentLoadingView {
+	func display(isLoading: Bool) {
+		object?.display(isLoading: isLoading)
+	}
+}
+
+extension WeakReferenceVirtualProxy: ImageCommentErrorView where T: ImageCommentErrorView {
+	func display(message: String?) {
+		object?.display(message: message)
+	}
+}
+
 public final class ImageCommentsUIComposer {
 	
 	private init() {}
@@ -19,8 +39,8 @@ public final class ImageCommentsUIComposer {
 		let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
 		let imageCommentsView = ImageCommentsAdapter(controller: imageCommentsViewController, currentDate: currentDate)
 		
-		presenter.loadingView = refreshController
-		presenter.errorView = refreshController
+		presenter.loadingView = WeakReferenceVirtualProxy(refreshController)
+		presenter.errorView = WeakReferenceVirtualProxy(refreshController)
 		presenter.commentsView = imageCommentsView
 		
 		return imageCommentsViewController

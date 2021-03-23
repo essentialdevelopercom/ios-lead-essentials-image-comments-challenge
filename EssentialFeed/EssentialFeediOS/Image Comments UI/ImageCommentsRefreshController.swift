@@ -9,15 +9,15 @@
 import EssentialFeed
 import UIKit
 
-protocol ImageCommentLoadingView: class {
+protocol ImageCommentLoadingView {
 	func display(isLoading: Bool)
 }
 
-protocol ImageCommentView: class {
+protocol ImageCommentView {
 	func display(comments: [ImageComment])
 }
 
-protocol ImageCommentErrorView: class {
+protocol ImageCommentErrorView {
 	func display(message: String?)
 }
 
@@ -26,9 +26,9 @@ final class ImageCommentsPresenter {
 	private let loader: ImageCommentLoader
 	private var task: ImageCommentLoaderTask?
 	
-	weak var loadingView: ImageCommentLoadingView?
+	var loadingView: ImageCommentLoadingView?
 	var commentsView: ImageCommentView?
-	weak var errorView: ImageCommentErrorView?
+	var errorView: ImageCommentErrorView?
 	
 	init(url: URL, loader: ImageCommentLoader) {
 		self.url = url
