@@ -54,19 +54,23 @@ final class ImageCommentsListPresenter {
 	}
 }
 
+protocol ImageCommentsRefreshViewControllerDelegate {
+	func didRequestLoadingComments()
+}
+
 final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, ImageCommentErrorView {
 	private(set) lazy var refreshView: UIRefreshControl = makeRefreshControl()
 	private(set) lazy var errorView: CommentErrorView = makeErrorView()
 	
-	private let loadComments: () -> Void
+	private let delegate: ImageCommentsRefreshViewControllerDelegate
 	
-	init(loadComments: @escaping () -> Void) {
-		self.loadComments = loadComments
+	init(delegate: ImageCommentsRefreshViewControllerDelegate) {
+		self.delegate = delegate
 	}
 	
 	@objc
 	func refreshComments() {
-		loadComments()
+		delegate.didRequestLoadingComments()
 	}
 	
 	func display(_ viewModel: ImageCommentLoadingViewModel) {

@@ -36,7 +36,7 @@ public final class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
 		let presenter = ImageCommentsListPresenter()
 		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader, presenter: presenter)
-		let refreshController = ImageCommentsRefreshController(loadComments: presentationAdapter.loadComments)
+		let refreshController = ImageCommentsRefreshController(delegate: presentationAdapter)
 		let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
 		let imageCommentsListView = ImageCommentsAdapter(controller: imageCommentsViewController, currentDate: currentDate)
 		
@@ -64,7 +64,7 @@ private final class ImageCommentsAdapter: ImageCommentsListView {
 	}
 }
 
-private final class ImageCommentsPresentationAdapter {
+private final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewControllerDelegate {
 	private let url: URL
 	private let loader: ImageCommentLoader
 	private let presenter: ImageCommentsListPresenter
@@ -81,7 +81,7 @@ private final class ImageCommentsPresentationAdapter {
 		task?.cancel()
 	}
 	
-	func loadComments() {
+	func didRequestLoadingComments() {
 		presenter.didStartLoadingComments()
 		task = loader.load(from: url) { [weak self] result in
 			switch result {
