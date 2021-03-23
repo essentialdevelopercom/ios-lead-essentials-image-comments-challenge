@@ -101,7 +101,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment1], timeFormatConfiguration: configuration)
 	}
 	
-	func test_loadImageCommentsCompletion_redersErrorMessageConErrorUntilNextReload() {
+	func test_loadImageCommentsCompletion_rendersErrorMessageConErrorUntilNextReload() {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
@@ -111,6 +111,12 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
 		
 		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeImageCommentsLoadingWithError(at: 1)
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateUserTapOnTheErrorMessage()
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	

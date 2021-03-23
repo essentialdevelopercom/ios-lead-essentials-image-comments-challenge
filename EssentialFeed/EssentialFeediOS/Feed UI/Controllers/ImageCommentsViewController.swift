@@ -11,6 +11,7 @@ import EssentialFeed
 
 public protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
+	func didUserInteractWithErrorMessage()
 }
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsErrorView, ImageCommentsLoadingView {
@@ -49,6 +50,10 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
 		errorView?.message = viewModel.message
+	}
+	
+	@IBAction func dismissErrorView() {
+		delegate?.didUserInteractWithErrorMessage()
 	}
 	
 	@IBAction private func refresh() {

@@ -52,6 +52,10 @@ public class ImageCommentsPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
+	public func didInteractWithErrorMessage() {
+		errorView.display(ImageCommentsErrorViewModel(message: nil))
+	}
+	
 	private var imageCommentsLoadError: String {
 		NSLocalizedString(
 			"IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",

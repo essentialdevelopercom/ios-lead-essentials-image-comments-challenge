@@ -37,6 +37,10 @@ final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegat
 			})
 	}
 	
+	func didUserInteractWithErrorMessage() {
+		presenter?.didInteractWithErrorMessage()
+	}
+	
 	deinit {
 		cancellable?.cancel()
 	}

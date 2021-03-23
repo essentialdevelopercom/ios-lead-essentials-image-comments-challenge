@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import EssentialFeediOS
+@testable import EssentialFeediOS
 
 extension ImageCommentsViewController {
 	var isShowingLoadingIndicator: Bool {
@@ -20,6 +20,10 @@ extension ImageCommentsViewController {
 	
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	func simulateUserTapOnTheErrorMessage() {
+		dismissErrorView()
 	}
 	
 	func numberOfRenderedImageCommentsViews() -> Int {
