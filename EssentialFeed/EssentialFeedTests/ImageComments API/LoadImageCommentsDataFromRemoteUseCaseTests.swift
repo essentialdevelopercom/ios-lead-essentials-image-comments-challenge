@@ -31,7 +31,11 @@ class RemoteImageCommentsLoader {
 					completion(.failure(Error.invalidData))
 					return
 				}
-				completion(.success((data, response)))
+				if let _ = try? JSONSerialization.jsonObject(with: data) {
+					completion(.success((data, response)))
+				} else {
+					completion(.failure(.invalidData))
+				}
 
 			case .failure:
 				completion(.failure(Error.connectivity))
@@ -109,6 +113,28 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 			}
 			client.complete(withStatusCode: code, data: "".data(using: .utf8)!)
 		}
+
+		wait(for: [exp], timeout: 1.0)
+	}
+
+	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+
+		let invalidJSON = Data("invalid json".utf8)
+
+		let exp = expectation(description: "Wait for load completion")
+		sut.load { result in
+			switch result {
+			case let .failure(error):
+				XCTAssertEqual(error, .invalidData)
+
+			default:
+				XCTFail("Expected result \(RemoteImageCommentsLoader.Error.invalidData) got \(result) instead")
+			}
+
+			exp.fulfill()
+		}
+		client.complete(withStatusCode: 200, data: invalidJSON)
 
 		wait(for: [exp], timeout: 1.0)
 	}
