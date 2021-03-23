@@ -137,7 +137,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (model, viewModel)
 	}
 	
-	func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageCommentViewModel], file: StaticString = #filePath, line: UInt = #line) {
+	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageCommentViewModel], file: StaticString = #filePath, line: UInt = #line) {
 		sut.view.enforceLayoutCycle()
 		
 		guard sut.numberOfRenderedImageCommentViews() == imageComments.count else {
@@ -151,7 +151,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		executeRunLoopToCleanUpReferences()
 	}
 	
-	func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor imageComment: ImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+	private func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor imageComment: ImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.imageCommentView(at: index)
 		
 		guard let cell = view as? ImageCommentCell else {
@@ -167,7 +167,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		RunLoop.current.run(until: Date())
 	}
 	
-	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
 		let bundle = Bundle(for: ImageCommentPresenter.self)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
