@@ -179,7 +179,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private class LoaderSpy: ImageCommentLoader {
 		
-		var completions = [(ImageCommentLoader.Result) -> Void]()
+		private(set) var completions = [(ImageCommentLoader.Result) -> Void]()
 		
 		var loadCallCount: Int {
 			return completions.count
