@@ -9,16 +9,28 @@
 import EssentialFeed
 import UIKit
 
+struct ImageCommentLoadingViewModel {
+	let isLoading: Bool
+}
+
 protocol ImageCommentLoadingView {
-	func display(isLoading: Bool)
+	func display(_ viewModel: ImageCommentLoadingViewModel)
+}
+
+struct ImageCommentsListViewModel {
+	let comments: [ImageComment]
 }
 
 protocol ImageCommentsListView {
-	func display(comments: [ImageComment])
+	func display(_ viewModel: ImageCommentsListViewModel)
+}
+
+struct ImageCommentErrorViewModel {
+	let message: String?
 }
 
 protocol ImageCommentErrorView {
-	func display(message: String?)
+	func display(_ viewModel: ImageCommentErrorViewModel)
 }
 
 final class ImageCommentsListPresenter {
@@ -40,17 +52,17 @@ final class ImageCommentsListPresenter {
 	}
 	
 	func loadComments() {
-		loadingView?.display(isLoading: true)
-		errorView?.display(message: nil)
+		loadingView?.display(ImageCommentLoadingViewModel(isLoading: true))
+		errorView?.display(ImageCommentErrorViewModel(message: nil))
 		
 		task = loader.load(from: url) { [weak self] result in
 			switch result {
 			case let .success(comments):
-				self?.commentsView?.display(comments: comments)
+				self?.commentsView?.display(ImageCommentsListViewModel(comments: comments))
 			case .failure:
-				self?.errorView?.display(message: "Couldn't connect to server")
+				self?.errorView?.display(ImageCommentErrorViewModel(message: "Couldn't connect to server"))
 			}
-			self?.loadingView?.display(isLoading: false)
+			self?.loadingView?.display(ImageCommentLoadingViewModel(isLoading: false))
 			self?.task = nil
 		}
 	}
@@ -71,16 +83,16 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, I
 		presenter.loadComments()
 	}
 	
-	func display(isLoading: Bool) {
-		if isLoading {
+	func display(_ viewModel: ImageCommentLoadingViewModel) {
+		if viewModel.isLoading {
 			refreshView.beginRefreshing()
 		} else {
 			refreshView.endRefreshing()
 		}
 	}
 	
-	func display(message: String?) {
-		if let message = message {
+	func display(_ viewModel: ImageCommentErrorViewModel) {
+		if let message = viewModel.message {
 			errorView.show(message: message)
 		} else {
 			errorView.hideMessage()

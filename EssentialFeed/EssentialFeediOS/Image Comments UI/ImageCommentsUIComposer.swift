@@ -18,14 +18,14 @@ final class WeakReferenceVirtualProxy<T: AnyObject> {
 }
 
 extension WeakReferenceVirtualProxy: ImageCommentLoadingView where T: ImageCommentLoadingView {
-	func display(isLoading: Bool) {
-		object?.display(isLoading: isLoading)
+	func display(_ viewModel: ImageCommentLoadingViewModel) {
+		object?.display(viewModel)
 	}
 }
 
 extension WeakReferenceVirtualProxy: ImageCommentErrorView where T: ImageCommentErrorView {
-	func display(message: String?) {
-		object?.display(message: message)
+	func display(_ viewModel: ImageCommentErrorViewModel) {
+		object?.display(viewModel)
 	}
 }
 
@@ -56,8 +56,8 @@ private final class ImageCommentsAdapter: ImageCommentsListView {
 		self.currentDate = currentDate
 	}
 	
-	func display(comments: [ImageComment]) {
-		controller?.tableModel = comments.map { comment in
+	func display(_ viewModel: ImageCommentsListViewModel) {
+		controller?.tableModel = viewModel.comments.map { comment in
 			ImageCommentsCellController(model: comment, currentDate: currentDate)
 		}
 	}
