@@ -23,7 +23,12 @@ final class ImageCommentViewController: UITableViewController {
 		
 		refreshControl = UIRefreshControl()
 		refreshControl?.beginRefreshing()
+		refreshControl?.addTarget(self, action: #selector(reloadImageComments), for: .valueChanged)
 		
+		loader?.load { _ in }
+	}
+	
+	@objc func reloadImageComments() {
 		loader?.load { _ in }
 	}
 }
@@ -45,13 +50,17 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
-//	func test_viewDidLoad_failToLoadFeed() {
-//		let (sut, _) = makeSUT()
-//		
-//		sut.loadViewIfNeeded()
-//		
-//		XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
-//	}
+	func test_pullToRefresh_loadCommentsManually() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		sut.refreshControl?.allTargets.forEach({ (target) in
+			sut.refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach({ (target as NSObject).perform(Selector($0))
+			})
+		})
+		
+		XCTAssertEqual(loader.loadCallCount, 2)
+	}
 	
 	// MARK: - Helpers
 	
