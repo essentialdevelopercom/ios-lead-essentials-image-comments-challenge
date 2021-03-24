@@ -104,7 +104,15 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator)
 	}
 	
-	func test_loadCommentActions_failedToLoadComments() {
+	func test_viewDidLoad_hidesErrorMessage() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertFalse(sut.isShowingErrorView)
+	}
+	
+	func test_loadCommentActions_failedToLoadCommentsShowsErrorMessage() {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
