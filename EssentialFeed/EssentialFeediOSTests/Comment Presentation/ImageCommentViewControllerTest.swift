@@ -51,6 +51,21 @@ final class ImageCommentViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return tableModel.count
 	}
+	
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cellModel = tableModel[indexPath.row]
+		let cell = ImageCommentCell()
+		cell.authorName.text = cellModel.author.username
+		cell.comment.text = cellModel.message
+		cell.datePosted.text = cellModel.createdAt.description
+		return cell
+	}
+}
+
+class ImageCommentCell: UITableViewCell {
+	let authorName = UILabel()
+	let datePosted = UILabel()
+	let comment = UILabel()
 }
 
 class ImageCommentViewControllerTest: XCTestCase {
@@ -133,20 +148,28 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertFalse(sut.isShowingErrorView)
 	}
 	
-	func test_loadCommentActions_displaysCorrectNumberOfRetrievedComments() {
+	func test_loadCommentActions_displaysRetrievedComments() {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(sut.numberOfRenderedImageCommentViews(), 0)
 		
-		let imageComment1 = makeImageComment(message: "message1", authorName: "author1")
-		let imageComment2 = makeImageComment(message: "message2", authorName: "author2")
-		let imageComment3 = makeImageComment(message: "message3", authorName: "author3")
+		let imageComment1 = makeImageComment(comment: "message1", date: Date(), authorName: "author1")
+		let imageComment2 = makeImageComment(comment: "message2", date: Date(), authorName: "author2")
+		let imageComment3 = makeImageComment(comment: "message3", date: Date(), authorName: "author3")
 		
-		loader.completeCommentLoading(with: [imageComment1, imageComment2, imageComment3])
+		let imageCommentArray = [imageComment1, imageComment2, imageComment3]
+		
+		loader.completeCommentLoading(with: imageCommentArray)
 		XCTAssertEqual(sut.numberOfRenderedImageCommentViews(), 3)
 		
-		
+		imageCommentArray.enumerated().forEach { index, imageComment in
+			let view = sut.imageCommentView(at: index) as? ImageCommentCell
+			
+			XCTAssertEqual(view?.authorNameText, imageComment.author.username)
+			XCTAssertEqual(view?.commentText, imageComment.message)
+			XCTAssertEqual(view?.dateText, imageComment.createdAt.description)
+		}
 	}
 	
 	
@@ -167,10 +190,10 @@ class ImageCommentViewControllerTest: XCTestCase {
 		})
 	}
 	
-	private func makeImageComment(message: String, date: Date = Date(), authorName: String) -> ImageComment {
+	private func makeImageComment(comment: String, date: Date = Date(), authorName: String) -> ImageComment {
 		let author = ImageCommentAuthor(username: authorName)
 		let imageComment = ImageComment(id: UUID(),
-										message: message,
+										message: comment,
 										createdAt: date,
 										author: author)
 		return imageComment
@@ -215,5 +238,19 @@ private extension ImageCommentViewController {
 	
 	private var imageCommentSections: Int {
 		return 0
+	}
+}
+
+private extension ImageCommentCell {
+	var authorNameText: String? {
+		return authorName.text
+	}
+	
+	var commentText: String? {
+		return comment.text
+	}
+	
+	var dateText: String? {
+		return datePosted.text
 	}
 }
