@@ -7,7 +7,7 @@
 //
 
 import EssentialFeed
-import Foundation
+import UIKit
 
 public final class ImageCommentsUIComposer {
 	
@@ -16,7 +16,11 @@ public final class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader)
 		let refreshController = ImageCommentsRefreshController(delegate: presentationAdapter)
-		let imageCommentsViewController = ImageCommentsViewController(refreshController: refreshController)
+		
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		
+		let imageCommentsViewController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
 		
 		let imageCommentsListView = ImageCommentsAdapter(
 			controller: imageCommentsViewController,
@@ -28,6 +32,8 @@ public final class ImageCommentsUIComposer {
 			commentsView: imageCommentsListView,
 			errorView: WeakReferenceVirtualProxy(refreshController)
 		)
+		
+		imageCommentsViewController.refreshController = refreshController
 		
 		presentationAdapter.presenter = presenter
 		

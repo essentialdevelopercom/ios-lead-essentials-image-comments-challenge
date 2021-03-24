@@ -10,18 +10,12 @@ import EssentialFeed
 import UIKit
 
 public class ImageCommentsViewController: UITableViewController {
-
-	private var refreshController: ImageCommentsRefreshController?
+	var refreshController: ImageCommentsRefreshController?
 	
 	var tableModel = [ImageCommentsCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
-	}
-	
-	convenience init(refreshController: ImageCommentsRefreshController) {
-		self.init()
-		self.refreshController = refreshController
 	}
 	
 	public override func viewDidLoad() {
