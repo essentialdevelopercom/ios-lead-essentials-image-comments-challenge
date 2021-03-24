@@ -17,11 +17,17 @@ class ImageCommentLoaderMainQueueDispatchDecorator : ImageCommentLoader {
 		self.decoratee = decoratee
 	}
 	
+	private func dispatch(_ closure: @escaping () -> Void) {
+		guard Thread.isMainThread else {
+			return DispatchQueue.main.async(execute: closure)
+		}
+		
+		closure()
+	}
+	
 	func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) -> ImageCommentLoaderDataTask {
-		decoratee.load { result in
-			DispatchQueue.main.async {
-				completion(result)
-			}
+		decoratee.load { [weak self] result in
+			self?.dispatch { completion(result) }
 		}
 	}
 }
