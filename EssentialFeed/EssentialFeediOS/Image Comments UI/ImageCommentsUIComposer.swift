@@ -29,6 +29,12 @@ extension WeakReferenceVirtualProxy: ImageCommentErrorView where T: ImageComment
 	}
 }
 
+extension WeakReferenceVirtualProxy: ImageCommentView where T: ImageCommentView {
+	func display(_ viewModel: ImageCommentViewModel) {
+		object?.display(viewModel)
+	}
+}
+
 public final class ImageCommentsUIComposer {
 	
 	private init() {}
@@ -66,8 +72,27 @@ private final class ImageCommentsAdapter: ImageCommentsListView {
 	
 	func display(_ viewModel: ImageCommentsListViewModel) {
 		controller?.tableModel = viewModel.comments.map { comment in
-			ImageCommentsCellController(model: comment, currentDate: currentDate)
+			let presentationAdapter = ImageCommentCellPresentationAdapter(comment: comment)
+			let controller = ImageCommentsCellController(delegate: presentationAdapter)
+			presentationAdapter.presenter = ImageCommentPresenter(
+				currentDate: currentDate,
+				commentView: WeakReferenceVirtualProxy(controller)
+			)
+			return controller
 		}
+	}
+}
+
+private final class ImageCommentCellPresentationAdapter: ImageCommentCellControllerDelegate {
+	private let comment: ImageComment
+	var presenter: ImageCommentPresenter?
+	
+	init(comment: ImageComment) {
+		self.comment = comment
+	}
+	
+	func didRequestComment() {
+		presenter?.didLoadComment(comment)
 	}
 }
 
