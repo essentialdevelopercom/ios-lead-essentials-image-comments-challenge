@@ -35,19 +35,6 @@ public final class ImageCommentsUIComposer {
 	}
 }
 
-final class ImageCommentCellPresentationAdapter: ImageCommentCellControllerDelegate {
-	private let comment: ImageComment
-	var presenter: ImageCommentPresenter?
-	
-	init(comment: ImageComment) {
-		self.comment = comment
-	}
-	
-	func didRequestComment() {
-		presenter?.didLoadComment(comment)
-	}
-}
-
 private final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewControllerDelegate {
 	private let url: URL
 	private let loader: ImageCommentLoader
