@@ -28,7 +28,7 @@ final class ImageCommentViewController: UITableViewController {
 		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
 		
 		load()
-		//errorView?.isHidden = true
+		errorView?.isHidden = true
 	}
 	
 	@objc func load() {
