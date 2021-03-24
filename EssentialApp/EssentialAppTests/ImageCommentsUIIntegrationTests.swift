@@ -53,35 +53,32 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		
 		let fixedDate = Date()
-		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: (fixedDate.adding(seconds: -30), "30 seconds ago"), username: "username0")
-		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: (fixedDate.adding(seconds: -30 * 60), "30 minutes ago"), username: "username1")
-		let comment2 = makeImageComment(id: UUID(), message: "message2", createdAt: (fixedDate.adding(days: -1), "1 day ago"), username: "username2")
-		let comment3 = makeImageComment(id: UUID(), message: "message3", createdAt: (fixedDate.adding(days: -2), "2 days ago"), username: "username3")
-		let comment4 = makeImageComment(id: UUID(), message: "message4", createdAt: (fixedDate.adding(days: -7), "1 week ago"), username: "username4")
+		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: fixedDate.adding(seconds: -30), username: "username0")
+		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: fixedDate.adding(seconds: -30 * 60), username: "username1")
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
-		loader.completeImageCommentLoading(with: [comment0.model], at: 0)
-		assertThat(sut, isRendering: [comment0.viewModel])
+		loader.completeImageCommentLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
 		
 		sut.simulateUserInitiatedReload()
-		loader.completeImageCommentLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model, comment4.model], at: 1)
-		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel, comment2.viewModel, comment3.viewModel, comment4.viewModel])
+		loader.completeImageCommentLoading(with: [comment0, comment1], at: 1)
+		assertThat(sut, isRendering: [comment0, comment1])
 	}
 	
 	func test_loadImageCommentCompletion_rendersSuccessfullyLoadedEmptyImageCommentsAfterNonEmptyImageComments() {
 		let (sut, loader) = makeSUT()
 		
 		let fixedDate = Date()
-		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: (fixedDate.adding(seconds: -30), "30 seconds ago"), username: "username0")
-		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: (fixedDate.adding(seconds: -30 * 60), "30 minutes ago"), username: "username1")
+		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: fixedDate.adding(seconds: -30), username: "username0")
+		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: fixedDate.adding(seconds: -30 * 60), username: "username1")
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
-		loader.completeImageCommentLoading(with: [comment0.model, comment1.model], at: 0)
-		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel])
+		loader.completeImageCommentLoading(with: [comment0, comment1], at: 0)
+		assertThat(sut, isRendering: [comment0, comment1])
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeImageCommentLoading(with: [], at: 1)
@@ -92,16 +89,16 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		
 		let fixedDate = Date()
-		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: (fixedDate.adding(seconds: -30), "30 seconds ago"), username: "username0")
-		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: (fixedDate.adding(seconds: -30 * 60), "30 minutes ago"), username: "username1")
+		let comment0 = makeImageComment(id: UUID(), message: "message0", createdAt: fixedDate.adding(seconds: -30), username: "username0")
+		let comment1 = makeImageComment(id: UUID(), message: "message1", createdAt: fixedDate.adding(seconds: -30 * 60), username: "username1")
 		
 		sut.loadViewIfNeeded()
-		loader.completeImageCommentLoading(with: [comment0.model, comment1.model], at: 0)
-		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel])
+		loader.completeImageCommentLoading(with: [comment0, comment1], at: 0)
+		assertThat(sut, isRendering: [comment0, comment1])
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeImageCommentLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [comment0.viewModel, comment1.viewModel])
+		assertThat(sut, isRendering: [comment0, comment1])
 	}
 	
 	func test_loadImageCommentCompletion_rendersErrorMessageOnErrorUntilNextReload() {
@@ -140,25 +137,25 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func makeImageComment(id: UUID, message: String, createdAt: (date: Date, formatted: String), username: String) -> (model: ImageComment, viewModel: ImageCommentViewModel) {
-		let model = ImageComment(
+	private func makeImageComment(id: UUID, message: String, createdAt: Date, username: String) -> ImageComment {
+		return ImageComment(
 			id: id,
 			message: message,
-			createdAt: createdAt.date,
+			createdAt: createdAt,
 			author: ImageCommentAuthor(username: username))
-		let viewModel = ImageCommentViewModel(message: message, created: createdAt.formatted, username: username)
-		return (model, viewModel)
 	}
 	
-	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageCommentViewModel], file: StaticString = #filePath, line: UInt = #line) {
+	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageComment], file: StaticString = #filePath, line: UInt = #line) {
 		sut.view.enforceLayoutCycle()
 		
 		guard sut.numberOfRenderedImageCommentViews() == imageComments.count else {
 			return XCTFail("Expected \(imageComments.count) image comments, got \(sut.numberOfRenderedImageCommentViews()) instead.", file: file, line: line)
 		}
 		
-		imageComments.enumerated().forEach { index, imageComment in
-			assertThat(sut, hasViewConfiguredFor: imageComment, at: index, file: file, line: line)
+		let viewModels = ImageCommentPresenter.map(imageComments)
+		
+		viewModels.enumerated().forEach { index, viewModel in
+			assertThat(sut, hasViewConfiguredFor: viewModel, at: index, file: file, line: line)
 		}
 		
 		executeRunLoopToCleanUpReferences()

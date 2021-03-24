@@ -26,14 +26,6 @@ public class ImageCommentPresenter {
 	private let locale: Locale
 	private let calendar = Calendar(identifier: .gregorian)
 	
-	private lazy var formatter: RelativeDateTimeFormatter = {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		formatter.locale = locale
-		formatter.calendar = calendar
-		return formatter
-	}()
-	
 	public init(commentView: ImageCommentView, loadingView: ImageCommentLoadingView, errorView: ImageCommentErrorView, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) {
 		self.commentView = commentView
 		self.loadingView = loadingView
@@ -49,18 +41,32 @@ public class ImageCommentPresenter {
 	
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
 		loadingView.display(.finished)
-		commentView.display(ImageCommentsViewModel(comments: comments.map { comment in
-			ImageCommentViewModel(
-				message: comment.message,
-				created: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate()),
-				username: comment.author.username
-			)
-		}))
+		commentView.display(ImageCommentsViewModel(comments: Self.map(comments, currentDate: currentDate(), locale: locale, calendar: calendar)))
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
 		loadingView.display(.finished)
 		errorView.display(ImageCommentErrorViewModel(message: ImageCommentPresenter.errorMessage))
+	}
+	
+	public static func map(
+		_ comments: [ImageComment],
+		currentDate: Date = Date(),
+		locale: Locale = .current,
+		calendar: Calendar = .current
+	) -> [ImageCommentViewModel] {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		formatter.locale = locale
+		formatter.calendar = calendar
+		
+		return comments.map { comment in
+			ImageCommentViewModel(
+				message: comment.message,
+				created: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate),
+				username: comment.author.username
+			)
+		}
 	}
 	
 }
