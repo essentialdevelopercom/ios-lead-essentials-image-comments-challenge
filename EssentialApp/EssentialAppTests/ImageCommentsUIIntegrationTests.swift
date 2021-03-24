@@ -184,7 +184,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	private func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor imageComment: ImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.imageCommentView(at: index)
 		
-		guard let cell = view as? ImageCommentCell else {
+		guard let cell = view else {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
