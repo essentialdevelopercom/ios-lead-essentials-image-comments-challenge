@@ -318,15 +318,15 @@ extension ImageCommentsViewController {
 
 extension ImageCommentCell {
 	var authorText: String? {
-		authorLabel.text
+		authorLabel?.text
 	}
 	
 	var creationDateText: String? {
-		creationDateLabel.text
+		creationDateLabel?.text
 	}
 	
 	var messageText: String? {
-		messageLabel.text
+		messageLabel?.text
 	}
 }
 

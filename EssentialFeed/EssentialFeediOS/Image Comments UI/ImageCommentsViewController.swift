@@ -29,7 +29,7 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellController = tableModel[indexPath.row]
-		return cellController.view()
+		return cellController.view(in: tableView)
 	}
 }
 

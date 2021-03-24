@@ -15,20 +15,21 @@ protocol ImageCommentCellControllerDelegate {
 
 final class ImageCommentsCellController: ImageCommentView {
 	private let delegate: ImageCommentCellControllerDelegate
-	private lazy var cell = ImageCommentCell()
+	private var cell: ImageCommentCell?
 	
 	init(delegate: ImageCommentCellControllerDelegate) {
 		self.delegate = delegate
 	}
 	
-	func view() -> UITableViewCell {
+	func view(in tableView: UITableView) -> UITableViewCell {
+		cell = tableView.dequeueReusableCell()
 		delegate.didRequestComment()
-		return cell
+		return cell!
 	}
 	
 	func display(_ viewModel: ImageCommentViewModel) {
-		cell.authorLabel.text = viewModel.author
-		cell.messageLabel.text = viewModel.message
-		cell.creationDateLabel.text = viewModel.creationDate
+		cell?.authorLabel?.text = viewModel.author
+		cell?.messageLabel?.text = viewModel.message
+		cell?.creationDateLabel?.text = viewModel.creationDate
 	}
 }
