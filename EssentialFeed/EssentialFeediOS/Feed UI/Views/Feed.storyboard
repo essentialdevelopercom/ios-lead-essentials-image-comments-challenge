@@ -41,10 +41,10 @@
                                 <constraint firstAttribute="trailing" secondItem="ava-Ae-wfa" secondAttribute="trailing" id="Blj-lY-jLF"/>
                                 <constraint firstAttribute="trailingMargin" secondItem="DmL-HC-95S" secondAttribute="trailing" id="EKI-dz-KaA"/>
                                 <constraint firstItem="DmL-HC-95S" firstAttribute="top" secondItem="tZ8-e5-A8H" secondAttribute="top" constant="8" id="GBR-T2-ev2"/>
-                                <constraint firstAttribute="bottom" secondItem="ava-Ae-wfa" secondAttribute="bottom" id="Y8E-nH-bMx"/>
+                                <constraint firstAttribute="bottom" secondItem="ava-Ae-wfa" secondAttribute="bottom" priority="999" id="Y8E-nH-bMx"/>
                                 <constraint firstItem="DmL-HC-95S" firstAttribute="leading" secondItem="tZ8-e5-A8H" secondAttribute="leadingMargin" id="jAr-GX-kC6"/>
                                 <constraint firstAttribute="bottom" secondItem="DmL-HC-95S" secondAttribute="bottom" constant="8" id="qaW-e1-v2k"/>
-                                <constraint firstItem="ava-Ae-wfa" firstAttribute="top" secondItem="tZ8-e5-A8H" secondAttribute="top" id="r20-rt-y6s"/>
+                                <constraint firstItem="ava-Ae-wfa" firstAttribute="top" secondItem="tZ8-e5-A8H" secondAttribute="top" priority="999" id="r20-rt-y6s"/>
                             </constraints>
                             <connections>
                                 <outlet property="button" destination="ava-Ae-wfa" id="TPd-RA-bAb"/>
