@@ -69,15 +69,18 @@ class ImageCommentsPresenterTests: XCTestCase {
 		)
 		
 		let configuration = Self.makeTimeFormatConfiguration(date: fixedRelativeDate)
-		let (sut, view) = makeSUT(timeFormatConfiguration: configuration)
 		
-		sut.didFinishLoadingComments(with: [comment1, comment2])
-		
-		let expectedViewModels = ImageCommentsViewModelMapper.map([comment1, comment2], timeFormatConfiguration: configuration)
-		
-		XCTAssertEqual(view.messages, [
-			.display(comments: expectedViewModels),
-			.display(isLoading: false)
+		let mappedViewModels = ImageCommentsViewModelMapper.map([comment1, comment2], timeFormatConfiguration: configuration)
+
+		XCTAssertEqual(mappedViewModels, [
+			ImageCommentViewModel(
+				authorUsername: "a username",
+				createdAt: "1 minute ago",
+				message: "a message"),
+			ImageCommentViewModel(
+				authorUsername: "some other username",
+				createdAt: "3 minutes ago",
+				message: "some other message")
 		])
 	}
 	
