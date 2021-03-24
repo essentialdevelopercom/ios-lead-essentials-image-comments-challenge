@@ -28,12 +28,6 @@ extension ImageCommentsUIIntegrationTests {
 			self.url = url
 		}
 		
-		func didRequestImageCommentsRefresh() {
-			_ = loadImageComments { _ in }
-		}
-		
-		func didCancelImageCommentsLoading() {}
-		
 		func loadImageComments(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommmentsLoaderTask {
 			commentsRequestHandlers.append(completion)
 			return TaskSpy { [weak self] in
