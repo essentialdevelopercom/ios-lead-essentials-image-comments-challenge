@@ -13,6 +13,7 @@ import EssentialFeed
 final class ImageCommentViewController: UITableViewController {
 	private var loader: ImageCommentLoader?
 	private var errorView: UIView?
+	private var tableModel = [ImageComment]()
 	
 	convenience init(loader: ImageCommentLoader) {
 		self.init()
@@ -35,17 +36,19 @@ final class ImageCommentViewController: UITableViewController {
 		loader?.load(completion: { [weak self] result in
 			switch result {
 			
-				case .failure(let error):
-					print("fail")
+				case .failure(_):
 					self?.errorView?.isHidden = false
 					
-				case .success(let comments):
-					print("success")
-				
+				case .success(let imageComments):
+					self?.tableModel = imageComments
 			}
 			
 			self?.refreshControl?.endRefreshing()
 		})
+	}
+	
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return tableModel.count
 	}
 }
 
@@ -129,6 +132,20 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertFalse(sut.isShowingErrorView)
 	}
 	
+	func test_loadCommentActions_displaysCorrectNumberOfRetrievedComments() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		let imageComment1 = makeImageComment(message: "message1", authorName: "author1")
+		let imageComment2 = makeImageComment(message: "message2", authorName: "author2")
+		let imageComment3 = makeImageComment(message: "message3", authorName: "author3")
+		
+		loader.completeCommentLoading(with: [imageComment1, imageComment2, imageComment3])
+		
+		XCTAssertEqual(sut.numberOfRenderedImageCommentViews(), 3)
+	}
+	
 	
 	// MARK: - Helpers
 	
@@ -147,6 +164,15 @@ class ImageCommentViewControllerTest: XCTestCase {
 		})
 	}
 	
+	private func makeImageComment(message: String, date: Date = Date(), authorName: String) -> ImageComment {
+		let author = ImageCommentAuthor(username: authorName)
+		let imageComment = ImageComment(id: UUID(),
+										message: message,
+										createdAt: date,
+										author: author)
+		return imageComment
+	}
+	
 	class LoaderSpy: ImageCommentLoader {
 		private var completions = [(LoadImageCommentResult) -> Void]()
 		var loadCallCount: Int { return completions.count }
@@ -155,8 +181,8 @@ class ImageCommentViewControllerTest: XCTestCase {
 			completions.append(completion)
 		}
 		
-		func completeCommentLoading() {
-			completions[0](.success([]))
+		func completeCommentLoading(with imageComments: [ImageComment] = []) {
+			completions[0](.success(imageComments))
 		}
 		
 		func failedCommentLoading() {
@@ -172,5 +198,13 @@ private extension ImageCommentViewController {
 	
 	var isShowingErrorView: Bool {
 		return errorView?.isHidden != true
+	}
+	
+	func numberOfRenderedImageCommentViews() -> Int {
+		return tableView.numberOfRows(inSection: imageCommentViews)
+	}
+	
+	private var imageCommentViews: Int {
+		return 0
 	}
 }
