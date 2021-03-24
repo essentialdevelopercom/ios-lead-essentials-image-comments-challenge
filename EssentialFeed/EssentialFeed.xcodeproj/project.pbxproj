@@ -103,6 +103,7 @@
 		FA88661C260AE70300789C72 /* ImageCommentsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88661B260AE70300789C72 /* ImageCommentsAdapter.swift */; };
 		FA886623260AE75B00789C72 /* ImageCommentCellPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA886622260AE75B00789C72 /* ImageCommentCellPresentationAdapter.swift */; };
 		FA88662F260AE79400789C72 /* ImageCommentsPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88662E260AE79400789C72 /* ImageCommentsPresentationAdapter.swift */; };
+		FA886636260AE86000789C72 /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA886635260AE86000789C72 /* ImageComments.storyboard */; };
 		FA96AE9826027AAB008C6DD5 /* LoadImageCommentsFromRemoteUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA96AE9726027AAB008C6DD5 /* LoadImageCommentsFromRemoteUseCaseTests.swift */; };
 		FADC44EA2601D825006D6847 /* ImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADC44E92601D825006D6847 /* ImageComment.swift */; };
 		FADC44F42601D956006D6847 /* ImageCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADC44F32601D956006D6847 /* ImageCommentLoader.swift */; };
@@ -236,6 +237,7 @@
 		FA88661B260AE70300789C72 /* ImageCommentsAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsAdapter.swift; sourceTree = "<group>"; };
 		FA886622260AE75B00789C72 /* ImageCommentCellPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCellPresentationAdapter.swift; sourceTree = "<group>"; };
 		FA88662E260AE79400789C72 /* ImageCommentsPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsPresentationAdapter.swift; sourceTree = "<group>"; };
+		FA886635260AE86000789C72 /* ImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
 		FA96AE9726027AAB008C6DD5 /* LoadImageCommentsFromRemoteUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadImageCommentsFromRemoteUseCaseTests.swift; sourceTree = "<group>"; };
 		FADC44E92601D825006D6847 /* ImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComment.swift; sourceTree = "<group>"; };
 		FADC44F32601D956006D6847 /* ImageCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentLoader.swift; sourceTree = "<group>"; };
@@ -606,6 +608,7 @@
 			children = (
 				FA6B827B26097C9700189E17 /* CommentErrorView.swift */,
 				FA6B827426097C6A00189E17 /* ImageCommentCell.swift */,
+				FA886635260AE86000789C72 /* ImageComments.storyboard */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -852,6 +855,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
+				FA886636260AE86000789C72 /* ImageComments.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
