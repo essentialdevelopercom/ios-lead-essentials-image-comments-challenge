@@ -14,25 +14,20 @@ protocol ImageCommentsRefreshViewControllerDelegate {
 }
 
 final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, ImageCommentErrorView {
-	private(set) lazy var refreshView: UIRefreshControl = makeRefreshControl()
+	@IBOutlet private var refreshView: UIRefreshControl?
 	private(set) lazy var errorView: CommentErrorView = makeErrorView()
 	
-	private let delegate: ImageCommentsRefreshViewControllerDelegate
+	var delegate: ImageCommentsRefreshViewControllerDelegate?
 	
-	init(delegate: ImageCommentsRefreshViewControllerDelegate) {
-		self.delegate = delegate
-	}
-	
-	@objc
-	func refreshComments() {
-		delegate.didRequestLoadingComments()
+	@IBAction func refreshComments() {
+		delegate?.didRequestLoadingComments()
 	}
 	
 	func display(_ viewModel: ImageCommentLoadingViewModel) {
 		if viewModel.isLoading {
-			refreshView.beginRefreshing()
+			refreshView?.beginRefreshing()
 		} else {
-			refreshView.endRefreshing()
+			refreshView?.endRefreshing()
 		}
 	}
 	
@@ -43,13 +38,7 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, I
 			errorView.hideMessage()
 		}
 	}
-	
-	private func makeRefreshControl() -> UIRefreshControl {
-		let control = UIRefreshControl()
-		control.addTarget(self, action: #selector(refreshComments), for: .valueChanged)
-		return control
-	}
-	
+
 	private func makeErrorView() -> CommentErrorView {
 		let view = CommentErrorView()
 		return view

@@ -10,7 +10,7 @@ import EssentialFeed
 import UIKit
 
 public class ImageCommentsViewController: UITableViewController {
-	var refreshController: ImageCommentsRefreshController?
+	@IBOutlet var refreshController: ImageCommentsRefreshController?
 	
 	var tableModel = [ImageCommentsCellController]() {
 		didSet {
@@ -20,7 +20,6 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		refreshControl = refreshController?.refreshView
 		tableView.tableHeaderView = refreshController?.errorView
 		refreshController?.refreshComments()
 	}

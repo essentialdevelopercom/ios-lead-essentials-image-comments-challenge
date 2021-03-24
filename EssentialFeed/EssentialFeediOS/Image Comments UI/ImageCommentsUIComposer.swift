@@ -15,8 +15,6 @@ public final class ImageCommentsUIComposer {
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader)
-		let refreshController = ImageCommentsRefreshController(delegate: presentationAdapter)
-		
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		
@@ -27,14 +25,14 @@ public final class ImageCommentsUIComposer {
 			currentDate: currentDate
 		)
 		
+		let refreshController = imageCommentsViewController.refreshController!
+		refreshController.delegate = presentationAdapter
+		
 		let presenter = ImageCommentsListPresenter(
 			loadingView: WeakReferenceVirtualProxy(refreshController),
 			commentsView: imageCommentsListView,
 			errorView: WeakReferenceVirtualProxy(refreshController)
 		)
-		
-		imageCommentsViewController.refreshController = refreshController
-		
 		presentationAdapter.presenter = presenter
 		
 		return imageCommentsViewController

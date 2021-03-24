@@ -91,9 +91,20 @@
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="P8l-Pf-l4C">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refreshComments" destination="7Pr-bJ-GEm" eventType="valueChanged" id="MG6-1U-JB3"/>
+                        </connections>
                     </refreshControl>
+                    <connections>
+                        <outlet property="refreshController" destination="7Pr-bJ-GEm" id="suN-Wx-lem"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b87-yf-05d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="7Pr-bJ-GEm" customClass="ImageCommentsRefreshController" customModule="EssentialFeediOS" customModuleProvider="target">
+                    <connections>
+                        <outlet property="refreshView" destination="P8l-Pf-l4C" id="ueL-1h-Axp"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="1062.3188405797102" y="129.91071428571428"/>
         </scene>
