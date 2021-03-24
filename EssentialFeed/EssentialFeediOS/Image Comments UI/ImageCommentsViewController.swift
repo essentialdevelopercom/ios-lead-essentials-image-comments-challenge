@@ -20,7 +20,6 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		tableView.tableHeaderView = refreshController?.errorView
 		refreshController?.refreshComments()
 	}
 	

@@ -15,7 +15,7 @@ protocol ImageCommentsRefreshViewControllerDelegate {
 
 final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, ImageCommentErrorView {
 	@IBOutlet private var refreshView: UIRefreshControl?
-	private(set) lazy var errorView: CommentErrorView = makeErrorView()
+	@IBOutlet private var errorView: CommentErrorView?
 	
 	var delegate: ImageCommentsRefreshViewControllerDelegate?
 	
@@ -33,14 +33,9 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, I
 	
 	func display(_ viewModel: ImageCommentErrorViewModel) {
 		if let message = viewModel.message {
-			errorView.show(message: message)
+			errorView?.show(message: message)
 		} else {
-			errorView.hideMessage()
+			errorView?.hideMessage()
 		}
-	}
-
-	private func makeErrorView() -> CommentErrorView {
-		let view = CommentErrorView()
-		return view
 	}
 }

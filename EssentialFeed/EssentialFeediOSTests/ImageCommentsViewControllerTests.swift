@@ -302,7 +302,7 @@ extension ImageCommentsViewController {
 	}
 	
 	func simulateTapOnErrorMessage() {
-		errorView?.button.simulateTap()
+		errorView?.button?.simulateTap()
 	}
 	
 	func numberOfRenderedComments() -> Int {

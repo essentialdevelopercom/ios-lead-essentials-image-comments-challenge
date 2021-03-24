@@ -15,19 +15,41 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="h4G-2v-kPb">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="16"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Nqu-TD-1lL" customClass="CommentErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RGb-b2-1I6" userLabel="Error Button">
+                                    <rect key="frame" x="0.0" y="8" width="414" height="18"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <state key="normal" title="Error Button">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="hideMessage" destination="Nqu-TD-1lL" eventType="touchUpInside" id="Ypd-3M-HRP"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="RGb-b2-1I6" secondAttribute="trailing" id="BHQ-2e-lrM"/>
+                                <constraint firstItem="RGb-b2-1I6" firstAttribute="leading" secondItem="Nqu-TD-1lL" secondAttribute="leading" id="CdQ-Zv-nJE"/>
+                                <constraint firstAttribute="bottom" secondItem="RGb-b2-1I6" secondAttribute="bottom" constant="8" id="EiI-Cg-YAa"/>
+                                <constraint firstItem="RGb-b2-1I6" firstAttribute="top" secondItem="Nqu-TD-1lL" secondAttribute="top" constant="8" id="XH1-bb-51r"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="button" destination="RGb-b2-1I6" id="ojH-8c-VET"/>
+                            </connections>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="ahl-K9-7dc">
-                            <rect key="frame" x="0.0" y="343" width="414" height="16"/>
+                            <rect key="frame" x="0.0" y="361" width="414" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="CommentCell" rowHeight="271" id="Rl0-gl-56B" customClass="CommentCell" customModule="ImageCommentsChallenge_UIPrototype" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="414" height="271"/>
+                                <rect key="frame" x="0.0" y="62" width="414" height="271"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Rl0-gl-56B" id="R6t-et-6hF">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="271"/>
@@ -102,6 +124,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b87-yf-05d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <customObject id="7Pr-bJ-GEm" customClass="ImageCommentsRefreshController" customModule="EssentialFeediOS" customModuleProvider="target">
                     <connections>
+                        <outlet property="errorView" destination="Nqu-TD-1lL" id="Ie6-Ty-PmW"/>
                         <outlet property="refreshView" destination="P8l-Pf-l4C" id="ueL-1h-Axp"/>
                     </connections>
                 </customObject>

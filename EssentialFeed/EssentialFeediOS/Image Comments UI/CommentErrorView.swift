@@ -9,24 +9,18 @@
 import UIKit
 
 public class CommentErrorView: UIView {
-	private(set) public lazy var button: UIButton = makeButton()
+	
+	@IBOutlet public var button: UIButton?
 	
 	public var message: String? {
-		get { return button.title(for: .normal) }
+		get { return button?.title(for: .normal) }
 	}
 	
 	func show(message: String) {
-		button.setTitle(message, for: .normal)
+		button?.setTitle(message, for: .normal)
 	}
 	
-	@objc func hideMessage() {
-		button.setTitle(nil, for: .normal)
-	}
-	
-	private func makeButton() -> UIButton {
-		let button = UIButton()
-		button.setTitle(nil, for: .normal)
-		button.addTarget(self, action: #selector(hideMessage), for: .touchUpInside)
-		return button
+	@IBAction func hideMessage() {
+		button?.setTitle(nil, for: .normal)
 	}
 }
