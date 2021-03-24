@@ -11,15 +11,15 @@ import EssentialFeed
 
 public final class ImageCommentCellController {
 	private var cell: ImageCommentCell?
-	private let viewModel: () -> ImageCommentViewModel
+	private let viewModel: ImageCommentViewModel
 	
-	public init(viewModel: @escaping () -> ImageCommentViewModel) {
+	public init(viewModel: ImageCommentViewModel) {
 		self.viewModel = viewModel
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
 		cell = tableView.dequeueReusableCell()
-		display(viewModel())
+		display(viewModel)
 		return cell!
 	}
 	

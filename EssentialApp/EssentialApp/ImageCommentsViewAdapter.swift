@@ -18,8 +18,6 @@ final class ImageCommentsViewAdapter: ImageCommentsView {
 	}
 	
 	func display(_ viewModel: ImageCommentsViewModel) {
-		controller?.display(viewModel.comments.map { model in
-			ImageCommentCellController(viewModel: { model })
-		})
+		controller?.display(viewModel.comments.map(ImageCommentCellController.init))
 	}
 }
