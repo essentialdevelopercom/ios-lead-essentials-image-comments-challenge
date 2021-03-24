@@ -28,7 +28,7 @@ final class ImageCommentViewController: UITableViewController {
 		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
 		
 		load()
-		errorView?.isHidden = true
+		//errorView?.isHidden = true
 	}
 	
 	@objc func load() {
@@ -41,7 +41,6 @@ final class ImageCommentViewController: UITableViewController {
 					
 				case .success(let comments):
 					print("success")
-					self?.errorView?.isHidden = true
 				
 			}
 			
@@ -120,6 +119,16 @@ class ImageCommentViewControllerTest: XCTestCase {
 		
 		XCTAssertTrue(sut.isShowingErrorView)
 	}
+	
+	func test_loadCommentActions_hideErrorMessageOnSuccessfulLoad() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentLoading()
+		
+		XCTAssertFalse(sut.isShowingErrorView)
+	}
+	
 	
 	// MARK: - Helpers
 	
