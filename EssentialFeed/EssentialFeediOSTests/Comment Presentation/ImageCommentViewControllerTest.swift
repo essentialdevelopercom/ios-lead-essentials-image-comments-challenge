@@ -12,10 +12,12 @@ import EssentialFeed
 
 final class ImageCommentViewController: UITableViewController {
 	private var loader: ImageCommentLoader?
+	private var errorView: UIView?
 	
 	convenience init(loader: ImageCommentLoader) {
 		self.init()
 		self.loader = loader
+		self.errorView = UIView()
 	}
 	
 	override func viewDidLoad() {
@@ -26,10 +28,23 @@ final class ImageCommentViewController: UITableViewController {
 		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
 		
 		load()
+		errorView?.isHidden = true
 	}
 	
 	@objc func load() {
 		loader?.load(completion: { [weak self] result in
+			switch result {
+			
+				case .failure(let error):
+					print("fail")
+					self?.errorView?.isHidden = false
+					
+				case .success(let comments):
+					print("success")
+					self?.errorView?.isHidden = true
+				
+			}
+			
 			self?.refreshControl?.endRefreshing()
 		})
 	}
@@ -48,7 +63,6 @@ class ImageCommentViewControllerTest: XCTestCase {
 		let (sut, _) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		
 		XCTAssertTrue(sut.isShowingLoadingIndicator)
 	}
 	
@@ -64,6 +78,7 @@ class ImageCommentViewControllerTest: XCTestCase {
 	func test_refreshAction_loadCommentsManually() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.loadCallCount, 1)
 		
 		refreshAction(sut: sut)
 		XCTAssertEqual(loader.loadCallCount, 2)
@@ -87,6 +102,15 @@ class ImageCommentViewControllerTest: XCTestCase {
 		loader.completeCommentLoading()
 		
 		XCTAssertFalse(sut.isShowingLoadingIndicator)
+	}
+	
+	func test_loadCommentActions_failedToLoadComments() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.failedCommentLoading()
+		
+		XCTAssertTrue(sut.isShowingErrorView)
 	}
 	
 	// MARK: - Helpers
@@ -117,11 +141,19 @@ class ImageCommentViewControllerTest: XCTestCase {
 		func completeCommentLoading() {
 			completions[0](.success([]))
 		}
+		
+		func failedCommentLoading() {
+			completions[0](.failure(anyNSError()))
+		}
 	}
 }
 
 private extension ImageCommentViewController {
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
+	}
+	
+	var isShowingErrorView: Bool {
+		return errorView?.isHidden != true
 	}
 }
