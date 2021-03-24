@@ -35,11 +35,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		
 		tableView.sizeTableHeaderToFit()
 	}
-	
-	deinit {
-		delegate = nil
-	}
-	
+
 	public func display(_ cellControllers: [ImageCommentCellController]) {
 		tableModel = cellControllers
 	}
