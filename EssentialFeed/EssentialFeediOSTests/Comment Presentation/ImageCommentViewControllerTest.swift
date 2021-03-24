@@ -41,6 +41,7 @@ final class ImageCommentViewController: UITableViewController {
 					
 				case .success(let imageComments):
 					self?.tableModel = imageComments
+					self?.tableView.reloadData()
 			}
 			
 			self?.refreshControl?.endRefreshing()
@@ -136,14 +137,16 @@ class ImageCommentViewControllerTest: XCTestCase {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.numberOfRenderedImageCommentViews(), 0)
 		
 		let imageComment1 = makeImageComment(message: "message1", authorName: "author1")
 		let imageComment2 = makeImageComment(message: "message2", authorName: "author2")
 		let imageComment3 = makeImageComment(message: "message3", authorName: "author3")
 		
 		loader.completeCommentLoading(with: [imageComment1, imageComment2, imageComment3])
-		
 		XCTAssertEqual(sut.numberOfRenderedImageCommentViews(), 3)
+		
+		
 	}
 	
 	
@@ -201,10 +204,16 @@ private extension ImageCommentViewController {
 	}
 	
 	func numberOfRenderedImageCommentViews() -> Int {
-		return tableView.numberOfRows(inSection: imageCommentViews)
+		return tableView.numberOfRows(inSection: imageCommentSections)
 	}
 	
-	private var imageCommentViews: Int {
+	func imageCommentView(at row: Int) -> UITableViewCell? {
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: imageCommentSections)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	private var imageCommentSections: Int {
 		return 0
 	}
 }
