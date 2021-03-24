@@ -266,13 +266,17 @@ extension ImageCommentsViewController {
 		return tableView.numberOfRows(inSection: imageCommentsSection)
 	}
 	
-	func imageCommentView(at row: Int) -> UITableViewCell? {
+	func imageCommentView(at row: Int) -> ImageCommentCell? {
 		guard numberOfRenderedImageCommentViews() > row else {
 			return nil
 		}
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: imageCommentsSection)
-		return ds?.tableView(tableView, cellForRowAt: index)
+		return ds?.tableView(tableView, cellForRowAt: index) as? ImageCommentCell
+	}
+	
+	func imageCommentMessage(at row: Int) -> String? {
+		return imageCommentView(at: row)?.labelMessage.text
 	}
 	
 	var imageCommentsSection: Int {

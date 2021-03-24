@@ -58,8 +58,9 @@ class FeedAcceptanceTests: XCTestCase {
 		feed.simulateFeedImageSelection(at: 0)
 		RunLoop.current.run(until: Date())
 		
-		let comments = feed.navigationController?.topViewController as? ImageCommentsViewController
-		XCTAssertNotNil(comments, "Expected the current view to be image comments UI")
+		let comments = feed.navigationController?.topViewController as! ImageCommentsViewController
+		XCTAssertEqual(comments.numberOfRenderedImageCommentViews(), 1)
+		XCTAssertEqual(comments.imageCommentMessage(at: 0), makeCommentMessage())
 	}
 	
 	// MARK: - Helpers
@@ -87,12 +88,18 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	private func makeData(for url: URL) -> Data {
-		switch url.absoluteString {
-		case "http://image.com":
+		switch url.path {
+		case "/image-1", "/image-2":
 			return makeImageData()
 			
-		default:
+		case "/essential-feed/v1/feed":
 			return makeFeedData()
+		
+		case "/essential-feed/v1/image/E1EE6B46-55D7-4978-AE0D-FD4D40749827/comments":
+			return makeCommentsData()
+			
+		default:
+			return Data()
 		}
 	}
 	
@@ -102,8 +109,25 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
-			["id": UUID().uuidString, "image": "http://image.com"]
+			["id": "E1EE6B46-55D7-4978-AE0D-FD4D40749827", "image": "http://image.com/image-1"],
+			["id": "AC3EA268-E6F3-46BA-AE2F-B129E8BAA7B5", "image": "http://image.com/image-2"]
+		]])
+	}
+	
+	private func makeCommentMessage() -> String {
+		return "a comment"
+	}
+	
+	private func makeCommentsData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString,
+				"message": makeCommentMessage(),
+				"created_at": "2020-05-20T11:24:59+0000",
+				"author": [
+				  "username": "a username"
+				]
+			],
 		]])
 	}
 	
