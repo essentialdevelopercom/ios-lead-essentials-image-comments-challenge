@@ -69,17 +69,14 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	private func commentsWithContent() -> [ImageCommentCellController] {
 		[
 			ImageCommentViewModel(
-				id: UUID().uuidString,
 				authorUsername: "Ἀριστοτέλης",
 				createdAt: "1 minuto atrás",
 				message: "But we think that knowledge and the ability to understand belong to knowledge rather than experience, and we believe that people of knowledge are smarter than empiricists, because wisdom depends in all cases on knowledge. And it is because they know the cause and they don't; empiricists know the effect but do not know the cause, and theorists know both the effect and the cause."),
 			ImageCommentViewModel(
-				id: UUID().uuidString,
 				authorUsername: "Ἡράκλειτος ὁ Ἐφέσιος",
 				createdAt: "10 minutos atrás",
 				message: "μάχεσθαι χρὴ τὸν δῆμον ὑπὲρ τοῦ νόμου ὅκωσπερ τείχεος"),
 			ImageCommentViewModel(
-				id: UUID().uuidString,
 				authorUsername: "This is a username that could exist",
 				createdAt: "3 dias atrás",
 				message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dui faucibus in ornare quam viverra orci. Purus semper eget duis at tellus. Eros in cursus turpis massa tincidunt dui ut. Nam at lectus urna duis. Malesuada fames ac turpis egestas integer eget aliquet. Sed enim ut sem viverra aliquet. Commodo nulla facilisi nullam vehicula ipsum. Nisl nunc mi ipsum faucibus. Odio morbi quis commodo odio. Tellus molestie nunc non blandit massa. Condimentum id venenatis a condimentum vitae sapien pellentesque.")

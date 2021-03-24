@@ -12,7 +12,6 @@ public class ImageCommentsViewModelMapper {
 	public static func map(_ imageComments: [ImageComment], timeFormatConfiguration: TimeFormatConfiguration) -> [ImageCommentViewModel] {
 		imageComments.map { imageComment in
 			ImageCommentViewModel(
-				id: imageComment.id.uuidString,
 				authorUsername: imageComment.username,
 				createdAt: convert(date: imageComment.createdAt, timeFormatConfiguration: timeFormatConfiguration),
 				message: imageComment.message)

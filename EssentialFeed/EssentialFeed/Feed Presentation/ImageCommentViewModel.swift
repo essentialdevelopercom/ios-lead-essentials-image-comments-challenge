@@ -9,13 +9,11 @@
 import Foundation
 
 public struct ImageCommentViewModel: Hashable {
-	public let id: String
 	public let authorUsername: String
 	public let createdAt: String
 	public let message: String
 	
-	public init(id: String, authorUsername: String, createdAt: String, message: String) {
-		self.id = id
+	public init(authorUsername: String, createdAt: String, message: String) {
 		self.authorUsername = authorUsername
 		self.createdAt = createdAt
 		self.message = message
