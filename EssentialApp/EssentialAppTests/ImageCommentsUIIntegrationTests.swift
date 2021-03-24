@@ -118,6 +118,19 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_tapOnErrorView_hidesErrorMessage() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeImageCommentLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("COMMENT_VIEW_ERROR_MESSAGE"))
+		
+		sut.simulateTapOnErrorViewButton()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -214,6 +227,10 @@ extension ImageCommentsViewController {
 	
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	func simulateTapOnErrorViewButton() {
+		errorView.button.simulateTap()
 	}
 	
 	func numberOfRenderedImageCommentViews() -> Int {

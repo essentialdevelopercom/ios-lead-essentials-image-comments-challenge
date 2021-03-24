@@ -19,6 +19,12 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsM-Kc-VDv">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                    <connections>
+                                        <action selector="hideMessageAnimated" destination="sfq-gb-lhp" eventType="touchUpInside" id="Sdn-ke-ivU"/>
+                                    </connections>
+                                </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7oa-nD-L1l">
                                     <rect key="frame" x="0.0" y="8" width="414" height="18"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -29,11 +35,16 @@
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="7oa-nD-L1l" secondAttribute="bottom" constant="8" id="2D5-A9-lcM"/>
+                                <constraint firstAttribute="trailing" secondItem="nsM-Kc-VDv" secondAttribute="trailing" id="5bI-PS-o8U"/>
                                 <constraint firstItem="7oa-nD-L1l" firstAttribute="leading" secondItem="sfq-gb-lhp" secondAttribute="leading" id="ADf-fI-mbC"/>
                                 <constraint firstItem="7oa-nD-L1l" firstAttribute="top" secondItem="sfq-gb-lhp" secondAttribute="top" constant="8" id="Ldq-mk-Z9h"/>
+                                <constraint firstAttribute="bottom" secondItem="nsM-Kc-VDv" secondAttribute="bottom" id="O8g-Qn-nwy"/>
+                                <constraint firstItem="nsM-Kc-VDv" firstAttribute="leading" secondItem="sfq-gb-lhp" secondAttribute="leading" id="YTK-3O-Hl4"/>
                                 <constraint firstAttribute="trailing" secondItem="7oa-nD-L1l" secondAttribute="trailing" id="aeo-zB-FTd"/>
+                                <constraint firstItem="nsM-Kc-VDv" firstAttribute="top" secondItem="sfq-gb-lhp" secondAttribute="top" id="dnx-4I-CLO"/>
                             </constraints>
                             <connections>
+                                <outlet property="button" destination="nsM-Kc-VDv" id="0rb-ji-OWa"/>
                                 <outlet property="label" destination="7oa-nD-L1l" id="aGo-s5-Lg0"/>
                             </connections>
                         </view>
@@ -89,6 +100,7 @@
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="o2B-35-FFi">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <action selector="refresh" destination="3Pp-8b-z6Q" eventType="valueChanged" id="BKT-bB-Wl0"/>
