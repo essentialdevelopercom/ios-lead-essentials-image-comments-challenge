@@ -128,6 +128,26 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_deinit_cancelsRunningRequest() {
+		var cancelCallCount = 0
+		
+		var sut: ImageCommentsViewController?
+		
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(loader: LoaderSpy() {
+				cancelCallCount += 1
+			})
+			
+			sut?.loadViewIfNeeded()
+		}
+		
+		XCTAssertEqual(cancelCallCount, 0)
+		
+		sut = nil
+		
+		XCTAssertEqual(cancelCallCount, 1)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -190,20 +210,32 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	private class LoaderSpy: ImageCommentLoader {
 		
 		private(set) var completions = [(ImageCommentLoader.Result) -> Void]()
+		private let onCancel: () -> Void
+		
+		init(_ onCancel: @escaping () -> Void = { }) {
+			self.onCancel = onCancel
+		}
 		
 		var loadCallCount: Int {
 			return completions.count
 		}
 		
 		private struct TaskSpy: ImageCommentLoaderDataTask {
+			
+			private let onCancel: () -> Void
+			
+			init(_ onCancel: @escaping () -> Void = { }) {
+				self.onCancel = onCancel
+			}
+			
 			func cancel() {
-				
+				onCancel()
 			}
 		}
 		
 		func load(completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderDataTask {
 			completions.append(completion)
-			return TaskSpy()
+			return TaskSpy(onCancel)
 		}
 		
 		func completeImageCommentLoading(with imageComments: [ImageComment] = [], at index: Int = 0) {
