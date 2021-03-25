@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import EssentialFeed
+import EssentialFeediOS
 
 class FeedImageCommentsDataLoaderPresentationAdapter<View: FeedImageCommentView>: FeedImageCommentCellControllerDelegate {
 	

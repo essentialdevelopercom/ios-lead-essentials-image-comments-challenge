@@ -8,16 +8,16 @@
 
 import Foundation
 
-class FeedImageCommentPresenter<View: FeedImageCommentView> {
+public class FeedImageCommentPresenter<View: FeedImageCommentView> {
 	private let view: View
 	private let formatter: RelativeDateTimeFormatter
 	
-	init(view: View, formatter: RelativeDateTimeFormatter) {
+	public init(view: View, formatter: RelativeDateTimeFormatter) {
 		self.view = view
 		self.formatter = formatter
 	}
 	
-	func display(_ model: FeedImageComment) {
+	public func display(_ model: FeedImageComment) {
 		let date = formatter.localizedString(for: model.createdAt, relativeTo: Date())
 		let viewModel = FeedImageCommentViewModel(message: model.message,
 												  creationDate: date,
