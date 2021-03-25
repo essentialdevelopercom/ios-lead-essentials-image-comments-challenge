@@ -107,6 +107,9 @@
                             <action selector="refresh" destination="dRD-8R-3VS" eventType="valueChanged" id="a0B-PM-605"/>
                         </connections>
                     </refreshControl>
+                    <connections>
+                        <outlet property="errorView" destination="pzs-Ge-nhn" id="xCx-Nw-CrQ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aYx-cb-Jay" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
