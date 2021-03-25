@@ -9,13 +9,20 @@
 import UIKit
 import EssentialFeed
 
-public class FeedImageCommentsViewController: UITableViewController {
+public protocol FeedImageCommentsViewControllerDelegate {
+	func didRequestFeedImageCommentsRefresh()
+}
+
+public class FeedImageCommentsViewController: UITableViewController, FeedLoadingView, FeedErrorView {
+	@IBOutlet private(set) public var errorView: ErrorView?
 	
 	private var loadingControllers = [IndexPath: FeedImageCommentCellController]()
 	
 	private var tableModel = [FeedImageCommentCellController]() {
 		didSet { tableView.reloadData() }
 	}
+	
+	public var delegate: FeedImageCommentsViewControllerDelegate?
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
@@ -30,11 +37,20 @@ public class FeedImageCommentsViewController: UITableViewController {
 	}
 	
 	@IBAction private func refresh() {
+		delegate?.didRequestFeedImageCommentsRefresh()
 	}
 	
 	public func display(_ cellControllers: [FeedImageCommentCellController]) {
 		loadingControllers = [:]
 		tableModel = cellControllers
+	}
+	
+	public func display(_ viewModel: FeedLoadingViewModel) {
+		refreshControl?.update(isRefreshing: viewModel.isLoading)
+	}
+	
+	public func display(_ viewModel: FeedErrorViewModel) {
+		errorView?.message = viewModel.message
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
