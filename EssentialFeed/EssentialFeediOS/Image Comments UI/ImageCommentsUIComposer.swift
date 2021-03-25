@@ -15,18 +15,14 @@ public final class ImageCommentsUIComposer {
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader)
-		let bundle = Bundle(for: ImageCommentsViewController.self)
-		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-		
-		let imageCommentsViewController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
-		imageCommentsViewController.title = ImageCommentsListPresenter.title
+		let controller = ImageCommentsViewController.makeWith(title: ImageCommentsListPresenter.title)
 		
 		let imageCommentsListView = ImageCommentsAdapter(
-			controller: imageCommentsViewController,
+			controller: controller,
 			currentDate: currentDate
 		)
 		
-		let refreshController = imageCommentsViewController.refreshController!
+		let refreshController = controller.refreshController!
 		refreshController.delegate = presentationAdapter
 		
 		let presenter = ImageCommentsListPresenter(
@@ -36,6 +32,16 @@ public final class ImageCommentsUIComposer {
 		)
 		presentationAdapter.presenter = presenter
 		
-		return imageCommentsViewController
+		return controller
+	}
+}
+
+private extension ImageCommentsViewController {
+	static func makeWith(title: String) -> ImageCommentsViewController {
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let controller = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		controller.title = title
+		return controller
 	}
 }
