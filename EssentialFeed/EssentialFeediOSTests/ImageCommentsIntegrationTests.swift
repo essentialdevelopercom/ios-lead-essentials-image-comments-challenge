@@ -193,6 +193,20 @@ class ImageCommentsIntegrationTests: XCTestCase {
 		XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests as all requests were finished before deallocating screen")
 	}
 	
+	func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT(url: anyURL())
+		
+		sut.loadViewIfNeeded()
+		
+		let exp = expectation(description: "Wait for background queue")
+		DispatchQueue.global().async {
+			loader.completeCommentsLoading(with: [], at: 0)
+			exp.fulfill()
+		}
+		
+		wait(for: [exp], timeout: 1.0)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(url: URL, currentDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
