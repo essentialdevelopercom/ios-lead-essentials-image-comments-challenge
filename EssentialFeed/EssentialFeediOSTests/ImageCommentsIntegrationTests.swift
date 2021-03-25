@@ -11,7 +11,7 @@ import EssentialFeediOS
 import XCTest
 import UIKit
 
-class ImageCommentsViewControllerTests: XCTestCase {
+class ImageCommentsIntegrationTests: XCTestCase {
 	func test_commentsScreen_hasLocalizedTitle() {
 		let (sut, _) = makeSUT(url: anyURL())
 		
