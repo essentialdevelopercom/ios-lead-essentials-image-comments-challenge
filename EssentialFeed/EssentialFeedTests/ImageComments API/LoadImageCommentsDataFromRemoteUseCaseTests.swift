@@ -190,18 +190,21 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
-	private func makeItem(id: UUID, message: String, date: String, username: String) -> (model: ImageComment, json: [String: Any]) {
+	lazy var iso8601DateFormatter: DateFormatter = {
 		let df = DateFormatter()
 		df.dateFormat = "yyy-MM-dd'T'HH:mm:ssZ"
-		let createdAt = df.date(from: date)!
+		return df
+	}()
 
+	private func makeItem(id: UUID, message: String, date: String, username: String) -> (model: ImageComment, json: [String: Any]) {
 		let author = ImageCommentAuthor(username: username)
+		let createdAt = iso8601DateFormatter.date(from: date)!
 		let item = ImageComment(id: id, message: message, createdAt: createdAt, author: author)
 
 		let authorJson: [String: Any] = [
 			"username": author.username
 		]
-		
+
 		let json: [String: Any] = [
 			"id": item.id.uuidString,
 			"message": item.message,
