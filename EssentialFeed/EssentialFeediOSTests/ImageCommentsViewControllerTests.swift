@@ -12,6 +12,15 @@ import XCTest
 import UIKit
 
 class ImageCommentsViewControllerTests: XCTestCase {
+	
+	func test_commentsScreen_hasTitle() {
+		let (sut, _) = makeSUT(url: anyURL())
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.title, "Comments")
+	}
+	
 	func test_loadCommentsActions_requestsLoadingCommentsFromURL() {
 		let url = URL(string: "https://any-url.com")!
 		let (sut, loader) = makeSUT(url: url)
