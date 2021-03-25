@@ -12,13 +12,17 @@ import XCTest
 import UIKit
 
 class ImageCommentsViewControllerTests: XCTestCase {
-	
-	func test_commentsScreen_hasTitle() {
+	func test_commentsScreen_hasLocalizedTitle() {
 		let (sut, _) = makeSUT(url: anyURL())
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(sut.title, "Comments")
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let localizedKey = "IMAGE_COMMENTS_VIEW_TITLE"
+		let localizedTitle = bundle.localizedString(forKey: localizedKey, value: nil, table: "ImageComments")
+		
+		XCTAssertEqual(sut.title, localizedTitle)
+		XCTAssertNotEqual(localizedTitle, localizedKey, "Missing localized string for key: \(localizedKey)")
 	}
 	
 	func test_loadCommentsActions_requestsLoadingCommentsFromURL() {

@@ -7,6 +7,7 @@
 //
 
 import EssentialFeed
+import Foundation
 
 // MARK: - ViewModels
 
@@ -43,7 +44,9 @@ final class ImageCommentsListPresenter {
 	private let commentsView: ImageCommentsListView
 	private let errorView: ImageCommentErrorView
 	
-	static var title: String { "Comments" }
+	static var title: String {
+		NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentsListPresenter.self), comment: "Title for the image comments list screen")
+	}
 	
 	init(loadingView: ImageCommentLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentErrorView) {
 		self.loadingView = loadingView
