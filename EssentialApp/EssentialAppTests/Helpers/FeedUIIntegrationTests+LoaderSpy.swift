@@ -8,7 +8,7 @@ import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
 	
-	class LoaderSpy: FeedLoader, FeedImageDataLoader {
+	class LoaderSpy: FeedLoader, FeedImageDataLoader, FeedImageCommentsLoader {
 		
 		// MARK: - FeedLoader
 		
@@ -60,6 +60,24 @@ extension FeedUIIntegrationTests {
 		func completeImageLoadingWithError(at index: Int = 0) {
 			let error = NSError(domain: "an error", code: 0)
 			imageRequests[index].completion(.failure(error))
+		}
+		
+		// MARK: - FeedImageCommentsLoader
+		
+		private struct ImageCommentTaskSpy: FeedImageCommentsLoaderTask {
+			let cancelCallback: () -> Void
+			func cancel() {
+				cancelCallback()
+			}
+		}
+		
+		private var imageCommentRequests = [(imageID: String, completion: (FeedImageCommentsLoader.Result) -> Void)]()
+		
+		private(set) var cancelledImageIDs = [String]()
+		
+		func loadImageComments(imageID: String, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+			imageCommentRequests.append((imageID, completion))
+			return ImageCommentTaskSpy { [weak self] in self?.cancelledImageIDs.append(imageID) }
 		}
 	}
 	
