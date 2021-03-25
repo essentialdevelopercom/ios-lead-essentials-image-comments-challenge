@@ -17,12 +17,7 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		
-		let bundle = Bundle(for: ImageCommentsViewController.self)
-		let localizedKey = "IMAGE_COMMENTS_VIEW_TITLE"
-		let localizedTitle = bundle.localizedString(forKey: localizedKey, value: nil, table: "ImageComments")
-		
-		XCTAssertEqual(sut.title, localizedTitle)
-		XCTAssertNotEqual(localizedTitle, localizedKey, "Missing localized string for key: \(localizedKey)")
+		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
 	}
 	
 	func test_loadCommentsActions_requestsLoadingCommentsFromURL() {
@@ -206,6 +201,16 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "ImageComments"
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
 	}
 	
 	private func assertThat(_ sut: ImageCommentsViewController, isRendering pairs: [(comment: ImageComment, relativeDate: String)], file: StaticString = #filePath, line: UInt = #line) {
