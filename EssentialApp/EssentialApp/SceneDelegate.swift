@@ -21,9 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
 	
+	private lazy var baseURL: URL = { URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/")! }()
+	
 	private lazy var remoteFeedLoader: RemoteFeedLoader = {
 		RemoteFeedLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
+			url: URL(string: "feed", relativeTo: baseURL)!,
 			client: httpClient)
 	}()
 	
