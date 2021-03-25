@@ -44,14 +44,6 @@ final class ImageCommentsListPresenter {
 	private let commentsView: ImageCommentsListView
 	private let errorView: ImageCommentErrorView
 	
-	static var title: String {
-		NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentsListPresenter.self), comment: "Title for the image comments list screen")
-	}
-	
-	static var errorMessage: String {
-		NSLocalizedString("IMAGE_COMMENTS_VIEW_ERROR_MESSAGE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentsListPresenter.self), comment: "Error message to be presented when comments fail to load")
-	}
-	
 	init(loadingView: ImageCommentLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentErrorView) {
 		self.loadingView = loadingView
 		self.commentsView = commentsView
@@ -70,6 +62,6 @@ final class ImageCommentsListPresenter {
 	
 	func didFinishLoadingComments(with error: Error) {
 		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
-		errorView.display(ImageCommentErrorViewModel(message: ImageCommentsListPresenter.errorMessage))
+		errorView.display(ImageCommentErrorViewModel(message: Localized.ImageComments.errorMessage))
 	}
 }

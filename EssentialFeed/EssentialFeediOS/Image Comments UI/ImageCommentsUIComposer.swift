@@ -15,7 +15,7 @@ public final class ImageCommentsUIComposer {
 	
 	public static func imageCommentsComposedWith(url: URL, currentDate: @escaping () -> Date, loader: ImageCommentLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(url: url, loader: loader)
-		let controller = ImageCommentsViewController.makeWith(title: ImageCommentsListPresenter.title)
+		let controller = ImageCommentsViewController.makeWith(title: Localized.ImageComments.title)
 		
 		let imageCommentsListView = ImageCommentsAdapter(
 			controller: controller,
