@@ -49,7 +49,7 @@ final class ImageCommentsListPresenter {
 	}
 	
 	static var errorMessage: String {
-		NSLocalizedString("IMAGE_COMMENTS_VIEW_ERROR_MESSAGE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentsListPresenter.self), comment: "Title for the image comments list screen")
+		NSLocalizedString("IMAGE_COMMENTS_VIEW_ERROR_MESSAGE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentsListPresenter.self), comment: "Error message to be presented when comments fail to load")
 	}
 	
 	init(loadingView: ImageCommentLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentErrorView) {
