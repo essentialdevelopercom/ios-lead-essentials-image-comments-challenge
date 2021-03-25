@@ -9,7 +9,20 @@
 import XCTest
 import EssentialFeed
 
-struct ImageComment: Equatable { }
+struct ImageComment: Decodable, Equatable {
+	let id: UUID
+	let message: String
+	let createdAt: Date
+	let author: ImageCommentAuthor
+}
+
+struct ImageCommentAuthor: Decodable, Equatable {
+	let username: String
+}
+
+struct Root: Decodable {
+	let comments: [ImageComment]
+}
 
 class RemoteImageCommentsLoader {
 	private let url: URL
@@ -35,8 +48,11 @@ class RemoteImageCommentsLoader {
 					completion(.failure(Error.invalidData))
 					return
 				}
-				if let _ = try? JSONSerialization.jsonObject(with: data) {
-					completion(.success([]))
+				let decoder = JSONDecoder()
+				decoder.dateDecodingStrategy = .iso8601
+				decoder.keyDecodingStrategy = .convertFromSnakeCase
+				if let root = try? decoder.decode(Root.self, from: data) {
+					completion(.success(root.comments))
 				} else {
 					completion(.failure(.invalidData))
 				}
@@ -116,6 +132,32 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+
+		let item1 = makeItem(
+			id: UUID(),
+			message: "a message",
+			date: "2020-05-20T11:24:59+0000",
+			username: "a username"
+		)
+
+		let item2 = makeItem(
+			id: UUID(),
+			message: "another message",
+			date: "2020-05-19T14:23:53+0000",
+			username: "another username"
+		)
+
+		let itemsModel = [item1.model, item2.model]
+
+		expect(sut, toCompleteWith: .success(itemsModel), when: {
+			let itemsJson = [item1.json, item2.json]
+			let json = makeItemsJSON(itemsJson)
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+
 	// MARK: - Helpers
 	private func makeSUT(url: URL = URL(string: "https://a-url.com")!, file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
@@ -148,8 +190,30 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 
+	private func makeItem(id: UUID, message: String, date: String, username: String) -> (model: ImageComment, json: [String: Any]) {
+		let df = DateFormatter()
+		df.dateFormat = "yyy-MM-dd'T'HH:mm:ssZ"
+		let createdAt = df.date(from: date)!
+
+		let author = ImageCommentAuthor(username: username)
+		let item = ImageComment(id: id, message: message, createdAt: createdAt, author: author)
+
+		let authorJson: [String: Any] = [
+			"username": author.username
+		]
+		
+		let json: [String: Any] = [
+			"id": item.id.uuidString,
+			"message": item.message,
+			"created_at": date,
+			"author": authorJson
+		].compactMapValues { $0 }
+
+		return (item, json)
+	}
+
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
-		let json = ["items": items]
+		let json = ["comments": items]
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
