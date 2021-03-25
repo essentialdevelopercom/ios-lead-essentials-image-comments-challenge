@@ -21,7 +21,7 @@ struct ImageCommentAuthor: Decodable, Equatable {
 }
 
 struct Root: Decodable {
-	let comments: [ImageComment]
+	let items: [ImageComment]
 }
 
 class RemoteImageCommentsLoader {
@@ -52,7 +52,7 @@ class RemoteImageCommentsLoader {
 				decoder.dateDecodingStrategy = .iso8601
 				decoder.keyDecodingStrategy = .convertFromSnakeCase
 				if let root = try? decoder.decode(Root.self, from: data) {
-					completion(.success(root.comments))
+					completion(.success(root.items))
 				} else {
 					completion(.failure(.invalidData))
 				}
@@ -216,7 +216,7 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 	}
 
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
-		let json = ["comments": items]
+		let json = ["items": items]
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
