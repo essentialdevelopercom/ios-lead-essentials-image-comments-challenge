@@ -43,6 +43,8 @@ final class ImageCommentsListPresenter {
 	private let commentsView: ImageCommentsListView
 	private let errorView: ImageCommentErrorView
 	
+	static var title: String { "Comments" }
+	
 	init(loadingView: ImageCommentLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentErrorView) {
 		self.loadingView = loadingView
 		self.commentsView = commentsView

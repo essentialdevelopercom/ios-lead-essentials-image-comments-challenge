@@ -20,7 +20,7 @@ public class ImageCommentsViewController: UITableViewController {
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		title = "Comments"
+		title = ImageCommentsListPresenter.title
 		refreshController?.refreshComments()
 	}
 	
