@@ -48,6 +48,10 @@ final class ImageCommentsListPresenter {
 		NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentsListPresenter.self), comment: "Title for the image comments list screen")
 	}
 	
+	static var errorMessage: String {
+		NSLocalizedString("IMAGE_COMMENTS_VIEW_ERROR_MESSAGE", tableName: "ImageComments", bundle: Bundle(for: ImageCommentsListPresenter.self), comment: "Title for the image comments list screen")
+	}
+	
 	init(loadingView: ImageCommentLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentErrorView) {
 		self.loadingView = loadingView
 		self.commentsView = commentsView
@@ -66,6 +70,6 @@ final class ImageCommentsListPresenter {
 	
 	func didFinishLoadingComments(with error: Error) {
 		loadingView.display(ImageCommentLoadingViewModel(isLoading: false))
-		errorView.display(ImageCommentErrorViewModel(message: "Couldn't connect to server"))
+		errorView.display(ImageCommentErrorViewModel(message: ImageCommentsListPresenter.errorMessage))
 	}
 }

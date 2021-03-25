@@ -98,27 +98,27 @@ class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [pair0, pair1, pair2, pair3, pair4])
 	}
 	
-	func test_loadCommentsCompletion_showsErrorMessageOnLoaderError() {
+	func test_loadCommentsCompletion_showsLocalizedErrorMessageOnLoaderError() {
 		let (sut, loader) = makeSUT(url: anyURL())
 		
 		sut.loadViewIfNeeded()
 		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown when view is loaded")
 		
 		loader.completeCommentsLoadingWithError()
-		XCTAssertEqual(sut.errorMessage, "Couldn't connect to server", "Expected error message to be shown after loader completes with error")
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_ERROR_MESSAGE"), "Expected error message to be shown after loader completes with error")
 		
 		sut.simulateUserInitiatedReloading()
 		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown when user reloads comments")
 	}
 	
-	func test_errorView_dismissesErrorMessageOnTap() {
+	func test_errorView_dismissesLocalizedErrorMessageOnTap() {
 		let (sut, loader) = makeSUT(url: anyURL())
 		
 		sut.loadViewIfNeeded()
 		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown when view is loaded")
 		
 		loader.completeCommentsLoadingWithError()
-		XCTAssertEqual(sut.errorMessage, "Couldn't connect to server", "Expected error message to be shown after loader completes with error")
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_ERROR_MESSAGE"), "Expected error message to be shown after loader completes with error")
 		
 		sut.simulateTapOnErrorMessage()
 		XCTAssertNil(sut.errorMessage, "Expected no error message to be shown after tapping on error message")
