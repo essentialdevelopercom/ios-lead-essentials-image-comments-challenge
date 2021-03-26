@@ -333,17 +333,19 @@ final class FeedUIIntegrationTests: XCTestCase {
 	func test_didSelectFeedImage_callsOnSelectClosure() {
 		let image0 = makeImage()
 		let image1 = makeImage()
-		let exp = expectation(description: "Wait for onSelect")
-		let (sut, loader) = makeSUT(onSelect: { tappedImage in
-			XCTAssertEqual(image0, tappedImage)
-			exp.fulfill()
-		})
+		
+		var selectedImages = [FeedImage]()
+		
+		let (sut, loader) = makeSUT(onSelect: { selectedImages.append($0) })
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [image0, image1])
 		
 		sut.simulateFeedImageSelection(at: 0)
-		wait(for: [exp], timeout: 1.0)
+		XCTAssertEqual(selectedImages, [image0])
+		
+		sut.simulateFeedImageSelection(at: 1)
+		XCTAssertEqual(selectedImages, [image0, image1])
 	}
 	
 	// MARK: - Helpers
