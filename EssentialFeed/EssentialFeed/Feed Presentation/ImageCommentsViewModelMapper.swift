@@ -9,20 +9,23 @@
 import Foundation
 
 public class ImageCommentsViewModelMapper {
-	private static let relativeFormatter = RelativeDateTimeFormatter()
-	
 	public static func map(_ imageComments: [ImageComment], timeFormatConfiguration: TimeFormatConfiguration) -> [ImageCommentViewModel] {
-		imageComments.map { imageComment in
+		let relativeFormatter = RelativeDateTimeFormatter()
+		
+		return imageComments.map { imageComment in
 			ImageCommentViewModel(
 				authorUsername: imageComment.username,
-				createdAt: convert(date: imageComment.createdAt, timeFormatConfiguration: timeFormatConfiguration),
+				createdAt: convert(
+					date: imageComment.createdAt,
+					formatter: relativeFormatter,
+					timeFormatConfiguration: timeFormatConfiguration),
 				message: imageComment.message)
 		}
 	}
 	
-	private static func convert(date: Date, timeFormatConfiguration: TimeFormatConfiguration) -> String {
-		relativeFormatter.locale = timeFormatConfiguration.locale
-		return relativeFormatter.localizedString(
+	private static func convert(date: Date, formatter: RelativeDateTimeFormatter, timeFormatConfiguration: TimeFormatConfiguration) -> String {
+		formatter.locale = timeFormatConfiguration.locale
+		return formatter.localizedString(
 			for: date,
 			relativeTo: timeFormatConfiguration.relativeDate())
 	}
