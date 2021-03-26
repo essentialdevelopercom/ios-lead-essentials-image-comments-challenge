@@ -65,7 +65,7 @@ class RemoteImageCommentLoaderTests: XCTestCase {
 		
 		codes.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.invalidData)) {
-				client.complete(withStatusCode: codes[0], data: invalidJSONData, at: index)
+				client.complete(withStatusCode: code, data: invalidJSONData, at: index)
 			}
 		}
 	}
