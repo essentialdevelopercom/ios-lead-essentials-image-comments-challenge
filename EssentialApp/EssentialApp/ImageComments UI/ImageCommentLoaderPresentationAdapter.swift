@@ -13,7 +13,7 @@ import EssentialFeediOS
 class ImageCommentLoaderPresentationAdapter : ImageCommentsViewControllerDelegate {
 	
 	private var loader: ImageCommentLoader
-	public var presenter: ImageCommentPresenter?
+	var presenter: ImageCommentPresenter?
 	private var cancellable: ImageCommentLoaderDataTask?
 	
 	init(loader: ImageCommentLoader) {
