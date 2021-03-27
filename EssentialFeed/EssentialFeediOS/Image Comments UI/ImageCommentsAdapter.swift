@@ -6,6 +6,7 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
+import EssentialFeed
 import Foundation
 
 final class ImageCommentsAdapter: ImageCommentsListView {

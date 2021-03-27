@@ -13,7 +13,7 @@ protocol ImageCommentsRefreshViewControllerDelegate {
 	func didRequestLoadingComments()
 }
 
-final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, ImageCommentErrorView {
+final class ImageCommentsRefreshController: NSObject, ImageCommentsLoadingView, ImageCommentsErrorView {
 	@IBOutlet private var refreshView: UIRefreshControl?
 	@IBOutlet private var errorView: CommentErrorView?
 	
@@ -23,7 +23,7 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, I
 		delegate?.didRequestLoadingComments()
 	}
 	
-	func display(_ viewModel: ImageCommentLoadingViewModel) {
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
 		if viewModel.isLoading {
 			refreshView?.beginRefreshing()
 		} else {
@@ -31,7 +31,7 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentLoadingView, I
 		}
 	}
 	
-	func display(_ viewModel: ImageCommentErrorViewModel) {
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
 		if let message = viewModel.message {
 			errorView?.show(message: message)
 		} else {

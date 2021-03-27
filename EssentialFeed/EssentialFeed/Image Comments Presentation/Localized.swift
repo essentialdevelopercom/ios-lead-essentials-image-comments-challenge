@@ -8,10 +8,19 @@
 
 import Foundation
 
-enum Localized {
-	enum ImageComments {
+public enum Localized {
+	public enum ImageComments {
 		static var bundle = Bundle(for: ImageCommentsListPresenter.self)
 		static var table: String { "ImageComments" }
+		
+		public static var title: String {
+			localizedString(
+				for: "IMAGE_COMMENTS_VIEW_TITLE",
+				table: table,
+				bundle: bundle,
+				comment: "Title for the image comments list screen"
+			)
+		}
 		
 		static var errorMessage: String {
 			localizedString(

@@ -219,7 +219,7 @@ class ImageCommentsIntegrationTests: XCTestCase {
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
-		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let bundle = Bundle(for: ImageCommentsListPresenter.self)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
 		if value == key {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)

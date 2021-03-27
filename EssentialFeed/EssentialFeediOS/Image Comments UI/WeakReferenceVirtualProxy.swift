@@ -6,6 +6,8 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
+import EssentialFeed
+
 final class WeakReferenceVirtualProxy<T: AnyObject> {
 	private weak var object: T?
 	
@@ -14,14 +16,14 @@ final class WeakReferenceVirtualProxy<T: AnyObject> {
 	}
 }
 
-extension WeakReferenceVirtualProxy: ImageCommentLoadingView where T: ImageCommentLoadingView {
-	func display(_ viewModel: ImageCommentLoadingViewModel) {
+extension WeakReferenceVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
 		object?.display(viewModel)
 	}
 }
 
-extension WeakReferenceVirtualProxy: ImageCommentErrorView where T: ImageCommentErrorView {
-	func display(_ viewModel: ImageCommentErrorViewModel) {
+extension WeakReferenceVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
+	func display(_ viewModel: ImageCommentsErrorViewModel) {
 		object?.display(viewModel)
 	}
 }
