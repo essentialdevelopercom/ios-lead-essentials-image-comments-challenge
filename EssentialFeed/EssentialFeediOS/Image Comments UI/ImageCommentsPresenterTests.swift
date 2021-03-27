@@ -52,7 +52,7 @@ class ImageCommentsListPresenterTests: XCTestCase {
 		
 		sut.didStartLoadingComments()
 		
-		XCTAssertEqual(view.messages, [.display(isLoading: true), .display(errorMessage: .none)])
+		XCTAssertEqual(view.messages, [.display(errorMessage: .none), .display(isLoading: true)])
 	}
 	
 	// MARK: - Helpers
@@ -67,18 +67,19 @@ class ImageCommentsListPresenterTests: XCTestCase {
 	
 	private class ViewSpy: ImageCommentsLoadingView, ImageCommentsErrorView {
 		
-		enum Messages: Equatable {
+		enum Messages: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
 		}
 		
-		private(set) var messages = [Messages]()
+		private(set) var messages = Set<Messages>()
 		
 		func display(_ viewModel: ImageCommentsErrorViewModel) {
-			messages.append(.display(errorMessage: viewModel.message))
+			messages.insert(.display(errorMessage: viewModel.message))
 		}
+		
 		func display(_ viewModel: ImageCommentsLoadingViewModel) {
-			messages.append(.display(isLoading: viewModel.isLoading))
+			messages.insert(.display(isLoading: viewModel.isLoading))
 		}
 	}
 }
