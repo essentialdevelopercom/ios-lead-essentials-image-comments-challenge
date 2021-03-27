@@ -47,18 +47,16 @@ final class ImageCommentPresenter {
 
 class ImageCommentPresenterTests: XCTestCase {
 	func test_init_doesNotSendMessagesToView() {
-		let view = ViewSpy()
-		_ = ImageCommentPresenter(currentDate: Date.init, commentView: view)
+		let (_, view) = makeSUT()
+		
 		XCTAssertTrue(view.messages.isEmpty)
 	}
 	
 	func test_didLoadComment_displaysCommentWithRelativeDateFormatting() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
+		let (sut, view) = makeSUT(currentDate: { staticDate })
 		let comment = makeComment(date: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"))
 		let expectedRelativeDate = "2 hours ago"
-		
-		let view = ViewSpy()
-		let sut = ImageCommentPresenter(currentDate: { staticDate }, commentView: view)
 		
 		sut.didLoadComment(comment)
 		
@@ -66,6 +64,14 @@ class ImageCommentPresenterTests: XCTestCase {
 	}
 	
 	// MARK: - Helpers
+	
+	private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentPresenter, view: ViewSpy) {
+		let view = ViewSpy()
+		let sut = ImageCommentPresenter(currentDate: currentDate, commentView: view)
+		trackForMemoryLeaks(view, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		return (sut, view)
+	}
 	
 	private func makeDateFromTimestamp(_ timestamp: TimeInterval, description: String, file: StaticString = #file, line: UInt = #line) -> Date {
 		let date = Date(timeIntervalSince1970: timestamp)
