@@ -9,6 +9,26 @@
 import EssentialFeed
 import XCTest
 
+enum Localized {
+	enum ImageComments {
+		static var bundle = Bundle(for: ImageCommentsListPresenter.self)
+		static var table: String { "ImageComments" }
+		
+		static var errorMessage: String {
+			localizedString(
+				for: "IMAGE_COMMENTS_VIEW_ERROR_MESSAGE",
+				table: table,
+				bundle: bundle,
+				comment: "Error message to be presented when comments fail to load"
+			)
+		}
+	}
+	
+	private static func localizedString(for key: String, table: String, bundle: Bundle, comment: String) -> String {
+		NSLocalizedString(key, tableName: table, bundle: bundle, comment: comment)
+	}
+}
+
 struct ImageCommentsLoadingViewModel {
 	let isLoading: Bool
 }
@@ -54,6 +74,11 @@ final class ImageCommentsListPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 		commentsView.display(ImageCommentsListViewModel(comments: comments))
 	}
+	
+	func didFinishLoadingComments(with error: Error) {
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+		errorView.display(ImageCommentsErrorViewModel(message: Localized.ImageComments.errorMessage))
+	}
 }
 
 class ImageCommentsListPresenterTests: XCTestCase {
@@ -80,6 +105,14 @@ class ImageCommentsListPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [.display(isLoading: false), .display(comments: comments)])
 	}
 	
+	func test_didFinishLoadingFeedWithError_stopsLoadingAndDisplaysLocalizedErrorMessage() {
+		let (sut, view) = makeSUT()
+		
+		sut.didFinishLoadingComments(with: anyNSError())
+		
+		XCTAssertEqual(view.messages, [.display(isLoading: false), .display(errorMessage: localized("IMAGE_COMMENTS_VIEW_ERROR_MESSAGE"))])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsListPresenter, view: ViewSpy) {
@@ -101,6 +134,16 @@ class ImageCommentsListPresenterTests: XCTestCase {
 	
 	func makeComments() -> [ImageComment] {
 		return [makeComment(), makeComment()]
+	}
+	
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "ImageComments"
+		let bundle = Bundle(for: ImageCommentsListPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
 	}
 	
 	private class ViewSpy: ImageCommentsLoadingView, ImageCommentsListView, ImageCommentsErrorView {
