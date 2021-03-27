@@ -10,4 +10,8 @@ import Foundation
 
 public struct ImageCommentAuthor: Equatable {
 	public let username: String
+	
+	public init(username: String) {
+		self.username = username
+	}
 }

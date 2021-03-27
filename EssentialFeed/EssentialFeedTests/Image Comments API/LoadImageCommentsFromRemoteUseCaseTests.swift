@@ -33,16 +33,53 @@ final class RemoteCommentsLoader {
 				completion(.failure(Error.connectivity))
 				
 			case let .success((data, response)):
-				if response.statusCode != 200 {
-					completion(.failure(.invalidData))
-				} else if let _ = try? JSONSerialization.jsonObject(with: data) {
-					completion(.success([]))
-				} else {
-					completion(.failure(.invalidData))
-				}
+				completion(RemoteCommentsLoader.map(data, from: response))
 			}
 		}
 	}
+	
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		guard response.statusCode == 200 else {
+			return .failure(.invalidData)
+		}
+		
+		do {
+			let jsonDecoder = JSONDecoder()
+			jsonDecoder.dateDecodingStrategy = .iso8601
+			let root = try jsonDecoder.decode(Root.self, from: data)
+			return .success(root.items.toModels())
+		} catch {
+			print(error)
+			return .failure(.invalidData)
+		}
+	}
+}
+
+private extension Array where Element == RemoteImageComment {
+	func toModels() -> [ImageComment] {
+		return map {
+			ImageComment(
+				id: $0.id,
+				message: $0.message,
+				createdAt: $0.created_at,
+				author: ImageCommentAuthor(username: $0.author.username))
+		}
+	}
+}
+
+private struct Root: Decodable {
+	let items: [RemoteImageComment]
+}
+
+private struct RemoteImageComment: Decodable {
+	let id: UUID
+	let message: String
+	let created_at: Date
+	let author: RemoteImageCommentAuthor
+}
+
+private struct RemoteImageCommentAuthor: Decodable {
+	let username: String
 }
 
 final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
@@ -108,6 +145,21 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+		let (sut, client) = makeSUT()
+		
+		let item1 = makeItem(id: UUID(), message: "a message", authorName: "a username")
+		
+		let item2 = makeItem(id: UUID(), message: "another message", authorName: "another username")
+		
+		let items = [item1.model, item2.model]
+		
+		expect(sut, toCompleteWith: .success(items), when: {
+			let json = makeItemsJSON([item1.json, item2.json])
+			client.complete(withStatusCode: 200, data: json)
+		})
+	}
+	
 	// MARK: - Helpers
 	
 	private func expect(
@@ -145,6 +197,22 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func makeItem(id: UUID, message: String, authorName: String) -> (model: ImageComment, json: [String: Any]) {
+		let createdAt = Date(timeIntervalSinceReferenceDate: 638556190)
+		let item = ImageComment(id: id, message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
+		
+		let json = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": ISO8601DateFormatter().string(from: createdAt),
+			"author": [
+				"username": authorName
+			]
+		].compactMapValues { $0 }
+		
+		return (item, json)
 	}
 	
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
