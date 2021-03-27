@@ -13,15 +13,15 @@ final class ImageCommentItemsMapper {
 		let items: [RemoteImageComment]
 	}
 
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
-		guard response.isOK else {
-			throw RemoteImageCommentsLoader.Error.invalidData
-		}
-
+	private static var decoder: JSONDecoder {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		guard let root = try? decoder.decode(Root.self, from: data) else {
+		return decoder
+	}
+
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
+		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteImageCommentsLoader.Error.invalidData
 		}
 
