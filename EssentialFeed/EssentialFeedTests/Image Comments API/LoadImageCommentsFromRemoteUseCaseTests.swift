@@ -36,6 +36,7 @@ final class RemoteCommentsLoader {
 				if response.statusCode != 200 {
 					completion(.failure(.invalidData))
 				} else if let _ = try? JSONSerialization.jsonObject(with: data) {
+					completion(.success([]))
 				} else {
 					completion(.failure(.invalidData))
 				}
@@ -98,6 +99,15 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
+	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWith: .success([]), when: {
+			let emptyListJSON = makeItemsJSON([])
+			client.complete(withStatusCode: 200, data: emptyListJSON)
+		})
+	}
+	
 	// MARK: - Helpers
 	
 	private func expect(
@@ -111,6 +121,9 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		sut.load { receivedResult in
 			switch (receivedResult, expectedResult) {
+			case let (.success(receivedItems), .success(expectedItems)):
+				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
+			
 			case let (.failure(receivedError), .failure(expectedError)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 				
@@ -132,5 +145,10 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
+	}
+	
+	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
+		let json = ["items": items]
+		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
