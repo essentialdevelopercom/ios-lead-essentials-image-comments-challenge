@@ -20,6 +20,15 @@ extension FeedImageCommentsUIIntegrationTests {
 			return imageCommentRequests.count
 		}
 		
+		func completeFeedImageCommentsLoading(with feed: [FeedImageComment] = [], at index: Int = 0) {
+			imageCommentRequests[index].completion(.success(feed))
+		}
+		
+		func completeFeedImageCommentsLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			imageCommentRequests[index].completion(.failure(error))
+		}
+		
 		private struct ImageCommentTaskSpy: FeedImageCommentsLoaderTask {
 			let cancelCallback: () -> Void
 			func cancel() {

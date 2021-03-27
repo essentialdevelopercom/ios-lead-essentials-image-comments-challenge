@@ -13,4 +13,8 @@ extension FeedImageCommentsViewController {
 	func simulateUserInitiatedFeedReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
+	}
 }
