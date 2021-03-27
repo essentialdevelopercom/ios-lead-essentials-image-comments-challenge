@@ -12,8 +12,11 @@ import XCTest
 final class RemoteCommentsLoader {
 	
 	enum Error: Swift.Error {
+		case connectivity
 		case invalidData
 	}
+	
+	typealias Result = Swift.Result<[ImageComment], Error>
 	
 	private let url: URL
 	private let client: HTTPClient
@@ -23,11 +26,11 @@ final class RemoteCommentsLoader {
 		self.client = client
 	}
 	
-	func load(completion: @escaping (Result<[ImageComment], Swift.Error>) -> Void) {
+	func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url) { result in
 			switch result {
-			case let .failure(error):
-				completion(.failure(error))
+			case .failure:
+				completion(.failure(Error.connectivity))
 				
 			case let .success((_, response)):
 				if response.statusCode != 200 {
@@ -66,49 +69,50 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_load_deliversErrorOnClientError() {
 		let (sut, client) = makeSUT()
-		let expectedError = NSError(domain: "Test", code: 0)
 		
-		let exp = expectation(description: "Wait for load completion")
-		sut.load { result in
-			switch result {
-			case let .failure(receivedError):
-				XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
-				
-			default:
-				XCTFail("Expected failure, git \(result) instead.")
-			}
-			exp.fulfill()
-		}
-		
-		client.complete(with: expectedError)
-		wait(for: [exp], timeout: 1.0)
+		expect(sut, toCompleteWith: .failure(.connectivity), when: {
+			client.complete(with: NSError(domain: "Test", code: 0))
+		})
 	}
 	
 	func test_load_deliversErrorOnNon200HTTPResponse() {
 		let (sut, client) = makeSUT()
-		
 		let samples = [199, 201, 300, 400, 500]
-		let expectedError = RemoteCommentsLoader.Error.invalidData
 		
 		samples.enumerated().forEach { index, code in
-			let exp = expectation(description: "Wait for load completion")
-			sut.load { result in
-				switch result {
-				case let .failure(receivedError):
-					XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
-					
-				default:
-					XCTFail("Expected failure, git \(result) instead.")
-				}
-				exp.fulfill()
-			}
-			
-			client.complete(withStatusCode: code, data: anyData(), at: index)
-			wait(for: [exp], timeout: 1.0)
+			expect(sut, toCompleteWith: .failure(.invalidData), when: {
+				client.complete(withStatusCode: code, data: anyData(), at: index)
+			})
 		}
 	}
 	
 	// MARK: - Helpers
+	
+	private func expect(
+		_ sut: RemoteCommentsLoader,
+		toCompleteWith expectedResult: RemoteCommentsLoader.Result,
+		when action: () -> Void,
+		file: StaticString = #filePath,
+		line: UInt = #line
+	) {
+		let exp = expectation(description: "Wait for load completion")
+		
+		sut.load { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.failure(receivedError), .failure(expectedError)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+				
+			default:
+				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+			}
+			
+			exp.fulfill()
+		}
+		
+		action()
+		
+		wait(for: [exp], timeout: 1.0)
+	}
 	
 	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
