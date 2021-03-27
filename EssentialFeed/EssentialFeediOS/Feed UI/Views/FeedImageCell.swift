@@ -12,6 +12,11 @@ public final class FeedImageCell: UITableViewCell {
 	@IBOutlet private(set) public var feedImageRetryButton: UIButton!
 	@IBOutlet private(set) public var descriptionLabel: UILabel!
 	
+	private(set) public lazy var feedImageButton: UIButton = {
+		let button = UIButton()
+		return button
+	}()
+	
 	var onRetry: (() -> Void)?
 	
 	@IBAction private func retryButtonTapped() {

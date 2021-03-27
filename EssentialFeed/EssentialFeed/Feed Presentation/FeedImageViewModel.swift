@@ -12,4 +12,8 @@ public struct FeedImageViewModel<Image> {
 	public var hasLocation: Bool {
 		return location != nil
 	}
+	
+	public var shouldAllowImageTap: Bool {
+		return !isLoading && !shouldRetry
+	}
 }

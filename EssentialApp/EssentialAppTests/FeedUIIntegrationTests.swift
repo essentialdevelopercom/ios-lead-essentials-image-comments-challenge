@@ -210,6 +210,32 @@ final class FeedUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(view1?.isShowingRetryAction, false, "Expected no retry action for second view on retry")
 	}
 	
+	func test_feedImageViewImageButton_isNotVisibleUntilImageLoadsSuccessfully() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [makeImage(), makeImage(), makeImage()])
+		
+		let view0 = sut.simulateFeedImageViewVisible(at: 0)
+		let view1 = sut.simulateFeedImageViewVisible(at: 1)
+		
+		XCTAssertEqual(view0?.isShowingImageButton, false, "Expected no image action for first view while loading first image")
+		XCTAssertEqual(view1?.isShowingImageButton, false, "Expected no image action for second view while loading second image")
+		
+		let imageData = UIImage.make(withColor: .red).pngData()!
+		loader.completeImageLoading(with: imageData, at: 0)
+		XCTAssertEqual(view0?.isShowingImageButton, true, "Expected image action for first view once first image loading completes successfully")
+		XCTAssertEqual(view1?.isShowingImageButton, false, "Expected no image action state change for second view once first image loading completes successfully")
+		
+		loader.completeImageLoadingWithError(at: 1)
+		XCTAssertEqual(view0?.isShowingImageButton, true, "Expected no image action state change for first view once second image loading completes with error")
+		XCTAssertEqual(view1?.isShowingImageButton, false, "Expected no image action for second view once second image loading completes with error")
+		
+		view1?.simulateRetryAction()
+		XCTAssertEqual(view0?.isShowingImageButton, true, "Expected no image action state change for first view on second image retry")
+		XCTAssertEqual(view1?.isShowingImageButton, false, "Expected no image action for second view on retry")
+	}
+	
 	func test_feedImageViewRetryButton_isVisibleOnInvalidImageData() {
 		let (sut, loader) = makeSUT()
 		

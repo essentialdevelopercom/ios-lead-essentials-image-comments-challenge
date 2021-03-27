@@ -22,6 +22,10 @@ extension FeedImageCell {
 		return !feedImageRetryButton.isHidden
 	}
 	
+	var isShowingImageButton: Bool {
+		return !feedImageButton.isHidden
+	}
+	
 	var locationText: String? {
 		return locationLabel.text
 	}
