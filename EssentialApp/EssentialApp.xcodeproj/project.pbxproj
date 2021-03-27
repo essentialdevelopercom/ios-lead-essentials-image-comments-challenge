@@ -168,17 +168,12 @@
 		0895DA85234B3B950031BB2D /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
-				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
-				0895DA88234B3B950031BB2D /* SceneDelegate.swift */,
-				0835BF6C24850F9800A793D2 /* CombineHelpers.swift */,
-				08073B42238D2DF900A75DC6 /* FeedUIComposer.swift */,
-				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
-				08073B3F238D2DF900A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift */,
-				08073B41238D2DF900A75DC6 /* FeedLoaderPresentationAdapter.swift */,
-				08073B43238D2DFA00A75DC6 /* FeedViewAdapter.swift */,
+				0895DA94234B3B970031BB2D /* Info.plist */,
 				0895DA8F234B3B970031BB2D /* Assets.xcassets */,
 				0895DA91234B3B970031BB2D /* LaunchScreen.storyboard */,
-				0895DA94234B3B970031BB2D /* Info.plist */,
+				FAB5DD41260F0DB600405C6E /* Helpers */,
+				FAB5DD40260F0D9800405C6E /* Application */,
+				FAB5DD3F260F0D8300405C6E /* Feed Composition */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -202,6 +197,35 @@
 				0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FAB5DD3F260F0D8300405C6E /* Feed Composition */ = {
+			isa = PBXGroup;
+			children = (
+				08073B42238D2DF900A75DC6 /* FeedUIComposer.swift */,
+				08073B3F238D2DF900A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift */,
+				08073B41238D2DF900A75DC6 /* FeedLoaderPresentationAdapter.swift */,
+				08073B43238D2DFA00A75DC6 /* FeedViewAdapter.swift */,
+			);
+			name = "Feed Composition";
+			sourceTree = "<group>";
+		};
+		FAB5DD40260F0D9800405C6E /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
+				0895DA88234B3B950031BB2D /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		FAB5DD41260F0DB600405C6E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0835BF6C24850F9800A793D2 /* CombineHelpers.swift */,
+				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
