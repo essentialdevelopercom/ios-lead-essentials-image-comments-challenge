@@ -53,14 +53,27 @@ class ImageCommentPresenterTests: XCTestCase {
 	}
 	
 	func test_didLoadComment_displaysCommentWithRelativeDateFormatting() {
-		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
-		let (sut, view) = makeSUT(currentDate: { staticDate })
-		let comment = makeComment(date: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"))
-		let expectedRelativeDate = "2 hours ago"
+		let staticDate = dateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
+		let samples: [(comment: ImageComment, relativeDate: String)] = [
+			(comment(date: dateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000")), "2 hours ago"),
+			(comment(date: dateFromTimestamp(1_605_713_544, description: "2020-11-18 15:32:24 +0000")), "1 day ago"),
+			(comment(date: dateFromTimestamp(1_604_571_429, description: "2020-11-05 10:17:09 +0000")), "2 weeks ago"),
+			(comment(date: dateFromTimestamp(1_602_510_149, description: "2020-10-12 13:42:29 +0000")), "1 month ago"),
+			(comment(date: dateFromTimestamp(1_488_240_000, description: "2017-02-28 00:00:00 +0000")), "3 years ago")
+		]
 		
-		sut.didLoadComment(comment)
-		
-		XCTAssertEqual(view.messages, [.display(author: comment.author, message: comment.message, relativeDate: expectedRelativeDate)])
+		samples.enumerated().forEach { index, pair in
+			let (comment, relativeDate) = pair
+			let (sut, view) = makeSUT(currentDate: { staticDate })
+			
+			sut.didLoadComment(comment)
+			
+			XCTAssertEqual(
+				view.messages,
+				[.display(author: comment.author, message: comment.message, relativeDate: relativeDate)],
+				"Expected comment at index \(index) to have author '\(comment.author)', message '\(comment.message)' and relative date '\(relativeDate)'"
+			)
+		}
 	}
 	
 	// MARK: - Helpers
@@ -73,13 +86,13 @@ class ImageCommentPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
-	private func makeDateFromTimestamp(_ timestamp: TimeInterval, description: String, file: StaticString = #file, line: UInt = #line) -> Date {
+	private func dateFromTimestamp(_ timestamp: TimeInterval, description: String, file: StaticString = #file, line: UInt = #line) -> Date {
 		let date = Date(timeIntervalSince1970: timestamp)
 		XCTAssertEqual(date.description, description, file: file, line: line)
 		return date
 	}
 	
-	private func makeComment(date: Date) -> ImageComment {
+	private func comment(date: Date) -> ImageComment {
 		ImageComment(
 			id: UUID(),
 			message: "any message",
