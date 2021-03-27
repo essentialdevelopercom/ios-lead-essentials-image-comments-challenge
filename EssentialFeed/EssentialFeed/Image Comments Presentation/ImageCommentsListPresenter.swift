@@ -8,26 +8,6 @@
 
 import Foundation
 
-enum Localized {
-	enum ImageComments {
-		static var bundle = Bundle(for: ImageCommentsListPresenter.self)
-		static var table: String { "ImageComments" }
-		
-		static var errorMessage: String {
-			localizedString(
-				for: "IMAGE_COMMENTS_VIEW_ERROR_MESSAGE",
-				table: table,
-				bundle: bundle,
-				comment: "Error message to be presented when comments fail to load"
-			)
-		}
-	}
-	
-	private static func localizedString(for key: String, table: String, bundle: Bundle, comment: String) -> String {
-		NSLocalizedString(key, tableName: table, bundle: bundle, comment: comment)
-	}
-}
-
 // MARK: - ViewModels
 
 public struct ImageCommentsLoadingViewModel {
