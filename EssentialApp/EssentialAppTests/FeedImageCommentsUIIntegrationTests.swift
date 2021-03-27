@@ -52,6 +52,24 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	}
 	
+	func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
+		let image0 = makeImageComment()
+		let image1 = makeImageComment()
+		let image2 = makeImageComment()
+		let image3 = makeImageComment()
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+		
+		loader.completeFeedImageCommentsLoading(with: [image0], at: 0)
+		assertThat(sut, isRendering: [image0])
+		
+		sut.simulateUserInitiatedFeedReload()
+		loader.completeFeedImageCommentsLoading(with: [image0, image1, image2, image3], at: 1)
+		assertThat(sut, isRendering: [image0, image1, image2, image3])
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {
@@ -66,5 +84,10 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
 		return FeedImage(id: UUID(), description: description, location: location, url: url)
+	}
+	
+	private func makeImageComment(message: String = "A message", createdAt: Date = Date(), author: String = "Ivan") -> FeedImageComment {
+		return FeedImageComment(id: UUID(), message: "A message", createdAt: createdAt, author: .init(username: author))
+
 	}
 }

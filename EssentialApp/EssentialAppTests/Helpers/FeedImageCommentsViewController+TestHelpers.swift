@@ -17,4 +17,21 @@ extension FeedImageCommentsViewController {
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}
+	
+	func numberOfRenderedFeedImageCommentViews() -> Int {
+		return tableView.numberOfRows(inSection: feedImageCommentsSection)
+	}
+	
+	func feedImageCommentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedFeedImageCommentViews() > row else {
+			return nil
+		}
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: feedImageCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	private var feedImageCommentsSection: Int {
+		return 0
+	}
 }
