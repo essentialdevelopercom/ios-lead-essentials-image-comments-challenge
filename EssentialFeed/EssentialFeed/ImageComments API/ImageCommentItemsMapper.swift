@@ -10,10 +10,10 @@ import Foundation
 
 final class ImageCommentItemsMapper {
 	private struct Root: Decodable {
-		let items: [ImageComment]
+		let items: [RemoteImageComment]
 	}
 
-	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
 		guard response.statusCode == 200 else {
 			throw RemoteImageCommentsLoader.Error.invalidData
 		}

@@ -155,10 +155,10 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		return df
 	}()
 
-	private func makeItem(id: UUID, message: String, date: String, username: String) -> (model: ImageComment, json: [String: Any]) {
-		let author = ImageCommentAuthor(username: username)
+	private func makeItem(id: UUID, message: String, date: String, username: String) -> (model: RemoteImageComment, json: [String: Any]) {
+		let author = RemoteImageCommentAuthor(username: username)
 		let createdAt = iso8601DateFormatter.date(from: date)!
-		let item = ImageComment(id: id, message: message, createdAt: createdAt, author: author)
+		let item = RemoteImageComment(id: id, message: message, createdAt: createdAt, author: author)
 
 		let authorJson: [String: Any] = [
 			"username": author.username

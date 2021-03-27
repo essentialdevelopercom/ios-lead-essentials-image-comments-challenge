@@ -17,7 +17,7 @@ public final class RemoteImageCommentsLoader {
 		case invalidData
 	}
 
-	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
+	public typealias Result = Swift.Result<[RemoteImageComment], Swift.Error>
 
 	public init(url: URL, client: HTTPClient) {
 		self.url = url

@@ -1,5 +1,5 @@
 //
-//  ImageCommentAuthor.swift
+//  RemoteImageCommentAuthor.swift
 //  EssentialFeed
 //
 //  Created by Sebastian Vidrea on 27.03.2021.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ImageCommentAuthor: Decodable, Equatable {
+public struct RemoteImageCommentAuthor: Decodable, Equatable {
 	public init(username: String) {
 		self.username = username
 	}
