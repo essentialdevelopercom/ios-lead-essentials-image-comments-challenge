@@ -20,7 +20,7 @@ struct ImageCommentAuthor: Decodable, Equatable {
 	let username: String
 }
 
-class RemoteImageCommentsLoader {
+final class RemoteImageCommentsLoader {
 	private let url: URL
 	private let client: HTTPClient
 
