@@ -50,11 +50,9 @@ class RemoteImageCommentsLoader {
 					completion(.failure(Error.invalidData))
 					return
 				}
-				let decoder = JSONDecoder()
-				decoder.dateDecodingStrategy = .iso8601
-				decoder.keyDecodingStrategy = .convertFromSnakeCase
-				if let root = try? decoder.decode(Root.self, from: data) {
-					completion(.success(root.items))
+
+				if let items = try? Self.map(data, from: response) {
+					completion(.success(items))
 				} else {
 					completion(.failure(.invalidData))
 				}
@@ -63,6 +61,20 @@ class RemoteImageCommentsLoader {
 				completion(.failure(Error.connectivity))
 			}
 		}
+	}
+
+	private static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
+		guard response.statusCode == 200 else {
+			throw Error.invalidData
+		}
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
+		decoder.keyDecodingStrategy = .convertFromSnakeCase
+		guard let root = try? decoder.decode(Root.self, from: data) else {
+			throw Error.invalidData
+		}
+
+		return root.items
 	}
 }
 
