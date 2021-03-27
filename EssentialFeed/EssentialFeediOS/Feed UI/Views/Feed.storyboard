@@ -102,8 +102,11 @@ Location</string>
                                                                 <action selector="retryButtonTapped" destination="4Aa-lg-gTp" eventType="touchUpInside" id="qtX-lz-XAI"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pek-Lw-IGA" userLabel="Image Button Action">
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pek-Lw-IGA" userLabel="Image Button Action">
                                                             <rect key="frame" x="164" y="172" width="46" height="30"/>
+                                                            <connections>
+                                                                <action selector="imageViewButtonTapped" destination="4Aa-lg-gTp" eventType="touchUpInside" id="FlB-0p-XL9"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>

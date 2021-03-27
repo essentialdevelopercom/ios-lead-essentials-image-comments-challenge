@@ -8,6 +8,7 @@ import EssentialFeed
 public protocol FeedImageCellControllerDelegate {
 	func didRequestImage()
 	func didCancelImageRequest()
+	func didTapImage()
 }
 
 public final class FeedImageCellController: FeedImageView {
@@ -42,6 +43,7 @@ public final class FeedImageCellController: FeedImageView {
 		cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
 		cell?.feedImageButton.isHidden = !viewModel.shouldAllowImageTap
 		cell?.onRetry = delegate.didRequestImage
+		cell?.onTap = viewModel.shouldAllowImageTap ? delegate.didTapImage : nil
 	}
 	
 	private func releaseCellForReuse() {

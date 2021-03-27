@@ -236,6 +236,36 @@ final class FeedUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(view1?.isShowingImageButton, false, "Expected no image action for second view on retry")
 	}
 	
+	func test_feedImageViewImageButton_forwardsFeedImageIDOnTapWhenImageHasLoadSuccessfully() {
+		let image1 = makeImage()
+		let image2 = makeImage()
+		var capturedIDs = [String?]()
+		let (sut, loader) = makeSUT(imageIDHandler: { capturedIDs.append($0) })
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [image1, image2])
+		let view1 = sut.simulateFeedImageViewVisible(at: 0)
+		let view2 = sut.simulateFeedImageViewVisible(at: 1)
+		
+		view1?.simulateTapAction()
+		view2?.simulateTapAction()
+		XCTAssertEqual(capturedIDs, [], "Expected no IDs to be forwarded when tapping before image has loaded successfully")
+		
+		let imageData = UIImage.make(withColor: .red).pngData()!
+		loader.completeImageLoading(with: imageData, at: 0)
+		view1?.simulateTapAction()
+		view2?.simulateTapAction()
+		XCTAssertEqual(capturedIDs, [image1.id.uuidString], "Expected tapped image ID to be forwarded when image has loaded successfully")
+		
+		loader.completeImageLoadingWithError(at: 1)
+		view2?.simulateTapAction()
+		XCTAssertEqual(capturedIDs, [image1.id.uuidString], "Expected no change in forwarded IDs when tapping an image that failed loading")
+		
+		view2?.simulateRetryAction()
+		view2?.simulateTapAction()
+		XCTAssertEqual(capturedIDs, [image1.id.uuidString], "Expected no change in forwarded IDs when tapping an image that is still loading")
+	}
+	
 	func test_feedImageViewRetryButton_isVisibleOnInvalidImageData() {
 		let (sut, loader) = makeSUT()
 		
@@ -345,9 +375,9 @@ final class FeedUIIntegrationTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(imageIDHandler: @escaping (String) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, imageIDHandler: imageIDHandler)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

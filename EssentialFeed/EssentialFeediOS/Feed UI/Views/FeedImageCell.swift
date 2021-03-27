@@ -14,8 +14,13 @@ public final class FeedImageCell: UITableViewCell {
 	@IBOutlet private(set) public var feedImageButton: UIButton!
 	
 	var onRetry: (() -> Void)?
+	var onTap: (() -> Void)?
 	
 	@IBAction private func retryButtonTapped() {
 		onRetry?()
+	}
+	
+	@IBAction private func imageViewButtonTapped() {
+		onTap?()
 	}
 }
