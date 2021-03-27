@@ -87,6 +87,7 @@
 		FA644533260EFA7400B54A9B /* ImageCommentsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA644532260EFA7400B54A9B /* ImageCommentsListPresenter.swift */; };
 		FA64453E260EFB0E00B54A9B /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = FA644524260EF90F00B54A9B /* ImageComments.strings */; };
 		FA644545260EFB7A00B54A9B /* Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA644544260EFB7A00B54A9B /* Localized.swift */; };
+		FA644565260EFD7E00B54A9B /* ImageCommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACF3052260C5A5100F838DA /* ImageCommentsLocalizationTests.swift */; };
 		FA6B827526097C6A00189E17 /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6B827426097C6A00189E17 /* ImageCommentCell.swift */; };
 		FA6B827C26097C9700189E17 /* CommentErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6B827B26097C9700189E17 /* CommentErrorView.swift */; };
 		FA6B828326097CD900189E17 /* ImageCommentsRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6B828226097CD900189E17 /* ImageCommentsRefreshController.swift */; };
@@ -108,7 +109,6 @@
 		FA88662F260AE79400789C72 /* ImageCommentsPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA88662E260AE79400789C72 /* ImageCommentsPresentationAdapter.swift */; };
 		FA886636260AE86000789C72 /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA886635260AE86000789C72 /* ImageComments.storyboard */; };
 		FA96AE9826027AAB008C6DD5 /* LoadImageCommentsFromRemoteUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA96AE9726027AAB008C6DD5 /* LoadImageCommentsFromRemoteUseCaseTests.swift */; };
-		FACF3053260C5A5100F838DA /* ImageCommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACF3052260C5A5100F838DA /* ImageCommentsLocalizationTests.swift */; };
 		FACF3066260C6B0F00F838DA /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACF3065260C6B0F00F838DA /* MainQueueDispatchDecorator.swift */; };
 		FADC44EA2601D825006D6847 /* ImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADC44E92601D825006D6847 /* ImageComment.swift */; };
 		FADC44F42601D956006D6847 /* ImageCommentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADC44F32601D956006D6847 /* ImageCommentLoader.swift */; };
@@ -561,7 +561,6 @@
 				086AEFBA23A7E5B100EE8933 /* Helpers */,
 				086AEFB823A7DFA400EE8933 /* FeedSnapshotTests.swift */,
 				FA884BD22606C74100D9AEAF /* ImageCommentsIntegrationTests.swift */,
-				FACF3052260C5A5100F838DA /* ImageCommentsLocalizationTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -599,6 +598,7 @@
 		FA644509260EECE200B54A9B /* Image Comments Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				FACF3052260C5A5100F838DA /* ImageCommentsLocalizationTests.swift */,
 				FA64450A260EECFA00B54A9B /* ImageCommentsPresenterTests.swift */,
 			);
 			path = "Image Comments Presentation";
@@ -965,6 +965,7 @@
 				08805A19233A9F8600509F19 /* URLProtocolStub.swift in Sources */,
 				FA96AE9826027AAB008C6DD5 /* LoadImageCommentsFromRemoteUseCaseTests.swift in Sources */,
 				081C0DAF22491A2400AC754E /* ValidateFeedCacheUseCaseTests.swift in Sources */,
+				FA644565260EFD7E00B54A9B /* ImageCommentsLocalizationTests.swift in Sources */,
 				087148AC232BDF6900D6BE1A /* FeedPresenterTests.swift in Sources */,
 				FA64450B260EECFA00B54A9B /* ImageCommentsPresenterTests.swift in Sources */,
 				08897BE8233910040029F5E4 /* LoadFeedImageDataFromRemoteUseCaseTests.swift in Sources */,
@@ -1027,7 +1028,6 @@
 				086AEFB923A7DFA400EE8933 /* FeedSnapshotTests.swift in Sources */,
 				0800314923B6909A00720217 /* XCTestCase+Snapshot.swift in Sources */,
 				0800314723B68FAB00720217 /* UIViewController+Snapshot.swift in Sources */,
-				FACF3053260C5A5100F838DA /* ImageCommentsLocalizationTests.swift in Sources */,
 				FA884BD32606C74100D9AEAF /* ImageCommentsIntegrationTests.swift in Sources */,
 				086AEFBC23A7E5C300EE8933 /* UIImage+TestHelpers.swift in Sources */,
 			);
