@@ -5,6 +5,7 @@
 import UIKit
 
 public final class ErrorView: UIView {
+	@IBOutlet private(set) public var button: UIButton!
 	@IBOutlet private var label: UILabel!
 	
 	public var message: String? {

@@ -1,0 +1,10 @@
+/* 
+  ImageComments.strings
+  EssentialFeed
+
+  Created by Eric Garlock on 3/9/21.
+  Copyright © 2021 Essential Developer. All rights reserved.
+*/
+
+"COMMENT_VIEW_TITLE" = "Comments";
+"COMMENT_VIEW_ERROR_MESSAGE" = "Couldn't connect to server";

@@ -10,6 +10,10 @@ extension FeedViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
+	func simulateTapOnErrorViewButton() {
+		errorView?.button.simulateTap()
+	}
+	
 	@discardableResult
 	func simulateFeedImageViewVisible(at index: Int) -> FeedImageCell? {
 		return feedImageView(at: index) as? FeedImageCell
@@ -38,6 +42,12 @@ extension FeedViewController {
 		let ds = tableView.prefetchDataSource
 		let index = IndexPath(row: row, section: feedImagesSection)
 		ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
+	}
+	
+	func simulateFeedImageSelection(at row: Int) {
+		let ds = tableView.delegate
+		let index = IndexPath(row: row, section: feedImagesSection)
+		ds?.tableView?(tableView, didSelectRowAt: index)
 	}
 	
 	func renderedFeedImageData(at index: Int) -> Data? {

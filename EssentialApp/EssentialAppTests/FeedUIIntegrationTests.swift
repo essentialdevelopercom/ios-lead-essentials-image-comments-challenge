@@ -106,6 +106,19 @@ final class FeedUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_tapOnErrorView_hidesErrorMessage() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeFeedLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateTapOnErrorViewButton()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	func test_feedImageView_loadsImageURLWhenVisible() {
 		let image0 = makeImage(url: URL(string: "http://url-0.com")!)
 		let image1 = makeImage(url: URL(string: "http://url-1.com")!)
@@ -307,7 +320,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [makeImage()])
-		_ = sut.simulateFeedImageViewVisible(at: 0)
+		sut.simulateFeedImageViewVisible(at: 0)
 		
 		let exp = expectation(description: "Wait for background queue")
 		DispatchQueue.global().async {
@@ -317,11 +330,29 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	func test_didSelectFeedImage_callsOnSelectClosure() {
+		let image0 = makeImage()
+		let image1 = makeImage()
+		
+		var selectedImages = [FeedImage]()
+		
+		let (sut, loader) = makeSUT(onSelect: { selectedImages.append($0) })
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [image0, image1])
+		
+		sut.simulateFeedImageSelection(at: 0)
+		XCTAssertEqual(selectedImages, [image0])
+		
+		sut.simulateFeedImageSelection(at: 1)
+		XCTAssertEqual(selectedImages, [image0, image1])
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(onSelect: @escaping (FeedImage) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, onSelect: onSelect)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

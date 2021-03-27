@@ -13,9 +13,11 @@ public protocol FeedImageCellControllerDelegate {
 public final class FeedImageCellController: FeedImageView {
 	private let delegate: FeedImageCellControllerDelegate
 	private var cell: FeedImageCell?
+	public var onSelect: () -> Void
 	
-	public init(delegate: FeedImageCellControllerDelegate) {
+	public init(delegate: FeedImageCellControllerDelegate, onSelect: @escaping () -> Void) {
 		self.delegate = delegate
+		self.onSelect = onSelect
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
@@ -31,6 +33,10 @@ public final class FeedImageCellController: FeedImageView {
 	func cancelLoad() {
 		releaseCellForReuse()
 		delegate.didCancelImageRequest()
+	}
+	
+	func select() {
+		onSelect()
 	}
 	
 	public func display(_ viewModel: FeedImageViewModel<UIImage>) {

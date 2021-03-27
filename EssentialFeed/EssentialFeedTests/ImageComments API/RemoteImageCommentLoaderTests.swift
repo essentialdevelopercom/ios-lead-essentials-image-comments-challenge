@@ -1,0 +1,189 @@
+//
+//  RemoteImageCommentLoaderTests.swift
+//  EssentialFeedTests
+//
+//  Created by Eric Garlock on 2/28/21.
+//  Copyright © 2021 Essential Developer. All rights reserved.
+//
+
+import XCTest
+import EssentialFeed
+
+class RemoteImageCommentLoaderTests: XCTestCase {
+	
+	func test_init_doesNotRequestDataFromURL() {
+		let (_, client) = makeSUT()
+		
+		XCTAssertEqual(client.requestedURLs, [])
+	}
+	
+	func test_load_requestsDataFromURL() {
+		let url = anyURL()
+		let (sut, client) = makeSUT(url: url)
+		
+		_ = sut.load() { _ in }
+		
+		XCTAssertEqual(client.requestedURLs, [url])
+	}
+	
+	func test_load_requestsDataFromURLTwice() {
+		let url = anyURL()
+		let (sut, client) = makeSUT(url: url)
+		
+		_ = sut.load() { _ in }
+		_ = sut.load() { _ in }
+		
+		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		
+		expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.connectivity)) {
+			client.complete(with: anyNSError())
+		}
+	}
+	
+	func test_load_deliversErrorOnNon2xxHTTPResponse() {
+		let (sut, client) = makeSUT()
+		let emptyListJSONData = "{\"items\": []}".data(using: .utf8)!
+		
+		let codes = [199, 301, 300, 400, 500]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.invalidData)) {
+				client.complete(withStatusCode: code, data: emptyListJSONData, at: index)
+			}
+		}
+	}
+	
+	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
+		let (sut, client) = makeSUT()
+		let invalidJSONData = "invalid json".data(using: .utf8)!
+		
+		let codes = [200, 201, 250, 280, 299]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .failure(RemoteImageCommentLoader.Error.invalidData)) {
+				client.complete(withStatusCode: code, data: invalidJSONData, at: index)
+			}
+		}
+	}
+	
+	func test_load_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() {
+		let (sut, client) = makeSUT()
+		let emptyListJSONData = "{\"items\": []}".data(using: .utf8)!
+		
+		let codes = [200, 201, 250, 280, 299]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([])) {
+				client.complete(withStatusCode: code, data: emptyListJSONData, at: index)
+			}
+		}
+	}
+	
+	func test_load_deliversItemsOn2xxHTTPResponseWithJSONList() {
+		let (sut, client) = makeSUT()
+		
+		let item1 = makeItem(
+			id: UUID(),
+			message: "a message",
+			createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
+			username: "a username")
+		
+		let item2 = makeItem(
+			id: UUID(),
+			message: "another message",
+			createdAt: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
+			username: "another username")
+		
+		let json = ["items": [item1.json, item2.json]]
+		let jsonData = try! JSONSerialization.data(withJSONObject: json)
+		
+		let codes = [200, 201, 250, 280, 299]
+		
+		codes.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([item1.model, item2.model])) {
+				client.complete(withStatusCode: code, data: jsonData, at: index)
+			}
+		}
+		
+	}
+	
+	func test_load_doesNotDeliverResultsAfterSUTInstanceHasBeenDeallocated() {
+		let client = HTTPClientSpy()
+		var sut: RemoteImageCommentLoader? = RemoteImageCommentLoader(url: anyURL(), client: client)
+		
+		var capturedResults = [RemoteImageCommentLoader.Result]()
+		sut?.load { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(with: anyNSError())
+		
+		XCTAssertTrue(capturedResults.isEmpty)
+	}
+	
+	func test_cancelLoadDataTask_cancelsRequestURL() {
+		let url = URL(string: "https://any-url.com")!
+		let (sut, client) = makeSUT(url: url)
+		
+		var capturedResults = [RemoteImageCommentLoader.Result]()
+		let task = sut.load { capturedResults.append($0) }
+		
+		task.cancel()
+		
+		XCTAssertEqual(client.cancelledURLs, [url])
+	}
+	
+	// MARK: - Helpers
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentLoader, client: HTTPClientSpy) {
+		let client = HTTPClientSpy()
+		let sut = RemoteImageCommentLoader(url: url, client: client)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		trackForMemoryLeaks(client, file: file, line: line)
+		return (sut, client)
+	}
+	
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: ImageComment, json: [String:Any]) {
+		let item = ImageComment(
+			id: id,
+			message: message,
+			createdAt: createdAt.date,
+			author: ImageCommentAuthor(username: username))
+		let json: [String:Any] = [
+			"id": item.id.uuidString,
+			"message": item.message,
+			"created_at": createdAt.iso8601String,
+			"author": [
+				"username": item.author.username
+			]
+		]
+		return (item, json)
+	}
+	
+	private func expect(_ sut: ImageCommentLoader, toCompleteWith expectedResult: ImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load completion")
+		
+		_ = sut.load { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.success(receivedItems), .success(expectedItems)):
+				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
+				
+			case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+				
+			default:
+				XCTFail("Expected result \(expectedResult) got \(receivedResult) instead", file: file, line: line)
+			}
+			
+			exp.fulfill()
+		}
+		
+		action()
+		
+		wait(for: [exp], timeout: 1.0)
+	}
+	
+	
+}
