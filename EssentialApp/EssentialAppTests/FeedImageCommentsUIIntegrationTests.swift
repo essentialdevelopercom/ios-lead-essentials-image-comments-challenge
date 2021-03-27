@@ -22,6 +22,20 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.title, localized("FEED_COMMENTS_VIEW_TITLE"))
 	}
 	
+	func test_loadFeedImageComments_requestFeedFromLoader() {
+		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.loadFeedImageCommentsCallCount, 0, "Expected no loading requests before view is loaded")
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.loadFeedImageCommentsCallCount, 1, "Expected a loading request once view is loaded")
+		
+		sut.simulateUserInitiatedFeedReload()
+		XCTAssertEqual(loader.loadFeedImageCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
+		
+		sut.simulateUserInitiatedFeedReload()
+		XCTAssertEqual(loader.loadFeedImageCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {

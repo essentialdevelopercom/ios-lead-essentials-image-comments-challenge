@@ -16,6 +16,10 @@ extension FeedImageCommentsUIIntegrationTests {
 		
 		// MARK: - FeedImageCommentsLoader
 		
+		var loadFeedImageCommentsCallCount: Int {
+			return imageCommentRequests.count
+		}
+		
 		private struct ImageCommentTaskSpy: FeedImageCommentsLoaderTask {
 			let cancelCallback: () -> Void
 			func cancel() {
