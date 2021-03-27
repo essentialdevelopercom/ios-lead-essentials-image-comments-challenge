@@ -214,7 +214,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [makeImage(), makeImage(), makeImage()])
+		loader.completeFeedLoading(with: [makeImage(), makeImage()])
 		
 		let view0 = sut.simulateFeedImageViewVisible(at: 0)
 		let view1 = sut.simulateFeedImageViewVisible(at: 1)
