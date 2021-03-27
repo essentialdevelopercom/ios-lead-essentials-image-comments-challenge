@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1hh-nG-9OR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1hh-nG-9OR">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -102,18 +102,25 @@ Location</string>
                                                                 <action selector="retryButtonTapped" destination="4Aa-lg-gTp" eventType="touchUpInside" id="qtX-lz-XAI"/>
                                                             </connections>
                                                         </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pek-Lw-IGA" userLabel="Image Button Action">
+                                                            <rect key="frame" x="164" y="172" width="46" height="30"/>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                                     <constraints>
+                                                        <constraint firstItem="Pek-Lw-IGA" firstAttribute="centerX" secondItem="tsT-7G-iNQ" secondAttribute="centerX" id="5Cm-c8-qMy"/>
                                                         <constraint firstItem="tsT-7G-iNQ" firstAttribute="top" secondItem="FAU-iA-TTE" secondAttribute="top" id="9oC-tH-3FO"/>
                                                         <constraint firstItem="tsT-7G-iNQ" firstAttribute="leading" secondItem="FAU-iA-TTE" secondAttribute="leading" id="ChN-bf-lt0"/>
                                                         <constraint firstAttribute="trailing" secondItem="ojQ-jM-69D" secondAttribute="trailing" id="E8c-65-xTD"/>
+                                                        <constraint firstItem="Pek-Lw-IGA" firstAttribute="height" secondItem="tsT-7G-iNQ" secondAttribute="height" multiplier="0.0802139" id="LAW-zA-Puj"/>
                                                         <constraint firstAttribute="trailing" secondItem="tsT-7G-iNQ" secondAttribute="trailing" id="eZM-lJ-lZN"/>
                                                         <constraint firstItem="ojQ-jM-69D" firstAttribute="top" secondItem="FAU-iA-TTE" secondAttribute="top" id="f45-Np-PSS"/>
                                                         <constraint firstAttribute="width" secondItem="FAU-iA-TTE" secondAttribute="height" multiplier="1:1" id="fEx-K9-TSV"/>
+                                                        <constraint firstItem="Pek-Lw-IGA" firstAttribute="centerY" secondItem="tsT-7G-iNQ" secondAttribute="centerY" id="lA7-UZ-Nrr"/>
                                                         <constraint firstAttribute="bottom" secondItem="ojQ-jM-69D" secondAttribute="bottom" id="lMu-Xo-ueA"/>
                                                         <constraint firstAttribute="bottom" secondItem="tsT-7G-iNQ" secondAttribute="bottom" id="qyf-hX-9Bz"/>
                                                         <constraint firstItem="ojQ-jM-69D" firstAttribute="leading" secondItem="FAU-iA-TTE" secondAttribute="leading" id="u9N-E3-1Iz"/>
+                                                        <constraint firstItem="Pek-Lw-IGA" firstAttribute="width" secondItem="tsT-7G-iNQ" secondAttribute="width" multiplier="0.122995" id="w6C-54-G0s"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -145,6 +152,7 @@ Location</string>
                                 <accessibility key="accessibilityConfiguration" identifier="feed-image-cell"/>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="H63-o4-rxp" id="2Er-vI-jnc"/>
+                                    <outlet property="feedImageButton" destination="Pek-Lw-IGA" id="cy0-b7-TzC"/>
                                     <outlet property="feedImageContainer" destination="FAU-iA-TTE" id="k7Q-aT-bl8"/>
                                     <outlet property="feedImageRetryButton" destination="ojQ-jM-69D" id="qY7-3z-Rze"/>
                                     <outlet property="feedImageView" destination="tsT-7G-iNQ" id="8Vg-J5-Z1K"/>

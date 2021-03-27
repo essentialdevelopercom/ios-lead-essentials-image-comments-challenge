@@ -11,11 +11,7 @@ public final class FeedImageCell: UITableViewCell {
 	@IBOutlet private(set) public var feedImageView: UIImageView!
 	@IBOutlet private(set) public var feedImageRetryButton: UIButton!
 	@IBOutlet private(set) public var descriptionLabel: UILabel!
-	
-	private(set) public lazy var feedImageButton: UIButton = {
-		let button = UIButton()
-		return button
-	}()
+	@IBOutlet private(set) public var feedImageButton: UIButton!
 	
 	var onRetry: (() -> Void)?
 	
