@@ -33,7 +33,7 @@ class RemoteImageCommentsLoader {
 		case invalidData
 	}
 
-	typealias Result = Swift.Result<[ImageComment], Error>
+	typealias Result = Swift.Result<[ImageComment], Swift.Error>
 
 	init(url: URL, client: HTTPClient) {
 		self.url = url
@@ -46,16 +46,7 @@ class RemoteImageCommentsLoader {
 
 			switch result {
 			case let .success((data, response)):
-				guard response.statusCode == 200 else {
-					completion(.failure(Error.invalidData))
-					return
-				}
-
-				if let items = try? Self.map(data, from: response) {
-					completion(.success(items))
-				} else {
-					completion(.failure(.invalidData))
-				}
+				completion(Self.map(data, from: response))
 
 			case .failure:
 				completion(.failure(Error.connectivity))
@@ -63,15 +54,31 @@ class RemoteImageCommentsLoader {
 		}
 	}
 
-	private static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
-		guard response.statusCode == 200 else {
-			throw Error.invalidData
+	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+		do {
+			let items = try ImageCommentItemsMapper.map(data, from: response)
+			return .success(items)
+		} catch {
+			return .failure(error)
 		}
+	}
+}
+
+final class ImageCommentItemsMapper {
+	private struct Root: Decodable {
+		let items: [ImageComment]
+	}
+
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [ImageComment] {
+		guard response.statusCode == 200 else {
+			throw RemoteImageCommentsLoader.Error.invalidData
+		}
+
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
 		guard let root = try? decoder.decode(Root.self, from: data) else {
-			throw Error.invalidData
+			throw RemoteImageCommentsLoader.Error.invalidData
 		}
 
 		return root.items
@@ -120,7 +127,7 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 		let statusCodes = [199, 201, 300, 400, 500]
 
 		statusCodes.enumerated().forEach { index, code in
-			expect(sut, toCompleteWith: .failure(.invalidData)) {
+			expect(sut, toCompleteWith: failure(.invalidData)) {
 				client.complete(withStatusCode: code, data: "".data(using: .utf8)!, at: index)
 			}
 		}
@@ -131,7 +138,7 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 
 		let invalidJSON = Data("invalid json".utf8)
 
-		expect(sut, toCompleteWith: .failure(.invalidData)) {
+		expect(sut, toCompleteWith: failure(.invalidData)) {
 			client.complete(withStatusCode: 200, data: invalidJSON)
 		}
 	}
@@ -203,7 +210,7 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
 
-			case let (.failure(receivedError), .failure(expectedError)):
+			case let (.failure(receivedError as RemoteImageCommentsLoader.Error), .failure(expectedError as RemoteImageCommentsLoader.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 
 			default:
@@ -246,5 +253,9 @@ class LoadImageCommentsDataFromRemoteUseCaseTests: XCTestCase {
 	private func makeItemsJSON(_ items: [[String: Any]]) -> Data {
 		let json = ["items": items]
 		return try! JSONSerialization.data(withJSONObject: json)
+	}
+
+	private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result {
+		return .failure(error)
 	}
 }
