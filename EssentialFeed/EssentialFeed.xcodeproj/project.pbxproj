@@ -90,6 +90,7 @@
 		C6F302F2260F5B8C001AF486 /* ImageCommentItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F302F1260F5B8C001AF486 /* ImageCommentItemsMapper.swift */; };
 		C6F30300260F5D4A001AF486 /* ImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F302FF260F5D4A001AF486 /* ImageComment.swift */; };
 		C6F30306260F5FE2001AF486 /* ImageCommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F30305260F5FE2001AF486 /* ImageCommentAuthor.swift */; };
+		C6F3030C260F6735001AF486 /* ImageCommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F3030B260F6735001AF486 /* ImageCommentsLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +201,7 @@
 		C6F302F1260F5B8C001AF486 /* ImageCommentItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentItemsMapper.swift; sourceTree = "<group>"; };
 		C6F302FF260F5D4A001AF486 /* ImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComment.swift; sourceTree = "<group>"; };
 		C6F30305260F5FE2001AF486 /* ImageCommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentAuthor.swift; sourceTree = "<group>"; };
+		C6F3030B260F6735001AF486 /* ImageCommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -532,6 +534,7 @@
 			children = (
 				C6F302FF260F5D4A001AF486 /* ImageComment.swift */,
 				C6F30305260F5FE2001AF486 /* ImageCommentAuthor.swift */,
+				C6F3030B260F6735001AF486 /* ImageCommentsLoader.swift */,
 			);
 			path = "ImageComments Feature";
 			sourceTree = "<group>";
@@ -800,6 +803,7 @@
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
 				08C4E988233E13CC00D939F8 /* FeedImageDataStore.swift in Sources */,
+				C6F3030C260F6735001AF486 /* ImageCommentsLoader.swift in Sources */,
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
 				C6F302F2260F5B8C001AF486 /* ImageCommentItemsMapper.swift in Sources */,

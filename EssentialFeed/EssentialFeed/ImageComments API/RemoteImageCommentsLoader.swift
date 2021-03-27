@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class RemoteImageCommentsLoader {
+public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let url: URL
 	private let client: HTTPClient
 
@@ -17,7 +17,7 @@ public final class RemoteImageCommentsLoader {
 		case invalidData
 	}
 
-	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
+	public typealias Result = ImageCommentsLoader.Result
 
 	public init(url: URL, client: HTTPClient) {
 		self.url = url
