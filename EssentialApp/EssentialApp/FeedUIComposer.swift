@@ -24,11 +24,11 @@ public final class FeedUIComposer {
 			feedView: FeedViewAdapter(
 				controller: feedController,
 				imageLoader: imageLoader,
-				displayImage: { feedImage in
+				displayImage: { [weak feedController] feedImage in
 					let feedImageCommentsViewController = FeedImageCommentsUIComposer
 						.feedImageCommentsComposedWith(feedImage: feedImage,
 													   feedImageCommentsLoader: feedImageCommentsLoader)
-					feedController.navigationController?.pushViewController(feedImageCommentsViewController, animated: true)
+					feedController?.navigationController?.pushViewController(feedImageCommentsViewController, animated: true)
 				}),
 			loadingView: WeakRefVirtualProxy(feedController),
 			errorView: WeakRefVirtualProxy(feedController))
