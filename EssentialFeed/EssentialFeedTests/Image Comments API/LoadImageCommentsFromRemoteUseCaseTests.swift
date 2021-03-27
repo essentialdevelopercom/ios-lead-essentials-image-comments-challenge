@@ -10,6 +10,11 @@ import EssentialFeed
 import XCTest
 
 final class RemoteCommentsLoader {
+	
+	enum Error: Swift.Error {
+		case invalidData
+	}
+	
 	private let url: URL
 	private let client: HTTPClient
 	
@@ -18,14 +23,16 @@ final class RemoteCommentsLoader {
 		self.client = client
 	}
 	
-	func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) {
+	func load(completion: @escaping (Result<[ImageComment], Swift.Error>) -> Void) {
 		client.get(from: url) { result in
 			switch result {
 			case let .failure(error):
 				completion(.failure(error))
 				
-			default:
-				break
+			case let .success((_, response)):
+				if response.statusCode != 200 {
+					completion(.failure(Error.invalidData))
+				}
 			}
 		}
 	}
@@ -75,6 +82,30 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		client.complete(with: expectedError)
 		wait(for: [exp], timeout: 1.0)
+	}
+	
+	func test_load_deliversErrorOnNon200HTTPResponse() {
+		let (sut, client) = makeSUT()
+		
+		let samples = [199, 201, 300, 400, 500]
+		let expectedError = RemoteCommentsLoader.Error.invalidData
+		
+		samples.enumerated().forEach { index, code in
+			let exp = expectation(description: "Wait for load completion")
+			sut.load { result in
+				switch result {
+				case let .failure(receivedError):
+					XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
+					
+				default:
+					XCTFail("Expected failure, git \(result) instead.")
+				}
+				exp.fulfill()
+			}
+			
+			client.complete(withStatusCode: code, data: anyData(), at: index)
+			wait(for: [exp], timeout: 1.0)
+		}
 	}
 	
 	// MARK: - Helpers
