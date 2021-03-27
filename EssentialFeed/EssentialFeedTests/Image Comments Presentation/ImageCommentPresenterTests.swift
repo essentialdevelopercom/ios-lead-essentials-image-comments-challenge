@@ -102,8 +102,15 @@ class ImageCommentPresenterTests: XCTestCase {
 	}
 	
 	private class ViewSpy: ImageCommentView {
-		enum Messages: Equatable {
+		enum Messages: Equatable, CustomStringConvertible {
 			case display(author: String, message: String, relativeDate: String)
+			
+			var description: String {
+				switch self {
+				case let .display(author: author, message: message, relativeDate: relativeDate):
+					return "(\(author), \(message), \(relativeDate))"
+				}
+			}
 		}
 		
 		private(set) var messages = [Messages]()
