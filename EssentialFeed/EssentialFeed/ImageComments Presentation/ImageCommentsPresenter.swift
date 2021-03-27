@@ -8,6 +8,23 @@
 
 import Foundation
 
+public protocol ImageCommentsView {
+	func display(_ viewModel: ImageCommentsViewModel)
+}
+
 public final class ImageCommentsPresenter {
-	public static let title: String = "Comments"
+	private let imageCommentsView: ImageCommentsView
+
+	public static var title: String {
+		NSLocalizedString(
+			"IMAGE_COMMENTS_TITLE",
+			tableName: "ImageComments",
+			bundle: Bundle(for: ImageCommentsPresenter.self),
+			comment: "Title for the comments view"
+		)
+	}
+
+	public init(imageCommentsView: ImageCommentsView) {
+		self.imageCommentsView = imageCommentsView
+	}
 }

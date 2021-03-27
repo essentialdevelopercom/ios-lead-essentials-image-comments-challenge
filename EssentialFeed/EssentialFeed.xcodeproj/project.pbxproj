@@ -94,6 +94,7 @@
 		C6F30318260FC1DA001AF486 /* ImageCommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F30317260FC1DA001AF486 /* ImageCommentsPresenterTests.swift */; };
 		C6F30322260FC312001AF486 /* ImageCommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F30321260FC312001AF486 /* ImageCommentsPresenter.swift */; };
 		C6F3032D260FC3AE001AF486 /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = C6F3032F260FC3AE001AF486 /* ImageComments.strings */; };
+		C6F3033B260FC7AD001AF486 /* ImageCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F3033A260FC7AD001AF486 /* ImageCommentsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -210,6 +211,7 @@
 		C6F3032E260FC3AE001AF486 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		C6F30334260FC3B5001AF486 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		C6F30335260FC3B6001AF486 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
+		C6F3033A260FC7AD001AF486 /* ImageCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -572,6 +574,7 @@
 			isa = PBXGroup;
 			children = (
 				C6F30321260FC312001AF486 /* ImageCommentsPresenter.swift */,
+				C6F3033A260FC7AD001AF486 /* ImageCommentsViewModel.swift */,
 				C6F3032F260FC3AE001AF486 /* ImageComments.strings */,
 			);
 			path = "ImageComments Presentation";
@@ -821,6 +824,7 @@
 				08897BED23393A2E0029F5E4 /* RemoteFeedImageDataLoader.swift in Sources */,
 				08B42EA421C3F09A00DDA349 /* RemoteFeedLoader.swift in Sources */,
 				08285AF4228BFAFF000A8987 /* FeedStore.xcdatamodeld in Sources */,
+				C6F3033B260FC7AD001AF486 /* ImageCommentsViewModel.swift in Sources */,
 				08604505233E316F005ECD22 /* CoreDataFeedStore+FeedStore.swift in Sources */,
 				0886893A221DAA34007BC3E7 /* LocalFeedImage.swift in Sources */,
 				087148B9232BEBD800D6BE1A /* FeedViewModel.swift in Sources */,
