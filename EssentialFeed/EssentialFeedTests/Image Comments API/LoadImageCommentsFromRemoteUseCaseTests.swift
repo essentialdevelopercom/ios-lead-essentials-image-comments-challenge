@@ -19,7 +19,15 @@ final class RemoteCommentsLoader {
 	}
 	
 	func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) {
-		client.get(from: url) { _ in }
+		client.get(from: url) { result in
+			switch result {
+			case let .failure(error):
+				completion(.failure(error))
+				
+			default:
+				break
+			}
+		}
 	}
 }
 
@@ -47,6 +55,26 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		sut.load { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
+	}
+	
+	func test_load_deliversErrorOnClientError() {
+		let (sut, client) = makeSUT()
+		let expectedError = NSError(domain: "Test", code: 0)
+		
+		let exp = expectation(description: "Wait for load completion")
+		sut.load { result in
+			switch result {
+			case let .failure(receivedError):
+				XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
+				
+			default:
+				XCTFail("Expected failure, git \(result) instead.")
+			}
+			exp.fulfill()
+		}
+		
+		client.complete(with: expectedError)
+		wait(for: [exp], timeout: 1.0)
 	}
 	
 	// MARK: - Helpers
