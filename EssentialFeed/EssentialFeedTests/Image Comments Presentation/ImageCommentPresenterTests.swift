@@ -55,16 +55,7 @@ class ImageCommentPresenterTests: XCTestCase {
 		XCTAssertEqual(date.description, description, file: file, line: line)
 		return date
 	}
-	
-	private func comment(date: Date) -> ImageComment {
-		ImageComment(
-			id: UUID(),
-			message: "any message",
-			creationDate: date,
-			author: "any author"
-		)
-	}
-	
+		
 	private class ViewSpy: ImageCommentView {
 		enum Messages: Equatable, CustomStringConvertible {
 			case display(author: String, message: String, relativeDate: String)

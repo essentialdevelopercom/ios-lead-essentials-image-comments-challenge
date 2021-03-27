@@ -51,17 +51,8 @@ class ImageCommentsListPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
-	private func makeComment() -> ImageComment {
-		ImageComment(
-			id: UUID(),
-			message: "any message",
-			creationDate: Date(),
-			author: "any author"
-		)
-	}
-	
 	func makeComments() -> [ImageComment] {
-		return [makeComment(), makeComment()]
+		return [comment(date: Date()), comment(date: Date())]
 	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
