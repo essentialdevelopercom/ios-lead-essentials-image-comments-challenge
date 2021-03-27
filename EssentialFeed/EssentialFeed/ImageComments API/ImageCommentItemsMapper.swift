@@ -14,7 +14,7 @@ final class ImageCommentItemsMapper {
 	}
 
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
-		guard response.statusCode == 200 else {
+		guard response.isOK else {
 			throw RemoteImageCommentsLoader.Error.invalidData
 		}
 
