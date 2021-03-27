@@ -17,7 +17,7 @@ public final class RemoteImageCommentsLoader {
 		case invalidData
 	}
 
-	public typealias Result = Swift.Result<[RemoteImageComment], Swift.Error>
+	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
 
 	public init(url: URL, client: HTTPClient) {
 		self.url = url
@@ -41,9 +41,22 @@ public final class RemoteImageCommentsLoader {
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
 		do {
 			let items = try ImageCommentItemsMapper.map(data, from: response)
-			return .success(items)
+			return .success(items.toModels())
 		} catch {
 			return .failure(error)
 		}
+	}
+}
+
+
+private extension Array where Element == RemoteImageComment {
+	func toModels() -> [ImageComment] {
+		return map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: $0.author.toModel()) }
+	}
+}
+
+private extension RemoteImageCommentAuthor {
+	func toModel() -> ImageCommentAuthor {
+		return ImageCommentAuthor(username: username)
 	}
 }

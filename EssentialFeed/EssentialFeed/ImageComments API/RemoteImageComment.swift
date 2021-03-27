@@ -8,16 +8,9 @@
 
 import Foundation
 
-public struct RemoteImageComment: Decodable, Equatable {
-	public init(id: UUID, message: String, createdAt: Date, author: RemoteImageCommentAuthor) {
-		self.id = id
-		self.message = message
-		self.createdAt = createdAt
-		self.author = author
-	}
-
-	public let id: UUID
-	public let message: String
-	public let createdAt: Date
-	public let author: RemoteImageCommentAuthor
+struct RemoteImageComment: Decodable {
+	let id: UUID
+	let message: String
+	let createdAt: Date
+	let author: RemoteImageCommentAuthor
 }

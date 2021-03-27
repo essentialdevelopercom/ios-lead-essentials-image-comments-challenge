@@ -8,10 +8,6 @@
 
 import Foundation
 
-public struct RemoteImageCommentAuthor: Decodable, Equatable {
-	public init(username: String) {
-		self.username = username
-	}
-
-	public let username: String
+struct RemoteImageCommentAuthor: Decodable {
+	let username: String
 }
