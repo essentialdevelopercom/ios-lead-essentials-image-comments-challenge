@@ -9,7 +9,7 @@
 import XCTest
 import EssentialFeed
 
-final class ImageCommentsLocalizationTests: XCTestCase {
+final class ImageCommentsLocalizationTests: XCTestCase, LocalizationTest {
 	
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
 		let table = "ImageComments"

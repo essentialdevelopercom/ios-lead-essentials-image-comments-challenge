@@ -8,7 +8,9 @@
 
 import XCTest
 
-extension XCTest {
+protocol LocalizationTest: XCTestCase {}
+
+extension LocalizationTest {
 	typealias LocalizedBundle = (bundle: Bundle, localization: String)
 
 	func allLocalizationBundles(in bundle: Bundle, file: StaticString = #filePath, line: UInt = #line) -> [LocalizedBundle] {
