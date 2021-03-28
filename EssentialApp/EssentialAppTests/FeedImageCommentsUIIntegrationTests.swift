@@ -53,21 +53,21 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedImageCommentsCompletion_rendersSuccessfullyLoadedFeed() {
-		let image0 = makeImageComment()
-		let image1 = makeImageComment()
-		let image2 = makeImageComment()
-		let image3 = makeImageComment()
+		let comment0 = makeImageComment()
+		let comment1 = makeImageComment()
+		let comment2 = makeImageComment()
+		let comment3 = makeImageComment()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
-		loader.completeFeedImageCommentsLoading(with: [image0], at: 0)
-		assertThat(sut, isRendering: [image0])
+		loader.completeFeedImageCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
 		
 		sut.simulateUserInitiatedFeedReload()
-		loader.completeFeedImageCommentsLoading(with: [image0, image1, image2, image3], at: 1)
-		assertThat(sut, isRendering: [image0, image1, image2, image3])
+		loader.completeFeedImageCommentsLoading(with: [comment0, comment1, comment2, comment3], at: 1)
+		assertThat(sut, isRendering: [comment0, comment1, comment2, comment3])
 	}
 	
 	// MARK: - Helpers
