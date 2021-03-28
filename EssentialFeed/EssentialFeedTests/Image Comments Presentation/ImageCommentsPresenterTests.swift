@@ -9,16 +9,28 @@
 import EssentialFeed
 import XCTest
 
+struct ImageCommentsViewModel {
+	let comments: [ImageComment]
+}
+
 protocol ImageCommentsView {
-	func display(comments: [ImageComment])
+	func display(_ viewModel: ImageCommentsViewModel)
+}
+
+struct ImageCommentsLoadingViewModel {
+	let isLoading: Bool
 }
 
 protocol ImageCommentsLoadingView {
-	func display(isLoading: Bool)
+	func display(_ viewModel: ImageCommentsLoadingViewModel)
+}
+
+struct ImageCommentsErrorViewModel {
+	let errorMessage: String?
 }
 
 protocol ImageCommentsErrorView {
-	func display(errorMessage: String?)
+	func display(_ viewModel: ImageCommentsErrorViewModel)
 }
 
 final class ImageCommentsPresenter {
@@ -50,18 +62,18 @@ final class ImageCommentsPresenter {
 	}
 	
 	public func didStartLoadingComments() {
-		loadingView.display(isLoading: true)
-		errorView.display(errorMessage: nil)
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
+		errorView.display(ImageCommentsErrorViewModel(errorMessage: nil))
 	}
 	
 	public func didFinishLoading(with comments: [ImageComment]) {
-		imageCommentsView.display(comments: comments)
-		loadingView.display(isLoading: false)
+		imageCommentsView.display(ImageCommentsViewModel(comments: comments))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoading(with error: Error) {
-		errorView.display(errorMessage: errorMessage)
-		loadingView.display(isLoading: false)
+		errorView.display(ImageCommentsErrorViewModel(errorMessage: errorMessage))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 }
 
@@ -150,16 +162,16 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		
 		private(set) var messages = [Message]()
 		
-		func display(comments: [ImageComment]) {
-			messages.append(.display(comments: comments))
+		func display(_ viewModel: ImageCommentsViewModel) {
+			messages.append(.display(comments: viewModel.comments))
 		}
 		
-		func display(isLoading: Bool) {
-			messages.append(.display(isLoading: isLoading))
+		func display(_ viewModel: ImageCommentsLoadingViewModel) {
+			messages.append(.display(isLoading: viewModel.isLoading))
 		}
 		
-		func display(errorMessage: String?) {
-			messages.append(.display(errorMessage: errorMessage))
+		func display(_ viewModel: ImageCommentsErrorViewModel) {
+			messages.append(.display(errorMessage: viewModel.errorMessage))
 		}
 	}
 }
