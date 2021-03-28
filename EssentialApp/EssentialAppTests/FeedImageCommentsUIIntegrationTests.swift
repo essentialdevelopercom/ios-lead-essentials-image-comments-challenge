@@ -52,7 +52,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	}
 	
-	func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
+	func test_loadFeedImageCommentsCompletion_rendersSuccessfullyLoadedFeed() {
 		let image0 = makeImageComment()
 		let image1 = makeImageComment()
 		let image2 = makeImageComment()
