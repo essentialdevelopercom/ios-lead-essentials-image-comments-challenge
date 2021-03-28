@@ -9,8 +9,14 @@
 import EssentialFeed
 import XCTest
 
+struct PresentableImageComment: Equatable {
+	let createdAt: String
+	let message: String
+	let author: String
+}
+
 struct ImageCommentsViewModel {
-	let comments: [ImageComment]
+	let comments: [PresentableImageComment]
 }
 
 protocol ImageCommentsView {
@@ -37,6 +43,7 @@ final class ImageCommentsPresenter {
 	private let imageCommentsView: ImageCommentsView
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
+	private let currentDate: Date
 	
 	public static var title: String {
 		NSLocalizedString(
@@ -55,10 +62,16 @@ final class ImageCommentsPresenter {
 		)
 	}
 	
-	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView) {
+	public init(
+		imageCommentsView: ImageCommentsView,
+		loadingView: ImageCommentsLoadingView,
+		errorView: ImageCommentsErrorView,
+		currentDate: Date = Date()
+	) {
 		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.currentDate = currentDate
 	}
 	
 	public func didStartLoadingComments() {
@@ -67,13 +80,31 @@ final class ImageCommentsPresenter {
 	}
 	
 	public func didFinishLoading(with comments: [ImageComment]) {
-		imageCommentsView.display(ImageCommentsViewModel(comments: comments))
+		let presentableComments = comments.map { comment in
+			PresentableImageComment(
+				createdAt: relativeDate(from: comment.createdAt),
+				message: comment.message,
+				author: comment.author.username)
+		}
+		imageCommentsView.display(ImageCommentsViewModel(comments: presentableComments))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoading(with error: Error) {
 		errorView.display(ImageCommentsErrorViewModel(errorMessage: errorMessage))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+	}
+	
+	private static var relativeDateFormatter: RelativeDateTimeFormatter {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		formatter.locale = .current
+		formatter.calendar = Calendar(identifier: .gregorian)
+		return formatter
+	}
+	
+	private func relativeDate(from date: Date) -> String {
+		return ImageCommentsPresenter.relativeDateFormatter.localizedString(for: date, relativeTo: currentDate)
 	}
 }
 
@@ -96,13 +127,14 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages, [.display(isLoading: true), .display(errorMessage: nil)])
 	}
 	
-	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let comments = uniqueComments()
+	func test_didFinishLoadingComments_displaysCommentsUsingRelativeTimesAndStopsLoading() {
+		let fixedDate = anyDate()
+		let (sut, view) = makeSUT(date: fixedDate)
+		let comments = uniqueComments(currentDate: fixedDate)
 		
-		sut.didFinishLoading(with: comments)
+		sut.didFinishLoading(with: comments.comments)
 		
-		XCTAssertEqual(view.messages, [.display(comments: comments), .display(isLoading: false)])
+		XCTAssertEqual(view.messages, [.display(comments: comments.presentableComments), .display(isLoading: false)])
 	}
 	
 	func test_didFinishLoadingCommentsWithError_displaysLocalizedErrorMessageAndStopsLoading() {
@@ -118,9 +150,9 @@ final class ImageCommentsPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view)
+		let sut = ImageCommentsPresenter(imageCommentsView: view, loadingView: view, errorView: view, currentDate: date)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -136,26 +168,33 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 	
-	private func uniqueComments() -> [ImageComment] {
-		[
+	private func uniqueComments(currentDate: Date) -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
+		let comments = [
 			ImageComment(
 				id: UUID(),
 				message: "a message",
-				createdAt: anyDate(),
+				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60 * 24),
 				author: ImageCommentAuthor(username: "a username")
 			),
 			ImageComment(
 				id: UUID(),
 				message: "another message",
-				createdAt: anyDate(),
+				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60),
 				author: ImageCommentAuthor(username: "another username")
 			),
 		]
+		
+		let presentableComments = [
+			PresentableImageComment(createdAt: "1 day ago", message: comments[0].message, author: comments[0].author.username),
+			PresentableImageComment(createdAt: "1 hour ago", message: comments[1].message, author: comments[1].author.username)
+		]
+		
+		return (comments, presentableComments)
 	}
 	
 	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 		enum Message: Equatable {
-			case display(comments: [ImageComment])
+			case display(comments: [PresentableImageComment])
 			case display(isLoading: Bool)
 			case display(errorMessage: String?)
 		}
