@@ -8,9 +8,13 @@
 
 import Foundation
 
+public protocol ImageCommentsLoaderTask {
+	func cancel()
+}
+
 public protocol ImageCommentsLoader {
 	typealias Result = Swift.Result<[ImageComment], Error>
 	
 	@discardableResult
-	func load(completion: @escaping (Result) -> Void) -> HTTPClientTask
+	func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask
 }
