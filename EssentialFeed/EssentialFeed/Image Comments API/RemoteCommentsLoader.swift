@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class RemoteCommentsLoader {
+public final class RemoteCommentsLoader: ImageCommentsLoader {
 	
 	// MARK: - Types
 	
@@ -17,7 +17,7 @@ public final class RemoteCommentsLoader {
 		case invalidData
 	}
 	
-	public typealias Result = Swift.Result<[ImageComment], Swift.Error>
+	public typealias Result = ImageCommentsLoader.Result
 	
 	// MARK: - Properties
 	
