@@ -6,6 +6,7 @@ import UIKit
 import CoreData
 import Combine
 import EssentialFeed
+import EssentialFeediOS
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
@@ -59,6 +60,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				imageLoader: makeLocalImageLoaderWithRemoteFallback) { _ in } ) 
 		
 		window?.makeKeyAndVisible()
+	}
+	
+	func handleImageID(_ id: String) {
+		let navigationController = window?.rootViewController as? UINavigationController
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!
+		let loader = RemoteImageCommentLoader(client: httpClient)
+		let imageCommentsVC = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
+		navigationController?.pushViewController(imageCommentsVC, animated: true)
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {

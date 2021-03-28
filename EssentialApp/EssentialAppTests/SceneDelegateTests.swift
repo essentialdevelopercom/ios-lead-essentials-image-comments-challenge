@@ -32,5 +32,24 @@ class SceneDelegateTests: XCTestCase {
 		XCTAssertNotNil(rootNavigation, "Expected a navigation controller as root, got \(String(describing: root)) instead")
 		XCTAssertTrue(topController is FeedViewController, "Expected a feed controller as top view controller, got \(String(describing: topController)) instead")
 	}
+
+	func test_handleImageID_pushesImageCommentsViewController() {
+		let sut = SceneDelegate()
+		sut.window = UIWindow()
+		sut.configureWindow()
+		
+		sut.handleImageID(UUID().uuidString)
+		executeRunLoopToFinishPush()
+		
+		let root = sut.window?.rootViewController
+		let rootNavigation = root as? UINavigationController
+		let topController = rootNavigation?.topViewController
+				
+		XCTAssertNotNil(rootNavigation, "Expected a navigation controller as root, got \(String(describing: root)) instead")
+		XCTAssertTrue(topController is ImageCommentsViewController, "Expected an image comments view controller as top view controller after push, got \(String(describing: topController)) instead")
+	}
 	
+	private func executeRunLoopToFinishPush() {
+		RunLoop.current.run(until: Date())
+	}
 }
