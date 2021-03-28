@@ -10,4 +10,8 @@ import Foundation
 
 public struct ImageCommentsErrorViewModel {
 	public let errorMessage: String?
+	
+	public init(errorMessage: String?) {
+		self.errorMessage = errorMessage
+	}
 }

@@ -542,7 +542,6 @@
 			children = (
 				08A3F2B5232AA67200127C15 /* Helpers */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
-				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 			);
@@ -552,6 +551,7 @@
 		08FC5AA622D5F33000148E12 /* Feed UI */ = {
 			isa = PBXGroup;
 			children = (
+				808FE60A2610F4AB006BD7F7 /* Shared */,
 				08EFB82A22D4A5F600A46837 /* Controllers */,
 				08EFB82C22D4A60300A46837 /* Views */,
 			);
@@ -613,6 +613,14 @@
 				808FE6042610E6A9006BD7F7 /* ImageComments.storyboard */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		808FE60A2610F4AB006BD7F7 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		80AC70C4260F846A0002565E /* Image Comments Feature */ = {
