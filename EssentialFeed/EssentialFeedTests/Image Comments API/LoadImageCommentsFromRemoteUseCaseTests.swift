@@ -27,7 +27,9 @@ final class RemoteCommentsLoader {
 	}
 	
 	func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url) { result in
+		client.get(from: url) { [weak self] result in
+			guard self != nil else { return }
+			
 			switch result {
 			case .failure:
 				completion(.failure(Error.connectivity))
@@ -168,6 +170,19 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			let json = makeItemsJSON([item1.json, item2.json])
 			client.complete(withStatusCode: 200, data: json)
 		})
+	}
+	
+	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let client = HTTPClientSpy()
+		var sut: RemoteCommentsLoader? = RemoteCommentsLoader(url: anyURL(), client: client)
+		
+		var capturedResults = [RemoteCommentsLoader.Result]()
+		sut?.load { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+		
+		XCTAssertTrue(capturedResults.isEmpty)
 	}
 	
 	// MARK: - Helpers
