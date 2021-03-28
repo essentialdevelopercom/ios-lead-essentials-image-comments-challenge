@@ -25,16 +25,14 @@ public class FeedImageCommentsViewController: UITableViewController, FeedLoading
 	
 	public var delegate: FeedImageCommentsViewControllerDelegate?
 	
+	deinit {
+		delegate?.didRequestFeedImageCommentsCancel()
+	}
+	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		refresh()
-	}
-	
-	public override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		
-		delegate?.didRequestFeedImageCommentsCancel()
 	}
 	
 	public override func viewDidLayoutSubviews() {
