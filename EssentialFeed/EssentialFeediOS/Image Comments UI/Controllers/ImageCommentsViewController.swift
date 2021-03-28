@@ -37,7 +37,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		errorView?.message = viewModel.errorMessage
+		errorView?.message = viewModel.message
 	}
 	
 	override public func numberOfSections(in _: UITableView) -> Int {

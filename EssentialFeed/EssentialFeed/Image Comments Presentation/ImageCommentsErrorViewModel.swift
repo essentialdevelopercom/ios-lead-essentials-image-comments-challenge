@@ -9,9 +9,17 @@
 import Foundation
 
 public struct ImageCommentsErrorViewModel {
-	public let errorMessage: String?
+	public let message: String?
 	
-	public init(errorMessage: String?) {
-		self.errorMessage = errorMessage
+	public static var noError: ImageCommentsErrorViewModel {
+		return ImageCommentsErrorViewModel(message: nil)
+	}
+
+	public static func error(message: String) -> ImageCommentsErrorViewModel {
+		return ImageCommentsErrorViewModel(message: message)
+	}
+	
+	public init(message: String?) {
+		self.message = message
 	}
 }
