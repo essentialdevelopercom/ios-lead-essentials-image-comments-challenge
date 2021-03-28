@@ -15,3 +15,7 @@ func anyURL() -> URL {
 func anyData() -> Data {
 	return Data("any data".utf8)
 }
+
+func anyDate() -> Date {
+	return Date(timeIntervalSinceReferenceDate: 638556190)
+}

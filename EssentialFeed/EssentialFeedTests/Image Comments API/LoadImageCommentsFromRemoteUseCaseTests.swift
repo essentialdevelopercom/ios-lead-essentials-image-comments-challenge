@@ -166,7 +166,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	private func makeItem(id: UUID, message: String, authorName: String) -> (model: ImageComment, json: [String: Any]) {
-		let createdAt = Date(timeIntervalSinceReferenceDate: 638556190)
+		let createdAt = anyDate()
 		let item = ImageComment(id: id, message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
 		
 		let json = [
