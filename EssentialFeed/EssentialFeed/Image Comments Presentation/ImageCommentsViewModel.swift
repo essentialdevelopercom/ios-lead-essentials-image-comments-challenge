@@ -9,9 +9,9 @@
 import Foundation
 
 public struct PresentableImageComment: Equatable {
-	let createdAt: String
-	let message: String
-	let author: String
+	public let createdAt: String
+	public let message: String
+	public let author: String
 	
 	public init(createdAt: String, message: String, author: String) {
 		self.createdAt = createdAt

@@ -20,6 +20,15 @@ final class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_EMPTY_COMMENTS_dark")
 	}
 	
+	func test_imageCommentsWithComments() {
+		let sut = makeSUT()
+		
+		sut.display(imageComments())
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_WITH_COMMENTS_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_COMMENTS_dark")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT() -> ImageCommentsViewController {
@@ -34,5 +43,30 @@ final class ImageCommentsSnapshotTests: XCTestCase {
 	
 	private func emptyImageComments() -> ImageCommentsViewModel {
 		ImageCommentsViewModel(comments: [])
+	}
+	
+	private func imageComments() -> ImageCommentsViewModel {
+		return ImageCommentsViewModel(comments: [
+			PresentableImageComment(
+				createdAt: "2 weeks ago",
+				message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				author: "Jen"
+			),
+			PresentableImageComment(
+				createdAt: "1 week ago",
+				message: "Lorem ipsum dolor sit amet.",
+				author: "Megan"
+			),
+			PresentableImageComment(
+				createdAt: "3 days ago",
+				message: "💯",
+				author: "Jim"
+			),
+			PresentableImageComment(
+				createdAt: "3 days ago",
+				message: "Lorem ipsum dolor sit amet. ☀️\n.\n.\n.\n.\n.\n.\n✅\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+				author: "Brian"
+			)
+		])
 	}
 }
