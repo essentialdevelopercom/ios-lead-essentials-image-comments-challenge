@@ -18,6 +18,10 @@ extension FeedImageCommentsViewController {
 		return refreshControl?.isRefreshing == true
 	}
 	
+	var errorMessage: String? {
+		return errorView?.message
+	}
+	
 	func numberOfRenderedFeedImageCommentViews() -> Int {
 		return tableView.numberOfRows(inSection: feedImageCommentsSection)
 	}
