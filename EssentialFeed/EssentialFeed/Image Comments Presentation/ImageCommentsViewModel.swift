@@ -22,4 +22,8 @@ public struct PresentableImageComment: Equatable {
 
 public struct ImageCommentsViewModel {
 	public let comments: [PresentableImageComment]
+	
+	public init(comments: [PresentableImageComment]) {
+		self.comments = comments
+	}
 }
