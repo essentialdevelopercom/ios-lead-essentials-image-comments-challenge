@@ -59,13 +59,17 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
-	func test_loadImageCommentsFromURL_deliversInvalidDataErrorOn200HTTPResponseWithEmptyData() {
+	func test_loadImageCommentsFromURL_deliversInvalidDataErrorOn2xxHTTPResponseWithEmptyData() {
 		let (sut, client) = makeSUT()
 		
-		expect(sut, toCompleteWith: failure(.invalidData), when: {
-			let emptyData = Data()
-			client.complete(withStatusCode: 200, data: emptyData)
-		})
+		let samples = [200, 201, 299]
+		
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
+				let emptyData = Data()
+				client.complete(withStatusCode: code, data: emptyData, at: index)
+			})
+		}
 	}
 	
 	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
