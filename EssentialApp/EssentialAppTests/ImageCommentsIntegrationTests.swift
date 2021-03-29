@@ -218,16 +218,6 @@ class ImageCommentsIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
-		let table = "ImageComments"
-		let bundle = Bundle(for: ImageCommentsListPresenter.self)
-		let value = bundle.localizedString(forKey: key, value: nil, table: table)
-		if value == key {
-			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
-		}
-		return value
-	}
-	
 	private func assertThat(_ sut: ImageCommentsViewController, isRendering pairs: [(comment: ImageComment, relativeDate: String)], file: StaticString = #filePath, line: UInt = #line) {
 		guard sut.numberOfRenderedComments() == pairs.count else {
 			return XCTFail("Expected \(pairs.count) images, got \(sut.numberOfRenderedComments()) instead.", file: file, line: line)
