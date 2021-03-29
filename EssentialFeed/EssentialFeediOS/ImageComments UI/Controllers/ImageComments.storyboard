@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,9 +16,33 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="2s8-Ft-ecr" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y2M-QY-mTE">
+                                    <rect key="frame" x="8" y="8" width="398" height="18"/>
+                                    <viewLayoutGuide key="safeArea" id="mdd-g9-gUm"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstAttribute="trailingMargin" secondItem="Y2M-QY-mTE" secondAttribute="trailing" id="OJR-9S-g6E"/>
+                                <constraint firstItem="Y2M-QY-mTE" firstAttribute="leading" secondItem="2s8-Ft-ecr" secondAttribute="leadingMargin" id="Qny-Wi-4up"/>
+                                <constraint firstItem="Y2M-QY-mTE" firstAttribute="top" secondItem="2s8-Ft-ecr" secondAttribute="top" constant="8" id="rLi-r5-RbI"/>
+                                <constraint firstAttribute="bottom" secondItem="Y2M-QY-mTE" secondAttribute="bottom" constant="8" id="xI0-FT-ryX"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="label" destination="Y2M-QY-mTE" id="4BI-Ha-7le"/>
+                            </connections>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="97" id="tYw-UV-3bu">
-                                <rect key="frame" x="0.0" y="28" width="414" height="97"/>
+                                <rect key="frame" x="0.0" y="62" width="414" height="97"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tYw-UV-3bu" id="1Lx-ie-hle">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="97"/>
@@ -30,6 +55,9 @@
                             <outlet property="delegate" destination="qYC-3o-w1v" id="mlh-gR-Svo"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="errorView" destination="2s8-Ft-ecr" id="vA9-wD-ets"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1He-Pf-Yhm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
