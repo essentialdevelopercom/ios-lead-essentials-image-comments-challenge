@@ -52,6 +52,7 @@
 		FA2A1D6B26116EC400B9BDF5 /* ImageCommentsAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D6A26116EC400B9BDF5 /* ImageCommentsAcceptanceTests.swift */; };
 		FA2A1D6F26117D2C00B9BDF5 /* AcceptanceTestsSharedHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D6E26117D2C00B9BDF5 /* AcceptanceTestsSharedHelpers.swift */; };
 		FAB13114261182430084DDD4 /* EndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB13113261182430084DDD4 /* EndpointTests.swift */; };
+		FAB13117261184390084DDD4 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB13116261184390084DDD4 /* Endpoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 		FA2A1D6A26116EC400B9BDF5 /* ImageCommentsAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsAcceptanceTests.swift; sourceTree = "<group>"; };
 		FA2A1D6E26117D2C00B9BDF5 /* AcceptanceTestsSharedHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptanceTestsSharedHelpers.swift; sourceTree = "<group>"; };
 		FAB13113261182430084DDD4 /* EndpointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointTests.swift; sourceTree = "<group>"; };
+		FAB13116261184390084DDD4 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -298,6 +300,7 @@
 				0835BF6C24850F9800A793D2 /* CombineHelpers.swift */,
 				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
 				FA2A1D312611660B00B9BDF5 /* MainQueueDispatchDecorator.swift */,
+				FAB13116261184390084DDD4 /* Endpoint.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAB13117261184390084DDD4 /* Endpoint.swift in Sources */,
 				FA2A1D362611660B00B9BDF5 /* ImageCommentCellPresentationAdapter.swift in Sources */,
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
