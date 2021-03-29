@@ -15,6 +15,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
 	}()
 	
+	private lazy var imageCommentsHTTPClient: HTTPClient = {
+		return httpClient
+	}()
+	
 	private lazy var store: FeedStore & FeedImageDataStore = {
 		try! CoreDataFeedStore(
 			storeURL: NSPersistentContainer
@@ -46,6 +50,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		self.store = store
 	}
 	
+	convenience init(httpClient: HTTPClient, imageCommentsHTTPClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+		self.init()
+		self.httpClient = httpClient
+		self.imageCommentsHTTPClient = imageCommentsHTTPClient
+		self.store = store
+	}
+	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		guard let scene = (scene as? UIWindowScene) else { return }
 		
@@ -68,7 +79,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func handleImageID(_ id: String) {
 		let navigationController = window?.rootViewController as? UINavigationController
 		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!
-		let loader = RemoteImageCommentLoader(client: httpClient)
+		let loader = RemoteImageCommentLoader(client: imageCommentsHTTPClient)
 		let imageCommentsVC = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
 		navigationController?.pushViewController(imageCommentsVC, animated: true)
 	}

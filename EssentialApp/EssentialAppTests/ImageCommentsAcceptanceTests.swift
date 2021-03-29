@@ -34,13 +34,27 @@ class ImageCommentsAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(view2?.creationDateText, "Expected creation date to be populated with a value")
 	}
 	
+	func test_onImageTap_displaysErrorWhenCustomerDoesNotHaveConnectivity() {
+		let feed = launch(httpClient: .online(response), imageCommentsHTTPClient: .offline, store: .empty)
+		
+		let image = feed.simulateFeedImageViewVisible(at: 0)
+		image?.simulateTapAction()
+		executeRunLoopToFinishPush()
+		
+		let imageComments = feed.navigationController?.topViewController as? ImageCommentsViewController
+		XCTAssertNotNil(imageComments, "Expected top view controller to be pushed when tapping an image")
+		XCTAssertEqual(imageComments?.numberOfRenderedComments(), 0, "Expected no comments to be loaded")
+		XCTAssertNotNil(imageComments?.errorMessage, "Expected error to be shown when customer does not have connectivity")
+	}
+	
 	// MARK: - Helpers
 	
 	private func launch(
 		httpClient: HTTPClientStub = .offline,
+		imageCommentsHTTPClient: HTTPClientStub? = nil,
 		store: InMemoryFeedStore = .empty
 	) -> FeedViewController {
-		let sut = SceneDelegate(httpClient: httpClient, store: store)
+		let sut = SceneDelegate(httpClient: httpClient, imageCommentsHTTPClient: imageCommentsHTTPClient ?? httpClient, store: store)
 		sut.window = UIWindow()
 		sut.configureWindow()
 		
