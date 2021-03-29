@@ -224,10 +224,6 @@ class ImageCommentsIntegrationTests: XCTestCase {
 		return date
 	}
 	
-	private func anyURL() -> URL {
-		URL(string: "https://any-url.com")!
-	}
-	
 	private func makeComment(message: String, creationDate: Date, author: String) -> ImageComment {
 		ImageComment(id: UUID(), message: message, creationDate: creationDate, author: author)
 	}
