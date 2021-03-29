@@ -45,9 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}()
 	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
-		self.init()
-		self.httpClient = httpClient
-		self.store = store
+		self.init(httpClient: httpClient, imageCommentsHTTPClient: httpClient, store: store)
 	}
 	
 	convenience init(httpClient: HTTPClient, imageCommentsHTTPClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
