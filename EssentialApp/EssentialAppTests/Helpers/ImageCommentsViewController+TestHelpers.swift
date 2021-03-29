@@ -14,8 +14,8 @@ extension ImageCommentsViewController {
 		0
 	}
 	
-	private var errorView: CommentErrorView? {
-		tableView.tableHeaderView as? CommentErrorView
+	private var errorView: ErrorView? {
+		tableView.tableHeaderView as? ErrorView
 	}
 	
 	var errorMessage: String? {

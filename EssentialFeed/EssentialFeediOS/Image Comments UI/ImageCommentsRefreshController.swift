@@ -15,7 +15,7 @@ public protocol ImageCommentsRefreshViewControllerDelegate {
 
 public final class ImageCommentsRefreshController: NSObject, ImageCommentsLoadingView, ImageCommentsErrorView {
 	@IBOutlet private var refreshView: UIRefreshControl?
-	@IBOutlet private var errorView: CommentErrorView?
+	@IBOutlet private var errorView: ErrorView?
 	
 	public var delegate: ImageCommentsRefreshViewControllerDelegate?
 	
@@ -32,10 +32,6 @@ public final class ImageCommentsRefreshController: NSObject, ImageCommentsLoadin
 	}
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		if let message = viewModel.message {
-			errorView?.show(message: message)
-		} else {
-			errorView?.hideMessage()
-		}
+		errorView?.message = viewModel.message
 	}
 }
