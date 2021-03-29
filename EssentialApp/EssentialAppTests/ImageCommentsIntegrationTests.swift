@@ -348,17 +348,3 @@ extension ImageCommentsViewController {
 		return dataSource?.tableView(tableView, cellForRowAt: indexPath)
 	}
 }
-
-extension ImageCommentCell {
-	var authorText: String? {
-		authorLabel?.text
-	}
-	
-	var creationDateText: String? {
-		creationDateLabel?.text
-	}
-	
-	var messageText: String? {
-		messageLabel?.text
-	}
-}
