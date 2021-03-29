@@ -61,14 +61,14 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NIs-Zh-YCx" userLabel="HeaderView">
                                                     <rect key="frame" x="0.0" y="0.0" width="374" height="22.5"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XnF-8M-ZAW" userLabel="Author Label">
-                                                            <rect key="frame" x="0.0" y="0.0" width="271" height="22.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XnF-8M-ZAW" userLabel="Author Label">
+                                                            <rect key="frame" x="0.0" y="0.0" width="183" height="22.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="2 weeks ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xNg-m3-xVz" userLabel="Creation Date Label">
-                                                            <rect key="frame" x="279" y="0.0" width="95" height="22.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 weeks ago" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xNg-m3-xVz" userLabel="Creation Date Label">
+                                                            <rect key="frame" x="191" y="0.0" width="183" height="22.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
@@ -79,10 +79,11 @@
                                                         <constraint firstItem="xNg-m3-xVz" firstAttribute="top" secondItem="NIs-Zh-YCx" secondAttribute="top" id="1DA-wO-dgj"/>
                                                         <constraint firstAttribute="trailing" secondItem="xNg-m3-xVz" secondAttribute="trailing" id="3wz-Da-v6x"/>
                                                         <constraint firstItem="XnF-8M-ZAW" firstAttribute="leading" secondItem="NIs-Zh-YCx" secondAttribute="leading" id="6dz-me-LWf"/>
+                                                        <constraint firstItem="xNg-m3-xVz" firstAttribute="leading" secondItem="XnF-8M-ZAW" secondAttribute="trailing" constant="8" symbolic="YES" id="J2K-L1-SZ5"/>
                                                         <constraint firstAttribute="bottom" secondItem="xNg-m3-xVz" secondAttribute="bottom" id="MBx-Yr-8xR"/>
                                                         <constraint firstAttribute="bottom" secondItem="XnF-8M-ZAW" secondAttribute="bottom" id="Wu1-CK-gr5"/>
                                                         <constraint firstItem="XnF-8M-ZAW" firstAttribute="top" secondItem="NIs-Zh-YCx" secondAttribute="top" id="XDR-MF-cFW"/>
-                                                        <constraint firstItem="xNg-m3-xVz" firstAttribute="leading" secondItem="XnF-8M-ZAW" secondAttribute="trailing" constant="8" id="y2w-Uo-0oR"/>
+                                                        <constraint firstItem="xNg-m3-xVz" firstAttribute="width" secondItem="XnF-8M-ZAW" secondAttribute="width" multiplier="1:1" id="f96-CY-flg"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HDq-ZJ-fiR" userLabel="Message Label">
