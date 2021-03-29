@@ -10,7 +10,7 @@ import EssentialFeediOS
 final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
 	private let model: FeedImage
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
-	let imageIDHandler: (String) -> Void
+	private let imageIDHandler: (String) -> Void
 	private var cancellable: Cancellable?
 	
 	var presenter: FeedImagePresenter<View, Image>?
