@@ -23,6 +23,11 @@ public class ImageCommentsViewController: UITableViewController {
 		refreshController?.refreshComments()
 	}
 	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		tableView.sizeTableHeaderToFit()
+	}
+	
 	public func display(_ cellControllers: [ImageCommentsCellController]) {
 		self.tableModel = cellControllers
 	}
