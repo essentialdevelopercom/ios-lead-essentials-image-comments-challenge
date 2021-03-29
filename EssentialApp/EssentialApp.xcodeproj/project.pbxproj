@@ -51,6 +51,7 @@
 		FA2A1D6826116D0F00B9BDF5 /* ImageCommentsIntegrationTests+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D6726116D0F00B9BDF5 /* ImageCommentsIntegrationTests+Assertions.swift */; };
 		FA2A1D6B26116EC400B9BDF5 /* ImageCommentsAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D6A26116EC400B9BDF5 /* ImageCommentsAcceptanceTests.swift */; };
 		FA2A1D6F26117D2C00B9BDF5 /* AcceptanceTestsSharedHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D6E26117D2C00B9BDF5 /* AcceptanceTestsSharedHelpers.swift */; };
+		FAB13114261182430084DDD4 /* EndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB13113261182430084DDD4 /* EndpointTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +129,7 @@
 		FA2A1D6726116D0F00B9BDF5 /* ImageCommentsIntegrationTests+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsIntegrationTests+Assertions.swift"; sourceTree = "<group>"; };
 		FA2A1D6A26116EC400B9BDF5 /* ImageCommentsAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsAcceptanceTests.swift; sourceTree = "<group>"; };
 		FA2A1D6E26117D2C00B9BDF5 /* AcceptanceTestsSharedHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptanceTestsSharedHelpers.swift; sourceTree = "<group>"; };
+		FAB13113261182430084DDD4 /* EndpointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +211,7 @@
 				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
 				FA2A1D6A26116EC400B9BDF5 /* ImageCommentsAcceptanceTests.swift */,
 				FA2A1D422611661F00B9BDF5 /* ImageCommentsIntegrationTests.swift */,
+				FAB13113261182430084DDD4 /* EndpointTests.swift */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAB13114261182430084DDD4 /* EndpointTests.swift in Sources */,
 				08073B55238D2E1000A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift in Sources */,
 				FA2A1D5B26116B6D00B9BDF5 /* ImageCommentCell+TestHelpers.swift in Sources */,
 				082C00062359E4C6008927D3 /* SharedTestHelpers.swift in Sources */,
