@@ -11,7 +11,7 @@ import EssentialFeediOS
 import Foundation
 
 final class ImageCommentsAdapter: ImageCommentsListView {
-	weak var controller: ImageCommentsViewController?
+	private weak var controller: ImageCommentsViewController?
 	private let currentDate: () -> Date
 	
 	init(controller: ImageCommentsViewController, currentDate: @escaping () -> Date) {
