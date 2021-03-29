@@ -45,6 +45,7 @@
 		FA2A1D3A2611660B00B9BDF5 /* ImageCommentsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D342611660B00B9BDF5 /* ImageCommentsAdapter.swift */; };
 		FA2A1D432611662000B9BDF5 /* ImageCommentsIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D422611661F00B9BDF5 /* ImageCommentsIntegrationTests.swift */; };
 		FA2A1D5B26116B6D00B9BDF5 /* ImageCommentCell+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D5A26116B6D00B9BDF5 /* ImageCommentCell+TestHelpers.swift */; };
+		FA2A1D5F26116BCF00B9BDF5 /* ImageCommentsViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2A1D5E26116BCF00B9BDF5 /* ImageCommentsViewController+TestHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		FA2A1D342611660B00B9BDF5 /* ImageCommentsAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCommentsAdapter.swift; sourceTree = "<group>"; };
 		FA2A1D422611661F00B9BDF5 /* ImageCommentsIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsIntegrationTests.swift; sourceTree = "<group>"; };
 		FA2A1D5A26116B6D00B9BDF5 /* ImageCommentCell+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentCell+TestHelpers.swift"; sourceTree = "<group>"; };
+		FA2A1D5E26116BCF00B9BDF5 /* ImageCommentsViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentsViewController+TestHelpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,6 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				FA2A1D5A26116B6D00B9BDF5 /* ImageCommentCell+TestHelpers.swift */,
+				FA2A1D5E26116BCF00B9BDF5 /* ImageCommentsViewController+TestHelpers.swift */,
 			);
 			name = "ImageCommentsUI Extensions";
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
 				08073B5A238D2E1000A75DC6 /* UIRefreshControl+TestHelpers.swift in Sources */,
+				FA2A1D5F26116BCF00B9BDF5 /* ImageCommentsViewController+TestHelpers.swift in Sources */,
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,
 				08073B5F238D2FF100A75DC6 /* FeedAcceptanceTests.swift in Sources */,
