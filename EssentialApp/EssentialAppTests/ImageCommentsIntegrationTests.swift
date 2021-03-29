@@ -85,7 +85,7 @@ class ImageCommentsIntegrationTests: XCTestCase {
 			author: "a fifth author",
 			expectedRelativeDate: "3 years ago"
 		)
-		
+		let pairs = [pair0, pair1, pair2, pair3, pair4]
 		let (sut, loader) = makeSUT(url: anyURL(), currentDate: { staticDate })
 		
 		sut.loadViewIfNeeded()
@@ -95,8 +95,8 @@ class ImageCommentsIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [pair0])
 		
 		sut.simulateUserInitiatedReloading()
-		loader.completeCommentsLoading(with: [pair0.comment, pair1.comment, pair2.comment, pair3.comment, pair4.comment], at: 1)
-		assertThat(sut, isRendering: [pair0, pair1, pair2, pair3, pair4])
+		loader.completeCommentsLoading(with: pairs.map(\.comment), at: 1)
+		assertThat(sut, isRendering: pairs)
 	}
 	
 	func test_loadCommentsCompletion_showsLocalizedErrorMessageOnLoaderError() {
