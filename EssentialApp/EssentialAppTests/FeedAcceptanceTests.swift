@@ -7,7 +7,7 @@ import EssentialFeed
 import EssentialFeediOS
 @testable import EssentialApp
 
-class FeedAcceptanceTests: XCTestCase {
+class FeedAcceptanceTests: XCTestCase, AcceptanceTest {
 	
 	func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
 		let feed = launch(httpClient: .online(response), store: .empty)
@@ -70,31 +70,4 @@ class FeedAcceptanceTests: XCTestCase {
 		let sut = SceneDelegate(httpClient: HTTPClientStub.offline, store: store)
 		sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
 	}
-	
-	private func response(for url: URL) -> (Data, HTTPURLResponse) {
-		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-		return (makeData(for: url), response)
-	}
-	
-	private func makeData(for url: URL) -> Data {
-		switch url.absoluteString {
-		case "http://image.com":
-			return makeImageData()
-			
-		default:
-			return makeFeedData()
-		}
-	}
-	
-	private func makeImageData() -> Data {
-		return UIImage.make(withColor: .red).pngData()!
-	}
-	
-	private func makeFeedData() -> Data {
-		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
-			["id": UUID().uuidString, "image": "http://image.com"]
-		]])
-	}
-	
 }
