@@ -47,10 +47,10 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		})
 	}
 	
-	func test_loadImageCommentsFromURL_deliversInvalidDataErrorOnNon200HTTPResponse() {
+	func test_loadImageCommentsFromURL_deliversInvalidDataErrorOnNon2xxHTTPResponse() {
 		let (sut, client) = makeSUT()
 		
-		let samples = [199, 201, 300, 400, 500]
+		let samples = [199, 150, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
