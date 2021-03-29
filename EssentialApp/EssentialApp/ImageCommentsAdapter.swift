@@ -7,6 +7,7 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
 import Foundation
 
 final class ImageCommentsAdapter: ImageCommentsListView {
@@ -19,14 +20,14 @@ final class ImageCommentsAdapter: ImageCommentsListView {
 	}
 	
 	func display(_ viewModel: ImageCommentsListViewModel) {
-		controller?.tableModel = viewModel.comments.map { comment in
+		controller?.display(viewModel.comments.map { comment in
 			let presentationAdapter = ImageCommentCellPresentationAdapter(comment: comment)
 			let controller = ImageCommentsCellController(delegate: presentationAdapter)
 			presentationAdapter.presenter = ImageCommentPresenter(
 				currentDate: currentDate,
-				commentView: WeakReferenceVirtualProxy(controller)
+				commentView: WeakRefVirtualProxy(controller)
 			)
 			return controller
-		}
+		})
 	}
 }

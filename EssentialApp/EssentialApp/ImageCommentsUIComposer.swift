@@ -7,6 +7,7 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
 import UIKit
 
 public final class ImageCommentsUIComposer {
@@ -29,9 +30,9 @@ public final class ImageCommentsUIComposer {
 		refreshController.delegate = presentationAdapter
 		
 		let presenter = ImageCommentsListPresenter(
-			loadingView: WeakReferenceVirtualProxy(refreshController),
+			loadingView: WeakRefVirtualProxy(refreshController),
 			commentsView: imageCommentsListView,
-			errorView: WeakReferenceVirtualProxy(refreshController)
+			errorView: WeakRefVirtualProxy(refreshController)
 		)
 		presentationAdapter.presenter = presenter
 		

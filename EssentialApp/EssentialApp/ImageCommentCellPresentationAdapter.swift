@@ -7,6 +7,7 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
 
 final class ImageCommentCellPresentationAdapter: ImageCommentCellControllerDelegate {
 	private let comment: ImageComment

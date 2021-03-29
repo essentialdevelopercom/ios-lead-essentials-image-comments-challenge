@@ -9,15 +9,15 @@
 import EssentialFeed
 import UIKit
 
-protocol ImageCommentCellControllerDelegate {
+public protocol ImageCommentCellControllerDelegate {
 	func didRequestComment()
 }
 
-final class ImageCommentsCellController: ImageCommentView {
+public final class ImageCommentsCellController: ImageCommentView {
 	private let delegate: ImageCommentCellControllerDelegate
 	private var cell: ImageCommentCell?
 	
-	init(delegate: ImageCommentCellControllerDelegate) {
+	public init(delegate: ImageCommentCellControllerDelegate) {
 		self.delegate = delegate
 	}
 	
@@ -27,7 +27,7 @@ final class ImageCommentsCellController: ImageCommentView {
 		return cell!
 	}
 	
-	func display(_ viewModel: ImageCommentViewModel) {
+	public func display(_ viewModel: ImageCommentViewModel) {
 		cell?.authorLabel?.text = viewModel.author
 		cell?.messageLabel?.text = viewModel.message
 		cell?.creationDateLabel?.text = viewModel.creationDate

@@ -10,9 +10,9 @@ import EssentialFeed
 import UIKit
 
 public class ImageCommentsViewController: UITableViewController {
-	@IBOutlet var refreshController: ImageCommentsRefreshController?
+	@IBOutlet private(set) public var refreshController: ImageCommentsRefreshController?
 	
-	var tableModel = [ImageCommentsCellController]() {
+	private var tableModel = [ImageCommentsCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
@@ -21,6 +21,10 @@ public class ImageCommentsViewController: UITableViewController {
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		refreshController?.refreshComments()
+	}
+	
+	public func display(_ cellControllers: [ImageCommentsCellController]) {
+		self.tableModel = cellControllers
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

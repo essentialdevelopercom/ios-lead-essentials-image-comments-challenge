@@ -7,6 +7,7 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
 import Foundation
 
 final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewControllerDelegate {

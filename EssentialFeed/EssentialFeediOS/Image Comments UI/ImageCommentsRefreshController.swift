@@ -9,21 +9,21 @@
 import EssentialFeed
 import UIKit
 
-protocol ImageCommentsRefreshViewControllerDelegate {
+public protocol ImageCommentsRefreshViewControllerDelegate {
 	func didRequestLoadingComments()
 }
 
-final class ImageCommentsRefreshController: NSObject, ImageCommentsLoadingView, ImageCommentsErrorView {
+public final class ImageCommentsRefreshController: NSObject, ImageCommentsLoadingView, ImageCommentsErrorView {
 	@IBOutlet private var refreshView: UIRefreshControl?
 	@IBOutlet private var errorView: CommentErrorView?
 	
-	var delegate: ImageCommentsRefreshViewControllerDelegate?
+	public var delegate: ImageCommentsRefreshViewControllerDelegate?
 	
 	@IBAction func refreshComments() {
 		delegate?.didRequestLoadingComments()
 	}
 	
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
 		if viewModel.isLoading {
 			refreshView?.beginRefreshing()
 		} else {
@@ -31,7 +31,7 @@ final class ImageCommentsRefreshController: NSObject, ImageCommentsLoadingView, 
 		}
 	}
 	
-	func display(_ viewModel: ImageCommentsErrorViewModel) {
+	public func display(_ viewModel: ImageCommentsErrorViewModel) {
 		if let message = viewModel.message {
 			errorView?.show(message: message)
 		} else {
