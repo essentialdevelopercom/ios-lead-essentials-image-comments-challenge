@@ -25,6 +25,13 @@ public final class ImageCommentsPresenter {
 	public let imageCommentsLoadingView: ImageCommentsLoadingView
 	public let imageCommentsErrorView: ImageCommentsErrorView
 
+	private var imageCommentsLoadError: String {
+		return NSLocalizedString("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR",
+			 tableName: "ImageComments",
+			 bundle: Bundle(for: ImageCommentsPresenter.self),
+			 comment: "Error message displayed when we can't load the image comments from the server")
+	}
+
 	public static var title: String {
 		NSLocalizedString(
 			"IMAGE_COMMENTS_TITLE",
@@ -66,6 +73,11 @@ public final class ImageCommentsPresenter {
 
 	public func didFinishLoadingImageComments(with imageComments: [ImageComment]) {
 		imageCommentsView.display(ImageCommentsViewModel(imageComments: imageComments))
+		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+	}
+
+	public func didFinishLoadingImageComments(with error: Error) {
+		errorView.display(.error(message: imageCommentsLoadError))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 }
