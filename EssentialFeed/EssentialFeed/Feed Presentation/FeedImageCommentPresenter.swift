@@ -48,18 +48,17 @@ public final class FeedImageCommentPresenter {
 	
 	public func didStartLoadingComments() {
 		errorView.display(.noError)
-		loadingView.display(.init(isLoading: true))
+		loadingView.display(.loading)
 	}
 	
 	public func didFinishLoadingComments(with comments: [FeedComment]) {
 		commentsView.display(.init(comments: comments))
-		loadingView.display(.init(isLoading: false))
+		loadingView.display(.notLoading)
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
-		loadingView.display(.init(isLoading: false))
+		loadingView.display(.notLoading)
 		errorView.display(.error(message: commentsLoadError))
 	}
 	
 }
-

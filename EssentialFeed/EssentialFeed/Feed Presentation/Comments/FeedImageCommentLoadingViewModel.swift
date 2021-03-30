@@ -11,3 +11,15 @@ import Foundation
 public struct FeedImageCommentLoadingViewModel {
 	public let isLoading: Bool
 }
+
+public extension FeedImageCommentLoadingViewModel {
+	
+	static var loading: Self {
+		Self(isLoading: true)
+	}
+	
+	static var notLoading: Self {
+		Self(isLoading: false)
+	}
+	
+}
