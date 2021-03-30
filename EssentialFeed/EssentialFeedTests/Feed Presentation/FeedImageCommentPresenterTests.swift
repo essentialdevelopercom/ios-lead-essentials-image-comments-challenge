@@ -36,10 +36,10 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 		let (sut, view) = makeSUT()
 		let comments = uniqueComments()
 		
-		sut.didFinishLoadingComments(with: comments)
+		sut.didFinishLoadingComments(with: comments.comments)
 		
 		XCTAssertEqual(view.messages, [
-			.display(comments: comments),
+			.display(comments: comments.presentation),
 			.display(isLoading: false)
 		])
 	}
@@ -59,7 +59,18 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImageCommentPresenter(commentsView: view, errorView: view, loadingView: view)
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .short
+		formatter.locale = .current
+		let sut = FeedImageCommentPresenter(
+			commentsView: view,
+			errorView: view,
+			loadingView: view,
+			dateFormatter: formatter,
+			currentDateProvider: { Date(timeIntervalSince1970: 1617129798.219656) }
+		)
+		
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -80,7 +91,7 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
-			case display(comments: [FeedComment])
+			case display(comments: [PresentationImageComment])
 		}
 		
 		private(set) var messages = Set<Message>()

@@ -9,10 +9,10 @@
 import Foundation
 
 public struct FeedComment: Hashable {
-	let id: UUID
-	let message: String
-	let createdAt: Date
-	let author: FeedCommentAuthor
+	public let id: UUID
+	public let message: String
+	public let createdAt: Date
+	public let author: FeedCommentAuthor
 	
 	public init(id: UUID, message: String, createdAt: Date, author: FeedCommentAuthor) {
 		self.id = id
@@ -24,7 +24,7 @@ public struct FeedComment: Hashable {
 }
 
 public struct FeedCommentAuthor: Hashable {
-	let username: String
+	public let username: String
 	
 	public init(username: String) {
 		self.username = username

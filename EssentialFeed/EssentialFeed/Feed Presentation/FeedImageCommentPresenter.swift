@@ -24,11 +24,15 @@ public final class FeedImageCommentPresenter {
 	private let commentsView: FeedImageCommentView
 	private let errorView: FeedImageCommentErrorView
 	private let loadingView: FeedImageCommentLoadingView
+	private let dateFormatter: DateFormatter
+	private let currentDateProvider: () -> Date
 	
-	public init(commentsView: FeedImageCommentView, errorView: FeedImageCommentErrorView, loadingView: FeedImageCommentLoadingView) {
+	public init(commentsView: FeedImageCommentView, errorView: FeedImageCommentErrorView, loadingView: FeedImageCommentLoadingView, dateFormatter: DateFormatter, currentDateProvider: @escaping () -> Date) {
 		self.commentsView = commentsView
 		self.errorView = errorView
 		self.loadingView = loadingView
+		self.dateFormatter = dateFormatter
+		self.currentDateProvider = currentDateProvider
 	}
 	
 	public static var title: String {
@@ -52,13 +56,25 @@ public final class FeedImageCommentPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [FeedComment]) {
-		commentsView.display(.init(comments: comments))
+		commentsView.display(.init(comments: presentableComments(from: comments)))
 		loadingView.display(.notLoading)
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
 		loadingView.display(.notLoading)
 		errorView.display(.error(message: commentsLoadError))
+	}
+	
+	private func presentableComments(from comments: [FeedComment]) -> [PresentationImageComment] {
+		comments.map { PresentationImageComment(
+			message: $0.message,
+			createdAt: format($0.createdAt),
+			author: $0.author.username)
+		}
+	}
+	
+	private func format(_ date: Date) -> String {
+		dateFormatter.string(from: date)
 	}
 	
 }
