@@ -11,7 +11,7 @@ import Foundation
 struct RemoteFeedImageCommentItem: Decodable {
 	let id: UUID
 	let message: String
-	let createdAt: String
+	let createdAt: Date
 	let author: RemoteFeedImageCommentItemAuthor
 	
 	enum CodingKeys: String, CodingKey {
