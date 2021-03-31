@@ -10,9 +10,9 @@ import UIKit
 import EssentialFeediOS
 
 extension ImageCommentCell {
-	var messageText: String?{ messageLabel.text }
-	var createdAtText: String?{ createdAtLabel.text }
-	var usernameText: String?{ usernameLabel.text }
+	var messageText: String? { messageLabel.text }
+	var createdAtText: String? { createdAtLabel.text }
+	var usernameText: String? { usernameLabel.text }
 }
 
 extension ImageCommentsViewController {
@@ -51,7 +51,7 @@ extension ImageCommentsViewController {
 	}
 }
 
-private extension ErrorView{
+private extension ErrorView {
 	func simulateTap(){
 		button.simulateTap()
 	}

@@ -130,7 +130,7 @@ class FeedAcceptanceTests: XCTestCase {
 		api().url(for: .imageComments(id: UUID(uuidString: uuidString)!)).absoluteString
 	}
 	
-	private func api() -> EssentialFeedAPI{
+	private func api() -> EssentialFeedAPI {
 		let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 		return EssentialFeedAPI(baseURL: baseURL)
 	}

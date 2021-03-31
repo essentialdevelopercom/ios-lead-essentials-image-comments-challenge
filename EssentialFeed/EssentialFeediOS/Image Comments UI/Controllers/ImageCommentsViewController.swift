@@ -13,7 +13,7 @@ public protocol ImageCommentsControllerDelegate {
 	func didRequestImageCommentsRefresh()
 }
 
-public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 	
 	private(set) public var errorView: ErrorView = ErrorView()
 	

@@ -20,7 +20,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://comments-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load{ _ in }
+		sut.load { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -29,8 +29,8 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://comments-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load{ _ in }
-		sut.load{ _ in }
+		sut.load { _ in }
+		sut.load { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -97,7 +97,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://comments-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		let task = sut.load{ _ in }
+		let task = sut.load { _ in }
 		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
 
 		task.cancel()

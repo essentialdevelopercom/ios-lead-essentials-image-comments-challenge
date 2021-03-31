@@ -94,7 +94,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 }
 
 
-private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
+private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 	enum Message: Hashable {
 		case display(errorMessage: String?)
 		case display(isLoading: Bool)

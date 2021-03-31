@@ -11,7 +11,7 @@ extension HTTPURLResponse {
 		return statusCode == HTTPURLResponse.OK_200
 	}
 	
-	func isValid(for validResponseRange: ClosedRange<Int>) -> Bool{
+	func isValid(for validResponseRange: ClosedRange<Int>) -> Bool {
 		validResponseRange.contains(statusCode)
 	}
 }
