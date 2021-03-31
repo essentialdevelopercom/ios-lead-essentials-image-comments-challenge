@@ -25,6 +25,10 @@ extension ImageCommentsViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
+	func simulateTapOnErrorMessage() {
+		errorView.simulateTap()
+	}
+	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}
@@ -32,7 +36,6 @@ extension ImageCommentsViewController {
 	func numberOfRenderedImageCommentViews() -> Int {
 		return tableView.numberOfRows(inSection: imageCommentsSection)
 	}
-	
 	
 	func imageCommentView(at row: Int) -> UITableViewCell? {
 		guard numberOfRenderedImageCommentViews() > row else {
@@ -45,5 +48,11 @@ extension ImageCommentsViewController {
 	
 	private var imageCommentsSection: Int {
 		return 0
+	}
+}
+
+private extension ErrorView{
+	func simulateTap(){
+		button.simulateTap()
 	}
 }
