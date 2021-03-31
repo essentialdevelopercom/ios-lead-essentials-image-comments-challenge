@@ -44,10 +44,6 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		tableView.sizeTableHeaderToFit()
 	}
 	
-	public override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-	}
-	
 	@objc private func refresh() {
 		self.delegate?.didRequestImageCommentsRefresh()
 	}
