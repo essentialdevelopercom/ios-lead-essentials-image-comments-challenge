@@ -15,3 +15,21 @@ func anyURL() -> URL {
 func anyData() -> Data {
 	return Data("any data".utf8)
 }
+
+extension Date {
+	func minusFeedCacheMaxAge() -> Date {
+		adding(days: -feedCacheMaxAgeInDays)
+	}
+	
+	var feedCacheMaxAgeInDays: Int {
+		7
+	}
+	
+	func adding(days: Int) -> Date {
+		Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+	}
+	
+	func adding(seconds: TimeInterval) -> Date {
+		return self + seconds
+	}
+}

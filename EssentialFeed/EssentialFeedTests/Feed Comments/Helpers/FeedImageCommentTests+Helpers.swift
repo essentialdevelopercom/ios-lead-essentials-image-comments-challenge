@@ -17,10 +17,18 @@ func uniqueComment() -> FeedComment {
 	)
 }
 
-func uniqueComments() -> (comments: [FeedComment], presentation: [PresentationImageComment]) {
+func uniqueComments(locale: Locale = Locale(identifier: "en_US_POSIX")) -> (comments: [FeedComment], presentation: [PresentationImageComment]) {
 	let comments = [uniqueComment(), uniqueComment()]
+	let createdAt: String
+	switch locale.identifier {
+	case "ru_RU":
+		createdAt = "1 день назад"
+	default:
+		createdAt = "1 day ago"
+	}
+	
 	let presentation: [PresentationImageComment] = comments.map {
-		PresentationImageComment(message: $0.message, createdAt: "1 day ago", author: $0.author.username)
+		PresentationImageComment(message: $0.message, createdAt: createdAt, author: $0.author.username)
 	}
 	return (comments: comments, presentation: presentation)
 }

@@ -32,9 +32,22 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 		])
 	}
 	
-	func test_didFinishLoadingComments_displaysFeedAndStopsLoading() {
+	func test_didFinishLoadingCommentsInEngLocale_displaysFeedAndStopsLoading() {
 		let (sut, view) = makeSUT()
 		let comments = uniqueComments()
+		
+		sut.didFinishLoadingComments(with: comments.comments)
+		
+		XCTAssertEqual(view.messages, [
+			.display(comments: comments.presentation),
+			.display(isLoading: false)
+		])
+	}
+	
+	func test_didFinishLoadingCommentsInRussianLocale_displaysFeedAndStopsLoading() {
+		let russianLocale = Locale(identifier: "ru_RU")
+		let (sut, view) = makeSUT(locale: russianLocale)
+		let comments = uniqueComments(locale: russianLocale)
 		
 		sut.didFinishLoadingComments(with: comments.comments)
 		
@@ -57,11 +70,11 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentPresenter, view: ViewSpy) {
+	private func makeSUT(locale: Locale = Locale(identifier: "en_US_POSIX"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentPresenter, view: ViewSpy) {
 		let view = ViewSpy()
 
 		let dateFormatter = RelativeDateTimeFormatter()
-		dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+		dateFormatter.locale = locale
 
 		let sut = FeedImageCommentPresenter(
 			commentsView: view,
