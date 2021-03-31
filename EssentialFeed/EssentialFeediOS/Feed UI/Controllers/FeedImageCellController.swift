@@ -11,26 +11,32 @@ public protocol FeedImageCellControllerDelegate {
 }
 
 public final class FeedImageCellController: FeedImageView {
-	private let delegate: FeedImageCellControllerDelegate
+	private let cellControllerDelegate: FeedImageCellControllerDelegate
+	private let selectionHandler: () -> Void
 	private var cell: FeedImageCell?
 	
-	public init(delegate: FeedImageCellControllerDelegate) {
-		self.delegate = delegate
+	public init(cellControllerDelegate: FeedImageCellControllerDelegate, selectionHandler: @escaping () -> Void) {
+		self.cellControllerDelegate = cellControllerDelegate
+		self.selectionHandler = selectionHandler
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
 		cell = tableView.dequeueReusableCell()
-		delegate.didRequestImage()
+		cellControllerDelegate.didRequestImage()
 		return cell!
 	}
 	
 	func preload() {
-		delegate.didRequestImage()
+		cellControllerDelegate.didRequestImage()
 	}
 	
 	func cancelLoad() {
 		releaseCellForReuse()
-		delegate.didCancelImageRequest()
+		cellControllerDelegate.didCancelImageRequest()
+	}
+	
+	func didSelect() {
+		selectionHandler()
 	}
 	
 	public func display(_ viewModel: FeedImageViewModel<UIImage>) {
@@ -40,7 +46,7 @@ public final class FeedImageCellController: FeedImageView {
 		cell?.feedImageView.setImageAnimated(viewModel.image)
 		cell?.feedImageContainer.isShimmering = viewModel.isLoading
 		cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
-		cell?.onRetry = delegate.didRequestImage
+		cell?.onRetry = cellControllerDelegate.didRequestImage
 	}
 	
 	private func releaseCellForReuse() {
