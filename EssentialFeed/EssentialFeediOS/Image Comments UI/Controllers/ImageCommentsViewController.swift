@@ -15,7 +15,7 @@ public protocol ImageCommentsControllerDelegate {
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView{
 	
-	@IBOutlet private(set) public var errorView: ErrorView!
+	private(set) public var errorView: ErrorView = ErrorView()
 	
 	public var delegate: ImageCommentsControllerDelegate?
 	
@@ -32,6 +32,8 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		
 		self.refreshControl = UIRefreshControl()
 		refreshControl?.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+		
+		tableView.tableHeaderView = errorView
 		
 		refresh()
 	}

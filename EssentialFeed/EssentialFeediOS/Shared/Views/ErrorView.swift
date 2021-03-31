@@ -5,22 +5,53 @@
 import UIKit
 
 public final class ErrorView: UIView {
-	@IBOutlet private var label: UILabel!
+	private lazy var label: UILabel = UILabel()
 	
 	public var message: String? {
 		get { return isVisible ? label.text : nil }
 		set { setMessageAnimated(newValue) }
 	}
 	
-	public override func awakeFromNib() {
-		super.awakeFromNib()
-		
-		label.text = nil
-		alpha = 0
+	public override init(frame: CGRect) {
+			super.init(frame: frame)
+			configure()
+	}
+	
+	required init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+	
+	private func configure() {
+		backgroundColor = .errorBackgroundColor
+		configureLabe()
+		setInitialState()
 	}
 	
 	private var isVisible: Bool {
 		return alpha > 0
+	}
+	
+	private func configureLabe(){
+		addSubview(label)
+		label.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			label.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 0),
+			label.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: 0),
+			label.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
+			label.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
+		])
+		
+		label.textAlignment = .center
+		label.numberOfLines = 0
+		label.adjustsFontForContentSizeCategory = true
+		label.font = .preferredFont(forTextStyle: .body)
+		label.textColor = .white
+		label.backgroundColor = .clear
+		
+	}
+	
+	private func setInitialState(){
+		onMessageHidden()
 	}
 	
 	private func setMessageAnimated(_ message: String?) {
@@ -43,8 +74,20 @@ public final class ErrorView: UIView {
 		UIView.animate(
 			withDuration: 0.25,
 			animations: { self.alpha = 0 },
-			completion: { completed in
-				if completed { self.label.text = nil }
+			completion: { [weak self] completed in
+				if completed { self?.onMessageHidden() }
 			})
+	}
+	
+	private func onMessageHidden(){
+		self.label.text = nil
+		alpha = 0
+	}
+}
+
+
+extension UIColor {
+	static var errorBackgroundColor: UIColor {
+		UIColor(red: 0.99951404330000004, green: 0.41759261489999999, blue: 0.4154433012, alpha: 1)
 	}
 }

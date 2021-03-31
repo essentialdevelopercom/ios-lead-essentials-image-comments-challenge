@@ -10,7 +10,7 @@ public protocol FeedViewControllerDelegate {
 }
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView, FeedErrorView {
-	@IBOutlet private(set) public var errorView: ErrorView?
+	private(set) public var errorView: ErrorView = ErrorView()
 	
 	private var loadingControllers = [IndexPath: FeedImageCellController]()
 	
@@ -22,6 +22,8 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		tableView.tableHeaderView = errorView
 		
 		refresh()
 	}
@@ -46,7 +48,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	}
 	
 	public func display(_ viewModel: FeedErrorViewModel) {
-		errorView?.message = viewModel.message
+		errorView.message = viewModel.message
 	}
 	
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

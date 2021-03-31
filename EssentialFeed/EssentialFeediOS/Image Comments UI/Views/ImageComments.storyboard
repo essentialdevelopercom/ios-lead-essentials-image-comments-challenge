@@ -3,7 +3,6 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,33 +15,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="ees-XP-Exg" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mCw-Sx-Y1N">
-                                    <rect key="frame" x="8" y="8" width="398" height="18"/>
-                                    <viewLayoutGuide key="safeArea" id="duF-s5-6uJ"/>
-                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <gestureRecognizers/>
-                            <constraints>
-                                <constraint firstAttribute="trailingMargin" secondItem="mCw-Sx-Y1N" secondAttribute="trailing" id="1U7-qh-FW9"/>
-                                <constraint firstItem="mCw-Sx-Y1N" firstAttribute="leading" secondItem="ees-XP-Exg" secondAttribute="leadingMargin" id="Jtc-6Z-BXa"/>
-                                <constraint firstAttribute="bottom" secondItem="mCw-Sx-Y1N" secondAttribute="bottom" constant="8" id="QSo-xe-MMs"/>
-                                <constraint firstItem="mCw-Sx-Y1N" firstAttribute="top" secondItem="ees-XP-Exg" secondAttribute="top" constant="8" id="wrs-1d-ZY0"/>
-                            </constraints>
-                            <connections>
-                                <outlet property="label" destination="mCw-Sx-Y1N" id="USA-Gt-cNl"/>
-                            </connections>
-                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="147" id="Tdl-xN-YmG" customClass="ImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="62" width="414" height="147"/>
+                                <rect key="frame" x="0.0" y="28" width="414" height="147"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Tdl-xN-YmG" id="tLe-XK-abI">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="147"/>
@@ -91,9 +66,6 @@
                             <outlet property="delegate" destination="FiQ-rn-6DH" id="3Zw-e6-oQE"/>
                         </connections>
                     </tableView>
-                    <connections>
-                        <outlet property="errorView" destination="ees-XP-Exg" id="m3M-0h-evW"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jr9-dX-fyw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
