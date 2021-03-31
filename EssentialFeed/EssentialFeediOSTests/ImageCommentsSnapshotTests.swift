@@ -30,7 +30,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraLarge)), named: "IMAGECOMMENTS_WITH_ERROR_MESSAGE_extralarge_light")
 	}
 	
-	func test_feedWithContent() {
+	func test_imageCommentsWithContent() {
 		let sut = makeSUT()
 		
 		let comments: [PresentableImageComment] = [
