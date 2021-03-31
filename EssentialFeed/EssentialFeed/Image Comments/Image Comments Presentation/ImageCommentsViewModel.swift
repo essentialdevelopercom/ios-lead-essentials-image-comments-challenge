@@ -11,7 +11,7 @@ import Foundation
 public struct ImageCommentsViewModel {
 	public let imageComments: [PresentableImageComment]
 	
-	public init(imageComments: [PresentableImageComment]){
+	public init(imageComments: [PresentableImageComment]) {
 		self.imageComments = imageComments
 	}
 }

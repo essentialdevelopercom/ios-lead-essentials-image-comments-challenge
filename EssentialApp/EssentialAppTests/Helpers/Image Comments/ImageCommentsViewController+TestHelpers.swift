@@ -52,7 +52,7 @@ extension ImageCommentsViewController {
 }
 
 private extension ErrorView {
-	func simulateTap(){
+	func simulateTap() {
 		button.simulateTap()
 	}
 }

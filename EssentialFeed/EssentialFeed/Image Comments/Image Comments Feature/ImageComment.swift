@@ -14,7 +14,7 @@ public struct ImageComment: Hashable {
 	public let createdAt: Date
 	public let author: ImageCommentAuthor
 	
-	public init(id: UUID, message: String, createdAt: Date, author: ImageCommentAuthor){
+	public init(id: UUID, message: String, createdAt: Date, author: ImageCommentAuthor) {
 		self.id = id
 		self.message = message
 		self.createdAt = createdAt

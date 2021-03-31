@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 	private let client: HTTPClient
 	private let url: URL
@@ -60,7 +59,7 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 		}
 	}
 	
-	public init(client: HTTPClient, url: URL){
+	public init(client: HTTPClient, url: URL) {
 		self.client = client
 		self.url = url
 	}
@@ -68,7 +67,7 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 	@discardableResult
 	public func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
-		task.wrapped = client.get(from: url){ [weak self] result in
+		task.wrapped = client.get(from: url) { [weak self] result in
 			if self == nil {return}
 			
 			let completionResult: RemoteImageCommentsLoader.Result

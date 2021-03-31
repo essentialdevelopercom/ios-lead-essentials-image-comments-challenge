@@ -37,7 +37,7 @@ public final class ImageCommentsPresenter {
 			 comment: "Title for the image comments view")
 	}
 	
-	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current){
+	public init(imageCommentsView: ImageCommentsView, loadingView: ImageCommentsLoadingView, errorView: ImageCommentsErrorView, currentDate: @escaping () -> Date = Date.init, locale: Locale = .current) {
 		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
@@ -45,7 +45,7 @@ public final class ImageCommentsPresenter {
 		self.locale = locale
 	}
 	
-	public func didStartLoadingImageComments(){
+	public func didStartLoadingImageComments() {
 		errorView.display(.noError)
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 	}

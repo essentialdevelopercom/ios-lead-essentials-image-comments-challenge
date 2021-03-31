@@ -317,7 +317,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
-	func test_didSelectImageRow_callsDidSelectHandler(){
+	func test_didSelectImageRow_callsDidSelectHandler() {
 		let image0 = makeImage()
 		let image1 = makeImage()
 

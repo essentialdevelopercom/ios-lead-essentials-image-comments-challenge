@@ -88,7 +88,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			})
 	}
 	
-	private func navigateToImageComments(feedImage: FeedImage){
+	private func navigateToImageComments(feedImage: FeedImage) {
 		let loader = RemoteImageCommentsLoader(client: httpClient, url: api.url(for: EssentialFeedAPI.Endpoint.imageComments(id: feedImage.id)))
 		let controller = ImageCommentsUIComposer.imageCommentsComposedWith(loader: loader.loadPublisher)
 		navigationController.pushViewController(controller, animated: true)

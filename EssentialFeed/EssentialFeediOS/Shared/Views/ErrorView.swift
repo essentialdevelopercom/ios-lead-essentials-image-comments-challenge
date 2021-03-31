@@ -33,7 +33,7 @@ public final class ErrorView: UIView {
 		return alpha > 0
 	}
 	
-	private func configureLabe(){
+	private func configureLabe() {
 		addSubview(label)
 		label.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
@@ -51,7 +51,7 @@ public final class ErrorView: UIView {
 		label.backgroundColor = .clear
 	}
 	
-	private func configureButton(){
+	private func configureButton() {
 		addSubview(button)
 		button.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
@@ -65,7 +65,7 @@ public final class ErrorView: UIView {
 		button.addTarget(self, action: #selector(hideMessageAnimated), for: .touchUpInside)
 	}
 	
-	private func setInitialState(){
+	private func setInitialState() {
 		onMessageHidden()
 	}
 	
@@ -95,7 +95,7 @@ public final class ErrorView: UIView {
 			})
 	}
 	
-	private func onMessageHidden(){
+	private func onMessageHidden() {
 		self.label.text = nil
 		alpha = 0
 		button.contentEdgeInsets = .init(top: -4.0, left: 0, bottom: -4.0, right: 0)
