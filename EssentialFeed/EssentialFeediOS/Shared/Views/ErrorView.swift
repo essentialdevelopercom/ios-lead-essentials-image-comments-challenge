@@ -5,6 +5,7 @@
 import UIKit
 
 public final class ErrorView: UIView {
+	public private(set) lazy var button = UIButton()
 	private lazy var label: UILabel = UILabel()
 	
 	public var message: String? {
@@ -24,6 +25,7 @@ public final class ErrorView: UIView {
 	private func configure() {
 		backgroundColor = .errorBackgroundColor
 		configureLabe()
+		configureButton()
 		setInitialState()
 	}
 	
@@ -49,6 +51,20 @@ public final class ErrorView: UIView {
 		label.backgroundColor = .clear
 	}
 	
+	private func configureButton(){
+		addSubview(button)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			button.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			button.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+			button.topAnchor.constraint(equalTo: self.topAnchor),
+			button.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+		])
+		
+		button.setTitle(nil, for: .normal)
+		button.addTarget(self, action: #selector(hideMessageAnimated), for: .touchUpInside)
+	}
+	
 	private func setInitialState(){
 		onMessageHidden()
 	}
@@ -63,6 +79,7 @@ public final class ErrorView: UIView {
 	
 	private func showAnimated(_ message: String) {
 		label.text = message
+		button.contentEdgeInsets = .zero
 		
 		UIView.animate(withDuration: 0.25) {
 			self.alpha = 1
@@ -81,6 +98,7 @@ public final class ErrorView: UIView {
 	private func onMessageHidden(){
 		self.label.text = nil
 		alpha = 0
+		button.contentEdgeInsets = .init(top: -4.0, left: 0, bottom: -4.0, right: 0)
 	}
 }
 
