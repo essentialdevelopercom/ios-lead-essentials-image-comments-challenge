@@ -89,7 +89,6 @@ class FeedSnapshotTests: XCTestCase {
 			)
 		]
 	}
-	
 }
 
 private extension FeedViewController {

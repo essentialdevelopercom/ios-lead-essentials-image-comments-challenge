@@ -6,7 +6,7 @@ import UIKit
 
 public final class ErrorView: UIView {
 	public private(set) lazy var button = UIButton()
-	private lazy var label: UILabel = UILabel()
+	private lazy var label = UILabel()
 	
 	public var message: String? {
 		get { return isVisible ? label.text : nil }
@@ -14,8 +14,8 @@ public final class ErrorView: UIView {
 	}
 	
 	public override init(frame: CGRect) {
-			super.init(frame: frame)
-			configure()
+		super.init(frame: frame)
+		configure()
 	}
 	
 	required init?(coder: NSCoder) {
@@ -88,11 +88,14 @@ public final class ErrorView: UIView {
 	
 	@IBAction private func hideMessageAnimated() {
 		UIView.animate(
-			withDuration: 0.25,
-			animations: { self.alpha = 0 },
-			completion: { [weak self] completed in
-				if completed { self?.onMessageHidden() }
-			})
+		withDuration: 0.25,
+		animations: { self.alpha = 0 },
+		completion: { [weak self] completed in
+				if completed {
+					self?.onMessageHidden()
+				}
+			}
+		)
 	}
 	
 	private func onMessageHidden() {
@@ -101,7 +104,6 @@ public final class ErrorView: UIView {
 		button.contentEdgeInsets = .init(top: -4.0, left: 0, bottom: -4.0, right: 0)
 	}
 }
-
 
 extension UIColor {
 	static var errorBackgroundColor: UIColor {

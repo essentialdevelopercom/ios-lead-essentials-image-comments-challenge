@@ -33,7 +33,6 @@ extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == 
 	}
 }
 
-
 // MARK: - Image Comments
 
  extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
