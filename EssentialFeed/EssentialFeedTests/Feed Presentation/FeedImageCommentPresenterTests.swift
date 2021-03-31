@@ -59,16 +59,16 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let formatter = DateFormatter()
-		formatter.dateStyle = .medium
-		formatter.timeStyle = .short
-		formatter.locale = .current
+
+		let dateFormatter = RelativeDateTimeFormatter()
+		dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+
 		let sut = FeedImageCommentPresenter(
 			commentsView: view,
 			errorView: view,
 			loadingView: view,
-			dateFormatter: formatter,
-			currentDateProvider: { Date(timeIntervalSince1970: 1617129798.219656) }
+			dateFormatter: dateFormatter,
+			currentDateProvider: { Date() }
 		)
 		
 		trackForMemoryLeaks(view, file: file, line: line)

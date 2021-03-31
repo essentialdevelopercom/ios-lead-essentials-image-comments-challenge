@@ -24,10 +24,10 @@ public final class FeedImageCommentPresenter {
 	private let commentsView: FeedImageCommentView
 	private let errorView: FeedImageCommentErrorView
 	private let loadingView: FeedImageCommentLoadingView
-	private let dateFormatter: DateFormatter
+	private let dateFormatter: RelativeDateTimeFormatter
 	private let currentDateProvider: () -> Date
 	
-	public init(commentsView: FeedImageCommentView, errorView: FeedImageCommentErrorView, loadingView: FeedImageCommentLoadingView, dateFormatter: DateFormatter, currentDateProvider: @escaping () -> Date) {
+	public init(commentsView: FeedImageCommentView, errorView: FeedImageCommentErrorView, loadingView: FeedImageCommentLoadingView, dateFormatter: RelativeDateTimeFormatter, currentDateProvider: @escaping () -> Date) {
 		self.commentsView = commentsView
 		self.errorView = errorView
 		self.loadingView = loadingView
@@ -74,7 +74,7 @@ public final class FeedImageCommentPresenter {
 	}
 	
 	private func format(_ date: Date) -> String {
-		dateFormatter.string(from: date)
+		dateFormatter.localizedString(for: date, relativeTo: currentDateProvider())
 	}
 	
 }

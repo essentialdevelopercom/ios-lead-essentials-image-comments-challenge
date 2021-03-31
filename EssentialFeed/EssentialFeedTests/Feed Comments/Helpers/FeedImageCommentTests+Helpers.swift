@@ -12,7 +12,7 @@ import EssentialFeed
 func uniqueComment() -> FeedComment {
 	.init(id: UUID(),
 		  message: "a message",
-		  createdAt: Date(timeIntervalSince1970: 1617129798.219656),
+		  createdAt: Date().adding(days: -1),
 		  author: .init(username: "danil")
 	)
 }
@@ -20,7 +20,7 @@ func uniqueComment() -> FeedComment {
 func uniqueComments() -> (comments: [FeedComment], presentation: [PresentationImageComment]) {
 	let comments = [uniqueComment(), uniqueComment()]
 	let presentation: [PresentationImageComment] = comments.map {
-		PresentationImageComment(message: $0.message, createdAt: "31 марта 2021 г., 00:43", author: $0.author.username)
+		PresentationImageComment(message: $0.message, createdAt: "1 day ago", author: $0.author.username)
 	}
 	return (comments: comments, presentation: presentation)
 }
