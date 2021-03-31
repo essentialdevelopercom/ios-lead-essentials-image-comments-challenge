@@ -69,10 +69,10 @@ public final class ImageCommentsPresenter {
 	}
 	
 	private func formatDate(since date: Date) -> String {
-			let formatter = RelativeDateTimeFormatter()
-			formatter.unitsStyle = .full
-			formatter.locale = locale
-			formatter.calendar = calendar
-			return formatter.localizedString(for: date, relativeTo: currentDate())
-		}
+		let formatter = RelativeDateTimeFormatter()
+		formatter.unitsStyle = .full
+		formatter.locale = locale
+		formatter.calendar = calendar
+		return formatter.localizedString(for: date, relativeTo: currentDate())
+	}
 }

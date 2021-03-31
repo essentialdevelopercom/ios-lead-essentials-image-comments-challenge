@@ -16,7 +16,6 @@ public struct ImageCommentsViewModel {
 	}
 }
 
-
 public struct PresentableImageComment: Hashable {
 	public let message: String
 	public let createdAt: String
