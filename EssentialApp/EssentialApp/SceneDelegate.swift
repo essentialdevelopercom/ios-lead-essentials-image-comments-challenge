@@ -57,7 +57,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				selectionHandler: { }
+				selectionHandler: { _ in }
 			)
 		)
 		
