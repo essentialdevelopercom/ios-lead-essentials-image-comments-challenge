@@ -10,7 +10,7 @@ public protocol FeedViewControllerDelegate {
 }
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView, FeedErrorView {
-	private(set) public var errorView: ErrorView = ErrorView()
+	private(set) public var errorView: ErrorView = ErrorView(frame: CGRect(x: 0, y: 0, width: 320, height: 20))
 	
 	private var loadingControllers = [IndexPath: FeedImageCellController]()
 	

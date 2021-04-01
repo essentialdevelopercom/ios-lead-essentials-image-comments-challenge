@@ -15,7 +15,7 @@ public protocol ImageCommentsControllerDelegate {
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 	
-	private(set) public var errorView: ErrorView = ErrorView()
+	private(set) public var errorView: ErrorView = ErrorView(frame: CGRect(x: 0, y: 0, width: 320, height: 40))
 	
 	public var delegate: ImageCommentsControllerDelegate?
 	
