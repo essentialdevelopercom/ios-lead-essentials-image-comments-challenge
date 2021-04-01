@@ -125,7 +125,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		return FeedImage(id: UUID(), description: description, location: location, url: url)
 	}
 	
-	private func makeImageComment(message: String = "A message", createdAt: Date = Date(), author: String = "Ivan") -> FeedImageComment {
+	private func makeImageComment(message: String = "A message", createdAt: Date = Date(), author: String = "An author") -> FeedImageComment {
 		return FeedImageComment(id: UUID(), message: "A message", createdAt: createdAt, author: .init(username: author))
 
 	}
