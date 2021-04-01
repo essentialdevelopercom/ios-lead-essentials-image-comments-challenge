@@ -58,7 +58,7 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 			task.complete(with: result
 				.mapError { _ in Error.connectivity }
 				.flatMap { (data, response) in
-					let isValidResponse = FeedImageCommentsMapper.isOK(response) && !data.isEmpty
+					let isValidResponse = FeedImageCommentsMapper.isOK(response)
 					return isValidResponse ? RemoteFeedImageCommentsLoader.map(data, from: response) : .failure(Error.invalidData)
 				})
 		}
