@@ -34,7 +34,7 @@ public final class FeedImageCellController: FeedImageView {
 		delegate.didCancelImageRequest()
 	}
 	
-	func selected() {
+	func select() {
 		delegate.didSelectImage()
 	}
 	

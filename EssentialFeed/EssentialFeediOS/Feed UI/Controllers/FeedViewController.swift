@@ -72,7 +72,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	}
 	
 	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		cellController(forRowAt: indexPath).selected()
+		cellController(forRowAt: indexPath).select()
 	}
 	
 	private func cellController(forRowAt indexPath: IndexPath) -> FeedImageCellController {
