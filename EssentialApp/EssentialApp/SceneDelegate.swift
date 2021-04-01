@@ -62,7 +62,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		rootViewController: FeedUIComposer.feedComposedWith(
 			   feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 			   imageLoader: makeLocalImageLoaderWithRemoteFallback,
-			   displayImage: displayImage))
+			imageSelection: displayImage))
 	
 	func configureWindow() {
 		window?.rootViewController = navigationController

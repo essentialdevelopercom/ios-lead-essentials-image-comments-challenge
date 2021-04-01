@@ -324,7 +324,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		let sut = FeedUIComposer
 			.feedComposedWith(feedLoader: loader.loadPublisher,
 							  imageLoader: loader.loadImageDataPublisher,
-							  displayImage: nil)
+							  imageSelection: nil)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
