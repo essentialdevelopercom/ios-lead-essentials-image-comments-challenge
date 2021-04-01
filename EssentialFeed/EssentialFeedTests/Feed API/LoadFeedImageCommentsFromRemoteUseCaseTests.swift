@@ -107,7 +107,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 							 username: "a username")
 		
 		let item2 = makeItem(id: UUID(),
-							 message: "a message",
+							 message: "another message",
 							 createdAt: "2020-05-19T14:23:53+0000".ISO8601Date,
 							 username: "another username")
 		
