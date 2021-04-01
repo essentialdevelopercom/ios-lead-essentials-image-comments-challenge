@@ -11,7 +11,6 @@ import EssentialFeed
 
 public protocol FeedImageCommentsViewControllerDelegate {
 	func didRequestFeedImageCommentsRefresh()
-	func didRequestFeedImageCommentsCancel()
 }
 
 public class FeedImageCommentsViewController: UITableViewController, FeedLoadingView, FeedErrorView {
@@ -24,10 +23,6 @@ public class FeedImageCommentsViewController: UITableViewController, FeedLoading
 	}
 	
 	public var delegate: FeedImageCommentsViewControllerDelegate?
-	
-	deinit {
-		delegate?.didRequestFeedImageCommentsCancel()
-	}
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()

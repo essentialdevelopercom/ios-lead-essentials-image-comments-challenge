@@ -21,6 +21,10 @@ final class FeedImageCommentsLoaderPresentationAdapter: FeedImageCommentsViewCon
 		self.feedImageCommentsLoader = feedImageCommentsLoader
 	}
 	
+	deinit {
+		cancellable?.cancel()
+	}
+	
 	func didRequestFeedImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
@@ -37,9 +41,5 @@ final class FeedImageCommentsLoaderPresentationAdapter: FeedImageCommentsViewCon
 				}, receiveValue: { [weak self] comments in
 					self?.presenter?.didFinishLoadingComments(with: comments)
 				})
-	}
-	
-	func didRequestFeedImageCommentsCancel() {
-		cancellable?.cancel()
 	}
 }
