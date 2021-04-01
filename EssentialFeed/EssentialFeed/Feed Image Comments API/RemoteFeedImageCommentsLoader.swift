@@ -11,6 +11,7 @@ import Foundation
 public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 	private let client: HTTPClient
 	private let baseURL: URL
+	private let feedImage: FeedImage
 	
 	public enum Error: Swift.Error {
 		case connectivity
@@ -19,9 +20,10 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 	
 	public typealias Result = FeedImageCommentsLoader.Result
 	
-	public init(baseURL: URL, client: HTTPClient) {
+	public init(baseURL: URL, client: HTTPClient, feedImage: FeedImage) {
 		self.baseURL = baseURL
 		self.client = client
+		self.feedImage = feedImage
 	}
 	
 	private final class HTTPClientTaskWrapper: FeedImageCommentsLoaderTask {
@@ -47,8 +49,8 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 		}
 	}
 	
-	public func loadImageComments(imageID: String, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-		let url = URL(string: "image/\(imageID)/comments", relativeTo: baseURL)!.absoluteURL
+	public func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+		let url = URL(string: "image/\(feedImage.id.uuidString)/comments", relativeTo: baseURL)!.absoluteURL
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }

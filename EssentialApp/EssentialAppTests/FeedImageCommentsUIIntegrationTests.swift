@@ -115,8 +115,7 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
 		
-		let sut = FeedImageCommentsUIComposer.feedImageCommentsComposedWith(feedImage: makeImage(),
-																			feedImageCommentsLoader: loader.loadPublisher)
+		let sut = FeedImageCommentsUIComposer.feedImageCommentsComposedWith(feedImageCommentsLoader: loader.loadPublisher)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

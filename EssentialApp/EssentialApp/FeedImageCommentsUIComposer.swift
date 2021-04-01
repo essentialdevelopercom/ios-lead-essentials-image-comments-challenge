@@ -15,11 +15,10 @@ public final class FeedImageCommentsUIComposer {
 	private init() {}
 	
 	public static func feedImageCommentsComposedWith(
-		feedImage: FeedImage,
-		feedImageCommentsLoader: @escaping (String) -> FeedImageCommentsLoader.Publisher
+		feedImageCommentsLoader: @escaping () -> FeedImageCommentsLoader.Publisher
 	) -> FeedImageCommentsViewController {
 		
-		let presentationAdapter = FeedImageCommentsLoaderPresentationAdapter(feedImage: feedImage, feedImageCommentsLoader: feedImageCommentsLoader)
+		let presentationAdapter = FeedImageCommentsLoaderPresentationAdapter(feedImageCommentsLoader: feedImageCommentsLoader)
 		let feedImageCommentsController = makeFeedImageCommentsViewController(delegate: presentationAdapter, title: FeedImageCommentsPresenter.title)
 		
 		presentationAdapter.presenter = FeedImageCommentsPresenter(

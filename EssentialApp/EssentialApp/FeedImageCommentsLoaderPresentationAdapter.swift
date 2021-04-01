@@ -12,22 +12,19 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class FeedImageCommentsLoaderPresentationAdapter: FeedImageCommentsViewControllerDelegate {
-	private let feedImageCommentsLoader: (String) -> FeedImageCommentsLoader.Publisher
+	private let feedImageCommentsLoader: () -> FeedImageCommentsLoader.Publisher
 	private var cancellable: Cancellable?
-	private let feedImage: FeedImage
 	
 	var presenter: FeedImageCommentsPresenter?
 	
-	init(feedImage: FeedImage,
-		 feedImageCommentsLoader: @escaping (String) -> FeedImageCommentsLoader.Publisher) {
-		self.feedImage = feedImage
+	init(feedImageCommentsLoader: @escaping () -> FeedImageCommentsLoader.Publisher) {
 		self.feedImageCommentsLoader = feedImageCommentsLoader
 	}
 	
 	func didRequestFeedImageCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		cancellable = feedImageCommentsLoader(feedImage.id.uuidString)
+		cancellable = feedImageCommentsLoader()
 			.dispatchOnMainQueue()
 			.sink(
 				receiveCompletion: { [weak self] completion in

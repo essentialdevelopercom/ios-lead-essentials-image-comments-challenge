@@ -40,10 +40,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private lazy var localImageLoader: LocalFeedImageDataLoader = {
 		LocalFeedImageDataLoader(store: store)
 	}()
-
-	private lazy var remoteImageCommentsLoader: RemoteFeedImageCommentsLoader = {
-		RemoteFeedImageCommentsLoader(baseURL: baseURL, client: httpClient)
-	}()
+	
+	private func makeRemoteFeedImageCommentsLoader(feedImage: FeedImage) -> RemoteFeedImageCommentsLoader {
+		RemoteFeedImageCommentsLoader(baseURL: baseURL, client: httpClient, feedImage: feedImage)
+	}
 	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
@@ -58,14 +58,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		configureWindow()
 	}
 	
+	private lazy var navigationController = UINavigationController(
+		rootViewController: FeedUIComposer.feedComposedWith(
+			   feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+			   imageLoader: makeLocalImageLoaderWithRemoteFallback,
+			   displayImage: displayImage))
+	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				feedImageCommentsLoader: makeRemoteFeedImageCommentsLoader))
-		
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
+	}
+	
+	func displayImage(feedImage: FeedImage) {
+		let feedImageCommentsLoaderPublisher = self.makeRemoteFeedImageCommentsLoaderPublisher(image: feedImage)
+		let feedImageCommentsViewController = FeedImageCommentsUIComposer
+			.feedImageCommentsComposedWith(feedImageCommentsLoader: feedImageCommentsLoaderPublisher)
+		navigationController.pushViewController(feedImageCommentsViewController, animated: true)
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
@@ -89,7 +97,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			})
 	}
 	
-	private func makeRemoteFeedImageCommentsLoader(imageID: String) -> FeedImageCommentsLoader.Publisher {
-		return remoteImageCommentsLoader.loadPublisher(with: imageID)
+	private func makeRemoteFeedImageCommentsLoaderPublisher(image: FeedImage) -> () -> FeedImageCommentsLoader.Publisher {
+		return makeRemoteFeedImageCommentsLoader(feedImage: image).loadPublisher
 	}
 }

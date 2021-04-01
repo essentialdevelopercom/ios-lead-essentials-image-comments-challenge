@@ -36,13 +36,13 @@ extension FeedImageCommentsUIIntegrationTests {
 			}
 		}
 		
-		private var imageCommentRequests = [(imageID: String, completion: (FeedImageCommentsLoader.Result) -> Void)]()
+		private var imageCommentRequests = [(String, completion: (FeedImageCommentsLoader.Result) -> Void)]()
 		
-		private(set) var cancelledImageIDs = [String]()
+		private(set) var cancelledTasks = [(String, completion: (FeedImageCommentsLoader.Result) -> Void)]()
 		
-		func loadImageComments(imageID: String, completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-			imageCommentRequests.append((imageID, completion))
-			return ImageCommentTaskSpy { [weak self] in self?.cancelledImageIDs.append(imageID) }
+		func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
+			imageCommentRequests.append(("", completion))
+			return ImageCommentTaskSpy { [weak self] in self?.cancelledTasks.append(("", completion)) }
 		}
 	}
 	

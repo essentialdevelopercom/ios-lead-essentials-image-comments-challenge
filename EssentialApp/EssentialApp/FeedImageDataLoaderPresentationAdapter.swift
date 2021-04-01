@@ -11,13 +11,13 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
 	private let model: FeedImage
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
 	private var cancellable: Cancellable?
-	private let displayImage: (FeedImage) -> Void
+	private let displayImage: ((FeedImage) -> Void)?
 		
 	var presenter: FeedImagePresenter<View, Image>?
 	
 	init(model: FeedImage,
 		 imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
-		 displayImage: @escaping (FeedImage) -> Void) {
+		 displayImage: ((FeedImage) -> Void)?) {
 		self.model = model
 		self.imageLoader = imageLoader
 		self.displayImage = displayImage
@@ -49,6 +49,6 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
 	}
 	
 	func didSelectImage() {
-		displayImage(model)
+		displayImage?(model)
 	}
 }
