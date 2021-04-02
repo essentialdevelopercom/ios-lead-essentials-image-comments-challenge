@@ -26,8 +26,8 @@ class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegat
 			case let .success(comments):
 				self.presenter?.didFinishLoading(with: comments)
 				
-			default:
-				break
+			case let .failure(error):
+				self.presenter?.didFinishLoading(with: error)
 			}
 		}
 	}
@@ -78,8 +78,14 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
 		
-		loader.completeCommentsLoading()
+		loader.completeCommentsLoading(at: 0)
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
+		
+		loader.completeCommentsLoadingWithError(at: 1)
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	}
 	
 	// MARK: - Helpers
@@ -104,6 +110,11 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		func completeCommentsLoading(at index: Int = 0) {
 			imageCommentsRequests[index](.success([]))
+		}
+		
+		func completeCommentsLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			imageCommentsRequests[index](.failure(error))
 		}
 		
 		@discardableResult
