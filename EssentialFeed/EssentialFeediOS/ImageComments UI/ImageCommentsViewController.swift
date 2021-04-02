@@ -11,6 +11,14 @@ import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
 	private var loader: ImageCommentsLoader?
+	private var tableModel = [ImageComment]()
+
+	private var dateFormatter: DateFormatter = {
+		let df = DateFormatter()
+		df.dateStyle = .medium
+		df.timeStyle = .medium
+		return df
+	}()
 
 	public convenience init(loader: ImageCommentsLoader) {
 		self.init()
@@ -27,8 +35,23 @@ public final class ImageCommentsViewController: UITableViewController {
 
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
-		loader?.load { [weak self] _ in
+		loader?.load { [weak self] result in
+			self?.tableModel = (try? result.get()) ?? []
+			self?.tableView.reloadData()
 			self?.refreshControl?.endRefreshing()
 		}
+	}
+
+	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		tableModel.count
+	}
+
+	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cellModel = tableModel[indexPath.row]
+		let cell = ImageCommentCell()
+		cell.messageLabel.text = cellModel.message
+		cell.authorNameLabel.text = cellModel.author.username
+		cell.createdAtLabel.text = dateFormatter.string(from: cellModel.createdAt)
+		return cell
 	}
 }

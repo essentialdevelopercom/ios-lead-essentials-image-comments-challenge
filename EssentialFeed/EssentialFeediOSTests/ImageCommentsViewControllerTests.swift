@@ -42,6 +42,23 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once user initiated loading is completed")
 	}
 
+	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedImageComments() {
+		let imageComment0 = makeImageComment(message: "a message", authorName: "a user", createdAt: Date())
+		let imageComment1 = makeImageComment(message: "another message", authorName: "another user", createdAt: Date())
+		let imageComment2 = makeImageComment(message: "yet another message", authorName: "yet another user", createdAt: Date())
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+
+		loader.completeImageCommentsLoading(with: [imageComment0], at: 0)
+		assertThat(sut, isRendering: [imageComment0])
+
+		sut.simulateUserInitiatedImageCommentsReload()
+		loader.completeImageCommentsLoading(with: [imageComment0, imageComment1, imageComment2], at: 1)
+		assertThat(sut, isRendering: [imageComment0, imageComment1, imageComment2])
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -50,6 +67,39 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+
+	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
+		guard sut.numberOfRenderedImageCommentViews() == imageComments.count else {
+			return XCTFail("Expected \(imageComments.count) image comments, got \(sut.numberOfRenderedImageCommentViews()) instead.", file: file, line: line)
+		}
+
+		imageComments.enumerated().forEach { index, imageComment in
+			assertThat(sut, hasViewConfiguredFor: imageComment, at: index, file: file, line: line)
+		}
+	}
+
+	private func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor imageComment: ImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
+		let view = sut.imageCommentView(at: index)
+
+		guard let cell = view as? ImageCommentCell else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+
+		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message to be \(imageComment.message) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.authorNameText, imageComment.author.username, "Expected author to be \(imageComment.author) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.createdAtText, dateFormatter.string(from: imageComment.createdAt), "Expected created at to be \(dateFormatter.string(from: imageComment.createdAt)) for image comment view at index \(index)", file: file, line: line)
+	}
+
+	private var dateFormatter: DateFormatter = {
+		let df = DateFormatter()
+		df.dateStyle = .medium
+		df.timeStyle = .medium
+		return df
+	}()
+
+	private func makeImageComment(message: String, authorName: String, createdAt: Date) -> ImageComment {
+		ImageComment(id: UUID(), message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
 	}
 
 	class LoaderSpy: ImageCommentsLoader {
@@ -65,6 +115,10 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		func completeImageCommentsLoading(at index: Int) {
 			completions[index](.success([]))
 		}
+
+		func completeImageCommentsLoading(with imageComments: [ImageComment] = [], at index: Int = 0) {
+			completions[index](.success(imageComments))
+		}
 	}
 
 }
@@ -74,8 +128,36 @@ private extension ImageCommentsViewController {
 		refreshControl?.isRefreshing == true
 	}
 
+	private var imageCommentsSection: Int {
+		return 0
+	}
+
 	func simulateUserInitiatedImageCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+
+	func numberOfRenderedImageCommentViews() -> Int {
+		tableView.numberOfRows(inSection: imageCommentsSection)
+	}
+
+	func imageCommentView(at row: Int) -> UITableViewCell? {
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: imageCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+}
+
+private extension ImageCommentCell {
+	var messageText: String? {
+		messageLabel.text
+	}
+
+	var authorNameText: String? {
+		authorNameLabel.text
+	}
+
+	var createdAtText: String? {
+		createdAtLabel.text
 	}
 }
 
