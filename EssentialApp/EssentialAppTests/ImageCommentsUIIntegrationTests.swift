@@ -14,6 +14,7 @@ import XCTest
 class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
 	let loader: ImageCommentsLoader
 	var presenter: ImageCommentsPresenter?
+	private var task: ImageCommentsLoaderTask?
 	
 	init(loader: ImageCommentsLoader) {
 		self.loader = loader
@@ -22,7 +23,7 @@ class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegat
 	func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		loader.load { [weak self] result in
+		task = loader.load { [weak self] result in
 			guard let self = self else { return }
 			
 			switch result {
@@ -33,6 +34,10 @@ class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegat
 				self.presenter?.didFinishLoading(with: error)
 			}
 		}
+	}
+	
+	func didCancelCommentsRequest() {
+		task?.cancel()
 	}
 }
 
@@ -172,6 +177,20 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_cancelsCommentsLoading_whenViewIsNotVisible() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.cancelledRequests, [], "Expected no cancelled requests until comments are not visibile")
+		
+		loader.completeCommentsLoading()
+		XCTAssertEqual(loader.cancelledRequests, [], "Expected no cancelled requests after loading")
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		sut.viewWillDisappear(false)
+		XCTAssertEqual(loader.cancelledRequests.count, 1, "Expected one cancelled request")
+	}
+	
 	func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
@@ -268,10 +287,17 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	private class LoaderSpy: ImageCommentsLoader {
 		
 		private struct TaskSpy: ImageCommentsLoaderTask {
-			func cancel() {}
+			let id: UUID
+			let cancelCallback: () -> Void
+			
+			func cancel() {
+				cancelCallback()
+			}
 		}
 		
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
+		
+		private(set) var cancelledRequests = [UUID]()
 		
 		var loadImageCommentsCallCount: Int {
 			return imageCommentsRequests.count
@@ -289,7 +315,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		@discardableResult
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			imageCommentsRequests.append(completion)
-			return TaskSpy()
+			let taskId = UUID()
+			return TaskSpy(id: taskId) { [weak self] in
+				self?.cancelledRequests.append(taskId)
+			}
 		}
 	}
 }

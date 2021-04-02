@@ -11,6 +11,7 @@ import UIKit
 
 public protocol ImageCommentsViewControllerDelegate {
 	func didRequestCommentsRefresh()
+	func didCancelCommentsRequest()
 }
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
@@ -29,6 +30,11 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		super.viewDidLoad()
 		
 		refresh()
+	}
+	
+	override public func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		delegate?.didCancelCommentsRequest()
 	}
 	
 	@IBAction func refresh() {
