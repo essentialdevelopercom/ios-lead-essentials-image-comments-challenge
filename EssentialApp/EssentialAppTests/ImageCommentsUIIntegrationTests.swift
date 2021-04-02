@@ -101,6 +101,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: imageComments.presentableComments)
 	}
 	
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
+		let imageComments = uniqueComments()
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: imageComments.comments, at: 0)
+		assertThat(sut, isRendering: imageComments.presentableComments)
+
+		sut.simulateUserInitiatedImageCommentsReload()
+		loader.completeCommentsLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
+	}
+	
 	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
 		let imageComments = uniqueComments()
 		let (sut, loader) = makeSUT()
