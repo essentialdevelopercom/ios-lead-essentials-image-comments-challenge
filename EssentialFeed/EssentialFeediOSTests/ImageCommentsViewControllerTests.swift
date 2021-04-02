@@ -7,10 +7,20 @@
 //
 
 import XCTest
+import UIKit
 
-final class ImageCommentsViewController {
-	init(loader: ImageCommentsViewControllerTests.LoaderSpy) {
+final class ImageCommentsViewController: UIViewController {
+	private var loader: ImageCommentsViewControllerTests.LoaderSpy?
 
+	convenience init(loader: ImageCommentsViewControllerTests.LoaderSpy) {
+		self.init()
+		self.loader = loader
+	}
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		loader?.load()
 	}
 }
 
@@ -23,10 +33,23 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 0)
 	}
 
+	func test_viewDidLoad_loadsImageComments() {
+		let loader = LoaderSpy()
+		let sut = ImageCommentsViewController(loader: loader)
+
+		sut.loadViewIfNeeded()
+
+		XCTAssertEqual(loader.loadCallCount, 1)
+	}
+
 	// MARK: - Helpers
 
 	class LoaderSpy {
 		private(set) var loadCallCount: Int = 0
+
+		func load() {
+			loadCallCount += 1
+		}
 	}
 
 }
