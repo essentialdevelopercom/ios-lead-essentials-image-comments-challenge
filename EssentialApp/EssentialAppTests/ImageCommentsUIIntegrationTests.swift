@@ -8,86 +8,8 @@
 
 import EssentialFeed
 import EssentialFeediOS
-@testable import EssentialApp // TODO: remove @testable once we move the code to prod
+import EssentialApp
 import XCTest
-
-class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
-	let loader: ImageCommentsLoader
-	var presenter: ImageCommentsPresenter?
-	private var task: ImageCommentsLoaderTask?
-	
-	init(loader: ImageCommentsLoader) {
-		self.loader = loader
-	}
-	
-	func didRequestCommentsRefresh() {
-		presenter?.didStartLoadingComments()
-		
-		task = loader.load { [weak self] result in
-			guard let self = self else { return }
-			
-			switch result {
-			case let .success(comments):
-				self.presenter?.didFinishLoading(with: comments)
-				
-			case let .failure(error):
-				self.presenter?.didFinishLoading(with: error)
-			}
-		}
-	}
-	
-	func didCancelCommentsRequest() {
-		task?.cancel()
-	}
-}
-
-class MainQueueDispatchDecorator: ImageCommentsLoader {
-	 let decoratee: ImageCommentsLoader
-
-	 init(decoratee: ImageCommentsLoader) {
-		 self.decoratee = decoratee
-	 }
-
-	 func dispatch(completion: @escaping () -> Void) {
-		 guard Thread.isMainThread else {
-			 return DispatchQueue.main.async { completion() }
-		 }
-		 completion()
-	 }
-
-	 public func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-		 decoratee.load { [weak self] result in
-			 self?.dispatch { completion(result) }
-		 }
-	 }
- }
-
-class ImageCommentsUIComposer {
-	static func imageCommentsComposedWith(commentsLoader: ImageCommentsLoader, date: Date = Date()) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader))
-		
-		let imageCommentsController = makeImageCommentsViewController(
-			delegate: presentationAdapter,
-			title: ImageCommentsPresenter.title)
-		
-		presentationAdapter.presenter = ImageCommentsPresenter(
-			imageCommentsView: WeakRefVirtualProxy(imageCommentsController),
-			loadingView: WeakRefVirtualProxy(imageCommentsController),
-			errorView: WeakRefVirtualProxy(imageCommentsController),
-			currentDate: date)
-		
-		return imageCommentsController
-	}
-	
-	private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate, title: String) -> ImageCommentsViewController {
-		let bundle = Bundle(for: ImageCommentsViewController.self)
-		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-		let commentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
-		commentsController.delegate = delegate
-		commentsController.title = title
-		return commentsController
-	}
-}
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
