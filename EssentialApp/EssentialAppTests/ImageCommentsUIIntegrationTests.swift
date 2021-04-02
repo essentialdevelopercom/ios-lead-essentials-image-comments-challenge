@@ -36,9 +36,30 @@ class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegat
 	}
 }
 
+class MainQueueDispatchDecorator: ImageCommentsLoader {
+	 let decoratee: ImageCommentsLoader
+
+	 init(decoratee: ImageCommentsLoader) {
+		 self.decoratee = decoratee
+	 }
+
+	 func dispatch(completion: @escaping () -> Void) {
+		 guard Thread.isMainThread else {
+			 return DispatchQueue.main.async { completion() }
+		 }
+		 completion()
+	 }
+
+	 public func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
+		 decoratee.load { [weak self] result in
+			 self?.dispatch { completion(result) }
+		 }
+	 }
+ }
+
 class ImageCommentsUIComposer {
 	static func imageCommentsComposedWith(commentsLoader: ImageCommentsLoader, date: Date = Date()) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(loader: commentsLoader)
+		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader))
 		
 		let imageCommentsController = makeImageCommentsViewController(
 			delegate: presentationAdapter,
@@ -149,6 +170,18 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.simulateUserInitiatedImageCommentsReload()
 		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
+	func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		let exp = expectation(description: "Wait for background queue")
+		DispatchQueue.global().async {
+			loader.completeCommentsLoading(at: 0)
+			exp.fulfill()
+		}
+		wait(for: [exp], timeout: 1.0)
 	}
 		
 	// MARK: - Helpers
