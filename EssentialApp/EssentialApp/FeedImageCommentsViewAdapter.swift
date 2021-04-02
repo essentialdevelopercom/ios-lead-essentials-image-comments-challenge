@@ -21,11 +21,11 @@ final class FeedImageCommentsViewAdapter: FeedImageCommentsView {
 	
 	func display(_ viewModel: FeedImageCommentsViewModel) {
 		controller?.display(viewModel.comments.map { model -> FeedImageCommentCellController in
-			let adapter = FeedImageCommentsDataLoaderPresentationAdapter<WeakRefVirtualProxy<FeedImageCommentCellController>>(model: model)
-			
-			let view = FeedImageCommentCellController(delegate: adapter)
-			adapter.presenter = FeedImageCommentPresenter(view: WeakRefVirtualProxy(view), formatter: formatter)
-			
+			let date = formatter.localizedString(for: model.createdAt, relativeTo: Date())
+			let viewModel = FeedImageCommentViewModel(message: model.message,
+													  creationDate: date,
+													  author: model.author.username)
+			let view = FeedImageCommentCellController(viewModel: viewModel)
 			return view
 		})
 	}

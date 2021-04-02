@@ -76,26 +76,19 @@ class FeedImageCommentsSnapshotTests: XCTestCase {
 extension FeedImageCommentsViewController {
 	fileprivate func display(_ stubs: [ImageCommentStub]) {
 		let cells: [FeedImageCommentCellController] = stubs.map { stub in
-			let cellController = FeedImageCommentCellController(delegate: stub)
-			stub.controller = cellController
-			return cellController
+			FeedImageCommentCellController(viewModel: stub.viewModel)
 		}
 		
 		display(cells)
 	}
 }
 
-private class ImageCommentStub: FeedImageCommentCellControllerDelegate {
+private class ImageCommentStub {
 	let viewModel: FeedImageCommentViewModel
-	weak var controller: FeedImageCommentCellController?
 	
 	init(message: String, creationDate: String, author: String) {
 		viewModel = .init(message: message,
 						  creationDate: creationDate,
 						  author: author)
-	}
-	
-	public func didRequestImageComment() {
-		controller?.display(viewModel)
 	}
 }
