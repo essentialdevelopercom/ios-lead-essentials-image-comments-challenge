@@ -9,9 +9,15 @@
 import EssentialFeed
 import UIKit
 
+public protocol ImageCommentsViewControllerDelegate {
+	func didRequestCommentsRefresh()
+}
+
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView {
 	
 	@IBOutlet private(set) public var errorView: ErrorView?
+	
+	public var delegate: ImageCommentsViewControllerDelegate?
 	
 	var models = [PresentableImageComment]() {
 		didSet {
@@ -19,6 +25,15 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		}
 	}
 	
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		refresh()
+	}
+	
+	@IBAction func refresh() {
+		delegate?.didRequestCommentsRefresh()
+	}
 	
 	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()

@@ -108,6 +108,12 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
                             <outlet property="delegate" destination="y8Q-45-fSI" id="kDQ-Au-AmC"/>
                         </connections>
                     </tableView>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="N29-wz-Vmh">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refresh" destination="y8Q-45-fSI" eventType="valueChanged" id="BO8-md-9zE"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="acF-aL-btj" id="Uhn-54-hsA"/>
                     </connections>
