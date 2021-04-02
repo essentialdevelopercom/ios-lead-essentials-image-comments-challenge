@@ -33,10 +33,8 @@ extension ImageCommentsUIIntegrationTests {
 		file: StaticString = #filePath,
 		line: UInt = #line
 	) {
-		let view = sut.imageCommentView(at: index)
-		
-		guard let cell = view as? ImageCommentCell else {
-			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		guard let cell = sut.imageCommentView(at: index) else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance", file: file, line: line)
 		}
 		
 		XCTAssertEqual(cell.usernameText, imageComment.author, "Expected username text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
