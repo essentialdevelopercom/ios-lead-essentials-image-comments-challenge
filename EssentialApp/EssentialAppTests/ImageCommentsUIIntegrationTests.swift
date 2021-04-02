@@ -8,6 +8,7 @@
 
 import EssentialFeed
 import EssentialFeediOS
+@testable import EssentialApp // TODO: remove @testable once we move the code to prod
 import XCTest
 
 class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
@@ -21,7 +22,9 @@ class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegat
 	func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		loader.load { result in
+		loader.load { [weak self] result in
+			guard let self = self else { return }
+			
 			switch result {
 			case let .success(comments):
 				self.presenter?.didFinishLoading(with: comments)
@@ -40,9 +43,9 @@ class ImageCommentsUIComposer {
 		let imageCommentsController = makeImageCommentsViewController(delegate: presentationAdapter)
 		
 		presentationAdapter.presenter = ImageCommentsPresenter(
-			imageCommentsView: imageCommentsController,
-			loadingView: imageCommentsController,
-			errorView: imageCommentsController,
+			imageCommentsView: WeakRefVirtualProxy(imageCommentsController),
+			loadingView: WeakRefVirtualProxy(imageCommentsController),
+			errorView: WeakRefVirtualProxy(imageCommentsController),
 			currentDate: date)
 		
 		return imageCommentsController
@@ -107,9 +110,11 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(date: Date = Date(), file _: StaticString = #filePath, line _: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
 		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader, date: date)
+		trackForMemoryLeaks(loader, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
 	
