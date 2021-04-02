@@ -34,7 +34,7 @@ class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegat
 }
 
 class ImageCommentsUIComposer {
-	static func imageCommentsComposedWith(commentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
+	static func imageCommentsComposedWith(commentsLoader: ImageCommentsLoader, date: Date = Date()) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(loader: commentsLoader)
 		
 		let imageCommentsController = makeImageCommentsViewController(delegate: presentationAdapter)
@@ -42,7 +42,8 @@ class ImageCommentsUIComposer {
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: imageCommentsController,
 			loadingView: imageCommentsController,
-			errorView: imageCommentsController)
+			errorView: imageCommentsController,
+			currentDate: date)
 		
 		return imageCommentsController
 	}
@@ -88,12 +89,56 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	}
 	
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+		let fixedDate = anyDate()
+		let imageComments = uniqueComments(currentDate: fixedDate)
+		let (sut, loader) = makeSUT(date: fixedDate)
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: imageComments.comments)
+		
+		for (index, presentableImageComment) in imageComments.presentableComments.enumerated() {
+			let cell = sut.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ImageCommentCell
+			XCTAssertEqual(cell?.usernameLabel?.text, presentableImageComment.author)
+			XCTAssertEqual(cell?.createdAtLabel?.text, presentableImageComment.createdAt)
+			XCTAssertEqual(cell?.commentLabel?.text, presentableImageComment.message)
+		}
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file _: StaticString = #filePath, line _: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(date: Date = Date(), file _: StaticString = #filePath, line _: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader)
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader, date: date)
 		return (sut, loader)
+	}
+	
+	private func uniqueComments(currentDate: Date) -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
+		let comments = [
+			ImageComment(
+				id: UUID(),
+				message: "a message",
+				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60 * 24),
+				author: ImageCommentAuthor(username: "a username")
+			),
+			ImageComment(
+				id: UUID(),
+				message: "another message",
+				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60),
+				author: ImageCommentAuthor(username: "another username")
+			),
+		]
+		
+		let presentableComments = [
+			PresentableImageComment(createdAt: "1 day ago", message: comments[0].message, author: comments[0].author.username),
+			PresentableImageComment(createdAt: "1 hour ago", message: comments[1].message, author: comments[1].author.username)
+		]
+		
+		return (comments, presentableComments)
+	}
+	
+	private func anyDate() -> Date {
+		return Date(timeIntervalSinceReferenceDate: 638556190)
 	}
 	
 	private class LoaderSpy: ImageCommentsLoader {
@@ -108,8 +153,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			return imageCommentsRequests.count
 		}
 		
-		func completeCommentsLoading(at index: Int = 0) {
-			imageCommentsRequests[index](.success([]))
+		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
+			imageCommentsRequests[index](.success(comments))
 		}
 		
 		func completeCommentsLoadingWithError(at index: Int = 0) {
