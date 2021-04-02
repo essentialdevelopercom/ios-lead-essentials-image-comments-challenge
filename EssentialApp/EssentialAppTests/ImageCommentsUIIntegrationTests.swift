@@ -40,7 +40,9 @@ class ImageCommentsUIComposer {
 	static func imageCommentsComposedWith(commentsLoader: ImageCommentsLoader, date: Date = Date()) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(loader: commentsLoader)
 		
-		let imageCommentsController = makeImageCommentsViewController(delegate: presentationAdapter)
+		let imageCommentsController = makeImageCommentsViewController(
+			delegate: presentationAdapter,
+			title: ImageCommentsPresenter.title)
 		
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: WeakRefVirtualProxy(imageCommentsController),
@@ -51,16 +53,25 @@ class ImageCommentsUIComposer {
 		return imageCommentsController
 	}
 	
-	private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate) -> ImageCommentsViewController {
+	private static func makeImageCommentsViewController(delegate: ImageCommentsViewControllerDelegate, title: String) -> ImageCommentsViewController {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let commentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
 		commentsController.delegate = delegate
+		commentsController.title = title
 		return commentsController
 	}
 }
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
+	
+	func test_imageCommentsView_hasTitle() {
+		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
+	}
 	
 	func test_loadCommentsActions_requestCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
