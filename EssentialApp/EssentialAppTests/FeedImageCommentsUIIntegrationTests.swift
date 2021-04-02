@@ -11,6 +11,7 @@ import UIKit
 import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	
@@ -108,6 +109,30 @@ final class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.simulateUserInitiatedFeedReload()
 		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
+	func test_deinit_cancelsRunningRequest() {
+		var cancelCallCount = 0
+		
+		var sut: FeedImageCommentsViewController?
+		
+		autoreleasepool {
+			
+			sut = FeedImageCommentsUIComposer.feedImageCommentsComposedWith(feedImageCommentsLoader: {
+				PassthroughSubject<[FeedImageComment], Error>()
+					.handleEvents(receiveCancel: {
+						cancelCallCount += 1
+					}).eraseToAnyPublisher()
+			})
+			
+			sut?.loadViewIfNeeded()
+		}
+		
+		XCTAssertEqual(cancelCallCount, 0)
+		
+		sut = nil
+		
+		XCTAssertEqual(cancelCallCount, 1)
 	}
 	
 	// MARK: - Helpers
