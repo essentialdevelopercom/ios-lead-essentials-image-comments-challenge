@@ -93,9 +93,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
-		let fixedDate = anyDate()
-		let imageComments = uniqueComments(currentDate: fixedDate)
-		let (sut, loader) = makeSUT(date: fixedDate)
+		let imageComments = uniqueComments()
+		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		loader.completeCommentsLoading(with: imageComments.comments)
@@ -123,6 +122,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		file: StaticString = #filePath,
 		line: UInt = #line
 	) {
+		guard sut.numberOfRenderedImageComments() == imageComments.count else {
+			return XCTFail("Expected \(imageComments.count) images, got \(sut.numberOfRenderedImageComments()) instead.", file: file, line: line)
+		}
+		
 		for (index, imageComment) in imageComments.enumerated() {
 			assertThat(sut, hasViewConfiguredFor: imageComment, at: index)
 		}
@@ -135,15 +138,15 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		file: StaticString = #filePath,
 		line: UInt = #line
 	) {
-		let view = sut.tableView.cellForRow(at: IndexPath(row: index, section: 0))
+		let view = sut.imageCommentView(at: index)
 		
 		guard let cell = view as? ImageCommentCell else {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
-		XCTAssertEqual(cell.usernameLabel?.text, imageComment.author, "Expected username text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.createdAtLabel?.text, imageComment.createdAt, "Expected created at text to be \(String(describing: imageComment.createdAt)) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.commentLabel?.text, imageComment.message, "Expected comment text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.usernameText, imageComment.author, "Expected username text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.createdAtText, imageComment.createdAt, "Expected created at text to be \(String(describing: imageComment.createdAt)) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.commentText, imageComment.message, "Expected comment text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
 	}
 	
 	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -219,4 +222,22 @@ extension ImageCommentsViewController {
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}
+	
+	func numberOfRenderedImageComments() -> Int {
+		tableView.numberOfRows(inSection: imageCommentsSection)
+	}
+	
+	func imageCommentView(at row: Int) -> UITableViewCell? {
+		let indexPath = IndexPath(row: row, section: imageCommentsSection)
+		let ds = tableView.dataSource
+		return ds?.tableView(tableView, cellForRowAt: indexPath)
+	}
+	
+	var imageCommentsSection: Int { 0 }
+}
+
+extension ImageCommentCell {
+	var commentText: String? { commentLabel?.text }
+	var usernameText: String? { usernameLabel?.text }
+	var createdAtText: String? { createdAtLabel?.text }
 }
