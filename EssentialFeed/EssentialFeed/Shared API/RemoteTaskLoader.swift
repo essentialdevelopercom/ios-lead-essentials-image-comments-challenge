@@ -23,7 +23,7 @@ public final class RemoteTaskLoader<Resource> {
 	}
 
 	public typealias Result = Swift.Result<Resource, Error>
-	public typealias Mapper = (Data, URLResponse) throws -> Resource
+	public typealias Mapper = (Data, HTTPURLResponse) throws -> Resource
 
 	private final class HTTPClientTaskWrapper: LoaderTask {
 		private var completion: ((Result) -> Void)?
