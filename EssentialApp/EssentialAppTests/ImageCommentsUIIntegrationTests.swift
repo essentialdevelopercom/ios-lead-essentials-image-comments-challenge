@@ -10,23 +10,39 @@ import EssentialFeed
 import EssentialFeediOS
 import XCTest
 
-class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
+class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
 	let loader: ImageCommentsLoader
+	var presenter: ImageCommentsPresenter?
 	
 	init(loader: ImageCommentsLoader) {
 		self.loader = loader
 	}
 	
 	func didRequestCommentsRefresh() {
-		loader.load { _ in }
+		presenter?.didStartLoadingComments()
+		
+		loader.load { result in
+			switch result {
+			case let .success(comments):
+				self.presenter?.didFinishLoading(with: comments)
+				
+			default:
+				break
+			}
+		}
 	}
 }
 
 class ImageCommentsUIComposer {
 	static func imageCommentsComposedWith(commentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader)
+		let presentationAdapter = ImageCommentsLoaderPresentationAdapter(loader: commentsLoader)
 		
 		let imageCommentsController = makeImageCommentsViewController(delegate: presentationAdapter)
+		
+		presentationAdapter.presenter = ImageCommentsPresenter(
+			imageCommentsView: imageCommentsController,
+			loadingView: imageCommentsController,
+			errorView: imageCommentsController)
 		
 		return imageCommentsController
 	}
@@ -56,6 +72,16 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.loadImageCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 	
+	func test_loadingCommentsIndicator_isVisibleWhileLoadingComments() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
+		
+		loader.completeCommentsLoading()
+		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file _: StaticString = #filePath, line _: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -66,14 +92,18 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private class LoaderSpy: ImageCommentsLoader {
 		
+		private struct TaskSpy: ImageCommentsLoaderTask {
+			func cancel() {}
+		}
+		
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		
 		var loadImageCommentsCallCount: Int {
 			return imageCommentsRequests.count
 		}
 		
-		private struct TaskSpy: ImageCommentsLoaderTask {
-			func cancel() {}
+		func completeCommentsLoading(at index: Int = 0) {
+			imageCommentsRequests[index](.success([]))
 		}
 		
 		@discardableResult
@@ -87,5 +117,9 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 extension ImageCommentsViewController {
 	func simulateUserInitiatedImageCommentsReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
 	}
 }

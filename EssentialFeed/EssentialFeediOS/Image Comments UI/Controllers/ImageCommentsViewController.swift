@@ -13,7 +13,7 @@ public protocol ImageCommentsViewControllerDelegate {
 	func didRequestCommentsRefresh()
 }
 
-public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView {
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsView, ImageCommentsErrorView, ImageCommentsLoadingView {
 	
 	@IBOutlet private(set) public var errorView: ErrorView?
 	
@@ -47,6 +47,14 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
 		errorView?.message = viewModel.message
+	}
+	
+	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
 	}
 	
 	override public func numberOfSections(in _: UITableView) -> Int {
