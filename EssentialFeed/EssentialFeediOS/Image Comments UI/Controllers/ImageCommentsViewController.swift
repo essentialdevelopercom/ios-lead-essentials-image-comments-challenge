@@ -77,6 +77,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		cell.usernameLabel?.text = model.author
 		cell.createdAtLabel?.text = model.createdAt
 		cell.commentLabel?.text = model.message
+		cell.selectionStyle = .none
 		return cell
 	}
 }
