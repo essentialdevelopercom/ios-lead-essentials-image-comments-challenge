@@ -33,13 +33,13 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected loading indicator once view is loaded")
 
 		loader.completeImageCommentsLoading(at: 0)
-		XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once loading is completed")
+		XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once loading is completed successfully")
 
 		sut.simulateUserInitiatedImageCommentsReload()
 		XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected loading indicator once user initiates a reload")
 
-		loader.completeImageCommentsLoading(at: 1)
-		XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once user initiated loading is completed")
+		loader.completeImageCommentsLoadingWithError(at: 1)
+		XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once user initiated loading completed with error")
 	}
 
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedImageComments() {

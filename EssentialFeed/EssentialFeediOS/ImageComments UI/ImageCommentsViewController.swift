@@ -36,15 +36,11 @@ public final class ImageCommentsViewController: UITableViewController {
 	@objc private func load() {
 		refreshControl?.beginRefreshing()
 		loader?.load { [weak self] result in
-			switch result {
-			case let .success(imageComments):
+			if let imageComments = try? result.get() {
 				self?.tableModel = imageComments
 				self?.tableView.reloadData()
-				self?.refreshControl?.endRefreshing()
-
-			case .failure:
-				break
 			}
+			self?.refreshControl?.endRefreshing()
 		}
 	}
 
