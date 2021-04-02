@@ -10,7 +10,7 @@ import XCTest
 import UIKit
 import EssentialFeed
 
-final class ImageCommentsViewController: UIViewController {
+final class ImageCommentsViewController: UITableViewController {
 	private var loader: ImageCommentsLoader?
 
 	convenience init(loader: ImageCommentsLoader) {
@@ -21,6 +21,12 @@ final class ImageCommentsViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		refreshControl = UIRefreshControl()
+		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+		load()
+	}
+
+	@objc private func load() {
 		loader?.load { _ in }
 	}
 }
@@ -41,6 +47,17 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		XCTAssertEqual(loader.loadCallCount, 1)
 	}
 
+	func test_pullToRefresh_loadsImageComments() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+
+		sut.refreshControl?.simulatePullToRefresh()
+		XCTAssertEqual(loader.loadCallCount, 2)
+
+		sut.refreshControl?.simulatePullToRefresh()
+		XCTAssertEqual(loader.loadCallCount, 3)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -59,4 +76,14 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		}
 	}
 
+}
+
+private extension UIRefreshControl {
+	func simulatePullToRefresh() {
+		allTargets.forEach { target in
+			actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
+				(target as NSObject).perform(Selector($0))
+			}
+		}
+	}
 }
