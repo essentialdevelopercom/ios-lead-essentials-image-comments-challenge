@@ -99,16 +99,52 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		loader.completeCommentsLoading(with: imageComments.comments)
+		assertThat(sut, isRendering: imageComments.presentableComments)
+	}
+	
+	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		let imageComments = uniqueComments()
+		let (sut, loader) = makeSUT()
 		
-		for (index, presentableImageComment) in imageComments.presentableComments.enumerated() {
-			let cell = sut.tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ImageCommentCell
-			XCTAssertEqual(cell?.usernameLabel?.text, presentableImageComment.author)
-			XCTAssertEqual(cell?.createdAtLabel?.text, presentableImageComment.createdAt)
-			XCTAssertEqual(cell?.commentLabel?.text, presentableImageComment.message)
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: imageComments.comments)
+		assertThat(sut, isRendering: imageComments.presentableComments)
+		
+		sut.simulateUserInitiatedImageCommentsReload()
+		loader.completeCommentsLoadingWithError(at: 1)
+		assertThat(sut, isRendering: imageComments.presentableComments)
+	}
+		
+	// MARK: - Helpers
+	
+	private func assertThat(
+		_ sut: ImageCommentsViewController,
+		isRendering imageComments: [PresentableImageComment],
+		file: StaticString = #filePath,
+		line: UInt = #line
+	) {
+		for (index, imageComment) in imageComments.enumerated() {
+			assertThat(sut, hasViewConfiguredFor: imageComment, at: index)
 		}
 	}
 	
-	// MARK: - Helpers
+	private func assertThat(
+		_ sut: ImageCommentsViewController,
+		hasViewConfiguredFor imageComment: PresentableImageComment,
+		at index: Int,
+		file: StaticString = #filePath,
+		line: UInt = #line
+	) {
+		let view = sut.tableView.cellForRow(at: IndexPath(row: index, section: 0))
+		
+		guard let cell = view as? ImageCommentCell else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+		
+		XCTAssertEqual(cell.usernameLabel?.text, imageComment.author, "Expected username text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.createdAtLabel?.text, imageComment.createdAt, "Expected created at text to be \(String(describing: imageComment.createdAt)) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.commentLabel?.text, imageComment.message, "Expected comment text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
+	}
 	
 	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
@@ -118,7 +154,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func uniqueComments(currentDate: Date) -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
+	private func uniqueComments(currentDate: Date = Date()) -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
 		let comments = [
 			ImageComment(
 				id: UUID(),
