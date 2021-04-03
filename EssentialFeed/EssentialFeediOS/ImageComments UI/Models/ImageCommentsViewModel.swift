@@ -9,28 +9,24 @@
 import EssentialFeed
 
 final class ImageCommentsViewModel {
+	typealias Observer<T> = (T) -> Void
+
 	private let imageCommentsLoader: ImageCommentsLoader
 
 	init(imageCommentsLoader: ImageCommentsLoader) {
 		self.imageCommentsLoader = imageCommentsLoader
 	}
 
-	var onChange: ((ImageCommentsViewModel) -> Void)?
-	var onImageCommentsLoad: (([ImageComment]) -> Void)?
-
-	private(set) var isLoading: Bool = false {
-		didSet {
-			onChange?(self)
-		}
-	}
+	var onLoadingStateChange: Observer<Bool>?
+	var onImageCommentsLoad: Observer<[ImageComment]>?
 
 	func loadImageComments() {
-		isLoading = true
+		onLoadingStateChange?(true)
 		imageCommentsLoader.load { [weak self] result in
 			if let imageComments = try? result.get() {
 				self?.onImageCommentsLoad?(imageComments)
 			}
-			self?.isLoading = false
+			self?.onLoadingStateChange?(false)
 		}
 	}
 }
