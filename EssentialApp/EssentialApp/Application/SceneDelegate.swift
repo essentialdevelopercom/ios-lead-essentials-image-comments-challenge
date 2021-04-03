@@ -15,10 +15,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
 	}()
 	
-	private lazy var imageCommentsHTTPClient: HTTPClient = {
-		return httpClient
-	}()
-	
 	private lazy var store: FeedStore & FeedImageDataStore = {
 		try! CoreDataFeedStore(
 			storeURL: NSPersistentContainer
@@ -45,13 +41,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}()
 	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
-		self.init(httpClient: httpClient, imageCommentsHTTPClient: httpClient, store: store)
-	}
-	
-	convenience init(httpClient: HTTPClient, imageCommentsHTTPClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
 		self.httpClient = httpClient
-		self.imageCommentsHTTPClient = imageCommentsHTTPClient
 		self.store = store
 	}
 	
@@ -77,7 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	private func handleImageID(_ id: String) {
 		let navigationController = window?.rootViewController as? UINavigationController
 		let url = Endpoint.url(for: .imageComments(id: id))
-		let loader = RemoteImageCommentLoader(url: url, client: imageCommentsHTTPClient)
+		let loader = RemoteImageCommentLoader(url: url, client: httpClient)
 		let imageCommentsVC = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
 		navigationController?.pushViewController(imageCommentsVC, animated: true)
 	}

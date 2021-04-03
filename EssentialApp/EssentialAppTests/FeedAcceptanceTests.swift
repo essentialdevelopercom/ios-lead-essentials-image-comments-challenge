@@ -8,7 +8,6 @@ import EssentialFeediOS
 @testable import EssentialApp
 
 class FeedAcceptanceTests: XCTestCase {
-	
 	func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
 		let feed = launch(httpClient: .online(response), store: .empty)
 		
@@ -71,9 +70,13 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	func test_onImageTap_displaysErrorWhenCustomerDoesNotHaveConnectivity() {
-		let feed = launch(httpClient: .online(response), imageCommentsHTTPClient: .offline, store: .empty)
+		let sharedStore = InMemoryFeedStore.empty
+		let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
+		onlineFeed.simulateFeedImageViewVisible(at: 0)
+		onlineFeed.simulateFeedImageViewVisible(at: 1)
 		
-		let imageComments = showImageCommentsForImage(in: feed, at: 0)
+		let offlineFeed = launch(httpClient: .offline, store: sharedStore)
+		let imageComments = showImageCommentsForImage(in: offlineFeed, at: 0)
 		
 		XCTAssertEqual(imageComments.numberOfRenderedComments(), 0, "Expected no comments to be loaded")
 		XCTAssertNotNil(imageComments.errorMessage, "Expected error to be shown when customer does not have connectivity")
@@ -86,19 +89,6 @@ class FeedAcceptanceTests: XCTestCase {
 		store: InMemoryFeedStore = .empty
 	) -> FeedViewController {
 		let sut = SceneDelegate(httpClient: httpClient, store: store)
-		sut.window = UIWindow()
-		sut.configureWindow()
-		
-		let nav = sut.window?.rootViewController as? UINavigationController
-		return nav?.topViewController as! FeedViewController
-	}
-	
-	private func launch(
-		httpClient: HTTPClientStub = .offline,
-		imageCommentsHTTPClient: HTTPClientStub? = nil,
-		store: InMemoryFeedStore = .empty
-	) -> FeedViewController {
-		let sut = SceneDelegate(httpClient: httpClient, imageCommentsHTTPClient: imageCommentsHTTPClient ?? httpClient, store: store)
 		sut.window = UIWindow()
 		sut.configureWindow()
 		
