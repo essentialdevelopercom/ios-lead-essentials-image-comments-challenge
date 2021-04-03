@@ -16,13 +16,7 @@ public final class ImageCommentsViewController: UITableViewController {
 			tableView.reloadData()
 		}
 	}
-
-	private var dateFormatter: DateFormatter = {
-		let df = DateFormatter()
-		df.dateStyle = .medium
-		df.timeStyle = .medium
-		return df
-	}()
+	private var cellControllers = [IndexPath: ImageCommentCellController]()
 
 	public convenience init(loader: ImageCommentsLoader) {
 		self.init()
@@ -44,11 +38,21 @@ public final class ImageCommentsViewController: UITableViewController {
 	}
 
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		cellController(forRowAt: indexPath).view()
+	}
+
+	public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		removeCellController(forRowAt: indexPath)
+	}
+
+	private func cellController(forRowAt indexPath: IndexPath) -> ImageCommentCellController {
 		let cellModel = tableModel[indexPath.row]
-		let cell = ImageCommentCell()
-		cell.messageLabel.text = cellModel.message
-		cell.authorNameLabel.text = cellModel.author.username
-		cell.createdAtLabel.text = dateFormatter.string(from: cellModel.createdAt)
-		return cell
+		let cellController = ImageCommentCellController(model: cellModel)
+		cellControllers[indexPath] = cellController
+		return cellController
+	}
+
+	private func removeCellController(forRowAt indexPath: IndexPath) {
+		cellControllers[indexPath] = nil
 	}
 }
