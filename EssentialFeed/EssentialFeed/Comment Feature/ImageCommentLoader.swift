@@ -8,8 +8,12 @@
 
 import Foundation
 
+public protocol ImageCommentLoaderTask {
+	func cancel()
+}
+
 public protocol ImageCommentLoader {
 	typealias LoadImageCommentResult = Swift.Result<[ImageComment], Error>
 	
-	func load(completion: @escaping (LoadImageCommentResult) -> Void)
+	func load(completion: @escaping (LoadImageCommentResult) -> Void) -> ImageCommentLoaderTask
 }

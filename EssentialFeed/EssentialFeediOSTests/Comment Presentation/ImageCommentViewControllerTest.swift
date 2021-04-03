@@ -14,11 +14,16 @@ final class ImageCommentViewController: UITableViewController {
 	private var loader: ImageCommentLoader?
 	private var errorView: UIView?
 	private var tableModel = [ImageComment]()
+	private var loadCommentTask: ImageCommentLoaderTask?
 	
 	convenience init(loader: ImageCommentLoader) {
 		self.init()
 		self.loader = loader
 		self.errorView = UIView()
+	}
+	
+	deinit {
+		loadCommentTask?.cancel()
 	}
 	
 	override func viewDidLoad() {
@@ -33,7 +38,7 @@ final class ImageCommentViewController: UITableViewController {
 	}
 	
 	@objc func load() {
-		loader?.load(completion: { [weak self] result in
+		loadCommentTask = loader?.load(completion: { [weak self] result in
 			switch result {
 			
 				case .failure(_):
@@ -172,6 +177,18 @@ class ImageCommentViewControllerTest: XCTestCase {
 		}
 	}
 	
+	func test_cancelLoad_cancelLoadCommentsWhenViewIsUnloaded() {
+		let loader = LoaderSpy()
+		var sut: ImageCommentViewController? = ImageCommentViewController(loader: loader)
+		
+		autoreleasepool {
+			sut?.loadViewIfNeeded()
+		}
+		
+		sut = nil
+		
+		XCTAssertEqual(loader.cancelledCompletions.count, 1)
+	}
 	
 	// MARK: - Helpers
 	
@@ -201,10 +218,26 @@ class ImageCommentViewControllerTest: XCTestCase {
 	
 	class LoaderSpy: ImageCommentLoader {
 		private var completions = [(LoadImageCommentResult) -> Void]()
+		private(set) var cancelledCompletions = [(LoadImageCommentResult) -> Void]()
 		var loadCallCount: Int { return completions.count }
 		
-		func load(completion: @escaping (LoadImageCommentResult) -> Void) {
+		private class TaskSpy: ImageCommentLoaderTask {
+			let cancelCallback: () -> Void
+			
+			init(cancelCallback: @escaping () -> Void) {
+				self.cancelCallback = cancelCallback
+			}
+			
+			func cancel() {
+				cancelCallback()
+			}
+		}
+		
+		func load(completion: @escaping (LoadImageCommentResult) -> Void) -> ImageCommentLoaderTask {
 			completions.append(completion)
+			return TaskSpy { [weak self] in
+				self?.cancelledCompletions.append(completion)
+			}
 		}
 		
 		func completeCommentLoading(with imageComments: [ImageComment] = []) {
