@@ -17,16 +17,10 @@ public class FeedCommentsViewController: UITableViewController, FeedCommentsView
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		initializeUI()
 		refresh()
 	}
 	
-	private func initializeUI() {
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
-	}
-	
-	@objc private func refresh() {
+	@IBAction private func refresh() {
 		delegate?.didRequestFeedCommentsRefresh()
 	}
 	

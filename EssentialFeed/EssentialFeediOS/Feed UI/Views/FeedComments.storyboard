@@ -100,6 +100,12 @@
                             <outlet property="delegate" destination="zqf-RJ-im0" id="hId-jY-x2z"/>
                         </connections>
                     </tableView>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="ia6-59-PuV">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refresh" destination="zqf-RJ-im0" eventType="valueChanged" id="OVx-bV-HSU"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="W3C-rq-N5x" id="6Fb-Eu-gsn"/>
                     </connections>
