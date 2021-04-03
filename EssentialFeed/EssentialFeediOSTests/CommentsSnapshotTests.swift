@@ -63,10 +63,10 @@ class CommentsSnapshotTests: XCTestCase {
 	
 	private func anyComments() -> [Comment] {
 		return [
-			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. Et sapiente saepe officia consectetur molestiae. Libero earum assumenda qui architecto repellendus ut iste non voluptatem optio", createdAt: "2 weeks ago", author: Comment.Author(username: "Jen")),
-			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis.", createdAt: "1 weak ago", author: Comment.Author(username: "Megan")),
-			Comment(id: UUID(), message: "💯", createdAt: "3 days ago", author: Comment.Author(username: "Jim")),
-			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. ☀️\n.\n.\n.\n.\n.\n.\n✅\nLibero earum assumenda qui architecto repellendus explicabo.", createdAt: "1 hour ago", author: Comment.Author(username: "Brian"))
+			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. Et sapiente saepe officia consectetur molestiae. Libero earum assumenda qui architecto repellendus ut iste non voluptatem optio", createdAt: "2 weeks ago", author: "Jen"),
+			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis.", createdAt: "1 weak ago", author: "Megan"),
+			Comment(id: UUID(), message: "💯", createdAt: "3 days ago", author: "Jim"),
+			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. ☀️\n.\n.\n.\n.\n.\n.\n✅\nLibero earum assumenda qui architecto repellendus explicabo.", createdAt: "1 hour ago", author: "Brian")
 		]
 	}
 }

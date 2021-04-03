@@ -9,21 +9,13 @@
 import Foundation
 
 public struct Comment: Hashable {
-	
-	public struct Author: Hashable {
-		public let username: String
 		
-		public init(username: String) {
-			self.username = username
-		}
-	}
-	
 	public let id: UUID
 	public let message: String
 	public let createdAt: String
-	public let author: Author
+	public let author: String
 	
-	public init(id: UUID, message: String, createdAt: String, author: Author) {
+	public init(id: UUID, message: String, createdAt: String, author: String) {
 		self.id = id
 		self.message = message
 		self.createdAt = createdAt

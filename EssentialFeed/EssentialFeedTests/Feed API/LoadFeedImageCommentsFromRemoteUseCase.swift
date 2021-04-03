@@ -127,7 +127,7 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 	}
 	
 	private func makeItem(id: UUID, message: String, createdAt: String, author: String ) -> (model: Comment, json: [String: Any]) {
-		let model = Comment(id: id, message: message, createdAt: createdAt, author: Comment.Author(username: author))
+		let model = Comment(id: id, message: message, createdAt: createdAt, author: author)
 		let json = [
 			"id": id.uuidString,
 			"message": message,

@@ -22,7 +22,7 @@ public final class CommentCellController {
 	}
 	
 	private func binded(_ cell: CommentCell) -> CommentCell {
-		cell.authorLabel.text = model.author.username
+		cell.authorLabel.text = model.author
 		cell.dateLabel.text = model.createdAt
 		cell.commentLabel.text = model.message
 		return cell
