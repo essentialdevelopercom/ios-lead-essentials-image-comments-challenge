@@ -11,17 +11,13 @@ import Foundation
 
 extension ImageCommentsIntegrationTests {
 	class LoaderSpy: ImageCommentLoader {
-		private var messages = [(url: URL, completion: (ImageCommentLoader.Result) -> Void)]()
+		private var completions = [(ImageCommentLoader.Result) -> Void]()
 		
-		private var completions: [(ImageCommentLoader.Result) -> Void] {
-			messages.map { $0.completion }
+		var loadCallCount: Int {
+			completions.count
 		}
 		
-		var requestedURLs: [URL] {
-			messages.map { $0.url }
-		}
-		
-		var cancelledURLs = [URL]()
+		private(set) var cancelCallCount = 0
 		
 		final class Task: ImageCommentLoaderTask {
 			private let callback: () -> Void
@@ -34,10 +30,10 @@ extension ImageCommentsIntegrationTests {
 			}
 		}
 		
-		func load(from url: URL, completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
-			messages.append((url, completion))
+		func load(completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
+			completions.append(completion)
 			return Task { [weak self] in
-				self?.cancelledURLs.append(url)
+				self?.cancelCallCount += 1
 			}
 		}
 		

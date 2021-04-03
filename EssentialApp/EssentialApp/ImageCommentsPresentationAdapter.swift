@@ -28,7 +28,7 @@ final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewController
 	
 	func didRequestLoadingComments() {
 		presenter?.didStartLoadingComments()
-		task = loader.load(from: url) { [weak self] result in
+		task = loader.load { [weak self] result in
 			switch result {
 			case let .success(comments):
 				self?.presenter?.didFinishLoadingComments(with: comments)

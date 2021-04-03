@@ -25,8 +25,8 @@ final class MainQueueDispatchDecorator<T> {
 }
 
 extension MainQueueDispatchDecorator: ImageCommentLoader where T == ImageCommentLoader {
-	func load(from url: URL, completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
-		decoratee.load(from: url) { [weak self] result in
+	func load(completion: @escaping (ImageCommentLoader.Result) -> Void) -> ImageCommentLoaderTask {
+		decoratee.load { [weak self] result in
 			self?.dispatch {
 				completion(result)
 			}

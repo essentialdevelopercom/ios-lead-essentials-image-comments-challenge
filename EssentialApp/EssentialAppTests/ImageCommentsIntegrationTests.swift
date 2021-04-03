@@ -24,16 +24,16 @@ class ImageCommentsIntegrationTests: XCTestCase {
 	func test_loadCommentsActions_requestsLoadingCommentsFromURL() {
 		let url = URL(string: "https://any-url.com")!
 		let (sut, loader) = makeSUT(url: url)
-		XCTAssertTrue(loader.requestedURLs.isEmpty, "Expected no loading requests upon creation")
+		XCTAssertEqual(loader.loadCallCount, 0, "Expected no loading requests upon creation")
 		
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.requestedURLs, [url], "Expected a single loading request when view has loaded")
+		XCTAssertEqual(loader.loadCallCount, 1, "Expected a single loading request when view has loaded")
 		
 		sut.simulateUserInitiatedReloading()
-		XCTAssertEqual(loader.requestedURLs, [url, url], "Expected a second loading request once user initiates a reload")
+		XCTAssertEqual(loader.loadCallCount, 2, "Expected a second loading request once user initiates a reload")
 		
 		sut.simulateUserInitiatedReloading()
-		XCTAssertEqual(loader.requestedURLs, [url, url, url], "Expected a third loading request once user initiates another reload")
+		XCTAssertEqual(loader.loadCallCount, 3, "Expected a third loading request once user initiates another reload")
 	}
 	
 	func test_loadingSpinner_isVisibleWhileLoadingComments() {
@@ -146,23 +146,23 @@ class ImageCommentsIntegrationTests: XCTestCase {
 		
 		autoreleasepool {
 			sut = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests upon creation")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests upon creation")
 			
 			sut?.loadViewIfNeeded()
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after view is loaded")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests after view is loaded")
 			
 			loader.completeCommentsLoading(at: 0)
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished successfully")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests after task is already finished successfully")
 			
 			sut?.simulateUserInitiatedReloading()
 			loader.completeCommentsLoadingWithError(at: 1)
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished with an error")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests after task is already finished with an error")
 			
 			sut?.simulateUserInitiatedReloading()
 		}
 		
 		sut = nil
-		XCTAssertEqual(loader.cancelledURLs, [url], "Expected cancelling request after user navigates back from comments screen")
+		XCTAssertEqual(loader.cancelCallCount, 1, "Expected cancelling request after user navigates back from comments screen")
 	}
 	
 	func test_loadComments_doesNotCancelAlreadyFinishedRequests() {
@@ -172,21 +172,21 @@ class ImageCommentsIntegrationTests: XCTestCase {
 		
 		autoreleasepool {
 			sut = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests upon creation")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests upon creation")
 			
 			sut?.loadViewIfNeeded()
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after view is loaded")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests after view is loaded")
 			
 			loader.completeCommentsLoading(at: 0)
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished successfully")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests after task is already finished successfully")
 			
 			sut?.simulateUserInitiatedReloading()
 			loader.completeCommentsLoadingWithError(at: 1)
-			XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests after task is already finished with an error")
+			XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests after task is already finished with an error")
 		}
 		
 		sut = nil
-		XCTAssertTrue(loader.cancelledURLs.isEmpty, "Expected no cancelled requests as all requests were finished before deallocating screen")
+		XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests as all requests were finished before deallocating screen")
 	}
 	
 	func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {

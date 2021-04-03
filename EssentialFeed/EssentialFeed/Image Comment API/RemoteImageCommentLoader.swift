@@ -40,13 +40,15 @@ public class RemoteImageCommentLoader: ImageCommentLoader {
 		}
 	}
 	
+	private let url: URL
 	private let client: HTTPClient
 	
-	public init(client: HTTPClient) {
+	public init(url: URL, client: HTTPClient) {
+		self.url = url
 		self.client = client
 	}
 	
-	public func load(from url: URL, completion: @escaping (Result) -> Void) -> ImageCommentLoaderTask {
+	public func load(completion: @escaping (Result) -> Void) -> ImageCommentLoaderTask {
 		let task = HTTPTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
