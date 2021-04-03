@@ -30,6 +30,6 @@ extension ImageCommentsIntegrationTests {
 		
 		XCTAssertEqual(cell.authorText, comment.author, "Author at index \(index)", file: file, line: line)
 		XCTAssertEqual(cell.messageText, comment.message, "Message at index \(index)", file: file, line: line)
-		XCTAssertNotNil(cell.creationDateText, "Expected relative date to be \(comment.creationDate) for comment view at index \(index)", file: file, line: line)
+		XCTAssertNotEqual(cell.creationDateText, "", "Date at index \(index)", file: file, line: line)
 	}
 }
