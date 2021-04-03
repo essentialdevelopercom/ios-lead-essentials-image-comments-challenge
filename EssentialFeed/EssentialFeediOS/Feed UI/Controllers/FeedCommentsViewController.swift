@@ -6,7 +6,6 @@ public protocol FeedCommentsViewControllerDelegate {
 }
 
 public class FeedCommentsViewController: UITableViewController, FeedCommentsView, FeedCommentsLoadingView, FeedCommentsErrorView {
-	
     @IBOutlet private(set) public weak var errorView: ErrorView!
     
 	public var delegate: FeedCommentsViewControllerDelegate?
