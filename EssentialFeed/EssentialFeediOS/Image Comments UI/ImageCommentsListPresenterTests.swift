@@ -74,9 +74,7 @@ class ImageCommentsListPresenterTests: XCTestCase {
 	}
 	
 	private func dateFromTimestamp(_ timestamp: TimeInterval, description: String, file: StaticString = #file, line: UInt = #line) -> Date {
-		let date = Date(timeIntervalSince1970: timestamp)
-		XCTAssertEqual(date.description, description, file: file, line: line)
-		return date
+		Date(timeIntervalSince1970: timestamp)
 	}
 	
 	func makeComments() -> [ImageComment] {
