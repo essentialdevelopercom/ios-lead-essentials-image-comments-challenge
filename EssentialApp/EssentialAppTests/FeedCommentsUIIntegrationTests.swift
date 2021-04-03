@@ -138,14 +138,21 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		return value
 	}
 	
+	private class TaskSpy: FeedCommentsLoaderTask {
+		func cancel() {
+			
+		}
+	}
+	
 	private class LoaderSpy: FeedCommentsLoader {
 		
 		private(set) var loadedUrls: [URL] = []
 		private var commentsRequests: [(FeedCommentsLoader.Result) -> Void] = []
 		
-		func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) {
+		func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
 			loadedUrls.append(url)
 			commentsRequests.append(completion)
+			return TaskSpy()
 		}
 		
 		func completeCommentsLoading(with comments: [FeedComment] = [], at index: Int = 0) {

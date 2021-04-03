@@ -5,8 +5,13 @@
 
 import Foundation
 
+public protocol FeedCommentsLoaderTask {
+	func cancel()
+}
+
 public protocol FeedCommentsLoader {
 	typealias Result = Swift.Result<[FeedComment], Error>
 	
-	func load(url: URL, completion: @escaping (Result) -> Void)
+	@discardableResult
+	func load(url: URL, completion: @escaping (Result) -> Void) -> FeedCommentsLoaderTask
 }

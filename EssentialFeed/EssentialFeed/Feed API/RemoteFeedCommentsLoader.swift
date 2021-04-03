@@ -12,35 +12,58 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 		case invalidData
 	}
 	
-	private var currentTask: HTTPClientTask?
-	
 	private let client: HTTPClient
 	public init(client: HTTPClient) {
 		self.client = client
 	}
 	
-	public func load(url: URL, completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
-		currentTask = client.get(from: url, completion: {[weak self] result in
-			guard let self = self else { return }
-			self.handle(result, completion)
-			self.currentTask = nil
-		})
-	}
-	
-	private func handle(_ result: HTTPClient.Result, _ completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
-		switch result {
-		case .success(let (data, response)):
-			handleSuccessCase(data, response, completion)
-		case .failure:
-			completion(.failure(Error.connectivity))
+	private final class HTTPClientTaskWrapper: FeedCommentsLoaderTask {
+		private var completion: ((FeedCommentsLoader.Result) -> Void)?
+		
+		var wrapped: HTTPClientTask?
+		
+		init(_ completion: @escaping (FeedCommentsLoader.Result) -> Void) {
+			self.completion = completion
+		}
+		
+		func complete(with result: FeedCommentsLoader.Result) {
+			completion?(result)
+		}
+		
+		func cancel() {
+			preventFurtherCompletions()
+			wrapped?.cancel()
+		}
+		
+		private func preventFurtherCompletions() {
+			completion = nil
 		}
 	}
 	
-	private func handleSuccessCase(_ data: Data, _ response: HTTPURLResponse, _ completion: @escaping (Result<[FeedComment], Swift.Error>)->()) {
+	@discardableResult
+	public func load(url: URL, completion: @escaping (Result<[FeedComment], Swift.Error>)->()) -> FeedCommentsLoaderTask {
+		let task = HTTPClientTaskWrapper(completion)
+		task.wrapped = client.get(from: url, completion: {[weak self] result in
+			guard let self = self else { return }
+			self.handle(result, task)
+		})
+		return task
+	}
+	
+	private func handle(_ result: HTTPClient.Result, _ task: HTTPClientTaskWrapper) {
+		switch result {
+		case .success(let (data, response)):
+			handleSuccessCase(data, response, task)
+		case .failure:
+			task.complete(with: .failure(Error.connectivity))
+		}
+	}
+	
+	private func handleSuccessCase(_ data: Data, _ response: HTTPURLResponse, _ task: HTTPClientTaskWrapper) {
 		if response.statusCode == 200, let comments = try? convert(data) {
-			completion(.success(comments))
+			task.complete(with: .success(comments))
 		} else {
-			completion(.failure(Error.invalidData))
+			task.complete(with: .failure(Error.invalidData))
 		}
 	}
 	
@@ -54,10 +77,6 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 		decoder.dateDecodingStrategy = .iso8601
 		return decoder
 	}()
-	
-	deinit {
-		currentTask?.cancel()
-	}
 }
 
 private struct Root: Decodable {

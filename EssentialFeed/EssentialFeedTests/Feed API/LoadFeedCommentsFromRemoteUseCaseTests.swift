@@ -106,29 +106,30 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertTrue(capturedResults.isEmpty)
 	}
 	
-	func test_requestShouldBeCancelledOnDeallocation() {
+	func test_cancelFeedCommentsLoaderTask_cancelsClientURLRequest() {
+		let (sut, client) = makeSUT()
 		let url = anyURL()
-		let client = HTTPClientSpy()
-		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(client: client)
 		
-		sut?.load(url: url, completion: { _ in })
+		let task = sut.load(url: url, completion: {_ in })
+		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
 		
-		sut = nil
-		
-		XCTAssertEqual(client.cancelledURLs, [url])
+		task.cancel()
+		XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
 	}
 	
-	func test_finishedRequestShouldNotBeCancelledOnDeallocation() {
-		let url = anyURL()
-		let client = HTTPClientSpy()
-		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(client: client)
+	func test_load_doesNotDeliverResultAfterCancellingTask() {
+		let (sut, client) = makeSUT()
+		let nonEmptyData = Data("non-empty data".utf8)
 		
-		sut?.load(url: url, completion: { _ in })
-		client.complete(withStatusCode: 200, data: emptyItemsData())
+		var received = [FeedCommentsLoader.Result]()
+		let task = sut.load(url: anyURL()) { received.append($0) }
+		task.cancel()
 		
-		sut = nil
+		client.complete(withStatusCode: 404, data: anyData())
+		client.complete(withStatusCode: 200, data: nonEmptyData)
+		client.complete(with: anyNSError())
 		
-		XCTAssertEqual(client.cancelledURLs, [])
+		XCTAssertTrue(received.isEmpty, "Expected no received results after cancelling task")
 	}
 	
 	// MARK: - Helpers
