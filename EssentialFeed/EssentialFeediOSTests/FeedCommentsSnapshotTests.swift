@@ -25,7 +25,7 @@ class FeedCommentsSnapshotTests: XCTestCase {
 		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_COMMENTS_WITH_CONTENT_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_COMMENTS_WITH_CONTENT_dark")
-		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, preferredContentSizeCategory: .extraExtraLarge)), named: "FEED_COMMENTS_WITH_CONTENT_extra_extra_large_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, preferredContentSizeCategory: .extraLarge)), named: "FEED_COMMENTS_WITH_CONTENT_extra_large_dark")
 	}
 	
 	func test_feedCommentsWithErrorMessage() {
