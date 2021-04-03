@@ -38,15 +38,29 @@ extension FeedCommentsViewController {
 	
 	@discardableResult
 	func simulateFeedImageViewVisible(at index: Int) -> FeedCommentCell? {
-		return commentView(at: index) as? FeedCommentCell
+		return commentView(at: index)
 	}
 	
-	func commentView(at row: Int) -> UITableViewCell? {
+	func commentView(at row: Int) -> FeedCommentCell? {
 		guard numberOfRenderedFeedCommentViews() > row else {
 			return nil
 		}
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: feedCommentsSection)
-		return ds?.tableView(tableView, cellForRowAt: index)
+		return ds?.tableView(tableView, cellForRowAt: index) as? FeedCommentCell
+	}
+}
+
+extension FeedCommentsViewController {
+	func commentMessage(at row: Int) -> String? {
+		commentView(at: row)?.messageLabel.text
+	}
+	
+	func commentDate(at row: Int) -> String? {
+		commentView(at: row)?.dateLabel.text
+	}
+	
+	func commentUsername(at row: Int) -> String? {
+		commentView(at: row)?.authorNameLabel.text
 	}
 }

@@ -220,19 +220,12 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 			return XCTFail("Expected \(FeedCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
-		XCTAssertEqual(cell.authorName, comment.authorName, "Expected author name to be \(String(describing: comment.authorName)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.authorName, sut.commentUsername(at: index), "Expected author name to be \(String(describing: sut.commentUsername(at: index))) for comment view at index (\(index))", file: file, line: line)
 		
-		XCTAssertEqual(cell.message, comment.message, "Expected message to be \(String(describing: comment.message)) for comment view at index (\(index)", file: file, line: line)
+		XCTAssertEqual(cell.message, sut.commentMessage(at: index), "Expected message to be \(String(describing: sut.commentMessage(at: index))) for comment view at index (\(index)", file: file, line: line)
 		
-		let expectedDateString = dateFormatter.localizedString(for: comment.date, relativeTo: Date())
-		XCTAssertEqual(cell.dateText, expectedDateString, "Expected date text to be \(expectedDateString) for comment view at index (\(index)", file: file, line: line)
+		XCTAssertEqual(cell.dateText, sut.commentDate(at: index), "Expected date text to be \(String(describing: sut.commentDate(at: index))) for comment view at index (\(index)", file: file, line: line)
 	}
-	
-	private lazy var dateFormatter: RelativeDateTimeFormatter = {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		return formatter
-	}()
 	
 	private func executeRunLoopToCleanUpReferences() {
 		RunLoop.current.run(until: Date())
