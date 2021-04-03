@@ -11,25 +11,21 @@ import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
 	private var refreshController: ImageCommentsRefreshViewController?
-	private var tableModel = [ImageComment]() {
+	var tableModel = [ImageCommentCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
-	private var cellControllers = [IndexPath: ImageCommentCellController]()
 
-	public convenience init(loader: ImageCommentsLoader) {
+	convenience init(refreshController: ImageCommentsRefreshViewController) {
 		self.init()
-		self.refreshController = ImageCommentsRefreshViewController(imageCommentsLoader: loader)
+		self.refreshController = refreshController
 	}
 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
 		refreshControl = refreshController?.view
-		refreshController?.onRefresh = { [weak self] imageComments in
-			self?.tableModel = imageComments
-		}
 		refreshController?.refresh()
 	}
 
@@ -41,18 +37,7 @@ public final class ImageCommentsViewController: UITableViewController {
 		cellController(forRowAt: indexPath).view()
 	}
 
-	public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		removeCellController(forRowAt: indexPath)
-	}
-
 	private func cellController(forRowAt indexPath: IndexPath) -> ImageCommentCellController {
-		let cellModel = tableModel[indexPath.row]
-		let cellController = ImageCommentCellController(model: cellModel)
-		cellControllers[indexPath] = cellController
-		return cellController
-	}
-
-	private func removeCellController(forRowAt indexPath: IndexPath) {
-		cellControllers[indexPath] = nil
+		tableModel[indexPath.row]
 	}
 }
