@@ -13,12 +13,14 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presenter = ImageCommentsPresenter()
-		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader, presenter: presenter)
+		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
 		let refreshController = ImageCommentsRefreshViewController(delegate: presentationAdapter)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
-		presenter.imageCommentsLoadingView = WeakRefVirtualProxy(refreshController)
-		presenter.imageCommentsView = ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader)
+
+		presentationAdapter.presenter = ImageCommentsPresenter(
+			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader),
+			imageCommentsLoadingView: WeakRefVirtualProxy(refreshController))
+		
 		return imageCommentsController
 	}
 }
@@ -55,23 +57,22 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 
 private final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewControllerDelegate {
 	private let imageCommentsLoader: ImageCommentsLoader
-	private let presenter: ImageCommentsPresenter
+	var presenter: ImageCommentsPresenter?
 
-	init(imageCommentsLoader: ImageCommentsLoader, presenter: ImageCommentsPresenter) {
+	init(imageCommentsLoader: ImageCommentsLoader) {
 		self.imageCommentsLoader = imageCommentsLoader
-		self.presenter = presenter
 	}
 
 	func didRequestImageCommentsRefresh() {
-		presenter.didStartLoadingImageComments()
+		presenter?.didStartLoadingImageComments()
 
 		imageCommentsLoader.load { [weak self] result in
 			switch result {
 			case let .success(imageComments):
-				self?.presenter.didFinishLoadingImageComments(with: imageComments)
+				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
 
 			case let .failure(error):
-				self?.presenter.didFinishLoadingImageComments(with: error)
+				self?.presenter?.didFinishLoadingImageComments(with: error)
 			}
 		}
 	}
