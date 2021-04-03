@@ -41,24 +41,23 @@ class URLProtocolStub: URLProtocol {
 	}
 	
 	override func startLoading() {
-		URLProtocolStub.queue.sync {
-			guard let stub = URLProtocolStub._stub else { return }
-			if let data = stub.data {
-				client?.urlProtocol(self, didLoad: data)
-			}
-			
-			if let response = stub.response {
-				client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-			}
-			
-			if let error = stub.error {
-				client?.urlProtocol(self, didFailWithError: error)
-			} else {
-				client?.urlProtocolDidFinishLoading(self)
-			}
-			
-			stub.requestObserver?(request)
+		guard let stub = URLProtocolStub.stub else { return }
+		
+		if let data = stub.data {
+			client?.urlProtocol(self, didLoad: data)
 		}
+		
+		if let response = stub.response {
+			client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+		}
+		
+		if let error = stub.error {
+			client?.urlProtocol(self, didFailWithError: error)
+		} else {
+			client?.urlProtocolDidFinishLoading(self)
+		}
+		
+		stub.requestObserver?(request)
 	}
 	
 	override func stopLoading() {}
