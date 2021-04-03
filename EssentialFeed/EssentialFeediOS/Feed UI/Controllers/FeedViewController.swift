@@ -83,6 +83,6 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	}
 	
 	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableModel[indexPath.row].openComments()
+		tableModel[indexPath.row].imageDidSelect()
 	}
 }

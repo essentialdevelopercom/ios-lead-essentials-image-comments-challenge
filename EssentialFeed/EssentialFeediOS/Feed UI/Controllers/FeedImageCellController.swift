@@ -11,13 +11,13 @@ public protocol FeedImageCellControllerDelegate {
 }
 
 public final class FeedImageCellController: FeedImageView {
-	private let onOpenComments: ()->Void
+	private let onImageSelection: ()->Void
 	private let delegate: FeedImageCellControllerDelegate
 	private var cell: FeedImageCell?
 	
-	public init(delegate: FeedImageCellControllerDelegate, onOpenComments: @escaping ()->Void) {
+	public init(delegate: FeedImageCellControllerDelegate, onImageSelection: @escaping ()->Void) {
 		self.delegate = delegate
-		self.onOpenComments = onOpenComments
+		self.onImageSelection = onImageSelection
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
@@ -49,7 +49,7 @@ public final class FeedImageCellController: FeedImageView {
 		cell = nil
 	}
 	
-	public func openComments() {
-		onOpenComments()
+	public func imageDidSelect() {
+		onImageSelection()
 	}
 }
