@@ -38,12 +38,11 @@ public final class ImageCommentsUIComposer {
 		let bundle = Bundle(for: ImageCommentsViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
-		let refreshController = imageCommentsController.refreshController!
-		refreshController.delegate = presentationAdapter
+		imageCommentsController.delegate = presentationAdapter
 
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader),
-			imageCommentsLoadingView: WeakRefVirtualProxy(refreshController))
+			imageCommentsLoadingView: WeakRefVirtualProxy(imageCommentsController))
 
 		return imageCommentsController
 	}
@@ -83,7 +82,7 @@ private final class ImageCommentPresentationAdapter {
 	}
 }
 
-private final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewControllerDelegate {
+private final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 	private let imageCommentsLoader: ImageCommentsLoader
 	var presenter: ImageCommentsPresenter?
 

@@ -7,9 +7,15 @@
 //
 
 import UIKit
+import EssentialFeed
 
-public final class ImageCommentsViewController: UITableViewController {
-	@IBOutlet private(set) var refreshController: ImageCommentsRefreshViewController?
+protocol ImageCommentsViewControllerDelegate {
+	func didRequestImageCommentsRefresh()
+}
+
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingView {
+	var delegate: ImageCommentsViewControllerDelegate?
+	
 	var tableModel = [ImageCommentCellController]() {
 		didSet {
 			tableView.reloadData()
@@ -19,7 +25,19 @@ public final class ImageCommentsViewController: UITableViewController {
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
-		refreshController?.refresh()
+		refresh()
+	}
+
+	@IBAction private func refresh() {
+		delegate?.didRequestImageCommentsRefresh()
+	}
+
+	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
 	}
 
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
