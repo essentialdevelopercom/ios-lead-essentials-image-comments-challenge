@@ -17,7 +17,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	func test_init_doesNotSendMessagesToView() {
 		let view = ViewSpy()
-		_ = ImageCommentsPresenter(imageCommentsView: view)
+		_ = ImageCommentsPresenter(imageCommentsView: view, imageCommentsLoadingView: view)
 
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
@@ -34,14 +34,19 @@ class ImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 
-	private class ViewSpy: ImageCommentsView {
+	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView {
 		enum Messages: Hashable {
 			case display(imageComments: [ImageComment])
+			case display(isLoading: Bool)
 		}
 		private(set) var messages: Set<Messages> = []
 
 		func display(_ viewModel: ImageCommentsViewModel) {
 			messages.insert(.display(imageComments: viewModel.imageComments))
+		}
+
+		func display(_ viewModel: ImageCommentsLoadingViewModel) {
+			messages.insert(.display(isLoading: viewModel.isLoading))
 		}
 	}
 
