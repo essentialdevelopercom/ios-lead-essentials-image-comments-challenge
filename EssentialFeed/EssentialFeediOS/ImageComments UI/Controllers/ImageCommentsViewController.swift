@@ -10,8 +10,12 @@ import UIKit
 import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
-	private var loader: ImageCommentsLoader?
-	private var tableModel = [ImageComment]()
+	private var refreshController: ImageCommentsRefreshViewController?
+	private var tableModel = [ImageComment]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
 
 	private var dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -22,26 +26,17 @@ public final class ImageCommentsViewController: UITableViewController {
 
 	public convenience init(loader: ImageCommentsLoader) {
 		self.init()
-		self.loader = loader
+		self.refreshController = ImageCommentsRefreshViewController(imageCommentsLoader: loader)
 	}
 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
-		refreshControl = UIRefreshControl()
-		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-		load()
-	}
-
-	@objc private func load() {
-		refreshControl?.beginRefreshing()
-		loader?.load { [weak self] result in
-			if let imageComments = try? result.get() {
-				self?.tableModel = imageComments
-				self?.tableView.reloadData()
-			}
-			self?.refreshControl?.endRefreshing()
+		refreshControl = refreshController?.view
+		refreshController?.onRefresh = { [weak self] imageComments in
+			self?.tableModel = imageComments
 		}
+		refreshController?.refresh()
 	}
 
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

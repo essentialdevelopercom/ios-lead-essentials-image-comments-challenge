@@ -87,6 +87,7 @@
 		C6CEB85B26175E4C0011A1B1 /* ImageCommentsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CEB85A26175E4C0011A1B1 /* ImageCommentsViewControllerTests.swift */; };
 		C6CEB86626176DD50011A1B1 /* ImageCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CEB86526176DD50011A1B1 /* ImageCommentsViewController.swift */; };
 		C6CEB870261775990011A1B1 /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CEB86F261775990011A1B1 /* ImageCommentCell.swift */; };
+		C6E39BD92618704A005901E2 /* ImageCommentsRefreshViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6E39BD82618704A005901E2 /* ImageCommentsRefreshViewController.swift */; };
 		C6F302DC260F5B4D001AF486 /* RemoteImageCommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F302DB260F5B4D001AF486 /* RemoteImageCommentsLoader.swift */; };
 		C6F302E6260F5B6D001AF486 /* RemoteImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F302E5260F5B6D001AF486 /* RemoteImageComment.swift */; };
 		C6F302EC260F5B7B001AF486 /* RemoteImageCommentAuthor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F302EB260F5B7B001AF486 /* RemoteImageCommentAuthor.swift */; };
@@ -205,6 +206,7 @@
 		C6CEB85A26175E4C0011A1B1 /* ImageCommentsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewControllerTests.swift; sourceTree = "<group>"; };
 		C6CEB86526176DD50011A1B1 /* ImageCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewController.swift; sourceTree = "<group>"; };
 		C6CEB86F261775990011A1B1 /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
+		C6E39BD82618704A005901E2 /* ImageCommentsRefreshViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsRefreshViewController.swift; sourceTree = "<group>"; };
 		C6F302DB260F5B4D001AF486 /* RemoteImageCommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageCommentsLoader.swift; sourceTree = "<group>"; };
 		C6F302E5260F5B6D001AF486 /* RemoteImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageComment.swift; sourceTree = "<group>"; };
 		C6F302EB260F5B7B001AF486 /* RemoteImageCommentAuthor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageCommentAuthor.swift; sourceTree = "<group>"; };
@@ -549,6 +551,23 @@
 			path = "Feed UI";
 			sourceTree = "<group>";
 		};
+		C61D015526186D0F007E481A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C6CEB86526176DD50011A1B1 /* ImageCommentsViewController.swift */,
+				C6E39BD82618704A005901E2 /* ImageCommentsRefreshViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		C61D015626186D12007E481A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C6CEB86F261775990011A1B1 /* ImageCommentCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		C6727BC526053E100045D53E /* ImageComments Feature */ = {
 			isa = PBXGroup;
 			children = (
@@ -570,8 +589,8 @@
 		C6CEB86426176DC50011A1B1 /* ImageComments UI */ = {
 			isa = PBXGroup;
 			children = (
-				C6CEB86526176DD50011A1B1 /* ImageCommentsViewController.swift */,
-				C6CEB86F261775990011A1B1 /* ImageCommentCell.swift */,
+				C61D015526186D0F007E481A /* Controllers */,
+				C61D015626186D12007E481A /* Views */,
 			);
 			path = "ImageComments UI";
 			sourceTree = "<group>";
@@ -916,6 +935,7 @@
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
 				08BB7EAB22C1425100F8B83C /* FeedViewController.swift in Sources */,
+				C6E39BD92618704A005901E2 /* ImageCommentsRefreshViewController.swift in Sources */,
 				C6CEB86626176DD50011A1B1 /* ImageCommentsViewController.swift in Sources */,
 				0822D0F7230581D2004B3345 /* UIImageView+Animations.swift in Sources */,
 				08B5EB4E22CE244400FE8683 /* FeedImageCell.swift in Sources */,
