@@ -106,6 +106,25 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_deinit_cancelsRunningRequest() {
+		let taskSpy = TaskSpy()
+		let loader = LoaderSpy(taskSpy: taskSpy)
+		let url = anyURL()
+		
+		var sut: FeedCommentsViewController?
+		
+		autoreleasepool {
+			sut = FeedCommentsUIComposer.commentsComposedWith(url: url, feedCommentsLoader: loader)
+			sut?.loadViewIfNeeded()
+		}
+		
+		XCTAssertEqual(taskSpy.cancelCount, 0)
+		
+		sut = nil
+		
+		XCTAssertEqual(taskSpy.cancelCount, 1)
+	}
+	
 	func test_loadFeedCommentsCompletion_dispatchesFromBackgroundToMainThread() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
@@ -139,8 +158,10 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	private class TaskSpy: FeedCommentsLoaderTask {
+		var cancelCount = 0
+		
 		func cancel() {
-			
+			cancelCount += 1
 		}
 	}
 	
@@ -148,11 +169,15 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		
 		private(set) var loadedUrls: [URL] = []
 		private var commentsRequests: [(FeedCommentsLoader.Result) -> Void] = []
+		private let taskSpy: TaskSpy
+		init(taskSpy: TaskSpy = TaskSpy()) {
+			self.taskSpy = taskSpy
+		}
 		
 		func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
 			loadedUrls.append(url)
 			commentsRequests.append(completion)
-			return TaskSpy()
+			return taskSpy
 		}
 		
 		func completeCommentsLoading(with comments: [FeedComment] = [], at index: Int = 0) {

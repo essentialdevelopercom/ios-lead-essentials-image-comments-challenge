@@ -11,6 +11,7 @@ final class FeedCommentsLoaderPresentationAdapter: FeedCommentsViewControllerDel
 	private let url: URL
 	private let feedCommentsLoader: FeedCommentsLoader
 	var presenter: FeedCommentsPresenter?
+	private var task: FeedCommentsLoaderTask?
 	
 	init(url: URL, feedCommentsLoader: FeedCommentsLoader) {
 		self.url = url
@@ -20,7 +21,7 @@ final class FeedCommentsLoaderPresentationAdapter: FeedCommentsViewControllerDel
 	func didRequestFeedCommentsRefresh() {
 		presenter?.didStartLoadingFeedComments()
 		
-		feedCommentsLoader.load(url: url) {[weak self] result in
+		task = feedCommentsLoader.load(url: url) {[weak self] result in
 			switch result {
 			case .success(let comments):
 				self?.presenter?.didFinishLoadingFeedComments(with: comments)
@@ -28,5 +29,9 @@ final class FeedCommentsLoaderPresentationAdapter: FeedCommentsViewControllerDel
 				self?.presenter?.didFinishLoadingFeedComments(with: error)
 			}
 		}
+	}
+	
+	deinit {
+		task?.cancel()
 	}
 }
