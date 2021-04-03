@@ -9,11 +9,17 @@
 import Foundation
 
 public protocol ImageCommentsView {
-	func display(_ viewModel: ImageCommentsViewModel)
+	func display(_ imageComments: [ImageComment])
+}
+
+public protocol ImageCommentsLoadingView: class {
+	func display(isLoading: Bool)
 }
 
 public final class ImageCommentsPresenter {
-	private let imageCommentsView: ImageCommentsView
+	public var imageCommentsView: ImageCommentsView?
+	public weak var imageCommentsLoadingView: ImageCommentsLoadingView?
+	private let imageCommentsLoader: ImageCommentsLoader
 
 	public static var title: String {
 		NSLocalizedString(
@@ -24,7 +30,17 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
-	public init(imageCommentsView: ImageCommentsView) {
-		self.imageCommentsView = imageCommentsView
+	public init(imageCommentsLoader: ImageCommentsLoader) {
+		self.imageCommentsLoader = imageCommentsLoader
+	}
+
+	public func loadImageComments() {
+		imageCommentsLoadingView?.display(isLoading: true)
+		imageCommentsLoader.load { [weak self] result in
+			if let imageComments = try? result.get() {
+				self?.imageCommentsView?.display(imageComments)
+			}
+			self?.imageCommentsLoadingView?.display(isLoading: false)
+		}
 	}
 }

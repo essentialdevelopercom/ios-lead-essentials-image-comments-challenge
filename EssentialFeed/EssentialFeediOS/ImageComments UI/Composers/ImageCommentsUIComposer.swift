@@ -13,18 +13,27 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let imageCommentsViewModel = ImageCommentsViewModel(imageCommentsLoader: imageCommentsLoader)
-		let refreshController = ImageCommentsRefreshViewController(viewModel: imageCommentsViewModel)
+		let presenter = ImageCommentsPresenter(imageCommentsLoader: imageCommentsLoader)
+		let refreshController = ImageCommentsRefreshViewController(presenter: presenter)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
-		imageCommentsViewModel.onImageCommentsLoad = adaptImageCommentToCellControllers(forwardingTo: imageCommentsController, loader: imageCommentsLoader)
+		presenter.imageCommentsLoadingView = refreshController
+		presenter.imageCommentsView = ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader)
 		return imageCommentsController
 	}
+}
 
-	private static func adaptImageCommentToCellControllers(forwardingTo controller: ImageCommentsViewController, loader: ImageCommentsLoader) -> ([ImageComment]) -> Void {
-		{ [weak controller] imageComments in
-			controller?.tableModel = imageComments.map { model in
-				ImageCommentCellController(viewModel: ImageCommentViewModel(model: model))
-			}
+private final class ImageCommentsViewAdapter: ImageCommentsView {
+	private weak var controller: ImageCommentsViewController?
+	private let imageCommentsLoader: ImageCommentsLoader
+
+	init(controller: ImageCommentsViewController? = nil, imageCommentsLoader: ImageCommentsLoader) {
+		self.controller = controller
+		self.imageCommentsLoader = imageCommentsLoader
+	}
+
+	func display(_ imageComments: [ImageComment]) {
+		controller?.tableModel = imageComments.map { model in
+			ImageCommentCellController(viewModel: ImageCommentViewModel(model: model))
 		}
 	}
 }
