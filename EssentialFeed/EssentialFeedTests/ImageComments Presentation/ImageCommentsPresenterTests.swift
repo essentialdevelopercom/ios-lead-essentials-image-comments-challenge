@@ -32,6 +32,18 @@ class ImageCommentsPresenterTests: XCTestCase {
 		])
 	}
 
+	func test_didFinishLoadingImageComments_displaysImageCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		let imageComments = uniqueImageComments()
+
+		sut.didFinishLoadingImageComments(with: imageComments)
+
+		XCTAssertEqual(view.messages, [
+			.display(imageComments: imageComments),
+			.display(isLoading: false)
+		])
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> (sut: ImageCommentsPresenter, view: ViewSpy) {
@@ -50,6 +62,14 @@ class ImageCommentsPresenterTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+
+	private func uniqueImageComment() -> ImageComment {
+		ImageComment(id: UUID(), message: "a message", createdAt: Date(), author: ImageCommentAuthor(username: "a username"))
+	}
+
+	private func uniqueImageComments() -> [ImageComment] {
+		[uniqueImageComment(), uniqueImageComment()]
 	}
 
 	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
