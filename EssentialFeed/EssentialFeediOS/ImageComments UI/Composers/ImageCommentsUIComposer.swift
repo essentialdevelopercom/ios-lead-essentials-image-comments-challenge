@@ -15,7 +15,7 @@ public final class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
 		let presenter = ImageCommentsPresenter()
 		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader, presenter: presenter)
-		let refreshController = ImageCommentsRefreshViewController(loadImageComments: presentationAdapter.loadImageComments)
+		let refreshController = ImageCommentsRefreshViewController(delegate: presentationAdapter)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
 		presenter.imageCommentsLoadingView = WeakRefVirtualProxy(refreshController)
 		presenter.imageCommentsView = ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader)
@@ -53,7 +53,7 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 	}
 }
 
-private final class ImageCommentsPresentationAdapter {
+private final class ImageCommentsPresentationAdapter: ImageCommentsRefreshViewControllerDelegate {
 	private let imageCommentsLoader: ImageCommentsLoader
 	private let presenter: ImageCommentsPresenter
 
@@ -62,7 +62,7 @@ private final class ImageCommentsPresentationAdapter {
 		self.presenter = presenter
 	}
 
-	func loadImageComments() {
+	func didRequestImageCommentsRefresh() {
 		presenter.didStartLoadingImageComments()
 
 		imageCommentsLoader.load { [weak self] result in

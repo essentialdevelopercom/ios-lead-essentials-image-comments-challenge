@@ -9,17 +9,21 @@
 import UIKit
 import EssentialFeed
 
+protocol ImageCommentsRefreshViewControllerDelegate {
+	func didRequestImageCommentsRefresh()
+}
+
 final class ImageCommentsRefreshViewController: NSObject, ImageCommentsLoadingView {
 	private(set) lazy var view = loadView(UIRefreshControl())
 
-	private let loadImageComments: () -> Void
+	private let delegate: ImageCommentsRefreshViewControllerDelegate
 
-	init(loadImageComments: @escaping ()  -> Void) {
-		self.loadImageComments = loadImageComments
+	init(delegate: ImageCommentsRefreshViewControllerDelegate) {
+		self.delegate = delegate
 	}
 
 	@objc func refresh() {
-		loadImageComments()
+		delegate.didRequestImageCommentsRefresh()
 	}
 
 	func display(_ viewModel: ImageCommentsLoadingViewModel) {
