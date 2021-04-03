@@ -53,9 +53,8 @@ class ImageCommentsListPresenterTests: XCTestCase {
 		
 		samples.enumerated().forEach { index, pair in
 			let (comment, relativeDate) = pair
-			let (sut, _) = makeSUT(currentDate: { staticDate }, locale: Locale(identifier: "en_US_POSIX"))
 			
-			let viewModel = sut.viewModel(for: comment)
+			let viewModel = ImageCommentsListPresenter.viewModel(for: comment, currentDate: { staticDate })
 			
 			XCTAssertEqual(viewModel.author, comment.author)
 			XCTAssertEqual(viewModel.message, comment.message)
@@ -65,9 +64,9 @@ class ImageCommentsListPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = Locale.current, file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsListPresenter, view: ViewSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsListPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = ImageCommentsListPresenter(currentDate: currentDate, loadingView: view, commentsView: view, errorView: view, locale: locale)
+		let sut = ImageCommentsListPresenter(loadingView: view, commentsView: view, errorView: view)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)

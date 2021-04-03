@@ -11,16 +11,17 @@ import EssentialFeediOS
 import Foundation
 
 final class ImageCommentsAdapter: ImageCommentsListView {
+	private let currentDate: () -> Date
 	private weak var controller: ImageCommentsViewController?
-	var presenter: ImageCommentsListPresenter!
 	
-	init(controller: ImageCommentsViewController) {
+	init(currentDate: @escaping () -> Date, controller: ImageCommentsViewController) {
+		self.currentDate = currentDate
 		self.controller = controller
 	}
 	
 	func display(_ viewModel: ImageCommentsListViewModel) {
 		controller?.display(viewModel.comments.map { comment in
-			let viewModel = presenter.viewModel(for: comment)
+			let viewModel = ImageCommentsListPresenter.viewModel(for: comment, currentDate: currentDate)
 			let controller = ImageCommentsCellController(viewModel: viewModel)
 			return controller
 		})

@@ -45,19 +45,14 @@ public protocol ImageCommentsErrorView {
 // MARK: - ImageCommentsListPresenter
 
 public final class ImageCommentsListPresenter {
-	
-	private let currentDate: () -> Date
 	private let loadingView: ImageCommentsLoadingView
 	private let commentsView: ImageCommentsListView
 	private let errorView: ImageCommentsErrorView
-	private let locale: Locale
 	
-	public init(currentDate: @escaping () -> Date, loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView, locale: Locale = Locale.current) {
-		self.currentDate = currentDate
+	public init(loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView) {
 		self.loadingView = loadingView
 		self.commentsView = commentsView
 		self.errorView = errorView
-		self.locale = locale
 	}
 	
 	public func didStartLoadingComments() {
@@ -75,17 +70,17 @@ public final class ImageCommentsListPresenter {
 		errorView.display(ImageCommentsErrorViewModel(message: Localized.ImageComments.errorMessage))
 	}
 	
-	public func viewModel(for comment: ImageComment) -> ImageCommentViewModel {
+	public static func viewModel(for comment: ImageComment, currentDate: () -> Date, locale: Locale = Locale.current) -> ImageCommentViewModel {
 		ImageCommentViewModel(
 			author: comment.author,
 			message: comment.message,
-			creationDate: formatRelativeDate(for: comment.creationDate)
+			creationDate: relativeDateString(for: comment.creationDate, relativeTo: currentDate(), locale: locale)
 		)
 	}
 	
-	private func formatRelativeDate(for date: Date) -> String {
+	private static func relativeDateString(for date: Date, relativeTo currentDate: Date, locale: Locale) -> String {
 		let formatter = RelativeDateTimeFormatter()
 		formatter.locale = locale
-		return formatter.localizedString(for: date, relativeTo: currentDate())
+		return formatter.localizedString(for: date, relativeTo: currentDate)
 	}
 }
