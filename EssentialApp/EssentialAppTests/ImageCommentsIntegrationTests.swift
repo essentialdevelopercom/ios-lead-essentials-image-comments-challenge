@@ -54,7 +54,7 @@ class ImageCommentsIntegrationTests: XCTestCase {
 	
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
-		
+		let currentDate = { staticDate }
 		let comment0 = makeComment(
 			message: "a message",
 			creationDate: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"),
@@ -81,17 +81,17 @@ class ImageCommentsIntegrationTests: XCTestCase {
 			author: "a fifth author"
 		)
 		let comments = [comment0, comment1, comment2, comment3, comment4]
-		let (sut, loader) = makeSUT(url: anyURL(), currentDate: { staticDate })
+		let (sut, loader) = makeSUT(url: anyURL(), currentDate: currentDate)
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
 		loader.completeCommentsLoading(with: [comment0], at: 0)
-		assertThat(sut, isRendering: [comment0])
+		assertThat(sut, isRendering: makePresentableViewModels(from: [comment0], currentDate: currentDate))
 		
 		sut.simulateUserInitiatedReloading()
 		loader.completeCommentsLoading(with: comments, at: 1)
-		assertThat(sut, isRendering: comments)
+		assertThat(sut, isRendering: makePresentableViewModels(from: comments, currentDate: currentDate))
 	}
 	
 	func test_loadCommentsCompletion_showsLocalizedErrorMessageOnLoaderError() {
@@ -122,20 +122,21 @@ class ImageCommentsIntegrationTests: XCTestCase {
 	
 	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
+		let currentDate = { staticDate }
 		let comment = makeComment(
 			message: "a message",
 			creationDate: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"),
 			author: "an author"
 		)
-		let (sut, loader) = makeSUT(url: anyURL(), currentDate: { staticDate })
+		let (sut, loader) = makeSUT(url: anyURL(), currentDate: currentDate)
 		
 		sut.loadViewIfNeeded()
 		loader.completeCommentsLoading(with: [comment], at: 0)
-		assertThat(sut, isRendering: [comment])
+		assertThat(sut, isRendering: makePresentableViewModels(from: [comment], currentDate: currentDate))
 		
 		sut.simulateUserInitiatedReloading()
 		loader.completeCommentsLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [comment])
+		assertThat(sut, isRendering: makePresentableViewModels(from: [comment], currentDate: currentDate))
 	}
 	
 	func test_loadComments_cancelsAnyRunningRequestsWhenNavigatingBack() {
@@ -220,8 +221,7 @@ class ImageCommentsIntegrationTests: XCTestCase {
 		ImageComment(id: UUID(), message: message, creationDate: creationDate, author: author)
 	}
 	
-	private func makeCommentDatePair(message: String, creationDate: Date, author: String, expectedRelativeDate: String) -> (comment: ImageComment, relativeDate: String) {
-		let comment = makeComment(message: message, creationDate: creationDate, author: author)
-		return (comment, expectedRelativeDate)
+	private func makePresentableViewModels(from imageComments: [ImageComment], currentDate: @escaping () -> Date) -> [ImageCommentViewModel] {
+		imageComments.map { ImageCommentsListPresenter.viewModel(for: $0, currentDate: currentDate) }
 	}
 }
