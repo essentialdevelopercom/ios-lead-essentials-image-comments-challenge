@@ -1,5 +1,5 @@
 //
-//  ImageCommentsViewControllerTests.swift
+//  ImageCommentsUIIntegrationTests.swift
 //  EssentialFeediOSTests
 //
 //  Created by Sebastian Vidrea on 02.04.2021.
@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeed
 import EssentialFeediOS
 
-final class ImageCommentsViewControllerTests: XCTestCase {
+final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	func test_imageCommentsView_hasTitle() {
 		let (sut, _) = makeSUT()
