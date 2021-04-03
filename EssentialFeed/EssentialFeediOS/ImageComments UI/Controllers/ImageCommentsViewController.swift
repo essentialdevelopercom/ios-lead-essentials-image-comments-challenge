@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import EssentialFeed
 
 public final class ImageCommentsViewController: UITableViewController {
 	private var refreshController: ImageCommentsRefreshViewController?
