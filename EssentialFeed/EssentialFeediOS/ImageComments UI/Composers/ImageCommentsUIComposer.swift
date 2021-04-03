@@ -35,17 +35,26 @@ public final class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
 
-		let bundle = Bundle(for: ImageCommentsViewController.self)
-		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
-		imageCommentsController.delegate = presentationAdapter
-		imageCommentsController.title = ImageCommentsPresenter.title
-
+		let imageCommentsController = ImageCommentsViewController.makeWith(
+			delegate: presentationAdapter,
+			title: ImageCommentsPresenter.title
+		)
 
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader),
 			imageCommentsLoadingView: WeakRefVirtualProxy(imageCommentsController))
 
+		return imageCommentsController
+	}
+}
+
+private extension ImageCommentsViewController {
+	static func makeWith(delegate: ImageCommentsViewControllerDelegate, title: String) -> ImageCommentsViewController {
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		imageCommentsController.delegate = delegate
+		imageCommentsController.title = title
 		return imageCommentsController
 	}
 }
