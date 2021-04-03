@@ -4,10 +4,6 @@
 
 import Foundation
 
-public protocol LoaderTask {
-	func cancel()
-}
-
 public final class RemoteTaskLoader<Resource> {
 	private let client: HTTPClient
 	private let mapper: Mapper
@@ -22,7 +18,7 @@ public final class RemoteTaskLoader<Resource> {
 		case invalidData
 	}
 
-	public typealias Result = Swift.Result<Resource, Error>
+	public typealias Result = Swift.Result<Resource, Swift.Error>
 	public typealias Mapper = (Data, HTTPURLResponse) throws -> Resource
 
 	private final class HTTPClientTaskWrapper: LoaderTask {

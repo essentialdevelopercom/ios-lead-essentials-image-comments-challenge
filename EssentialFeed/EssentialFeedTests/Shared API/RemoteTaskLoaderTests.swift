@@ -123,7 +123,7 @@ class RemoteTaskLoaderTests: XCTestCase {
 			case let (.success(receivedData), .success(expectedData)):
 				XCTAssertEqual(receivedData, expectedData, file: file, line: line)
 
-			case let (.failure(receivedError), .failure(expectedError)):
+			case let (.failure(receivedError as RemoteTaskLoader<String>.Error), .failure(expectedError as RemoteTaskLoader<String>.Error)):
 				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 
 			default:
