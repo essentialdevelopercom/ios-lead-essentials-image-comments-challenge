@@ -13,9 +13,10 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let refreshController = ImageCommentsRefreshViewController(imageCommentsLoader: imageCommentsLoader)
+		let imageCommentsViewModel = ImageCommentsViewModel(imageCommentsLoader: imageCommentsLoader)
+		let refreshController = ImageCommentsRefreshViewController(viewModel: imageCommentsViewModel)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
-		refreshController.onRefresh = adaptImageCommentToCellControllers(forwardingTo: imageCommentsController, loader: imageCommentsLoader)
+		imageCommentsViewModel.onImageCommentsLoad = adaptImageCommentToCellControllers(forwardingTo: imageCommentsController, loader: imageCommentsLoader)
 		return imageCommentsController
 	}
 
