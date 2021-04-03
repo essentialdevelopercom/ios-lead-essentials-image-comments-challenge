@@ -9,9 +9,8 @@
 import Foundation
 
 public class RemoteImageCommentLoader {
-	
-	private let url: URL
 	private let httpClient: HTTPClient
+	private let url: URL
 	
 	public typealias Result = Swift.Result<[ImageComment], Error>
 	
