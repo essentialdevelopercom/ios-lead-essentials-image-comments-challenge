@@ -152,14 +152,3 @@ class FeedAcceptanceTests: XCTestCase {
 		}
 	}
 }
-
-private extension FeedViewController {
-	func simulateFeedCommentDidSelect(at index: Int) {
-		tableView(tableView, didSelectRowAt: IndexPath(row: index, section: feedImagesSection))
-		RunLoop.current.run(until: Date())
-	}
-	
-	private var feedImagesSection: Int {
-		return 0
-	}
-}
