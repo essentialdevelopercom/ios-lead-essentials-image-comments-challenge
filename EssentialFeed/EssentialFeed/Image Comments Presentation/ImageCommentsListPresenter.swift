@@ -50,12 +50,14 @@ public final class ImageCommentsListPresenter {
 	private let loadingView: ImageCommentsLoadingView
 	private let commentsView: ImageCommentsListView
 	private let errorView: ImageCommentsErrorView
+	private let locale: Locale
 	
-	public init(currentDate: @escaping () -> Date, loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView) {
+	public init(currentDate: @escaping () -> Date, loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView, locale: Locale = Locale.current) {
 		self.currentDate = currentDate
 		self.loadingView = loadingView
 		self.commentsView = commentsView
 		self.errorView = errorView
+		self.locale = locale
 	}
 	
 	public func didStartLoadingComments() {
@@ -83,6 +85,7 @@ public final class ImageCommentsListPresenter {
 	
 	private func formatRelativeDate(for date: Date) -> String {
 		let formatter = RelativeDateTimeFormatter()
+		formatter.locale = locale
 		return formatter.localizedString(for: date, relativeTo: currentDate())
 	}
 }
