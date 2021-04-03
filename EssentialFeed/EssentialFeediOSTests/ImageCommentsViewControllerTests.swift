@@ -17,7 +17,7 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 
 		sut.loadViewIfNeeded()
 
-		XCTAssertEqual(sut.title, "Image comments")
+		XCTAssertEqual(sut.title, "Comments")
 	}
 
 	func test_loadImageCommentsActions_requestImageCommentsFromLoader() {
