@@ -56,7 +56,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.rootViewController = UINavigationController(
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
+				imageLoader: makeLocalImageLoaderWithRemoteFallback,
+				onSelect: onFeedImageSelect))
 		
 		window?.makeKeyAndVisible()
 	}
@@ -80,5 +81,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					.loadImageDataPublisher(from: url)
 					.caching(to: localImageLoader, using: url)
 			})
+	}
+	
+	private func onFeedImageSelect(_ feedImage: FeedImage) {
+		guard let navigationController = window?.rootViewController as? UINavigationController else { return }
+		
+		let remoteCommentsLoader = RemoteCommentsLoader(client: httpClient,
+			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImage.id)/comments")!)
+		let commentsController = CommentsUIComposer.commentsComposedWith(commentsLoader: remoteCommentsLoader)
+		navigationController.pushViewController(commentsController, animated: true)
 	}
 }

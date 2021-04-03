@@ -150,7 +150,6 @@ Location</string>
                                     <outlet property="feedImageView" destination="tsT-7G-iNQ" id="8Vg-J5-Z1K"/>
                                     <outlet property="locationContainer" destination="iiY-WY-aBZ" id="WcC-Xd-ChO"/>
                                     <outlet property="locationLabel" destination="gSb-GM-nc6" id="taU-3P-abA"/>
-                                    <segue destination="fRd-jc-krv" kind="show" id="pco-FW-BeG"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -185,7 +184,7 @@ Location</string>
             <objects>
                 <tableViewController storyboardIdentifier="CommentsController" id="fRd-jc-krv" customClass="CommentsController" customModule="EssentialFeediOS" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="t7t-fV-Jye">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="FqF-09-T6d" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
