@@ -55,25 +55,31 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT()
+		let samples = [200, 201, 202, 206, 207, 226]
 		
-		expect(sut, toCompleteWith: failure(.invalidData), when: {
-			let invalidJSON = Data("invalid json".utf8)
-			client.complete(withStatusCode: 200, data: invalidJSON)
-		})
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
+				let invalidJSON = Data("invalid json".utf8)
+				client.complete(withStatusCode: code, data: invalidJSON, at: index)
+			})
+		}
 	}
 	
-	func test_load_deliversNoCommentsOn200HTTPResponseWithEmptyList() {
+	func test_load_deliversNoCommentsOn2xxHTTPResponseWithEmptyList() {
 		let (sut, client) = makeSUT()
+		let samples = [200, 201, 202, 206, 207, 226]
 		
-		expect(sut, toCompleteWith: .success([]), when: {
-			let emptyListJSON = makeCommentsJSON([])
-			client.complete(withStatusCode: 200, data: emptyListJSON)
-		})
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([]), when: {
+				let emptyListJSON = makeCommentsJSON([])
+				client.complete(withStatusCode: code, data: emptyListJSON, at: index)
+			})
+		}
 	}
 	
-	func test_load_deliversCommentsOn200HTTPResponseWithCommentsList() {
+	func test_load_deliversCommentsOn2xxHTTPResponseWithCommentsList() {
 		let (sut, client) = makeSUT()
 		
 		let comment1 = makeComment(
@@ -88,11 +94,14 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			creationDate: (timestamp: 1_589_898_233, iso8601Representation: "2020-05-19T14:23:53+0000"),
 			author: "another username"
 		)
+		let samples = [200, 201, 202, 206, 207, 226]
 		
-		expect(sut, toCompleteWith: .success([comment1.model, comment2.model]), when: {
-			let json = makeCommentsJSON([comment1.json, comment2.json])
-			client.complete(withStatusCode: 200, data: json)
-		})
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([comment1.model, comment2.model]), when: {
+				let json = makeCommentsJSON([comment1.json, comment2.json])
+				client.complete(withStatusCode: code, data: json, at: index)
+			})
+		}
 	}
 	
 	func test_load_doesNotDeliverResultAfterInstanceHasBeenDeallocated() {
