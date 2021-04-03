@@ -40,6 +40,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		LocalFeedImageDataLoader(store: store)
 	}()
 	
+	private lazy var navigationController: UINavigationController = {
+		UINavigationController(
+			rootViewController: FeedUIComposer.feedComposedWith(
+				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+				imageLoader: makeLocalImageLoaderWithRemoteFallback,
+				imageIDHandler: handleImageID
+			)
+		)
+	}()
+	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
 		self.httpClient = httpClient
@@ -54,23 +64,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				imageIDHandler: handleImageID
-			)
-		)
-		
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 	}
 	
 	private func handleImageID(_ id: String) {
-		let navigationController = window?.rootViewController as? UINavigationController
 		let url = Endpoint.url(for: .imageComments(id: id))
 		let loader = RemoteImageCommentLoader(url: url, client: httpClient)
 		let imageCommentsVC = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
-		navigationController?.pushViewController(imageCommentsVC, animated: true)
+		navigationController.pushViewController(imageCommentsVC, animated: true)
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
