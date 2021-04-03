@@ -23,7 +23,7 @@ public final class ImageCommentsUIComposer {
 	private static func adaptImageCommentToCellControllers(forwardingTo controller: ImageCommentsViewController, loader: ImageCommentsLoader) -> ([ImageComment]) -> Void {
 		{ [weak controller] imageComments in
 			controller?.tableModel = imageComments.map { model in
-				ImageCommentCellController(model: model)
+				ImageCommentCellController(viewModel: ImageCommentViewModel(model: model))
 			}
 		}
 	}

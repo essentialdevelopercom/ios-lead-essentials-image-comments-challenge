@@ -34,7 +34,7 @@ public final class ImageCommentsViewController: UITableViewController {
 	}
 
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		cellController(forRowAt: indexPath).view()
+		cellController(forRowAt: indexPath).view
 	}
 
 	private func cellController(forRowAt indexPath: IndexPath) -> ImageCommentCellController {
