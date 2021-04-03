@@ -36,7 +36,7 @@ extension LocalFeedImageDataLoader: FeedImageDataLoader {
 		case notFound
 	}
 	
-	private final class LoadImageDataTask: FeedImageDataLoaderTask {
+	private final class LoadImageDataTask: LoaderTask {
 		private var completion: ((FeedImageDataLoader.Result) -> Void)?
 		
 		init(_ completion: @escaping (FeedImageDataLoader.Result) -> Void) {
@@ -56,7 +56,7 @@ extension LocalFeedImageDataLoader: FeedImageDataLoader {
 		}
 	}
 	
-	public func loadImageData(from url: URL, completion: @escaping (LoadResult) -> Void) -> FeedImageDataLoaderTask {
+	public func load(from url: URL, completion: @escaping (LoadResult) -> Void) -> LoaderTask {
 		let task = LoadImageDataTask(completion)
 		store.retrieve(dataForURL: url) { [weak self] result in
 			guard self != nil else { return }

@@ -10,11 +10,11 @@ public extension FeedImageDataLoader {
 	typealias Publisher = AnyPublisher<Data, Error>
 	
 	func loadImageDataPublisher(from url: URL) -> Publisher {
-		var task: FeedImageDataLoaderTask?
+		var task: LoaderTask?
 		
 		return Deferred {
 			Future { completion in
-				task = self.loadImageData(from: url, completion: completion)
+				task = self.load(from: url, completion: completion)
 			}
 		}
 		.handleEvents(receiveCancel: { task?.cancel() })

@@ -4,12 +4,12 @@
 
 import Foundation
 
-public protocol FeedImageDataLoaderTask {
+public protocol LoaderTask {
 	func cancel()
 }
 
 public protocol FeedImageDataLoader {
 	typealias Result = Swift.Result<Data, Error>
 	
-	func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask
+	func load(from url: URL, completion: @escaping (Result) -> Void) -> LoaderTask
 }
