@@ -32,10 +32,9 @@ final class ImageCommentCellController: ImageCommentView {
 	}
 
 	func view(in tableView: UITableView) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCommentCell") as! ImageCommentCell
-		self.cell = cell
+		self.cell = tableView.dequeueReusableCell()
 		delegate.didLoadCell()
-		return cell
+		return cell!
 	}
 
 	func display(_ viewModel: ImageCommentViewModel) {
