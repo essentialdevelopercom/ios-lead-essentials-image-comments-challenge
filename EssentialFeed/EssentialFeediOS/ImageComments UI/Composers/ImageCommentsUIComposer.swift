@@ -33,7 +33,7 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
+		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: MainQueueDispatchDecorator(decoratee: imageCommentsLoader))
 
 		let imageCommentsController = ImageCommentsViewController.makeWith(
 			delegate: presentationAdapter,
@@ -45,6 +45,26 @@ public final class ImageCommentsUIComposer {
 			imageCommentsLoadingView: WeakRefVirtualProxy(imageCommentsController))
 
 		return imageCommentsController
+	}
+}
+
+private final class MainQueueDispatchDecorator: ImageCommentsLoader {
+	private let decoratee: ImageCommentsLoader
+
+	init(decoratee: ImageCommentsLoader) {
+		self.decoratee = decoratee
+	}
+
+	func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
+		decoratee.load { result in
+			if Thread.isMainThread {
+				completion(result)
+			} else {
+				DispatchQueue.main.async {
+					completion(result)
+				}
+			}
+		}
 	}
 }
 
