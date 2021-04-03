@@ -56,19 +56,19 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		return []
 	}
 	
-	private func commentsListWithContent() -> [ImageCommentStub] {
+	private func commentsListWithContent() -> [ImageCommentViewModel] {
 		return [
-			ImageCommentStub(
+			ImageCommentViewModel(
 				author: "Joe",
 				message: "The gallery was seen in Wolfgang Becker's movie Goodbye, Lenin!",
 				creationDate: "8 months ago"
 			),
-			ImageCommentStub(
+			ImageCommentViewModel(
 				author: "Megan",
 				message: "It was also featured in English indie/rock band Bloc Party's single Kreuzberg taken from the album A Weekend in the City.",
 				creationDate: "3 days ago"
 			),
-			ImageCommentStub(
+			ImageCommentViewModel(
 				author: "Dwight",
 				message: "The restoration process has been marked by major conflict. Eight of the artists of 1990 refused to paint their own images again after they were completely destroyed by the renovation. In order to defend the copyright, they founded Founder Initiative East Side with other artists whose images were copied without permission.",
 				creationDate: "12 hours ago"
@@ -77,29 +77,10 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	}
 }
 
-private class ImageCommentStub: ImageCommentCellControllerDelegate {
-	let viewModel: ImageCommentViewModel
-	weak var controller: ImageCommentsCellController?
-	
-	init(author: String, message: String, creationDate: String) {
-		viewModel = ImageCommentViewModel(
-			author: author,
-			message: message,
-			creationDate: creationDate
-		)
-	}
-	
-	func didRequestComment() {
-		controller?.display(viewModel)
-	}
-}
-
 private extension ImageCommentsViewController {
-	func display(_ stubs: [ImageCommentStub]) {
-		let cells: [ImageCommentsCellController] = stubs.map { stub in
-			let cellController = ImageCommentsCellController(delegate: stub)
-			stub.controller = cellController
-			return cellController
+	func display(_ viewModels: [ImageCommentViewModel]) {
+		let cells: [ImageCommentsCellController] = viewModels.map { viewModel in
+			ImageCommentsCellController(viewModel: viewModel)
 		}
 		display(cells)
 	}

@@ -12,21 +12,16 @@ import Foundation
 
 final class ImageCommentsAdapter: ImageCommentsListView {
 	private weak var controller: ImageCommentsViewController?
-	private let currentDate: () -> Date
+	var presenter: ImageCommentsListPresenter!
 	
-	init(controller: ImageCommentsViewController, currentDate: @escaping () -> Date) {
+	init(controller: ImageCommentsViewController) {
 		self.controller = controller
-		self.currentDate = currentDate
 	}
 	
 	func display(_ viewModel: ImageCommentsListViewModel) {
 		controller?.display(viewModel.comments.map { comment in
-			let presentationAdapter = ImageCommentCellPresentationAdapter(comment: comment)
-			let controller = ImageCommentsCellController(delegate: presentationAdapter)
-			presentationAdapter.presenter = ImageCommentPresenter(
-				currentDate: currentDate,
-				commentView: WeakRefVirtualProxy(controller)
-			)
+			let viewModel = presenter.viewModel(for: comment)
+			let controller = ImageCommentsCellController(viewModel: viewModel)
 			return controller
 		})
 	}

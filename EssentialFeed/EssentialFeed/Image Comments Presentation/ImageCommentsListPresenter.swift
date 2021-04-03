@@ -22,6 +22,12 @@ public struct ImageCommentsErrorViewModel {
 	public let message: String?
 }
 
+public struct ImageCommentViewModel {
+	public let author: String
+	public let message: String
+	public let creationDate: String
+}
+
 // MARK: - View Protocols
 
 public protocol ImageCommentsLoadingView {
@@ -40,11 +46,13 @@ public protocol ImageCommentsErrorView {
 
 public final class ImageCommentsListPresenter {
 	
+	private let currentDate: () -> Date
 	private let loadingView: ImageCommentsLoadingView
 	private let commentsView: ImageCommentsListView
 	private let errorView: ImageCommentsErrorView
 	
-	public init(loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView) {
+	public init(currentDate: @escaping () -> Date, loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView) {
+		self.currentDate = currentDate
 		self.loadingView = loadingView
 		self.commentsView = commentsView
 		self.errorView = errorView
@@ -63,5 +71,18 @@ public final class ImageCommentsListPresenter {
 	public func didFinishLoadingComments(with error: Error) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 		errorView.display(ImageCommentsErrorViewModel(message: Localized.ImageComments.errorMessage))
+	}
+	
+	public func viewModel(for comment: ImageComment) -> ImageCommentViewModel {
+		ImageCommentViewModel(
+			author: comment.author,
+			message: comment.message,
+			creationDate: formatRelativeDate(for: comment.creationDate)
+		)
+	}
+	
+	private func formatRelativeDate(for date: Date) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		return formatter.localizedString(for: date, relativeTo: currentDate())
 	}
 }

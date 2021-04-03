@@ -42,9 +42,3 @@ extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErro
 		object?.display(viewModel)
 	}
 }
-
-extension WeakRefVirtualProxy: ImageCommentView where T: ImageCommentView {
-	func display(_ viewModel: ImageCommentViewModel) {
-		object?.display(viewModel)
-	}
-}
