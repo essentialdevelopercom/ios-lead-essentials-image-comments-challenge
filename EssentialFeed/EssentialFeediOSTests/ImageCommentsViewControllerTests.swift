@@ -17,7 +17,7 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 
 		sut.loadViewIfNeeded()
 
-		XCTAssertEqual(sut.title, "Comments")
+		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_TITLE"))
 	}
 
 	func test_loadImageCommentsActions_requestImageCommentsFromLoader() {
@@ -130,6 +130,16 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		df.timeStyle = .medium
 		return df
 	}()
+
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "ImageComments"
+		let bundle = Bundle(for: ImageCommentsPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
+	}
 
 	private func makeImageComment(message: String = "a message", authorName: String = "a user", createdAt: Date = Date()) -> ImageComment {
 		ImageComment(id: UUID(), message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
