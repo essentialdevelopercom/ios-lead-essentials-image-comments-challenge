@@ -55,48 +55,43 @@ class ImageCommentsIntegrationTests: XCTestCase {
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
 		
-		let pair0 = makeCommentDatePair(
+		let comment0 = makeComment(
 			message: "a message",
 			creationDate: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"),
-			author: "an author",
-			expectedRelativeDate: "2 hours ago"
+			author: "an author"
 		)
-		let pair1 = makeCommentDatePair(
+		let comment1 = makeComment(
 			message: "another message",
 			creationDate: makeDateFromTimestamp(1_605_713_544, description: "2020-11-18 15:32:24 +0000"),
-			author: "a second author",
-			expectedRelativeDate: "1 day ago"
+			author: "a second author"
 		)
-		let pair2 = makeCommentDatePair(
+		let comment2 = makeComment(
 			message: "another message",
 			creationDate: makeDateFromTimestamp(1_604_571_429, description: "2020-11-05 10:17:09 +0000"),
-			author: "a third author",
-			expectedRelativeDate: "2 weeks ago"
+			author: "a third author"
 		)
-		let pair3 = makeCommentDatePair(
+		let comment3 = makeComment(
 			message: "a fourth message",
 			creationDate: makeDateFromTimestamp(1_602_510_149, description: "2020-10-12 13:42:29 +0000"),
-			author: "another author",
-			expectedRelativeDate: "1 month ago"
+			author: "another author"
 		)
-		let pair4 = makeCommentDatePair(
+		let comment4 = makeComment(
 			message: "a fifth message",
 			creationDate: makeDateFromTimestamp(1_488_240_000, description: "2017-02-28 00:00:00 +0000"),
-			author: "a fifth author",
-			expectedRelativeDate: "3 years ago"
+			author: "a fifth author"
 		)
-		let pairs = [pair0, pair1, pair2, pair3, pair4]
+		let comments = [comment0, comment1, comment2, comment3, comment4]
 		let (sut, loader) = makeSUT(url: anyURL(), currentDate: { staticDate })
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
-		loader.completeCommentsLoading(with: [pair0.comment], at: 0)
-		assertThat(sut, isRendering: [pair0])
+		loader.completeCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
 		
 		sut.simulateUserInitiatedReloading()
-		loader.completeCommentsLoading(with: pairs.map(\.comment), at: 1)
-		assertThat(sut, isRendering: pairs)
+		loader.completeCommentsLoading(with: comments, at: 1)
+		assertThat(sut, isRendering: comments)
 	}
 	
 	func test_loadCommentsCompletion_showsLocalizedErrorMessageOnLoaderError() {
@@ -127,21 +122,20 @@ class ImageCommentsIntegrationTests: XCTestCase {
 	
 	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
 		let staticDate = makeDateFromTimestamp(1_605_868_247, description: "2020-11-20 10:30:47 +0000")
-		let pair0 = makeCommentDatePair(
+		let comment = makeComment(
 			message: "a message",
 			creationDate: makeDateFromTimestamp(1_605_860_313, description: "2020-11-20 08:18:33 +0000"),
-			author: "an author",
-			expectedRelativeDate: "2 hours ago"
+			author: "an author"
 		)
 		let (sut, loader) = makeSUT(url: anyURL(), currentDate: { staticDate })
 		
 		sut.loadViewIfNeeded()
-		loader.completeCommentsLoading(with: [pair0.comment], at: 0)
-		assertThat(sut, isRendering: [pair0])
+		loader.completeCommentsLoading(with: [comment], at: 0)
+		assertThat(sut, isRendering: [comment])
 		
 		sut.simulateUserInitiatedReloading()
 		loader.completeCommentsLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [pair0])
+		assertThat(sut, isRendering: [comment])
 	}
 	
 	func test_loadComments_cancelsAnyRunningRequestsWhenNavigatingBack() {
