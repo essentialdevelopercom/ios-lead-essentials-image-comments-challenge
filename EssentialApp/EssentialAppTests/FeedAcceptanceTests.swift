@@ -10,7 +10,7 @@ import EssentialFeediOS
 class FeedAcceptanceTests: XCTestCase {
 	
 	func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() {
-		let (_, feed) = launch(httpClient: .online(response), store: .empty)
+		let feed = launch(httpClient: .online(response), store: .empty)
 		
 		XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 2)
 		XCTAssertEqual(feed.renderedFeedImageData(at: 0), makeImageData())
@@ -19,11 +19,11 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() {
 		let sharedStore = InMemoryFeedStore.empty
-		let (_, onlineFeed) = launch(httpClient: .online(response), store: sharedStore)
+		let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
 		onlineFeed.simulateFeedImageViewVisible(at: 0)
 		onlineFeed.simulateFeedImageViewVisible(at: 1)
 		
-		let (_, offlineFeed) = launch(httpClient: .offline, store: sharedStore)
+		let offlineFeed = launch(httpClient: .offline, store: sharedStore)
 		
 		XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 2)
 		XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData())
@@ -31,7 +31,7 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	func test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache() {
-		let (_, feed) = launch(httpClient: .offline, store: .empty)
+		let feed = launch(httpClient: .offline, store: .empty)
 		
 		XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 0)
 	}
@@ -55,7 +55,7 @@ class FeedAcceptanceTests: XCTestCase {
 	func test_onFeedImageSelection_opensCommentsScreenForSelectedFeedImage() throws {
 		let uuid0 = UUID()
 		let uuid1 = UUID()
-		let (navigationController, feed) = launch(httpClient: .online({url in
+		let (navigationController, feed) = launchAndReturnWithNavigationController(httpClient: .online({url in
 			self.makeFeedDataWithConcreteUUIDs(uuids: [uuid0, uuid1], udidToBeSelected: uuid1, for: url)
 		}, make200Response), store: .empty)
 		
@@ -71,13 +71,20 @@ class FeedAcceptanceTests: XCTestCase {
 	// MARK: - Helpers
 	
 	private func launch(
-		httpClient: HTTPClientStub = .offline,
-		store: InMemoryFeedStore = .empty
+			httpClient: HTTPClientStub = .offline,
+			store: InMemoryFeedStore = .empty
+	) -> FeedViewController {
+		return launchAndReturnWithNavigationController(httpClient: httpClient, store: store).feedViewController
+	}
+	
+	private func launchAndReturnWithNavigationController(
+			httpClient: HTTPClientStub = .offline,
+			store: InMemoryFeedStore = .empty
 	) -> (navigationController: UINavigationController, feedViewController: FeedViewController) {
 		let sut = SceneDelegate(httpClient: httpClient, store: store)
 		sut.window = UIWindow()
 		sut.configureWindow()
-		
+			
 		let nav = sut.window?.rootViewController as! UINavigationController
 		return (nav, nav.topViewController as! FeedViewController)
 	}
