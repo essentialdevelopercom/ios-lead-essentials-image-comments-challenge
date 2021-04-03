@@ -106,6 +106,16 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_errorViewIsHidden_whenUserTapsOnIt() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoadingWithError(at: 0)
+		
+		sut.errorView.simulateTap()
+		
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	func test_deinit_cancelsRunningRequest() {
 		let taskSpy = TaskSpy()
 		let loader = LoaderSpy(taskSpy: taskSpy)
@@ -244,5 +254,11 @@ private extension Date {
 	
 	func adding(mins: Int) -> Date {
 		return Calendar(identifier: .gregorian).date(byAdding: .minute, value: mins, to: self)!
+	}
+}
+
+private extension ErrorView {
+	func simulateTap() {
+		subviews.compactMap({$0 as? UIButton}).first?.simulateTap()
 	}
 }

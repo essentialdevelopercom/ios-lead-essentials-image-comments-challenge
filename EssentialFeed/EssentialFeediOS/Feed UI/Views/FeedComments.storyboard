@@ -20,6 +20,13 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CuY-fK-bx0">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <connections>
+                                        <action selector="hideMessageAnimated" destination="W3C-rq-N5x" eventType="touchUpInside" id="zs4-aM-fN7"/>
+                                    </connections>
+                                </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UWe-yh-lC1">
                                     <rect key="frame" x="8" y="8" width="398" height="18"/>
                                     <viewLayoutGuide key="safeArea" id="uum-Mh-8cU"/>
@@ -32,8 +39,12 @@
                             <gestureRecognizers/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="UWe-yh-lC1" secondAttribute="bottom" constant="8" id="0ge-Rx-mcr"/>
+                                <constraint firstItem="CuY-fK-bx0" firstAttribute="top" secondItem="W3C-rq-N5x" secondAttribute="top" id="0sa-eG-eTM"/>
+                                <constraint firstAttribute="trailing" secondItem="CuY-fK-bx0" secondAttribute="trailing" id="4ta-Tp-sms"/>
                                 <constraint firstItem="UWe-yh-lC1" firstAttribute="top" secondItem="W3C-rq-N5x" secondAttribute="top" constant="8" id="5eI-cL-ilI"/>
+                                <constraint firstAttribute="bottom" secondItem="CuY-fK-bx0" secondAttribute="bottom" id="8tm-fz-npj"/>
                                 <constraint firstItem="UWe-yh-lC1" firstAttribute="leading" secondItem="W3C-rq-N5x" secondAttribute="leadingMargin" id="I02-bK-PbZ"/>
+                                <constraint firstItem="CuY-fK-bx0" firstAttribute="leading" secondItem="W3C-rq-N5x" secondAttribute="leading" id="Y6e-TM-riD"/>
                                 <constraint firstAttribute="trailingMargin" secondItem="UWe-yh-lC1" secondAttribute="trailing" id="kZW-FC-pzw"/>
                             </constraints>
                             <connections>
@@ -101,6 +112,7 @@
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="ia6-59-PuV">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <action selector="refresh" destination="zqf-RJ-im0" eventType="valueChanged" id="OVx-bV-HSU"/>
