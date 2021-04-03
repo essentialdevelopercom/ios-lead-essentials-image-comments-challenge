@@ -60,12 +60,18 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 	}
 	
 	private func handleSuccessCase(_ data: Data, _ response: HTTPURLResponse, _ task: HTTPClientTaskWrapper) {
-		if response.statusCode == 200, let comments = try? convert(data) {
+		if valid(statusCode: response.statusCode), let comments = try? convert(data) {
 			task.complete(with: .success(comments))
 		} else {
 			task.complete(with: .failure(Error.invalidData))
 		}
 	}
+	
+	private func valid(statusCode: Int) -> Bool {
+		validStatusCodes.contains(statusCode)
+	}
+	
+	private var validStatusCodes: [Int] { Array(200...299) }
 	
 	private func convert(_ data: Data) throws -> [FeedComment] {
 		let root = try decoder.decode(Root.self, from: data)

@@ -41,10 +41,10 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOnNon200HTTPResponse() {
+	func test_load_deliversErrorOnNon2xxHTTPResponse() {
 		let (sut, client) = makeSUT()
 		
-		let samples = [199, 201, 300, 400, 500]
+		let samples = [199, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut: sut, toCompleteWith: .failure(RemoteFeedCommentsLoader.Error.invalidData)) {
@@ -53,26 +53,16 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
-		let (sut, client) = makeSUT()
-		
-		expect(sut: sut, toCompleteWith: .failure(RemoteFeedCommentsLoader.Error.invalidData)) {
-			let invalidJSON = Data("invalid json".utf8)
-			client.complete(withStatusCode: 200, data: invalidJSON)
-		}
+	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
+		let invalidJSON = Data("invalid json".utf8)
+		expectLoad(toCompleteWith: .failure(RemoteFeedCommentsLoader.Error.invalidData), data: invalidJSON, forEveryStatusCodesIn: [200, 201, 250, 299])
 	}
 	
-	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
-		let (sut, client) = makeSUT()
-		
-		expect(sut: sut, toCompleteWith: .success([])) {
-			client.complete(withStatusCode: 200, data: self.emptyItemsData())
-		}
+	func test_load_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() {
+		expectLoad(toCompleteWith: .success([]), data: emptyItemsData(), forEveryStatusCodesIn: [200, 201, 250, 299])
 	}
 	
-	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
-		let (sut, client) = makeSUT()
-		
+	func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
 		let item1 = makeFeedCommentWithJSON(id: UUID(),
 											message: "a message",
 											date: "2020-05-20T11:24:59+0000",
@@ -81,15 +71,13 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 											message: "another message",
 											date: "2020-05-19T14:23:53+0000",
 											authorName: "another name")
+		let json = ["items": [
+			item1.json,
+			item2.json
+		]]
+		let data = try! JSONSerialization.data(withJSONObject: json)
 		
-		expect(sut: sut, toCompleteWith: .success([item1.comment, item2.comment])) {
-			let json = ["items": [
-				item1.json,
-				item2.json
-			]]
-			let data = try! JSONSerialization.data(withJSONObject: json)
-			client.complete(withStatusCode: 200, data: data)
-		}
+		expectLoad(toCompleteWith: .success([item1.comment, item2.comment]), data: data, forEveryStatusCodesIn: [200, 201, 250, 299])
 	}
 	
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
@@ -184,4 +172,14 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let comment = FeedComment(id: id, message: message, date: dateFormatter.date(from: date)!, authorName: authorName)
 		return (comment, json)
 	}
+	
+	private func expectLoad(toCompleteWith expectedResult: Result<[FeedComment], Error>, data: Data, forEveryStatusCodesIn statusCodes: [Int], file: StaticString = #filePath, line: UInt = #line) {
+		let (sut, client) = makeSUT()
+		statusCodes.enumerated().forEach { index, code in
+			expect(sut: sut, toCompleteWith: expectedResult, on: {
+				client.complete(withStatusCode: code, data: data, at: index)
+			}, file: file, line: line)
+		}
+	}
+	
 }
