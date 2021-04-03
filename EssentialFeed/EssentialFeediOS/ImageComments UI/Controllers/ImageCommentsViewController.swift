@@ -25,6 +25,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
+		title = "Image comments"
 		refresh()
 	}
 

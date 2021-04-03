@@ -12,6 +12,14 @@ import EssentialFeediOS
 
 final class ImageCommentsViewControllerTests: XCTestCase {
 
+	func test_imageCommentsView_hasTitle() {
+		let (sut, _) = makeSUT()
+
+		sut.loadViewIfNeeded()
+
+		XCTAssertEqual(sut.title, "Image comments")
+	}
+
 	func test_loadImageCommentsActions_requestImageCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadCallCount, 0, "Expected no loading requests before view is loaded")
