@@ -9,26 +9,6 @@
 import UIKit
 import EssentialFeed
 
-private final class WeakRefVirtualProxy<T: AnyObject> {
-	private weak var object: T?
-
-	init(_ object: T) {
-		self.object = object
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentView where T: ImageCommentView {
-	func display(_ viewModel: ImageCommentViewModel) {
-		object?.display(viewModel)
-	}
-}
-
 public final class ImageCommentsUIComposer {
 	private init() {}
 
