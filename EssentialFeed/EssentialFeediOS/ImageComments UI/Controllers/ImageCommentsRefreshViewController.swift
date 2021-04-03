@@ -12,14 +12,14 @@ import EssentialFeed
 final class ImageCommentsRefreshViewController: NSObject, ImageCommentsLoadingView {
 	private(set) lazy var view = loadView(UIRefreshControl())
 
-	private let presenter: ImageCommentsPresenter
+	private let loadImageComments: () -> Void
 
-	init(presenter: ImageCommentsPresenter) {
-		self.presenter = presenter
+	init(loadImageComments: @escaping ()  -> Void) {
+		self.loadImageComments = loadImageComments
 	}
 
 	@objc func refresh() {
-		presenter.loadImageComments()
+		loadImageComments()
 	}
 
 	func display(_ viewModel: ImageCommentsLoadingViewModel) {

@@ -14,7 +14,7 @@ public final class ImageCommentsUIComposer {
 
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
 		let presenter = ImageCommentsPresenter(imageCommentsLoader: imageCommentsLoader)
-		let refreshController = ImageCommentsRefreshViewController(presenter: presenter)
+		let refreshController = ImageCommentsRefreshViewController(loadImageComments: presenter.loadImageComments)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
 		presenter.imageCommentsLoadingView = WeakRefVirtualProxy(refreshController)
 		presenter.imageCommentsView = ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader)
