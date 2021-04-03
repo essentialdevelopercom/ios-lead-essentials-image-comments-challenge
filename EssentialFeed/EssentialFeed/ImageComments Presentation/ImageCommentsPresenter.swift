@@ -9,11 +9,11 @@
 import Foundation
 
 public protocol ImageCommentsView {
-	func display(_ imageComments: [ImageComment])
+	func display(_ viewModel: ImageCommentsViewModel)
 }
 
 public protocol ImageCommentsLoadingView {
-	func display(isLoading: Bool)
+	func display(_ viewModel: ImageCommentsLoadingViewModel)
 }
 
 public final class ImageCommentsPresenter {
@@ -35,12 +35,12 @@ public final class ImageCommentsPresenter {
 	}
 
 	public func loadImageComments() {
-		imageCommentsLoadingView?.display(isLoading: true)
+		imageCommentsLoadingView?.display(ImageCommentsLoadingViewModel(isLoading: true))
 		imageCommentsLoader.load { [weak self] result in
 			if let imageComments = try? result.get() {
-				self?.imageCommentsView?.display(imageComments)
+				self?.imageCommentsView?.display(ImageCommentsViewModel(imageComments: imageComments))
 			}
-			self?.imageCommentsLoadingView?.display(isLoading: false)
+			self?.imageCommentsLoadingView?.display(ImageCommentsLoadingViewModel(isLoading: false))
 		}
 	}
 }

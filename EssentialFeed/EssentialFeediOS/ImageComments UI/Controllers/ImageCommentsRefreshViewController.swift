@@ -22,8 +22,8 @@ final class ImageCommentsRefreshViewController: NSObject, ImageCommentsLoadingVi
 		presenter.loadImageComments()
 	}
 
-	func display(isLoading: Bool) {
-		if isLoading {
+	func display(_ viewModel: ImageCommentsLoadingViewModel) {
+		if viewModel.isLoading {
 			view.beginRefreshing()
 		} else {
 			view.endRefreshing()
