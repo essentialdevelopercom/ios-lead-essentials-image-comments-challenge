@@ -41,7 +41,7 @@ public final class ImageCommentsUIComposer {
 		)
 
 		presentationAdapter.presenter = ImageCommentsPresenter(
-			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader),
+			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController),
 			imageCommentsLoadingView: WeakRefVirtualProxy(imageCommentsController))
 
 		return imageCommentsController
@@ -84,11 +84,9 @@ private extension ImageCommentsViewController {
 
 private final class ImageCommentsViewAdapter: ImageCommentsView {
 	private weak var controller: ImageCommentsViewController?
-	private let imageCommentsLoader: ImageCommentsLoader
 
-	init(controller: ImageCommentsViewController? = nil, imageCommentsLoader: ImageCommentsLoader) {
+	init(controller: ImageCommentsViewController? = nil) {
 		self.controller = controller
-		self.imageCommentsLoader = imageCommentsLoader
 	}
 
 	func display(_ viewModel: ImageCommentsViewModel) {
