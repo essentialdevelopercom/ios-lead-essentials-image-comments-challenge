@@ -9,22 +9,6 @@
 import UIKit
 import EssentialFeed
 
-public final class ImageCommentsUIComposer {
-	private init() {}
-
-	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
-		let refreshController = ImageCommentsRefreshViewController(delegate: presentationAdapter)
-		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
-
-		presentationAdapter.presenter = ImageCommentsPresenter(
-			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader),
-			imageCommentsLoadingView: WeakRefVirtualProxy(refreshController))
-		
-		return imageCommentsController
-	}
-}
-
 private final class WeakRefVirtualProxy<T: AnyObject> {
 	private weak var object: T?
 
@@ -39,6 +23,28 @@ extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLo
 	}
 }
 
+extension WeakRefVirtualProxy: ImageCommentView where T: ImageCommentView {
+	func display(_ viewModel: ImageCommentViewModel) {
+		object?.display(viewModel)
+	}
+}
+
+public final class ImageCommentsUIComposer {
+	private init() {}
+
+	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
+		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
+		let refreshController = ImageCommentsRefreshViewController(delegate: presentationAdapter)
+		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
+
+		presentationAdapter.presenter = ImageCommentsPresenter(
+			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader),
+			imageCommentsLoadingView: WeakRefVirtualProxy(refreshController))
+
+		return imageCommentsController
+	}
+}
+
 private final class ImageCommentsViewAdapter: ImageCommentsView {
 	private weak var controller: ImageCommentsViewController?
 	private let imageCommentsLoader: ImageCommentsLoader
@@ -50,8 +56,26 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 
 	func display(_ viewModel: ImageCommentsViewModel) {
 		controller?.tableModel = viewModel.imageComments.map { model in
-			ImageCommentCellController(viewModel: ImageCommentViewModel(model: model))
+			let adapter = ImageCommentPresentationAdapter(imageComment: model)
+			let view = ImageCommentCellController()
+
+			adapter.presenter = ImageCommentPresenter(imageCommentView: WeakRefVirtualProxy(view))
+
+			return view
 		}
+	}
+}
+
+private final class ImageCommentPresentationAdapter {
+	private let imageComment: ImageComment
+	var presenter: ImageCommentPresenter? {
+		didSet {
+			presenter?.shouldDisplayImageComment(imageComment)
+		}
+	}
+
+	init(imageComment: ImageComment) {
+		self.imageComment = imageComment
 	}
 }
 

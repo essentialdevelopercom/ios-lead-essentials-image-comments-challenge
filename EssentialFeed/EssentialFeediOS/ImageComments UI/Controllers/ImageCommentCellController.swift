@@ -7,20 +7,14 @@
 //
 
 import UIKit
+import EssentialFeed
 
-final class ImageCommentCellController {
-	private(set) lazy var view = binded(ImageCommentCell())
+final class ImageCommentCellController: ImageCommentView {
+	private(set) lazy var view = ImageCommentCell()
 
-	private let viewModel: ImageCommentViewModel
-
-	init(viewModel: ImageCommentViewModel) {
-		self.viewModel = viewModel
-	}
-
-	private func binded(_ cell: ImageCommentCell) -> ImageCommentCell {
-		cell.messageLabel.text = viewModel.message
-		cell.authorNameLabel.text = viewModel.author
-		cell.createdAtLabel.text = viewModel.createdAt
-		return cell
+	func display(_ viewModel: ImageCommentViewModel) {
+		view.messageLabel.text = viewModel.message
+		view.authorNameLabel.text = viewModel.author
+		view.createdAtLabel.text = viewModel.createdAt
 	}
 }
