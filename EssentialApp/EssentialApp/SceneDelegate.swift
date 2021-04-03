@@ -61,8 +61,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.makeKeyAndVisible()
 	}
 	
-	private func openCommentsScreen(feedImageId: UUID) {
-		let commentsURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImageId.uuidString)/comments")!
+	private func openCommentsScreen(feedImage: FeedImage) {
+		let commentsURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImage.id.uuidString)/comments")!
 		let commentsViewController = FeedCommentsUIComposer.commentsComposedWith(url: commentsURL, feedCommentsLoader: RemoteFeedCommentsLoader(client: self.httpClient))
 		navigationController?.pushViewController(commentsViewController, animated: true)
 	}
