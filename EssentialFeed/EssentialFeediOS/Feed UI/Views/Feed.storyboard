@@ -104,9 +104,6 @@ Location</string>
                                                         </button>
                                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pek-Lw-IGA" userLabel="Image Button Action">
                                                             <rect key="frame" x="0.0" y="0.0" width="374" height="374"/>
-                                                            <connections>
-                                                                <action selector="imageViewButtonTapped" destination="4Aa-lg-gTp" eventType="touchUpInside" id="FlB-0p-XL9"/>
-                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
@@ -155,7 +152,6 @@ Location</string>
                                 <accessibility key="accessibilityConfiguration" identifier="feed-image-cell"/>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="H63-o4-rxp" id="2Er-vI-jnc"/>
-                                    <outlet property="feedImageButton" destination="Pek-Lw-IGA" id="cy0-b7-TzC"/>
                                     <outlet property="feedImageContainer" destination="FAU-iA-TTE" id="k7Q-aT-bl8"/>
                                     <outlet property="feedImageRetryButton" destination="ojQ-jM-69D" id="qY7-3z-Rze"/>
                                     <outlet property="feedImageView" destination="tsT-7G-iNQ" id="8Vg-J5-Z1K"/>

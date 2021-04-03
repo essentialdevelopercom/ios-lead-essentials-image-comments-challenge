@@ -26,6 +26,13 @@ extension FeedViewController {
 		return view
 	}
 	
+	func simulateTapOnFeedImageView(at row: Int) {
+		simulateFeedImageViewVisible(at: row)
+		let index = IndexPath(row: row, section: feedImagesSection)
+		let delegate = tableView.delegate
+		delegate?.tableView?(tableView, didSelectRowAt: index)
+	}
+	
 	func simulateFeedImageViewNearVisible(at row: Int) {
 		let ds = tableView.prefetchDataSource
 		let index = IndexPath(row: row, section: feedImagesSection)

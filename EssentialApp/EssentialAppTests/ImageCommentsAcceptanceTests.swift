@@ -55,7 +55,7 @@ class ImageCommentsAcceptanceTests: XCTestCase, AcceptanceTest {
 	}
 	
 	private func showImageCommentsForImage(in feed: FeedViewController, at index: Int, file: StaticString = #filePath, line: UInt = #line) -> ImageCommentsViewController {
-		feed.simulateFeedImageViewVisible(at: index)?.simulateTapAction()
+		feed.simulateTapOnFeedImageView(at: index)
 		executeRunLoopToFinishPush()
 		
 		let imageComments = feed.navigationController?.topViewController as? ImageCommentsViewController

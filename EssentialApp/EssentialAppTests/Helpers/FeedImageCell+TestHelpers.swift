@@ -10,10 +10,6 @@ extension FeedImageCell {
 		feedImageRetryButton.simulateTap()
 	}
 	
-	func simulateTapAction() {
-		feedImageButton.simulateTap()
-	}
-	
 	var isShowingLocation: Bool {
 		return !locationContainer.isHidden
 	}
@@ -24,10 +20,6 @@ extension FeedImageCell {
 	
 	var isShowingRetryAction: Bool {
 		return !feedImageRetryButton.isHidden
-	}
-	
-	var isShowingImageButton: Bool {
-		return !feedImageButton.isHidden
 	}
 	
 	var locationText: String? {
