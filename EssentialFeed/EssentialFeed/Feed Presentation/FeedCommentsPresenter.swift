@@ -22,11 +22,13 @@ public class FeedCommentsPresenter {
 	private let feedCommentsView: FeedCommentsView
 	private let loadingView: FeedCommentsLoadingView
 	private let errorView: FeedCommentsErrorView
+	private let locale: Locale
 	
-	public init(feedCommentsView: FeedCommentsView, loadingView: FeedCommentsLoadingView, errorView: FeedCommentsErrorView) {
+	public init(feedCommentsView: FeedCommentsView, loadingView: FeedCommentsLoadingView, errorView: FeedCommentsErrorView, locale: Locale = Locale.current) {
 		self.feedCommentsView = feedCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.locale = locale
 	}
 	
 	public static var title: String {
@@ -42,9 +44,15 @@ public class FeedCommentsPresenter {
 	}
 	
 	public func didFinishLoadingFeedComments(with comments: [FeedComment]) {
-		feedCommentsView.display(FeedCommentsViewModel(comments: comments.toViewModels))
+		feedCommentsView.display(FeedCommentsViewModel(comments: comments.toViewModels(formatter: timeFormatter)))
 		loadingView.display(FeedCommentsLoadingViewModel(isLoading: false))
 	}
+	
+	private lazy var timeFormatter: RelativeDateTimeFormatter = {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.locale = locale
+		return formatter
+	}()
 	
 	public func didFinishLoadingFeedComments(with error: Error) {
 		errorView.display(.error(message: commentsLoadError))
@@ -60,11 +68,7 @@ public class FeedCommentsPresenter {
 }
 
 private extension Array where Element == FeedComment {
-	
-	var toViewModels: [FeedCommentViewModel] {
-		map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: Self.formatter.localizedString(for: $0.date, relativeTo: Date()))})
+	func toViewModels(formatter: RelativeDateTimeFormatter) -> [FeedCommentViewModel] {
+		map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: formatter.localizedString(for: $0.date, relativeTo: Date()))})
 	}
-	
-	private static let formatter = RelativeDateTimeFormatter()
-	
 }

@@ -30,13 +30,21 @@ class FeedCommentsPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingFeedComments_displaysFeedCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let comments = [uniqueFeedComment(), uniqueFeedComment()]
+		let locale = Locale(identifier: "en_US_POSIX")
+		let (sut, view) = makeSUT(locale: locale)
+		let now = Date()
+		let calendar = Calendar(identifier: .gregorian)
+		
+		let comments = [FeedComment(id: UUID(), message: "any message", date: now.adding(mins: -5, calendar: calendar), authorName: "any name"),
+						FeedComment(id: UUID(), message: "another message", date: now.adding(days: -1, calendar: calendar), authorName: "another name")]
 		
 		sut.didFinishLoadingFeedComments(with: comments)
 		
 		XCTAssertEqual(view.messages, [
-			.display(feedComments: comments.toViewModels),
+			.display(feedComments: [
+				FeedCommentViewModel(name: "any name", message: "any message", formattedDate: "5 minutes ago"),
+				FeedCommentViewModel(name: "another name", message: "another message", formattedDate: "1 day ago")
+			]),
 			.display(isLoading: false)
 		])
 	}
@@ -54,9 +62,9 @@ class FeedCommentsPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(locale: Locale = Locale.current, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedCommentsPresenter(feedCommentsView: view, loadingView: view, errorView: view)
+		let sut = FeedCommentsPresenter(feedCommentsView: view, loadingView: view, errorView: view, locale: locale)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -94,15 +102,14 @@ class FeedCommentsPresenterTests: XCTestCase {
 		}
 	}
 	
-	private func uniqueFeedComment() -> FeedComment {
-		return FeedComment(id: UUID(), message: "any message", date: Date(), authorName: "any name")
-	}
 }
 
-private extension Array where Element == FeedComment {
-	var toViewModels: [FeedCommentViewModel] {
-		map({FeedCommentViewModel(name: $0.authorName, message: $0.message, formattedDate: Self.formatter.localizedString(for: $0.date, relativeTo: Date()))})
+private extension Date {
+	func adding(days: Int, calendar: Calendar) -> Date {
+		return calendar.date(byAdding: .day, value: days, to: self)!
 	}
 	
-	private static let formatter = RelativeDateTimeFormatter()
+	func adding(mins: Int, calendar: Calendar) -> Date {
+		return calendar.date(byAdding: .minute, value: mins, to: self)!
+	}
 }
