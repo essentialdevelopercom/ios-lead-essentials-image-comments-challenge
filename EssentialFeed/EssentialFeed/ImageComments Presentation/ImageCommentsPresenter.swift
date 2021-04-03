@@ -16,9 +16,14 @@ public protocol ImageCommentsLoadingView {
 	func display(_ viewModel: ImageCommentsLoadingViewModel)
 }
 
+public protocol ImageCommentsErrorView {
+	func display(_ viewModel: ImageCommentsErrorViewModel)
+}
+
 public final class ImageCommentsPresenter {
 	public let imageCommentsView: ImageCommentsView
 	public let imageCommentsLoadingView: ImageCommentsLoadingView
+	public let imageCommentsErrorView: ImageCommentsErrorView
 
 	public static var title: String {
 		NSLocalizedString(
@@ -29,12 +34,23 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
-	public init(imageCommentsView: ImageCommentsView, imageCommentsLoadingView: ImageCommentsLoadingView) {
+	private var imageCommentsLoadError: String {
+		NSLocalizedString(
+			"IMAGE_COMMENTS_CONNECTION_ERROR",
+			tableName: "ImageComments",
+			bundle: Bundle(for: ImageCommentsPresenter.self),
+			comment: "Error message displayed when we can't load the image comments from the server"
+		)
+	}
+
+	public init(imageCommentsView: ImageCommentsView, imageCommentsLoadingView: ImageCommentsLoadingView, imageCommentsErrorView: ImageCommentsErrorView) {
 		self.imageCommentsView = imageCommentsView
 		self.imageCommentsLoadingView = imageCommentsLoadingView
+		self.imageCommentsErrorView = imageCommentsErrorView
 	}
 
 	public func didStartLoadingImageComments() {
+		imageCommentsErrorView.display(.noError)
 		imageCommentsLoadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
 	}
 
@@ -44,6 +60,7 @@ public final class ImageCommentsPresenter {
 	}
 
 	public func didFinishLoadingImageComments(with error: Error) {
+		imageCommentsErrorView.display(.error(message: imageCommentsLoadError))
 		imageCommentsLoadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 }

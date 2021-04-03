@@ -16,13 +16,31 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 
 	func test_init_doesNotSendMessagesToView() {
-		let view = ViewSpy()
-		_ = ImageCommentsPresenter(imageCommentsView: view, imageCommentsLoadingView: view)
+		let (_, view) = makeSUT()
 
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 
+	func test_didStartLoadingImageComments_displaysNoErrorMessageAndStartsLoading() {
+		let (sut, view) = makeSUT()
+
+		sut.didStartLoadingImageComments()
+
+		XCTAssertEqual(view.messages, [
+			.display(errorMessage: .none),
+			.display(isLoading: true)
+		])
+	}
+
 	// MARK: - Helpers
+
+	private func makeSUT() -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+		let view = ViewSpy()
+		let sut = ImageCommentsPresenter(imageCommentsView: view, imageCommentsLoadingView: view, imageCommentsErrorView: view)
+		trackForMemoryLeaks(view)
+		trackForMemoryLeaks(sut)
+		return (sut, view)
+	}
 
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
@@ -34,10 +52,11 @@ class ImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 
-	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView {
+	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 		enum Messages: Hashable {
 			case display(imageComments: [ImageComment])
 			case display(isLoading: Bool)
+			case display(errorMessage: String?)
 		}
 		private(set) var messages: Set<Messages> = []
 
@@ -47,6 +66,10 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 		func display(_ viewModel: ImageCommentsLoadingViewModel) {
 			messages.insert(.display(isLoading: viewModel.isLoading))
+		}
+
+		func display(_ viewModel: ImageCommentsErrorViewModel) {
+			messages.insert(.display(errorMessage: viewModel.message))
 		}
 	}
 
