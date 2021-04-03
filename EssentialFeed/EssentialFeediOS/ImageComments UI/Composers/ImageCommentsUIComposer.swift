@@ -15,11 +15,15 @@ public final class ImageCommentsUIComposer {
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
 		let refreshController = ImageCommentsRefreshViewController(imageCommentsLoader: imageCommentsLoader)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
-		refreshController.onRefresh = { [weak imageCommentsController] imageComments in
-			imageCommentsController?.tableModel = imageComments.map { model in
+		refreshController.onRefresh = adaptImageCommentToCellControllers(forwardingTo: imageCommentsController, loader: imageCommentsLoader)
+		return imageCommentsController
+	}
+
+	private static func adaptImageCommentToCellControllers(forwardingTo controller: ImageCommentsViewController, loader: ImageCommentsLoader) -> ([ImageComment]) -> Void {
+		{ [weak controller] imageComments in
+			controller?.tableModel = imageComments.map { model in
 				ImageCommentCellController(model: model)
 			}
 		}
-		return imageCommentsController
 	}
 }
