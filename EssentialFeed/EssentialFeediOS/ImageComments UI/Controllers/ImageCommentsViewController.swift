@@ -18,7 +18,13 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	
 	var tableModel = [ImageCommentCellController]() {
 		didSet {
-			tableView.reloadData()
+			if Thread.isMainThread {
+				tableView.reloadData()
+			} else {
+				DispatchQueue.main.async { [weak self] in
+					self?.tableView.reloadData()
+				}
+			}
 		}
 	}
 
@@ -36,7 +42,13 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		if viewModel.isLoading {
 			refreshControl?.beginRefreshing()
 		} else {
-			refreshControl?.endRefreshing()
+			if Thread.isMainThread {
+				refreshControl?.endRefreshing()
+			} else {
+				DispatchQueue.main.async { [weak self] in
+					self?.refreshControl?.endRefreshing()
+				}
+			}
 		}
 	}
 

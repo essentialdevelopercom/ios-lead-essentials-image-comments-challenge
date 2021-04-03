@@ -92,6 +92,18 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertNil(view?.createdAtText, "Expected no rendered created at text when the view is no longer visible")
 	}
 
+	func test_loadImageCommentsCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+
+		let exp = expectation(description: "Wait for backgorund queue")
+		DispatchQueue.global().async {
+			loader.completeImageCommentsLoading()
+			exp.fulfill()
+		}
+		wait(for: [exp], timeout: 1.0)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
