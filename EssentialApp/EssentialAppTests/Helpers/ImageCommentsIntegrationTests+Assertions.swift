@@ -28,10 +28,8 @@ extension ImageCommentsIntegrationTests {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: self)) instead", file: file, line: line)
 		}
 		
-		XCTAssertEqual(cell.authorText, comment.author, "Expected author to be \(comment.author) for comment view at index \(index)", file: file, line: line)
-		
-		XCTAssertEqual(cell.messageText, comment.message, "Expected message to be \(comment.message) for comment view at index \(index)", file: file, line: line)
-		
+		XCTAssertEqual(cell.authorText, comment.author, "Author at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.messageText, comment.message, "Message at index \(index)", file: file, line: line)
 		XCTAssertNotNil(cell.creationDateText, "Expected relative date to be \(comment.creationDate) for comment view at index \(index)", file: file, line: line)
 	}
 }
