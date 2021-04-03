@@ -50,7 +50,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
-				client.complete(withStatusCode: code, data: anyData(), at: index)
+				client.complete(withStatusCode: code, data: makeCommentsJSON([]), at: index)
 			})
 		}
 	}
