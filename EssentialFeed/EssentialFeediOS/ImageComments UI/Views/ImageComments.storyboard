@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yi0-yj-RYw">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -80,11 +80,6 @@
                                         <constraint firstItem="ZDe-2S-vHw" firstAttribute="top" secondItem="aNs-pv-pxP" secondAttribute="topMargin" id="gK3-cf-Uo8"/>
                                     </constraints>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="authorLabel" destination="7ZV-VG-kQB" id="8XQ-fe-mvb"/>
-                                    <outlet property="createdAtLabel" destination="ZDe-2S-vHw" id="8jc-3z-xoo"/>
-                                    <outlet property="messageLabel" destination="eZV-rK-qZ4" id="qYI-Av-jVh"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -96,14 +91,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
-                            <action selector="refresh" destination="Yi0-yj-RYw" eventType="valueChanged" id="BTL-vT-3PZ"/>
+                            <action selector="refresh" destination="vJL-zc-pdj" eventType="valueChanged" id="R5A-se-FCG"/>
                         </connections>
                     </refreshControl>
                     <connections>
-                        <outlet property="errorView" destination="RBp-M7-jBK" id="eBk-a1-82T"/>
+                        <outlet property="refreshController" destination="vJL-zc-pdj" id="Y97-e2-z80"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7p5-hh-xT0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="vJL-zc-pdj" customClass="ImageCommentsRefreshViewController" customModule="EssentialFeediOS" customModuleProvider="target">
+                    <connections>
+                        <outlet property="view" destination="56K-8X-SgG" id="VUh-Yn-CKr"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="-49.275362318840585" y="-163.39285714285714"/>
         </scene>

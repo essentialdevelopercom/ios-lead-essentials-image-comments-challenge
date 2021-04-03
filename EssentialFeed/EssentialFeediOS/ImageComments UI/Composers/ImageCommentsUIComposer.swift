@@ -34,8 +34,12 @@ public final class ImageCommentsUIComposer {
 
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
 		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
-		let refreshController = ImageCommentsRefreshViewController(delegate: presentationAdapter)
-		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
+
+		let bundle = Bundle(for: ImageCommentsViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
+		let refreshController = imageCommentsController.refreshController!
+		refreshController.delegate = presentationAdapter
 
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader),

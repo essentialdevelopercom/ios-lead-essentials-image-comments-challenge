@@ -14,28 +14,19 @@ protocol ImageCommentsRefreshViewControllerDelegate {
 }
 
 final class ImageCommentsRefreshViewController: NSObject, ImageCommentsLoadingView {
-	private(set) lazy var view = loadView(UIRefreshControl())
+	@IBOutlet private(set) var view: UIRefreshControl?
 
-	private let delegate: ImageCommentsRefreshViewControllerDelegate
+	var delegate: ImageCommentsRefreshViewControllerDelegate?
 
-	init(delegate: ImageCommentsRefreshViewControllerDelegate) {
-		self.delegate = delegate
-	}
-
-	@objc func refresh() {
-		delegate.didRequestImageCommentsRefresh()
+	@IBAction func refresh() {
+		delegate?.didRequestImageCommentsRefresh()
 	}
 
 	func display(_ viewModel: ImageCommentsLoadingViewModel) {
 		if viewModel.isLoading {
-			view.beginRefreshing()
+			view?.beginRefreshing()
 		} else {
-			view.endRefreshing()
+			view?.endRefreshing()
 		}
-	}
-
-	private func loadView(_ view: UIRefreshControl) -> UIRefreshControl {
-		view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-		return view
 	}
 }

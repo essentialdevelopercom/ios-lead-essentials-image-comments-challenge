@@ -9,22 +9,16 @@
 import UIKit
 
 public final class ImageCommentsViewController: UITableViewController {
-	private var refreshController: ImageCommentsRefreshViewController?
+	@IBOutlet private(set) var refreshController: ImageCommentsRefreshViewController?
 	var tableModel = [ImageCommentCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
 
-	convenience init(refreshController: ImageCommentsRefreshViewController) {
-		self.init()
-		self.refreshController = refreshController
-	}
-
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
-		refreshControl = refreshController?.view
 		refreshController?.refresh()
 	}
 
