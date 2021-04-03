@@ -262,6 +262,20 @@ extension FeedCommentsViewController {
 	var errorMessage: String? {
 		return errorView?.message
 	}
+	
+	@discardableResult
+	func simulateFeedImageViewVisible(at index: Int) -> FeedCommentCell? {
+		return commentView(at: index) as? FeedCommentCell
+	}
+	
+	func commentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedFeedCommentViews() > row else {
+			return nil
+		}
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: feedCommentsSection)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
 }
 
 private extension Date {

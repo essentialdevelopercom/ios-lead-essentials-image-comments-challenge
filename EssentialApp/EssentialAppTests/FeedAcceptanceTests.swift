@@ -55,8 +55,13 @@ class FeedAcceptanceTests: XCTestCase {
 	func test_onFeedImageSelection_opensCommentsScreenForSelectedFeedImage() throws {
 		let uuid0 = UUID()
 		let uuid1 = UUID()
+		let comment0 = (message: "any message", authorName: "any author name")
+		let comment1 = (message: "another message", authorName: "another author name")
 		let (navigationController, feed) = launchAndReturnWithNavigationController(httpClient: .online({url in
-			self.makeFeedDataWithConcreteUUIDs(uuids: [uuid0, uuid1], udidToBeSelected: uuid1, for: url)
+			self.makeFeedDataWithConcreteUUIDs(uuids: [uuid0, uuid1], comments: [
+				comment0,
+				comment1
+			], udidToBeSelected: uuid1, for: url)
 		}, make200Response), store: .empty)
 		
 		feed.simulateFeedCommentDidSelect(at: 1)
@@ -65,7 +70,15 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(commentsViewController)
 		
 		commentsViewController.view.layoutIfNeeded()
-		XCTAssertEqual(commentsViewController.numberOfRenderedFeedCommentViews(), 2, "Expected 2 loaded comments on FeedCommentsViewController viewDidLoad, because HTTPClientStub is configured to return 2 comments for selected uuid1")
+		XCTAssertEqual(commentsViewController.numberOfRenderedFeedCommentViews(), 2)
+		
+		let cell0 = commentsViewController.simulateFeedImageViewVisible(at: 0)
+		XCTAssertEqual(cell0?.message, comment0.message)
+		XCTAssertEqual(cell0?.authorName, comment0.authorName)
+		
+		let cell1 = commentsViewController.simulateFeedImageViewVisible(at: 1)
+		XCTAssertEqual(cell1?.message, comment1.message)
+		XCTAssertEqual(cell1?.authorName, comment1.authorName)
 	}
 	
 	// MARK: - Helpers
@@ -124,18 +137,16 @@ class FeedAcceptanceTests: XCTestCase {
 		]])
 	}
 	
-	private func makeFeedDataWithConcreteUUIDs(uuids: [UUID], udidToBeSelected: UUID, for url: URL) -> Data {
+	private func makeFeedDataWithConcreteUUIDs(uuids: [UUID], comments: [(message: String, authorName: String)] ,udidToBeSelected: UUID, for url: URL) -> Data {
 		if url.absoluteString.contains(udidToBeSelected.uuidString) {
-			return try! JSONSerialization.data(withJSONObject: ["items": [
-				["id": UUID().uuidString, "message": "a message",
-				 "created_at": "2020-05-20T11:24:59+0000", "author": [
-					"username": "a username"
-				 ]],
-				["id": UUID().uuidString, "message": "another message",
-				 "created_at": "2020-05-19T14:23:53+0000", "author": [
-					"username": "another username"
-				 ]]
-			]])
+			return try! JSONSerialization.data(withJSONObject: ["items":
+				comments.map({ comment in
+					["id": UUID().uuidString, "message": comment.message,
+					 "created_at": "2020-05-20T11:24:59+0000", "author": [
+						"username": comment.authorName
+					 ]]
+				})
+			])
 		} else {
 			return try! JSONSerialization.data(withJSONObject: ["items": uuids.map({["id": $0.uuidString, "image": "http://image.com"]})])
 		}
