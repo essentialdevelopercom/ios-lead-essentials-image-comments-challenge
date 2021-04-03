@@ -74,7 +74,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.makeKeyAndVisible()
 	}
 	
-	func handleImageID(_ id: String) {
+	private func handleImageID(_ id: String) {
 		let navigationController = window?.rootViewController as? UINavigationController
 		let url = Endpoint.url(for: .imageComments(id: id))
 		let loader = RemoteImageCommentLoader(client: imageCommentsHTTPClient)
