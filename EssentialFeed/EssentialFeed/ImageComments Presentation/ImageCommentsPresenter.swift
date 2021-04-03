@@ -12,13 +12,13 @@ public protocol ImageCommentsView {
 	func display(_ imageComments: [ImageComment])
 }
 
-public protocol ImageCommentsLoadingView: class {
+public protocol ImageCommentsLoadingView {
 	func display(isLoading: Bool)
 }
 
 public final class ImageCommentsPresenter {
 	public var imageCommentsView: ImageCommentsView?
-	public weak var imageCommentsLoadingView: ImageCommentsLoadingView?
+	public var imageCommentsLoadingView: ImageCommentsLoadingView?
 	private let imageCommentsLoader: ImageCommentsLoader
 
 	public static var title: String {

@@ -16,9 +16,23 @@ public final class ImageCommentsUIComposer {
 		let presenter = ImageCommentsPresenter(imageCommentsLoader: imageCommentsLoader)
 		let refreshController = ImageCommentsRefreshViewController(presenter: presenter)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
-		presenter.imageCommentsLoadingView = refreshController
+		presenter.imageCommentsLoadingView = WeakRefVirtualProxy(refreshController)
 		presenter.imageCommentsView = ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader)
 		return imageCommentsController
+	}
+}
+
+private final class WeakRefVirtualProxy<T: AnyObject> {
+	private weak var object: T?
+
+	init(_ object: T) {
+		self.object = object
+	}
+}
+
+extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
+	func display(isLoading: Bool) {
+		object?.display(isLoading: isLoading)
 	}
 }
 
