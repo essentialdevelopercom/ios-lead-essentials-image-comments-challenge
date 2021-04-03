@@ -19,7 +19,6 @@ public protocol ImageCommentsLoadingView {
 public final class ImageCommentsPresenter {
 	public var imageCommentsView: ImageCommentsView?
 	public var imageCommentsLoadingView: ImageCommentsLoadingView?
-	private let imageCommentsLoader: ImageCommentsLoader
 
 	public static var title: String {
 		NSLocalizedString(
@@ -30,17 +29,18 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
-	public init(imageCommentsLoader: ImageCommentsLoader) {
-		self.imageCommentsLoader = imageCommentsLoader
+	public init() {}
+
+	public func didStartLoadingImageComments() {
+		imageCommentsLoadingView?.display(ImageCommentsLoadingViewModel(isLoading: true))
 	}
 
-	public func loadImageComments() {
-		imageCommentsLoadingView?.display(ImageCommentsLoadingViewModel(isLoading: true))
-		imageCommentsLoader.load { [weak self] result in
-			if let imageComments = try? result.get() {
-				self?.imageCommentsView?.display(ImageCommentsViewModel(imageComments: imageComments))
-			}
-			self?.imageCommentsLoadingView?.display(ImageCommentsLoadingViewModel(isLoading: false))
-		}
+	public func didFinishLoadingImageComments(with imageComments: [ImageComment]) {
+		imageCommentsView?.display(ImageCommentsViewModel(imageComments: imageComments))
+		imageCommentsLoadingView?.display(ImageCommentsLoadingViewModel(isLoading: false))
+	}
+
+	public func didFinishLoadingImageComments(with error: Error) {
+		imageCommentsLoadingView?.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 }

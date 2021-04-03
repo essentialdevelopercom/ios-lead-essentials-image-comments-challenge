@@ -13,8 +13,9 @@ public final class ImageCommentsUIComposer {
 	private init() {}
 
 	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presenter = ImageCommentsPresenter(imageCommentsLoader: imageCommentsLoader)
-		let refreshController = ImageCommentsRefreshViewController(loadImageComments: presenter.loadImageComments)
+		let presenter = ImageCommentsPresenter()
+		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader, presenter: presenter)
+		let refreshController = ImageCommentsRefreshViewController(loadImageComments: presentationAdapter.loadImageComments)
 		let imageCommentsController = ImageCommentsViewController(refreshController: refreshController)
 		presenter.imageCommentsLoadingView = WeakRefVirtualProxy(refreshController)
 		presenter.imageCommentsView = ImageCommentsViewAdapter(controller: imageCommentsController, imageCommentsLoader: imageCommentsLoader)
@@ -48,6 +49,30 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 	func display(_ viewModel: ImageCommentsViewModel) {
 		controller?.tableModel = viewModel.imageComments.map { model in
 			ImageCommentCellController(viewModel: ImageCommentViewModel(model: model))
+		}
+	}
+}
+
+private final class ImageCommentsPresentationAdapter {
+	private let imageCommentsLoader: ImageCommentsLoader
+	private let presenter: ImageCommentsPresenter
+
+	init(imageCommentsLoader: ImageCommentsLoader, presenter: ImageCommentsPresenter) {
+		self.imageCommentsLoader = imageCommentsLoader
+		self.presenter = presenter
+	}
+
+	func loadImageComments() {
+		presenter.didStartLoadingImageComments()
+
+		imageCommentsLoader.load { [weak self] result in
+			switch result {
+			case let .success(imageComments):
+				self?.presenter.didFinishLoadingImageComments(with: imageComments)
+
+			case let .failure(error):
+				self?.presenter.didFinishLoadingImageComments(with: error)
+			}
 		}
 	}
 }
