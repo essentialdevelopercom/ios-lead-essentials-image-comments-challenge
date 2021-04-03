@@ -9,7 +9,7 @@
 import UIKit
 
 public final class ImageCommentCell: UITableViewCell {
-	public let messageLabel = UILabel()
-	public let authorNameLabel = UILabel()
-	public let createdAtLabel = UILabel()
+	@IBOutlet private(set) public var messageLabel: UILabel!
+	@IBOutlet private(set) public var authorNameLabel: UILabel!
+	@IBOutlet private(set) public var createdAtLabel: UILabel!
 }

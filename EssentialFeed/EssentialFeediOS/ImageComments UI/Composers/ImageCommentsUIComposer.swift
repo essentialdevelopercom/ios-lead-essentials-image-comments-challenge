@@ -60,7 +60,7 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 	func display(_ viewModel: ImageCommentsViewModel) {
 		controller?.tableModel = viewModel.imageComments.map { model in
 			let adapter = ImageCommentPresentationAdapter(imageComment: model)
-			let view = ImageCommentCellController()
+			let view = ImageCommentCellController(delegate: adapter)
 
 			adapter.presenter = ImageCommentPresenter(imageCommentView: WeakRefVirtualProxy(view))
 
@@ -69,16 +69,20 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 	}
 }
 
-private final class ImageCommentPresentationAdapter {
+private final class ImageCommentPresentationAdapter: ImageCommentCellControllerDelegate {
 	private let imageComment: ImageComment
-	var presenter: ImageCommentPresenter? {
-		didSet {
-			presenter?.shouldDisplayImageComment(imageComment)
-		}
-	}
+	var presenter: ImageCommentPresenter?
 
 	init(imageComment: ImageComment) {
 		self.imageComment = imageComment
+	}
+
+	func didLoadCell() {
+		presenter?.shouldDisplayImageComment(imageComment)
+	}
+
+	func willReleaseCell() {
+		presenter?.shouldDisplayNoImageComment()
 	}
 }
 

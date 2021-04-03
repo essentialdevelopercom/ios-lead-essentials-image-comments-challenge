@@ -45,10 +45,18 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		cellController(forRowAt: indexPath).view
+		cellController(forRowAt: indexPath).view(in: tableView)
+	}
+
+	public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		removeCellController(forRowAt: indexPath)
 	}
 
 	private func cellController(forRowAt indexPath: IndexPath) -> ImageCommentCellController {
 		tableModel[indexPath.row]
+	}
+
+	private func removeCellController(forRowAt indexPath: IndexPath) {
+		tableModel[indexPath.row].removeCell()
 	}
 }

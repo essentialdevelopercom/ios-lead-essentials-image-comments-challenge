@@ -72,6 +72,18 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		assertThat(sut, isRendering: [imageComment0])
 	}
 
+	func test_imageCommentsView_doesNotRenderImageCommentWhenNoLongerVisible() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		loader.completeImageCommentsLoading(with: [makeImageComment()])
+
+		let view = sut.simulateImageCommentNotVisible(at: 0)
+
+		XCTAssertNil(view?.messageText, "Expected no rendered message text when the view is no longer visible")
+		XCTAssertNil(view?.authorNameText, "Expected no rendered author name text when the view is no longer visible")
+		XCTAssertNil(view?.createdAtText, "Expected no rendered created at text when the view is no longer visible")
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
@@ -111,7 +123,7 @@ final class ImageCommentsViewControllerTests: XCTestCase {
 		return df
 	}()
 
-	private func makeImageComment(message: String, authorName: String, createdAt: Date) -> ImageComment {
+	private func makeImageComment(message: String = "a message", authorName: String = "a user", createdAt: Date = Date()) -> ImageComment {
 		ImageComment(id: UUID(), message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
 	}
 
@@ -156,6 +168,22 @@ private extension ImageCommentsViewController {
 
 	func numberOfRenderedImageCommentViews() -> Int {
 		tableView.numberOfRows(inSection: imageCommentsSection)
+	}
+
+	@discardableResult
+	func simulateImageCommentViewVisible(at index: Int) -> ImageCommentCell? {
+		imageCommentView(at: index) as? ImageCommentCell
+	}
+
+	@discardableResult
+	func simulateImageCommentNotVisible(at row: Int) -> ImageCommentCell? {
+		let view = simulateImageCommentViewVisible(at: row)
+
+		let delegate = tableView.delegate
+		let index = IndexPath(row: row, section: imageCommentsSection)
+		delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: index)
+
+		return view
 	}
 
 	func imageCommentView(at row: Int) -> UITableViewCell? {

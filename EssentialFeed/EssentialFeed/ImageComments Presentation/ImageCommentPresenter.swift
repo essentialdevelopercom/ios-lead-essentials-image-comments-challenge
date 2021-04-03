@@ -35,4 +35,14 @@ public final class ImageCommentPresenter {
 			)
 		)
 	}
+
+	public func shouldDisplayNoImageComment() {
+		imageCommentView.display(
+			ImageCommentViewModel(
+				message: nil,
+				author: nil,
+				createdAt: nil
+			)
+		)
+	}
 }
