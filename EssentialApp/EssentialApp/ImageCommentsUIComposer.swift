@@ -8,6 +8,7 @@
 
 import UIKit
 import EssentialFeed
+import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
 	private init() {}
@@ -56,14 +57,14 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 	}
 
 	func display(_ viewModel: ImageCommentsViewModel) {
-		controller?.tableModel = viewModel.imageComments.map { model in
+		controller?.display(viewModel.imageComments.map { model in
 			let adapter = ImageCommentPresentationAdapter(imageComment: model)
 			let view = ImageCommentCellController(delegate: adapter)
 
 			adapter.presenter = ImageCommentPresenter(imageCommentView: WeakRefVirtualProxy(view), formattedDate: formattedDate)
 
 			return view
-		}
+		})
 	}
 }
 

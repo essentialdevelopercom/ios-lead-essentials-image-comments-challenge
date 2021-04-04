@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
@@ -251,15 +252,5 @@ private extension ImageCommentCell {
 
 	var createdAtText: String? {
 		createdAtLabel.text
-	}
-}
-
-private extension UIRefreshControl {
-	func simulatePullToRefresh() {
-		allTargets.forEach { target in
-			actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
-				(target as NSObject).perform(Selector($0))
-			}
-		}
 	}
 }

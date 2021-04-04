@@ -9,16 +9,16 @@
 import UIKit
 import EssentialFeed
 
-protocol ImageCommentCellControllerDelegate {
+public protocol ImageCommentCellControllerDelegate {
 	func didLoadCell()
 	func willReleaseCell()
 }
 
-final class ImageCommentCellController: ImageCommentView {
+public final class ImageCommentCellController: ImageCommentView {
 	private let delegate: ImageCommentCellControllerDelegate
 	private var cell: ImageCommentCell?
 
-	init(delegate: ImageCommentCellControllerDelegate) {
+	public init(delegate: ImageCommentCellControllerDelegate) {
 		self.delegate = delegate
 	}
 
@@ -37,7 +37,7 @@ final class ImageCommentCellController: ImageCommentView {
 		return cell!
 	}
 
-	func display(_ viewModel: ImageCommentViewModel) {
+	public func display(_ viewModel: ImageCommentViewModel) {
 		cell?.messageLabel.text = viewModel.message
 		cell?.authorNameLabel.text = viewModel.author
 		cell?.createdAtLabel.text = viewModel.createdAt

@@ -9,16 +9,16 @@
 import UIKit
 import EssentialFeed
 
-protocol ImageCommentsViewControllerDelegate {
+public protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
 }
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingView, ImageCommentsErrorView {
 	@IBOutlet private(set) public var errorView: ErrorView?
 
-	var delegate: ImageCommentsViewControllerDelegate?
+	public var delegate: ImageCommentsViewControllerDelegate?
 	
-	var tableModel = [ImageCommentCellController]() {
+	private var tableModel = [ImageCommentCellController]() {
 		didSet {
 			tableView.reloadData()
 		}
@@ -32,6 +32,10 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 
 	@IBAction private func refresh() {
 		delegate?.didRequestImageCommentsRefresh()
+	}
+
+	public func display(_ cellControllers: [ImageCommentCellController]) {
+		tableModel = cellControllers
 	}
 
 	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
