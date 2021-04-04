@@ -6,6 +6,7 @@ import UIKit
 import CoreData
 import Combine
 import EssentialFeed
+import EssentialFeediOS
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
@@ -60,11 +61,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
-		
+		let feeedViewController = FeedUIComposer.feedComposedWith(
+			feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+			imageLoader: makeLocalImageLoaderWithRemoteFallback
+		)
+		feeedViewController.navigationDelegate = self
+
+		window?.rootViewController = UINavigationController(rootViewController: feeedViewController)
 		window?.makeKeyAndVisible()
 	}
 
@@ -94,5 +97,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					.loadImageDataPublisher(from: url)
 					.caching(to: localImageLoader, using: url)
 			})
+	}
+}
+
+extension SceneDelegate: FeedViewControllerNavigationDelegate {
+	func didTapImageWith(id: String) {
+		navigateToDetails(with: id, animated: false)
 	}
 }

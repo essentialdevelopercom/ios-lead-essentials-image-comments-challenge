@@ -11,11 +11,13 @@ public protocol FeedImageCellControllerDelegate {
 }
 
 public final class FeedImageCellController: FeedImageView {
+	private var imageUUID: UUID
 	private let delegate: FeedImageCellControllerDelegate
 	private var cell: FeedImageCell?
 	
-	public init(delegate: FeedImageCellControllerDelegate) {
+	public init(delegate: FeedImageCellControllerDelegate, imageUUID: UUID) {
 		self.delegate = delegate
+		self.imageUUID = imageUUID
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
@@ -31,6 +33,10 @@ public final class FeedImageCellController: FeedImageView {
 	func cancelLoad() {
 		releaseCellForReuse()
 		delegate.didCancelImageRequest()
+	}
+
+	func imageID() -> String {
+		imageUUID.uuidString
 	}
 	
 	public func display(_ viewModel: FeedImageViewModel<UIImage>) {

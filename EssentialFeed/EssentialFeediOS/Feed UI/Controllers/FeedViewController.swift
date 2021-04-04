@@ -9,6 +9,10 @@ public protocol FeedViewControllerDelegate {
 	func didRequestFeedRefresh()
 }
 
+public protocol FeedViewControllerNavigationDelegate {
+	func didTapImageWith(id: String)
+}
+
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching, FeedLoadingView, FeedErrorView {
 	@IBOutlet private(set) public var errorView: ErrorView?
 	
@@ -19,7 +23,8 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	}
 	
 	public var delegate: FeedViewControllerDelegate?
-	
+	public var navigationDelegate: FeedViewControllerNavigationDelegate?
+
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -69,6 +74,12 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 	
 	public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
 		indexPaths.forEach(cancelCellControllerLoad)
+	}
+
+	public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if let imageID = loadingControllers[indexPath]?.imageID() {
+			navigationDelegate?.didTapImageWith(id: imageID)
+		}
 	}
 	
 	private func cellController(forRowAt indexPath: IndexPath) -> FeedImageCellController {
