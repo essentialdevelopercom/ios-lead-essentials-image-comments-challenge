@@ -83,6 +83,7 @@
 		08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */; };
 		08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F8822C236499B200CAEE16 /* FeedCache.swift */; };
 		4B1BA8F8260581840074BAAD /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081C0DB222491EEF00AC754E /* SharedTestHelpers.swift */; };
+		4B67C1BA26193D31009DC9C2 /* ImageComment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B67C1B926193D31009DC9C2 /* ImageComment.storyboard */; };
 		4B7596F926025C0C00D9B606 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		4B7596FA26025C0C00D9B606 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B75971026025E4B00D9B606 /* ImageCommentViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B75970F26025E4B00D9B606 /* ImageCommentViewControllerTest.swift */; };
@@ -217,6 +218,7 @@
 		08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCellController.swift; sourceTree = "<group>"; };
 		08F8822C236499B200CAEE16 /* FeedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCache.swift; sourceTree = "<group>"; };
 		08FC5AA922D5F47900148E12 /* FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoader.swift; sourceTree = "<group>"; };
+		4B67C1B926193D31009DC9C2 /* ImageComment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComment.storyboard; sourceTree = "<group>"; };
 		4B75970F26025E4B00D9B606 /* ImageCommentViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentViewControllerTest.swift; sourceTree = "<group>"; };
 		4BB1ED2125F1693E0008E33E /* ImageCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentLoader.swift; sourceTree = "<group>"; };
 		4BB1ED2725F16A370008E33E /* ImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComment.swift; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
+				4B67C1B826193CF4009DC9C2 /* Image Comment UI */,
 				08D917A322B92A5D003BC31B /* Info.plist */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
 			);
@@ -527,7 +530,6 @@
 			isa = PBXGroup;
 			children = (
 				08BB7EAA22C1425100F8B83C /* FeedViewController.swift */,
-				08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -551,6 +553,31 @@
 				08EFB82C22D4A60300A46837 /* Views */,
 			);
 			path = "Feed UI";
+			sourceTree = "<group>";
+		};
+		4B67C1B826193CF4009DC9C2 /* Image Comment UI */ = {
+			isa = PBXGroup;
+			children = (
+				4B67C1BF261951EB009DC9C2 /* Controllers */,
+				4B67C1BE261951DE009DC9C2 /* Views */,
+			);
+			path = "Image Comment UI";
+			sourceTree = "<group>";
+		};
+		4B67C1BE261951DE009DC9C2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4B67C1B926193D31009DC9C2 /* ImageComment.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4B67C1BF261951EB009DC9C2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		4B7596D62602557300D9B606 /* Comment Feature */ = {
@@ -755,6 +782,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
+				4B67C1BA26193D31009DC9C2 /* ImageComment.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
