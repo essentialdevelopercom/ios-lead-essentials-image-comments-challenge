@@ -18,6 +18,14 @@ extension FeedImageCommentsViewController {
 		return refreshControl?.isRefreshing == true
 	}
 	
+	func simulateTapOnErrorMessage() {
+		errorView?.button.simulateTap()
+	}
+	
+	private var errorView: ErrorView? {
+		tableView.tableHeaderView as? ErrorView
+	}
+	
 	var errorMessage: String? {
 		return errorView?.message
 	}

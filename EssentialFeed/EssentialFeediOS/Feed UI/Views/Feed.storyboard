@@ -27,7 +27,7 @@
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
                                     <connections>
-                                        <action selector="hideMessage" destination="uSC-1N-09L" eventType="touchUpInside" id="1Fk-sw-RKO"/>
+                                        <action selector="hideMessageAnimated" destination="uSC-1N-09L" eventType="touchUpInside" id="oVD-V7-eGw"/>
                                     </connections>
                                 </button>
                             </subviews>
