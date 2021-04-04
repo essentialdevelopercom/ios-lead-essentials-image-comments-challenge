@@ -37,7 +37,7 @@
                                 <constraint firstAttribute="trailingMargin" secondItem="kMe-vF-j1s" secondAttribute="trailing" id="wE6-il-Tzq"/>
                             </constraints>
                             <connections>
-                                <outlet property="label" destination="kMe-vF-j1s" id="q4z-AM-Kwl"/>
+                                <outlet property="label" destination="kMe-vF-j1s" id="U2m-kD-NFw"/>
                             </connections>
                         </view>
                         <prototypes>
@@ -99,6 +99,9 @@
                             <action selector="refresh" destination="Yi0-yj-RYw" eventType="valueChanged" id="zY0-lt-oBS"/>
                         </connections>
                     </refreshControl>
+                    <connections>
+                        <outlet property="errorView" destination="RBp-M7-jBK" id="9ol-nm-hSb"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7p5-hh-xT0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

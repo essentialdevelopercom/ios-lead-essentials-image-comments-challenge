@@ -13,7 +13,9 @@ protocol ImageCommentsViewControllerDelegate {
 	func didRequestImageCommentsRefresh()
 }
 
-public final class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingView {
+public final class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingView, ImageCommentsErrorView {
+	@IBOutlet private(set) public var errorView: ErrorView?
+
 	var delegate: ImageCommentsViewControllerDelegate?
 	
 	var tableModel = [ImageCommentCellController]() {
@@ -38,6 +40,10 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		} else {
 			refreshControl?.endRefreshing()
 		}
+	}
+
+	public func display(_ viewModel: ImageCommentsErrorViewModel) {
+		errorView?.message = viewModel.message
 	}
 
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

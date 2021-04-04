@@ -22,7 +22,9 @@ public final class ImageCommentsUIComposer {
 
 		presentationAdapter.presenter = ImageCommentsPresenter(
 			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController),
-			imageCommentsLoadingView: WeakRefVirtualProxy(imageCommentsController))
+			imageCommentsLoadingView: WeakRefVirtualProxy(imageCommentsController),
+			imageCommentsErrorView: WeakRefVirtualProxy(imageCommentsController)
+		)
 
 		return imageCommentsController
 	}
@@ -42,6 +44,13 @@ private extension ImageCommentsViewController {
 private final class ImageCommentsViewAdapter: ImageCommentsView {
 	private weak var controller: ImageCommentsViewController?
 
+	private lazy var formattedDate = { (date: Date) -> String? in
+		let df = DateFormatter()
+		df.dateStyle = .medium
+		df.timeStyle = .medium
+		return df.string(from: date)
+	}
+
 	init(controller: ImageCommentsViewController? = nil) {
 		self.controller = controller
 	}
@@ -51,7 +60,7 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 			let adapter = ImageCommentPresentationAdapter(imageComment: model)
 			let view = ImageCommentCellController(delegate: adapter)
 
-			adapter.presenter = ImageCommentPresenter(imageCommentView: WeakRefVirtualProxy(view))
+			adapter.presenter = ImageCommentPresenter(imageCommentView: WeakRefVirtualProxy(view), formattedDate: formattedDate)
 
 			return view
 		}
