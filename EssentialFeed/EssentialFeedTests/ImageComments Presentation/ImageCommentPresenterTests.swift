@@ -17,6 +17,18 @@ final class ImageCommentPresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 
+	func test_shouldDisplayImageComment_displaysImageComment() {
+		let (sut, view) = makeSUT()
+		let imageComment = uniqueImageComment()
+
+		sut.shouldDisplayImageComment(imageComment)
+
+		let message = view.messages.first
+		XCTAssertEqual(view.messages.count, 1)
+		XCTAssertEqual(message?.message, imageComment.message)
+		XCTAssertEqual(message?.author, imageComment.author.username)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> (sut: ImageCommentPresenter, view: ViewSpy) {

@@ -75,14 +75,6 @@ class ImageCommentsPresenterTests: XCTestCase {
 		return value
 	}
 
-	private func uniqueImageComment() -> ImageComment {
-		ImageComment(id: UUID(), message: "a message", createdAt: Date(), author: ImageCommentAuthor(username: "a username"))
-	}
-
-	private func uniqueImageComments() -> [ImageComment] {
-		[uniqueImageComment(), uniqueImageComment()]
-	}
-
 	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 		enum Messages: Hashable {
 			case display(imageComments: [ImageComment])
