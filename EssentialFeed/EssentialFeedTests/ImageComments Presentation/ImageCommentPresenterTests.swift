@@ -29,6 +29,18 @@ final class ImageCommentPresenterTests: XCTestCase {
 		XCTAssertEqual(message?.author, imageComment.author.username)
 	}
 
+	func test_shouldDisplayNoImageComment_displaysNoImageComment() {
+		let (sut, view) = makeSUT()
+
+		sut.shouldDisplayNoImageComment()
+
+		let message = view.messages.first
+		XCTAssertEqual(view.messages.count, 1)
+		XCTAssertEqual(message?.message, nil)
+		XCTAssertEqual(message?.author, nil)
+		XCTAssertEqual(message?.createdAt, nil)
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> (sut: ImageCommentPresenter, view: ViewSpy) {
