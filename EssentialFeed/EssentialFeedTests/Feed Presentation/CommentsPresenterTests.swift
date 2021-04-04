@@ -101,7 +101,7 @@ class CommentsPresenterTests: XCTestCase {
 		return [comment0, comment1]
 	}
 	
-	private func makeItem(id: UUID = UUID(), message: String, createdAt: String = "now", author: String ) -> (model: Comment, json: [String: Any]) {
+	private func makeItem(id: UUID = UUID(), message: String, createdAt: Date = Date(), author: String ) -> (model: Comment, json: [String: Any]) {
 		let model = Comment(id: id, message: message, createdAt: createdAt, author: author)
 		let json = [
 			"id": id.uuidString,

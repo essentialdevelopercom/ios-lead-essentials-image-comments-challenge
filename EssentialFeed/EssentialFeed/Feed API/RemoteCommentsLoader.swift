@@ -50,7 +50,8 @@ public final class RemoteCommentsLoader: CommentsLoader {
 
 private extension Array where Element == RemoteComment {
 	func toModels() -> [Comment] {
-		return map { Comment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: $0.author.username) }
+		let formatter = ISO8601DateFormatter()
+		return map { Comment(id: $0.id, message: $0.message, createdAt: formatter.date(from: $0.createdAt) ?? Date(), author: $0.author.username) }
 	}
 }
 

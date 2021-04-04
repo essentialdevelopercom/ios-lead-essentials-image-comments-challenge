@@ -81,13 +81,13 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		let item1 = makeItem(
 			id: UUID(),
 			message: "message 1",
-			createdAt: "created 1",
+			createdAt: .now,
 			author: "author 1")
 		
 		let item2 = makeItem(
 			id: UUID(),
 			message: "message 2",
-			createdAt: "created 2",
+			createdAt: .now,
 			author: "author 2")
 		
 		let items = [item1.model, item2.model]
@@ -126,12 +126,13 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		return .failure(error)
 	}
 	
-	private func makeItem(id: UUID, message: String, createdAt: String, author: String ) -> (model: Comment, json: [String: Any]) {
+	private func makeItem(id: UUID, message: String, createdAt: Date, author: String ) -> (model: Comment, json: [String: Any]) {
 		let model = Comment(id: id, message: message, createdAt: createdAt, author: author)
+		let formatter = ISO8601DateFormatter()
 		let json = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": createdAt,
+			"created_at": formatter.string(from: createdAt),
 			"author": [
 				"username": author
 			]

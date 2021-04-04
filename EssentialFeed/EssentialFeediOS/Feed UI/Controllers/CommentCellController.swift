@@ -22,8 +22,11 @@ public final class CommentCellController {
 	}
 	
 	private func binded(_ cell: CommentCell) -> CommentCell {
+		let formatter = RelativeDateTimeFormatter()
+		let relativeDate = formatter.localizedString(for: model.createdAt, relativeTo: Date())
+
 		cell.authorLabel.text = model.author
-		cell.dateLabel.text = model.createdAt
+		cell.dateLabel.text = relativeDate
 		cell.commentLabel.text = model.message
 		return cell
 	}

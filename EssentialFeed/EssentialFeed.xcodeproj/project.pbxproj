@@ -98,6 +98,8 @@
 		73B434FB25FA271B00099924 /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */; };
 		73B4350125FA276600099924 /* CommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4350025FA276600099924 /* CommentErrorViewModel.swift */; };
 		73B4350725FA279400099924 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4350625FA279400099924 /* CommentViewModel.swift */; };
+		73B69B15261A062600D717E9 /* Date+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B69B14261A062600D717E9 /* Date+TestHelpers.swift */; };
+		73B69B1B261A09BF00D717E9 /* Date+Teselpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B69B1A261A09BF00D717E9 /* Date+Teselpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,6 +220,8 @@
 		73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoadingViewModel.swift; sourceTree = "<group>"; };
 		73B4350025FA276600099924 /* CommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentErrorViewModel.swift; sourceTree = "<group>"; };
 		73B4350625FA279400099924 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
+		73B69B14261A062600D717E9 /* Date+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TestHelpers.swift"; sourceTree = "<group>"; };
+		73B69B1A261A09BF00D717E9 /* Date+Teselpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Teselpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -355,6 +359,7 @@
 				0800314623B68FAB00720217 /* UIViewController+Snapshot.swift */,
 				0800314823B6909A00720217 /* XCTestCase+Snapshot.swift */,
 				730D6EA725F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift */,
+				73B69B1A261A09BF00D717E9 /* Date+Teselpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -415,6 +420,7 @@
 			children = (
 				08897BEA233939B60029F5E4 /* HTTPClientSpy.swift */,
 				08805A18233A9F8600509F19 /* URLProtocolStub.swift */,
+				73B69B14261A062600D717E9 /* Date+TestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -788,6 +794,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				081C0DB122491E1200AC754E /* FeedCacheTestHelpers.swift in Sources */,
+				73B69B15261A062600D717E9 /* Date+TestHelpers.swift in Sources */,
 				08805A19233A9F8600509F19 /* URLProtocolStub.swift in Sources */,
 				081C0DAF22491A2400AC754E /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				087148AC232BDF6900D6BE1A /* FeedPresenterTests.swift in Sources */,
@@ -847,6 +854,7 @@
 				730D6EA825F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				0800314723B68FAB00720217 /* UIViewController+Snapshot.swift in Sources */,
 				086AEFBC23A7E5C300EE8933 /* UIImage+TestHelpers.swift in Sources */,
+				73B69B1B261A09BF00D717E9 /* Date+Teselpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
