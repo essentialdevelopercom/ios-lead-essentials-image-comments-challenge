@@ -38,13 +38,14 @@ class SceneDelegateTests: XCTestCase {
 
 		sut.configureWindow()
 
-		sut.navigateToDetails(with: "id")
+		sut.navigateToDetails(with: "id", animated: false)
 
 		let root = sut.window?.rootViewController
 		let rootNavigation = root as? UINavigationController
-		let childController = rootNavigation?.children.first
 
-		XCTAssertEqual(rootNavigation?.children.count, 1, "Expected only one child view controller, got \(String(describing: rootNavigation?.children.count)) instead")
-		XCTAssertNotNil(rootNavigation?.children.contains(where: { $0 is ImageCommentsViewController }), "Expected an Image comments as the child view controller, got \(String(describing: childController)) instead")
+		let imageCommentsViewController = rootNavigation?.children.first(where: { $0 is ImageCommentsViewController })
+
+		XCTAssertEqual(rootNavigation?.children.count, 2, "Expected two child view controllers, got \(String(describing: rootNavigation?.children.count)) instead")
+		XCTAssertNotNil(imageCommentsViewController, "Expected an Image comments as the child view controller")
 	}
 }

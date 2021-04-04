@@ -44,10 +44,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 								  client: httpClient)
 	}
 	
-	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+	convenience init(httpClient: HTTPClient, store: (FeedStore & FeedImageDataStore)? = nil) {
 		self.init()
 		self.httpClient = httpClient
-		self.store = store
+		if let store = store {
+			self.store = store
+		}
 	}
 	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -64,13 +66,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				imageLoader: makeLocalImageLoaderWithRemoteFallback))
 		
 		window?.makeKeyAndVisible()
+
+		navigateToDetails(with: "id")
 	}
 
-	func navigateToDetails(with imageID: String) {
+	func navigateToDetails(with imageID: String, animated: Bool = true) {
 		let detailsViewController = ImageCommentsUIComposer.imageCommentsComposedWith(
 			imageCommentsLoader: remoteImageCommentsLoader(imageID: imageID)
 		)
-		window?.rootViewController?.navigationController?.pushViewController(detailsViewController, animated: true)
+		(window?.rootViewController as? UINavigationController)?.pushViewController(detailsViewController, animated: animated)
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
