@@ -31,4 +31,20 @@ class SceneDelegateTests: XCTestCase {
 		XCTAssertNotNil(rootNavigation, "Expected a navigation controller as root, got \(String(describing: root)) instead")
 		XCTAssertTrue(topController is FeedViewController, "Expected a feed controller as top view controller, got \(String(describing: topController)) instead")
 	}
+
+	func test_navigation_canDisplayImageCommentsViewController() {
+		let sut = SceneDelegate()
+		sut.window = UIWindow()
+
+		sut.configureWindow()
+
+		sut.navigateToDetails(with: "id")
+
+		let root = sut.window?.rootViewController
+		let rootNavigation = root as? UINavigationController
+		let childController = rootNavigation?.children.first
+
+		XCTAssertEqual(rootNavigation?.children.count, 1, "Expected only one child view controller, got \(String(describing: rootNavigation?.children.count)) instead")
+		XCTAssertNotNil(rootNavigation?.children.contains(where: { $0 is ImageCommentsViewController }), "Expected an Image comments as the child view controller, got \(String(describing: childController)) instead")
+	}
 }
