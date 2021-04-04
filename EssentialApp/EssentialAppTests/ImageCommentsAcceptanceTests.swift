@@ -14,22 +14,23 @@ import EssentialFeediOS
 final class ImageCommentsAcceptanceTests: XCTestCase {
 
 	func test_onLaunch_displaysRemoteImageCommentsWhenCustomerHasConnectivity() {
-		let httpClient = HTTPClientStub.online(response)
-		let sut = SceneDelegate(httpClient: httpClient)
-		sut.window = UIWindow()
-		sut.configureWindow()
-
-		sut.navigateToDetails(with: "id", animated: false)
-
-		let root = sut.window?.rootViewController
-		let rootNavigation = root as? UINavigationController
-		let imageComments = rootNavigation?.children.first(where: { $0 is ImageCommentsViewController }) as! ImageCommentsViewController
-
+		let imageComments = launch(httpClient: .online(response))
 
 		XCTAssertEqual(imageComments.numberOfRenderedImageCommentViews(), 2)
 	}
 
 	// MARK: - Helpers
+
+	private func launch(httpClient: HTTPClientStub = .offline) -> ImageCommentsViewController {
+		let sut = SceneDelegate(httpClient: httpClient)
+		sut.window = UIWindow()
+		sut.configureWindow()
+		sut.navigateToDetails(with: "id", animated: false)
+
+		let nav = sut.window?.rootViewController as? UINavigationController
+		return nav?.children.first(where: { $0 is ImageCommentsViewController }) as! ImageCommentsViewController
+	}
+
 	private func response(for url: URL) -> (Data, HTTPURLResponse) {
 		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
 		return (makeImageCommentsData(), response)
