@@ -211,14 +211,14 @@ final class FeedUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_feedImageView_forwardsFeedImageIDOnTapWhenImageHasLoadSuccessfully() {
-		let image1 = makeImage()
-		var capturedIDs = [String?]()
-		let (sut, loader) = makeSUT(imageIDHandler: { capturedIDs.append($0) })
+		let image = makeImage()
+		var capturedImages = [FeedImage]()
+		let (sut, loader) = makeSUT(imageHandler: { capturedImages.append($0) })
 		
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image1])
+		loader.completeFeedLoading(with: [image])
 		sut.simulateTapOnFeedImageView(at: 0)
-		XCTAssertEqual(capturedIDs, [image1.id.uuidString], "Expected tapped image ID to be forwarded when image has loaded successfully")
+		XCTAssertEqual(capturedImages, [image], "Expected tapped image to be forwarded without changes")
 	}
 	
 	func test_feedImageViewRetryButton_isVisibleOnInvalidImageData() {
@@ -330,9 +330,9 @@ final class FeedUIIntegrationTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(imageIDHandler: @escaping (String) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(imageHandler: @escaping (FeedImage) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, imageIDHandler: imageIDHandler)
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, imageHandler: imageHandler)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

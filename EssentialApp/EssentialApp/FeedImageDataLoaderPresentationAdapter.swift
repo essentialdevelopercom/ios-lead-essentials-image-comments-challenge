@@ -10,19 +10,19 @@ import EssentialFeediOS
 final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
 	private let model: FeedImage
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
-	private let imageIDHandler: (String) -> Void
+	private let imageHandler: (FeedImage) -> Void
 	private var cancellable: Cancellable?
 	
 	var presenter: FeedImagePresenter<View, Image>?
 	
-	init(model: FeedImage, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, imageIDHandler: @escaping (String) -> Void) {
+	init(model: FeedImage, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, imageHandler: @escaping (FeedImage) -> Void) {
 		self.model = model
 		self.imageLoader = imageLoader
-		self.imageIDHandler = imageIDHandler
+		self.imageHandler = imageHandler
 	}
 	
 	func didTapImage() {
-		imageIDHandler(model.id.uuidString)
+		imageHandler(model)
 	}
 	
 	func didRequestImage() {

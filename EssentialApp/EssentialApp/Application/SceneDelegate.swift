@@ -45,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				imageIDHandler: handleImageID
+				imageHandler: handleImage
 			)
 		)
 	}()
@@ -68,8 +68,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		window?.makeKeyAndVisible()
 	}
 	
-	private func handleImageID(_ id: String) {
-		let url = Endpoint.url(for: .imageComments(id: id))
+	private func handleImage(_ image: FeedImage) {
+		let url = Endpoint.url(for: .imageComments(id: image.id.uuidString))
 		let loader = RemoteImageCommentLoader(url: url, client: httpClient)
 		let imageCommentsVC = ImageCommentsUIComposer.imageCommentsComposedWith(url: url, currentDate: Date.init, loader: loader)
 		navigationController.pushViewController(imageCommentsVC, animated: true)
