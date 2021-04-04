@@ -41,11 +41,21 @@ final class ImageCommentPresenterTests: XCTestCase {
 		XCTAssertEqual(message?.createdAt, nil)
 	}
 
+	func test_dateFormatting_displaysCommentFormattedCorrectly() {
+		let formattedDate = "one week ago"
+		let (sut, view) = makeSUT(formattedDate: { _ in formattedDate })
+
+		let imageComment = uniqueImageComment()
+		sut.shouldDisplayImageComment(imageComment)
+
+		XCTAssertEqual(view.messages.first?.createdAt, formattedDate)
+	}
+
 	// MARK: - Helpers
 
-	private func makeSUT() -> (sut: ImageCommentPresenter, view: ViewSpy) {
+	private func makeSUT(formattedDate: @escaping (Date) -> String? = { _ in nil }) -> (sut: ImageCommentPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let presenter = ImageCommentPresenter(imageCommentView: view)
+		let presenter = ImageCommentPresenter(imageCommentView: view, formattedDate: formattedDate)
 		return (presenter, view)
 	}
 

@@ -15,15 +15,11 @@ public protocol ImageCommentView {
 public final class ImageCommentPresenter {
 	public let imageCommentView: ImageCommentView
 
-	private lazy var dateFormatter: DateFormatter = {
-		let df = DateFormatter()
-		df.dateStyle = .medium
-		df.timeStyle = .medium
-		return df
-	}()
+	private let formattedDate: (Date) -> String?
 
-	public init(imageCommentView: ImageCommentView) {
+	public init(imageCommentView: ImageCommentView, formattedDate: @escaping (Date) -> String?) {
 		self.imageCommentView = imageCommentView
+		self.formattedDate = formattedDate
 	}
 
 	public func shouldDisplayImageComment(_ imageComment: ImageComment) {
@@ -31,7 +27,7 @@ public final class ImageCommentPresenter {
 			ImageCommentViewModel(
 				message: imageComment.message,
 				author: imageComment.author.username,
-				createdAt: dateFormatter.string(from: imageComment.createdAt)
+				createdAt: formattedDate(imageComment.createdAt)
 			)
 		)
 	}
