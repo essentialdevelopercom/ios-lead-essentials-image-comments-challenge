@@ -80,6 +80,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [imageComment0])
 	}
 
+	func test_loadImageCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+
+		loader.completeImageCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_CONNECTION_ERROR"))
+
+		sut.simulateUserInitiatedImageCommentsReload()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+
 	func test_imageCommentsView_doesNotRenderImageCommentWhenNoLongerVisible() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
@@ -198,6 +211,10 @@ private extension ImageCommentsViewController {
 
 	func numberOfRenderedImageCommentViews() -> Int {
 		tableView.numberOfRows(inSection: imageCommentsSection)
+	}
+
+	var errorMessage: String? {
+		errorView?.message
 	}
 
 	@discardableResult
