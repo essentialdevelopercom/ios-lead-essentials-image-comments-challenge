@@ -12,14 +12,14 @@ import EssentialFeediOS
 
 extension ImageCommentCell {
 	var authorNameText: String? {
-		return authorName.text
+		return nameLabel.text
 	}
 	
 	var commentText: String? {
-		return comment.text
+		return commentLabel.text
 	}
 	
 	var dateText: String? {
-		return datePosted.text
+		return datePostedLabel.text
 	}
 }

@@ -11,15 +11,15 @@ import UIKit
 import EssentialFeed
 
 public final class ImageCommentViewController: UITableViewController {
+	@IBOutlet public weak var errorView: UIView!
+	
 	private var loader: ImageCommentLoader?
-	public var errorView: UIView?
 	private var tableModel = [ImageComment]()
 	private var loadCommentTask: ImageCommentLoaderTask?
 	
 	public convenience init(loader: ImageCommentLoader) {
 		self.init()
 		self.loader = loader
-		self.errorView = UIView()
 	}
 	
 	deinit {
@@ -60,9 +60,9 @@ public final class ImageCommentViewController: UITableViewController {
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellModel = tableModel[indexPath.row]
 		let cell = ImageCommentCell()
-		cell.authorName.text = cellModel.author.username
-		cell.comment.text = cellModel.message
-		cell.datePosted.text = cellModel.createdAt.description
+		cell.nameLabel.text = cellModel.author.username
+		cell.datePostedLabel.text = cellModel.message
+		cell.commentLabel.text = cellModel.createdAt.description
 		return cell
 	}
 }

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public class ImageCommentCell: UITableViewCell {
-	public let authorName = UILabel()
-	public let datePosted = UILabel()
-	public let comment = UILabel()
+	@IBOutlet private(set) public var nameLabel: UILabel!
+	@IBOutlet private(set) public var datePostedLabel: UILabel!
+	@IBOutlet private(set) public var commentLabel: UILabel!
 }
