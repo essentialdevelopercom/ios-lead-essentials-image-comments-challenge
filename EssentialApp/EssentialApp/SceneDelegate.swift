@@ -66,8 +66,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				imageLoader: makeLocalImageLoaderWithRemoteFallback))
 		
 		window?.makeKeyAndVisible()
-
-		navigateToDetails(with: "id")
 	}
 
 	func navigateToDetails(with imageID: String, animated: Bool = true) {
