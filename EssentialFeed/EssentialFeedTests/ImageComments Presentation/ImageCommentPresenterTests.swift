@@ -18,7 +18,8 @@ final class ImageCommentPresenterTests: XCTestCase {
 	}
 
 	func test_shouldDisplayImageComment_displaysImageComment() {
-		let (sut, view) = makeSUT()
+		let formattedDate = "one week ago"
+		let (sut, view) = makeSUT(formattedDate: { _ in formattedDate })
 		let imageComment = uniqueImageComment()
 
 		sut.shouldDisplayImageComment(imageComment)
@@ -27,6 +28,7 @@ final class ImageCommentPresenterTests: XCTestCase {
 		XCTAssertEqual(view.messages.count, 1)
 		XCTAssertEqual(message?.message, imageComment.message)
 		XCTAssertEqual(message?.author, imageComment.author.username)
+		XCTAssertEqual(message?.createdAt, formattedDate)
 	}
 
 	func test_shouldDisplayNoImageComment_displaysNoImageComment() {
@@ -39,16 +41,6 @@ final class ImageCommentPresenterTests: XCTestCase {
 		XCTAssertEqual(message?.message, nil)
 		XCTAssertEqual(message?.author, nil)
 		XCTAssertEqual(message?.createdAt, nil)
-	}
-
-	func test_dateFormatting_displaysCommentFormattedCorrectly() {
-		let formattedDate = "one week ago"
-		let (sut, view) = makeSUT(formattedDate: { _ in formattedDate })
-
-		let imageComment = uniqueImageComment()
-		sut.shouldDisplayImageComment(imageComment)
-
-		XCTAssertEqual(view.messages.first?.createdAt, formattedDate)
 	}
 
 	// MARK: - Helpers
