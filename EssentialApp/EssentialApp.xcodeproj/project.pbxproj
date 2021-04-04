@@ -41,6 +41,7 @@
 		C6C98ED62619D2DA00BEE75D /* ImageCommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C98ED52619D2D900BEE75D /* ImageCommentsUIIntegrationTests.swift */; };
 		C6C98EE22619D30F00BEE75D /* ImageCommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C98EE12619D30F00BEE75D /* ImageCommentsUIComposer.swift */; };
 		C6C98EE92619D31C00BEE75D /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C98EE82619D31C00BEE75D /* MainQueueDispatchDecorator.swift */; };
+		C6C98F032619DA2500BEE75D /* ImageCommentsAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C98F022619DA2500BEE75D /* ImageCommentsAcceptanceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 		C6C98ED52619D2D900BEE75D /* ImageCommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		C6C98EE12619D30F00BEE75D /* ImageCommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsUIComposer.swift; sourceTree = "<group>"; };
 		C6C98EE82619D31C00BEE75D /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
+		C6C98F022619DA2500BEE75D /* ImageCommentsAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsAcceptanceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,8 +199,9 @@
 				0895DA9F234B3B980031BB2D /* Info.plist */,
 				082C00022359E43F008927D3 /* Helpers */,
 				0832C9CF238D2811002314C9 /* SceneDelegateTests.swift */,
-				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
+				C6C98F022619DA2500BEE75D /* ImageCommentsAcceptanceTests.swift */,
 				C6C98ED52619D2D900BEE75D /* ImageCommentsUIIntegrationTests.swift */,
+				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
 				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
 			);
 			path = EssentialAppTests;
@@ -365,6 +368,7 @@
 				08073B5B238D2E1000A75DC6 /* FeedViewController+TestHelpers.swift in Sources */,
 				08073B58238D2E1000A75DC6 /* FeedUIIntegrationTests+Localization.swift in Sources */,
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,
+				C6C98F032619DA2500BEE75D /* ImageCommentsAcceptanceTests.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
