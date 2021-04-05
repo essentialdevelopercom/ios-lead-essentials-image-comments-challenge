@@ -6,9 +6,9 @@
 import UIKit
 
 public final class FeedCommentCell: UITableViewCell {
-    @IBOutlet public weak var authorNameLabel: UILabel!
-    @IBOutlet public weak var messageLabel: UILabel!
-    @IBOutlet public weak var dateLabel: UILabel!
+    @IBOutlet public var authorNameLabel: UILabel!
+    @IBOutlet public var messageLabel: UILabel!
+    @IBOutlet public var dateLabel: UILabel!
 	
 	public var authorName: String? {
 		return authorNameLabel.text
