@@ -16,19 +16,19 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_load_requestsDataFromURL() {
 		let url = anyURL()
-		let (sut, client) = makeSUT()
+		let (sut, client) = makeSUT(url: url)
 		
-		sut.load(url: url) { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
 	
 	func test_loadTwice_requestsDataFromURLTwice() {
 		let url = anyURL()
-		let (sut, client) = makeSUT()
+		let (sut, client) = makeSUT(url: url)
 		
-		sut.load(url: url) { _ in }
-		sut.load(url: url) { _ in }
+		_ = sut.load { _ in }
+		_ = sut.load { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -83,10 +83,10 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
 		let url = anyURL()
 		let client = HTTPClientSpy()
-		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(client: client)
+		var sut: RemoteFeedCommentsLoader? = RemoteFeedCommentsLoader(url: url, client: client)
 		
 		var capturedResults = [Result<[FeedComment], Error>]()
-		sut?.load(url: url) { capturedResults.append($0) }
+		_ = sut?.load { capturedResults.append($0) }
 		
 		sut = nil
 		client.complete(withStatusCode: 200, data: emptyItemsData())
@@ -95,10 +95,10 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_cancelFeedCommentsLoaderTask_cancelsClientURLRequest() {
-		let (sut, client) = makeSUT()
 		let url = anyURL()
+		let (sut, client) = makeSUT(url: url)
 		
-		let task = sut.load(url: url, completion: {_ in })
+		let task = sut.load {_ in }
 		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
 		
 		task.cancel()
@@ -110,7 +110,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		let nonEmptyData = Data("non-empty data".utf8)
 		
 		var received = [FeedCommentsLoader.Result]()
-		let task = sut.load(url: anyURL()) { received.append($0) }
+		let task = sut.load { received.append($0) }
 		task.cancel()
 		
 		client.complete(withStatusCode: 404, data: anyData())
@@ -122,9 +122,9 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let sut = RemoteFeedCommentsLoader(client: client)
+		let sut = RemoteFeedCommentsLoader(url: url, client: client)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
@@ -133,7 +133,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	private func expect(sut: RemoteFeedCommentsLoader, toCompleteWith expectedResult: Result<[FeedComment], Error>, on actions: @escaping ()->Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
-		sut.load(url: anyURL()) { receivedResult in
+		_ = sut.load { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case (.success(let receivedComments), .success(let expectedComments)):
 				XCTAssertEqual(receivedComments, expectedComments, file: file, line: line)

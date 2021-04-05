@@ -8,20 +8,18 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class FeedCommentsLoaderPresentationAdapter: FeedCommentsViewControllerDelegate {
-	private let url: URL
 	private let feedCommentsLoader: FeedCommentsLoader
 	var presenter: FeedCommentsPresenter?
 	private var task: FeedCommentsLoaderTask?
 	
-	init(url: URL, feedCommentsLoader: FeedCommentsLoader) {
-		self.url = url
+	init(feedCommentsLoader: FeedCommentsLoader) {
 		self.feedCommentsLoader = feedCommentsLoader
 	}
 	
 	func didRequestFeedCommentsRefresh() {
 		presenter?.didStartLoadingFeedComments()
 		
-		task = feedCommentsLoader.load(url: url) {[weak self] result in
+		task = feedCommentsLoader.load {[weak self] result in
 			switch result {
 			case .success(let comments):
 				self?.presenter?.didFinishLoadingFeedComments(with: comments)

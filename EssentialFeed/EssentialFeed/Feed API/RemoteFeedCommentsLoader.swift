@@ -12,8 +12,11 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 		case invalidData
 	}
 	
+	private let url: URL
 	private let client: HTTPClient
-	public init(client: HTTPClient) {
+	
+	public init(url: URL, client: HTTPClient) {
+		self.url = url
 		self.client = client
 	}
 	
@@ -40,8 +43,7 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 		}
 	}
 	
-	@discardableResult
-	public func load(url: URL, completion: @escaping (Result<[FeedComment], Swift.Error>)->()) -> FeedCommentsLoaderTask {
+	public func load(completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url, completion: {[weak self] result in
 			guard let self = self else { return }

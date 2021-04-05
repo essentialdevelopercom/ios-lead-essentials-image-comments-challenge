@@ -11,7 +11,6 @@ public protocol FeedCommentsLoaderTask {
 
 public protocol FeedCommentsLoader {
 	typealias Result = Swift.Result<[FeedComment], Error>
-	
-	@discardableResult
-	func load(url: URL, completion: @escaping (Result) -> Void) -> FeedCommentsLoaderTask
+
+	func load(completion: @escaping (Result) -> Void) -> FeedCommentsLoaderTask
 }

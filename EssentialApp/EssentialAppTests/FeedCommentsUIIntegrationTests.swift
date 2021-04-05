@@ -19,18 +19,17 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedCommentsActions_requestCommentsFromLoader() {
-		let url = URL(string: "https://comments-url.com")!
-		let (sut, loader) = makeSUT(url: url)
-		XCTAssertEqual(loader.loadedUrls, [], "Expected no loading requests before view is loaded")
+		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.loadCallCount, 0, "Expected no loading requests before view is loaded")
 		
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.loadedUrls, [url], "Expected a loading request once view is loaded")
+		XCTAssertEqual(loader.loadCallCount, 1, "Expected a loading request once view is loaded")
 		
 		sut.simulateUserInitiatedFeedCommentsReload()
-		XCTAssertEqual(loader.loadedUrls, [url, url], "Expected another loading request once user initiates a reload")
+		XCTAssertEqual(loader.loadCallCount, 2, "Expected another loading request once user initiates a reload")
 		
 		sut.simulateUserInitiatedFeedCommentsReload()
-		XCTAssertEqual(loader.loadedUrls, [url, url, url], "Expected yet another loading request once user initiates another reload")
+		XCTAssertEqual(loader.loadCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 	
 	func test_loadingFeedCommentsIndicator_isVisibleWhileLoadingFeedComments() {
@@ -119,12 +118,11 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	func test_deinit_cancelsRunningRequest() {
 		let taskSpy = TaskSpy()
 		let loader = LoaderSpy(taskSpy: taskSpy)
-		let url = anyURL()
 		
 		var sut: FeedCommentsViewController?
 		
 		autoreleasepool {
-			sut = FeedCommentsUIComposer.commentsComposedWith(url: url, feedCommentsLoader: loader)
+			sut = FeedCommentsUIComposer.commentsComposedWith(feedCommentsLoader: loader)
 			sut?.loadViewIfNeeded()
 		}
 		
@@ -149,9 +147,9 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedCommentsUIComposer.commentsComposedWith(url: url, feedCommentsLoader: loader)
+		let sut = FeedCommentsUIComposer.commentsComposedWith(feedCommentsLoader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
@@ -177,15 +175,14 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	
 	private class LoaderSpy: FeedCommentsLoader {
 		
-		private(set) var loadedUrls: [URL] = []
 		private var commentsRequests: [(FeedCommentsLoader.Result) -> Void] = []
 		private let taskSpy: TaskSpy
+		
 		init(taskSpy: TaskSpy = TaskSpy()) {
 			self.taskSpy = taskSpy
 		}
 		
-		func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
-			loadedUrls.append(url)
+		func load(completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
 			commentsRequests.append(completion)
 			return taskSpy
 		}
@@ -196,6 +193,10 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		
 		func completeCommentsLoadingWithError(at index: Int = 0) {
 			commentsRequests[index](.failure(anyNSError()))
+		}
+		
+		var loadCallCount: Int {
+			commentsRequests.count
 		}
 	}
 	

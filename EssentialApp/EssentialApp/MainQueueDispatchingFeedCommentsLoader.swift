@@ -13,8 +13,8 @@ final class MainQueueDispatchingFeedCommentsLoader: FeedCommentsLoader {
 		self.adaptee = adaptee
 	}
 	
-	func load(url: URL, completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
-		adaptee.load(url: url) { result in
+	func load(completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
+		adaptee.load { result in
 			if Thread.isMainThread {
 				completion(result)
 			} else {

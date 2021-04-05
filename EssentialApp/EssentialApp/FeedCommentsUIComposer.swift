@@ -11,10 +11,9 @@ public final class FeedCommentsUIComposer {
 	private init() {}
 	
 	public static func commentsComposedWith(
-		url: URL,
 		feedCommentsLoader: FeedCommentsLoader
 	) -> FeedCommentsViewController {
-		let presentationAdapter = FeedCommentsLoaderPresentationAdapter(url: url, feedCommentsLoader: MainQueueDispatchingFeedCommentsLoader(adaptee: feedCommentsLoader))
+		let presentationAdapter = FeedCommentsLoaderPresentationAdapter(feedCommentsLoader: MainQueueDispatchingFeedCommentsLoader(adaptee: feedCommentsLoader))
 		
 		let feedCommentsController = makeFeedCommentsViewController(
 			delegate: presentationAdapter,
