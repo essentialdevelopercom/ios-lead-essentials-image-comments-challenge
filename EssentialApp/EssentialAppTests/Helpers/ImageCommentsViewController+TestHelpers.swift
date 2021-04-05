@@ -22,6 +22,10 @@ extension ImageCommentsViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 
+	func simulateViewDidDisappear() {
+		viewDidDisappear(false)
+	}
+
 	func numberOfRenderedImageCommentViews() -> Int {
 		tableView.numberOfRows(inSection: imageCommentsSection)
 	}

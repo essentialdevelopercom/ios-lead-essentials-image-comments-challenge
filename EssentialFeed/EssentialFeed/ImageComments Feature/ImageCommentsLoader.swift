@@ -6,8 +6,12 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
+public protocol ImageCommentsLoaderTask {
+	func cancel()
+}
+
 public protocol ImageCommentsLoader {
 	typealias Result = Swift.Result<[ImageComment], Error>
 
-	func load(completion: @escaping (Result) -> Void)
+	func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask
 }

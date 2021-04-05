@@ -110,6 +110,18 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(cell.createdAtText, RelativeDateTimeFormatter().localizedString(for: oneHourAgo, relativeTo: Date()))
 	}
 
+	func test_imageCommentsView_cancelsImageCommentsRequestWhenUserNavigatesBack() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+
+		loader.completeImageCommentsLoading(with: [makeImageComment()], at: 0)
+
+		sut.simulateViewDidDisappear()
+
+		XCTAssertEqual(loader.cancelledImageCommentsCompletions.count, 1)
+	}
+
 	func test_imageCommentsView_doesNotRenderImageCommentWhenNoLongerVisible() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
@@ -180,13 +192,27 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	class LoaderSpy: ImageCommentsLoader {
-		private var completions = [(ImageCommentsLoader.Result) -> Void]()
+		private struct TaskSpy: ImageCommentsLoaderTask {
+			let cancelCallback: () -> Void
+
+			func cancel() {
+				cancelCallback()
+			}
+		}
+
+		private(set) var completions = [(ImageCommentsLoader.Result) -> Void]()
+
+		private(set) var cancelledImageCommentsCompletions = [(ImageCommentsLoader.Result) -> Void]()
+
 		var loadCallCount: Int {
 			completions.count
 		}
 
-		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
+		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			completions.append(completion)
+			return TaskSpy { [weak self] in
+				self?.cancelledImageCommentsCompletions.append(completion)
+			}
 		}
 
 		func completeImageCommentsLoading(at index: Int) {

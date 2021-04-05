@@ -83,8 +83,9 @@ private final class ImageCommentPresentationAdapter: ImageCommentCellControllerD
 }
 
 private final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
-	private let imageCommentsLoader: ImageCommentsLoader
 	var presenter: ImageCommentsPresenter?
+	private let imageCommentsLoader: ImageCommentsLoader
+	private var imageCommentsLoadTask: ImageCommentsLoaderTask?
 
 	init(imageCommentsLoader: ImageCommentsLoader) {
 		self.imageCommentsLoader = imageCommentsLoader
@@ -93,7 +94,7 @@ private final class ImageCommentsPresentationAdapter: ImageCommentsViewControlle
 	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingImageComments()
 
-		imageCommentsLoader.load { [weak self] result in
+		imageCommentsLoadTask = imageCommentsLoader.load { [weak self] result in
 			switch result {
 			case let .success(imageComments):
 				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
@@ -102,5 +103,9 @@ private final class ImageCommentsPresentationAdapter: ImageCommentsViewControlle
 				self?.presenter?.didFinishLoadingImageComments(with: error)
 			}
 		}
+	}
+
+	func didCancelImageCommentsRequest() {
+		imageCommentsLoadTask?.cancel()
 	}
 }

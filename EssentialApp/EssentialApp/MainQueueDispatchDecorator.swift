@@ -25,7 +25,7 @@ final class MainQueueDispatchDecorator<T> {
 }
 
 extension MainQueueDispatchDecorator: ImageCommentsLoader where T == ImageCommentsLoader {
-	func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) {
+	func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 		decoratee.load { [weak self] result in
 			self?.dispatch { completion(result) }
 		}
