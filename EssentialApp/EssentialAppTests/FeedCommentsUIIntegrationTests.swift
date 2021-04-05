@@ -111,6 +111,8 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		loader.completeCommentsLoadingWithError(at: 0)
 		
+		XCTAssertEqual(sut.errorMessage, localized("FEED_COMMENTS_VIEW_CONNECTION_ERROR"))
+		
 		sut.errorView.simulateTap()
 		
 		XCTAssertEqual(sut.errorMessage, nil)
