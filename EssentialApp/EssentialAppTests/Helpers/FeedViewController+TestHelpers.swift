@@ -39,6 +39,11 @@ extension FeedViewController {
 		let index = IndexPath(row: row, section: feedImagesSection)
 		ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
 	}
+
+	func simulateFeedImageViewTap(at row: Int) {
+		let index = IndexPath(row: row, section: feedImagesSection)
+		tableView(tableView, didSelectRowAt: index)
+	}
 	
 	func renderedFeedImageData(at index: Int) -> Data? {
 		return simulateFeedImageViewVisible(at: index)?.renderedImage
