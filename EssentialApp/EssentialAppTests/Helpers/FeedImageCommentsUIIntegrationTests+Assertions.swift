@@ -29,9 +29,15 @@ extension FeedImageCommentsUIIntegrationTests {
 	func assertThat(_ sut: FeedImageCommentsViewController, hasViewConfiguredFor imageComment: FeedImageComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.feedImageCommentView(at: index)
 		
-		guard let _ = view as? FeedImageCommentCell else {
+		guard let cell = view as? FeedImageCommentCell else {
 			return XCTFail("Expected \(FeedImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
+	
+		XCTAssertEqual(cell.messageText, imageComment.message, "Expected cell message text to equal the message of the comment at index \(index)", file: file, line: line)
+		
+		XCTAssertEqual(cell.createdAtText, imageComment.formattedDate, "Expected cell created at date to equal the date of the comment at index \(index)", file: file, line: line)
+		
+		XCTAssertEqual(cell.authorText, imageComment.author.username, "Expected cell author text to equal the username of the comment at index \(index)", file: file, line: line)
 	}
 	
 	private func executeRunLoopToCleanUpReferences() {
