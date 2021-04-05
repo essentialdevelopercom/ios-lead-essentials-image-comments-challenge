@@ -8,10 +8,10 @@ import EssentialFeediOS
 
 final class FeedViewAdapter: FeedView {
 	private weak var controller: FeedViewController?
-	private let onImageSelection: (FeedImage)->()
+	private let onImageSelection: (FeedImage) -> Void
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
 	
-	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, onImageSelection: @escaping (FeedImage)->()) {
+	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, onImageSelection: @escaping (FeedImage) -> Void) {
 		self.controller = controller
 		self.imageLoader = imageLoader
 		self.onImageSelection = onImageSelection
