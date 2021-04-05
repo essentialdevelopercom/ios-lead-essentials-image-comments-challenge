@@ -94,6 +94,22 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 
+	func test_loadImageCommentsCompletion_rendersRelativeFormattedDate() {
+		let oneHourAgo = Date().addingTimeInterval(-3600)
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+
+		loader.completeImageCommentsLoading(with: [makeImageComment(message: "a message", authorName: "an author", createdAt: oneHourAgo)], at: 0)
+
+		let view = sut.imageCommentView(at: 0)
+		guard let cell = view as? ImageCommentCell else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead")
+		}
+
+		XCTAssertEqual(cell.createdAtText, RelativeDateTimeFormatter().localizedString(for: oneHourAgo, relativeTo: Date()))
+	}
+
 	func test_imageCommentsView_doesNotRenderImageCommentWhenNoLongerVisible() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
@@ -147,15 +163,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message to be \(imageComment.message) for image comment view at index \(index)", file: file, line: line)
 		XCTAssertEqual(cell.authorNameText, imageComment.author.username, "Expected author to be \(imageComment.author) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.createdAtText, dateFormatter.string(from: imageComment.createdAt), "Expected created at to be \(dateFormatter.string(from: imageComment.createdAt)) for image comment view at index \(index)", file: file, line: line)
 	}
-
-	private var dateFormatter: DateFormatter = {
-		let df = DateFormatter()
-		df.dateStyle = .medium
-		df.timeStyle = .medium
-		return df
-	}()
 
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"

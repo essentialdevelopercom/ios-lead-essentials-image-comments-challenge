@@ -46,10 +46,7 @@ private final class ImageCommentsViewAdapter: ImageCommentsView {
 	private weak var controller: ImageCommentsViewController?
 
 	private lazy var formattedDate = { (date: Date) -> String? in
-		let df = DateFormatter()
-		df.dateStyle = .medium
-		df.timeStyle = .medium
-		return df.string(from: date)
+		RelativeDateTimeFormatter().localizedString(for: date, relativeTo: Date())
 	}
 
 	init(controller: ImageCommentsViewController? = nil) {
