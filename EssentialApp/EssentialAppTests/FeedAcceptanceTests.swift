@@ -65,9 +65,10 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func launch(
 		httpClient: HTTPClientStub = .offline,
-		store: InMemoryFeedStore = .empty
+		store: InMemoryFeedStore = .empty,
+		animationsEnabled: Bool = false
 	) -> FeedViewController {
-		let sut = SceneDelegate(httpClient: httpClient, store: store)
+		let sut = SceneDelegate(httpClient: httpClient, store: store, animationsEnabled: animationsEnabled)
 		sut.window = UIWindow()
 		sut.configureWindow()
 		

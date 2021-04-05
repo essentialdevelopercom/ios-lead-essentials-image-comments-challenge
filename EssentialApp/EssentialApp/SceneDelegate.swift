@@ -44,13 +44,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		RemoteImageCommentsLoader(url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!,
 								  client: httpClient)
 	}
+
+	private lazy var animationsEnabled: Bool = {
+		true
+	}()
 	
-	convenience init(httpClient: HTTPClient, store: (FeedStore & FeedImageDataStore)? = nil) {
+	convenience init(httpClient: HTTPClient, store: (FeedStore & FeedImageDataStore)? = nil, animationsEnabled: Bool = true) {
 		self.init()
 		self.httpClient = httpClient
 		if let store = store {
 			self.store = store
 		}
+		self.animationsEnabled = animationsEnabled
 	}
 	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -102,6 +107,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate: FeedViewControllerNavigationDelegate {
 	func didTapImageWith(id: String) {
-		navigateToDetails(with: id, animated: false)
+		navigateToDetails(with: id, animated: animationsEnabled)
 	}
 }
