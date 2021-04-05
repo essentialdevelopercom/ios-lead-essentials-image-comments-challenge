@@ -11,7 +11,8 @@ public final class FeedCommentsUIComposer {
 	private init() {}
 	
 	public static func commentsComposedWith(
-		feedCommentsLoader: FeedCommentsLoader
+		feedCommentsLoader: FeedCommentsLoader,
+		locale: Locale = Locale.current
 	) -> FeedCommentsViewController {
 		let presentationAdapter = FeedCommentsLoaderPresentationAdapter(feedCommentsLoader: MainQueueDispatchingFeedCommentsLoader(adaptee: feedCommentsLoader))
 		
@@ -22,7 +23,8 @@ public final class FeedCommentsUIComposer {
 		presentationAdapter.presenter = FeedCommentsPresenter(
 			feedCommentsView: WeakRefVirtualProxy(feedCommentsController),
 			loadingView: WeakRefVirtualProxy(feedCommentsController),
-			errorView: WeakRefVirtualProxy(feedCommentsController))
+			errorView: WeakRefVirtualProxy(feedCommentsController),
+			locale: locale)
 		
 		return feedCommentsController
 	}
