@@ -130,7 +130,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		return (sut, client)
 	}
 	
-	private func expect(sut: RemoteFeedCommentsLoader, toCompleteWith expectedResult: Result<[FeedComment], Error>, on actions: @escaping ()->Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(sut: RemoteFeedCommentsLoader, toCompleteWith expectedResult: Result<[FeedComment], Error>, on actions: @escaping () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		_ = sut.load { receivedResult in

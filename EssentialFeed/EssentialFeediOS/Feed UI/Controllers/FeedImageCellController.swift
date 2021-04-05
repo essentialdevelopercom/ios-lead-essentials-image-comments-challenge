@@ -11,11 +11,11 @@ public protocol FeedImageCellControllerDelegate {
 }
 
 public final class FeedImageCellController: FeedImageView {
-	private let onImageSelection: ()->Void
+	private let onImageSelection: () -> Void
 	private let delegate: FeedImageCellControllerDelegate
 	private var cell: FeedImageCell?
 	
-	public init(delegate: FeedImageCellControllerDelegate, onImageSelection: @escaping ()->Void) {
+	public init(delegate: FeedImageCellControllerDelegate, onImageSelection: @escaping () -> Void) {
 		self.delegate = delegate
 		self.onImageSelection = onImageSelection
 	}
