@@ -35,8 +35,10 @@ class FeedCommentsPresenterTests: XCTestCase {
 		let now = Date()
 		let calendar = Calendar(identifier: .gregorian)
 		
-		let comments = [FeedComment(id: UUID(), message: "any message", date: now.adding(mins: -5, calendar: calendar), authorName: "any name"),
-						FeedComment(id: UUID(), message: "another message", date: now.adding(days: -1, calendar: calendar), authorName: "another name")]
+		let nowMinus5Min = now.adding(mins: -5, calendar: calendar)
+		let nowMinus1Day = now.adding(days: -1, calendar: calendar)
+		let comments = [makeComment(message: "any message", date: nowMinus5Min, name: "any name"),
+						makeComment(message: "another message", date: nowMinus1Day, name: "another name")]
 		
 		sut.didFinishLoadingFeedComments(with: comments)
 		
@@ -78,6 +80,10 @@ class FeedCommentsPresenterTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
+	}
+	
+	private func makeComment(message: String, date: Date, name: String) -> FeedComment {
+		return FeedComment(id: UUID(), message: message, date: date, authorName: name)
 	}
 	
 	private class ViewSpy: FeedCommentsView, FeedCommentsLoadingView, FeedCommentsErrorView {
