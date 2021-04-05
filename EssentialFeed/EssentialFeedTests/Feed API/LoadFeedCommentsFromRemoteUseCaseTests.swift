@@ -173,7 +173,7 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	private func expectLoad(toCompleteWith expectedResult: Result<[FeedComment], Error>, data: Data, forEveryStatusCodesIn statusCodes: [Int], file: StaticString = #filePath, line: UInt = #line) {
-		let (sut, client) = makeSUT()
+		let (sut, client) = makeSUT(file: file, line: line)
 		statusCodes.enumerated().forEach { index, code in
 			expect(sut: sut, toCompleteWith: expectedResult, on: {
 				client.complete(withStatusCode: code, data: data, at: index)
