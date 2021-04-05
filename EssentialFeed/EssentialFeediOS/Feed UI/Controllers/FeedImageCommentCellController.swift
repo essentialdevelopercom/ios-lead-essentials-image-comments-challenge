@@ -10,7 +10,6 @@ import UIKit
 import EssentialFeed
 
 public class FeedImageCommentCellController {
-	private var cell: FeedImageCommentCell?
 	private let viewModel: FeedImageCommentViewModel
 	
 	public init(viewModel: FeedImageCommentViewModel) {
@@ -18,10 +17,10 @@ public class FeedImageCommentCellController {
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
-		cell = tableView.dequeueReusableCell()
-		cell?.messageLabel.text = viewModel.message
-		cell?.createdAtLabel.text = viewModel.creationDate
-		cell?.authorLabel.text = viewModel.author
-		return cell!
+		let cell: FeedImageCommentCell = tableView.dequeueReusableCell()
+		cell.messageLabel.text = viewModel.message
+		cell.createdAtLabel.text = viewModel.creationDate
+		cell.authorLabel.text = viewModel.author
+		return cell
 	}
 }
