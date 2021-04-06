@@ -65,6 +65,12 @@ extension FeedViewController {
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 	
+	func simulateFeedImageSelection(at row: Int) {
+		let dg = tableView.delegate
+		let index = IndexPath(row: row, section: feedImagesSection)
+		dg?.tableView?(tableView, didSelectRowAt: index)
+	}
+	
 	private var feedImagesSection: Int {
 		return 0
 	}
