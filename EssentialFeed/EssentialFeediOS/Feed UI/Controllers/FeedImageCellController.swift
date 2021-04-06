@@ -12,10 +12,17 @@ public protocol FeedImageCellControllerDelegate {
 
 public final class FeedImageCellController: FeedImageView {
 	private let delegate: FeedImageCellControllerDelegate
+
+	private let onSelection: () -> Void
+
 	private var cell: FeedImageCell?
 	
-	public init(delegate: FeedImageCellControllerDelegate) {
+	public init(
+		delegate: FeedImageCellControllerDelegate,
+		onSelection: @escaping () -> Void
+	) {
 		self.delegate = delegate
+		self.onSelection = onSelection
 	}
 	
 	func view(in tableView: UITableView) -> UITableViewCell {
@@ -32,6 +39,10 @@ public final class FeedImageCellController: FeedImageView {
 		releaseCellForReuse()
 		delegate.didCancelImageRequest()
 	}
+
+	func didSelect() {
+		onSelection()
+	}
 	
 	public func display(_ viewModel: FeedImageViewModel<UIImage>) {
 		cell?.locationContainer.isHidden = !viewModel.hasLocation
@@ -40,7 +51,10 @@ public final class FeedImageCellController: FeedImageView {
 		cell?.feedImageView.setImageAnimated(viewModel.image)
 		cell?.feedImageContainer.isShimmering = viewModel.isLoading
 		cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
-		cell?.onRetry = delegate.didRequestImage
+		cell?.onRetry = { [weak self] in
+			self?.delegate.didRequestImage()
+		}
+
 	}
 	
 	private func releaseCellForReuse() {

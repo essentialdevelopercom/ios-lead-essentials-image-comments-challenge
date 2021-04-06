@@ -6,6 +6,24 @@ import UIKit
 import EssentialFeediOS
 
 extension FeedViewController {
+	func simulateTapOnErrorView() {
+		errorView.simulateTap()
+	}
+	
+	func simulateTapOnFeedImage(
+		at row: Int
+	) {
+		let delegate = tableView.delegate
+		let index = IndexPath(
+			row: row,
+			section: feedImagesSection
+		)
+		delegate?.tableView?(
+			tableView,
+			didSelectRowAt: index
+		)
+	}
+
 	func simulateUserInitiatedFeedReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
@@ -45,7 +63,7 @@ extension FeedViewController {
 	}
 	
 	var errorMessage: String? {
-		return errorView?.message
+		return errorView.message
 	}
 	
 	var isShowingLoadingIndicator: Bool {
