@@ -12,7 +12,7 @@ import EssentialFeediOS
 
 class CommentsSnapshotTests: XCTestCase {
 
-	func test_emptyCommetns() {
+	func test_emptyComments() {
 		let sut = makeSUT()
 		
 		sut.display(emptyComments())
