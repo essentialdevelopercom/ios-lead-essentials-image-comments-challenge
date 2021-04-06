@@ -8,6 +8,7 @@
 
 import XCTest
 import EssentialFeediOS
+@testable import EssentialFeed
 
 class ImageCommentsSnapshotTests: XCTestCase {
 
@@ -18,6 +19,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "EMPTY_IMAGE_COMMENTS_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENTS_dark")
+	}
+
+	func test_emptyImageCommentsWithContent() {
+		let sut = makeSUT()
+
+		sut.display(imageCommentsWithContent())
+
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_WITH_CONTENT_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_CONTENT_dark")
 	}
 
 	// MARK: - Helpers
@@ -34,4 +44,50 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		return []
 	}
 
+	private func imageCommentsWithContent() -> [ImageCommentStub] {
+		[
+			ImageCommentStub(
+				message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dignissim volutpat condimentum. Nam elementum tincidunt ligula, vitae auctor arcu pulvinar sed",
+				author: "Author",
+				createdAt: "Today"
+			),
+			ImageCommentStub(
+				message: "Message",
+				author: "Another author",
+				createdAt: "One hour ago"
+			),
+		]
+	}
+
+}
+
+private extension ImageCommentsViewController {
+	func display(_ stubs: [ImageCommentStub]) {
+		let cells: [ImageCommentCellController] = stubs.map { stub in
+			let cellController = ImageCommentCellController(delegate: stub)
+			stub.controller = cellController
+			return cellController
+		}
+
+		display(cells)
+	}
+}
+
+private class ImageCommentStub: ImageCommentCellControllerDelegate {
+	let viewModel: ImageCommentViewModel
+	weak var controller: ImageCommentCellController?
+
+	init(message: String?, author: String?, createdAt: String?) {
+		viewModel = ImageCommentViewModel(
+			message: message,
+			author: author,
+			createdAt: createdAt
+		)
+	}
+
+	func didLoadCell() {
+		controller?.display(viewModel)
+	}
+
+	func willReleaseCell() {}
 }
