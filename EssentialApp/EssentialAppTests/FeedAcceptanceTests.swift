@@ -52,6 +52,20 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
+	func test_onSelectImage_displayImageComments() {
+		let feed = launch(httpClient: .online(response), store: .empty)
+		
+		feed.simulateUserSelectFeedImage(at: 0)
+		RunLoop.current.run(until: Date())
+		
+		let imageComment = feed.navigationController?.topViewController as? ImageCommentsViewController
+		
+		XCTAssertNotNil(imageComment, "should open ImageCommentsViewController for selected image")
+		XCTAssertEqual(imageComment?.numberOfRenderedImageCommentsViews, 2)
+		XCTAssertEqual(imageComment?.commentMessage(at: 0), "A Message")
+		XCTAssertEqual(imageComment?.commentMessage(at: 1), "Another Message")
+	}
+	
 	// MARK: - Helpers
 	
 	private func launch(
@@ -80,9 +94,10 @@ class FeedAcceptanceTests: XCTestCase {
 		switch url.absoluteString {
 		case "http://image.com":
 			return makeImageData()
-			
-		default:
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed":
 			return makeFeedData()
+		default:
+			return makeImageCommentsData()
 		}
 	}
 	
@@ -97,4 +112,24 @@ class FeedAcceptanceTests: XCTestCase {
 		]])
 	}
 	
+	private func makeImageCommentsData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString,
+				"message": "A Message",
+				"created_at": "2021-02-20T00:00:00+0000",
+				"author": [
+					"username": "Jen"
+				]
+			],
+			[
+				"id": UUID().uuidString,
+				"message": "Another Message",
+				"created_at": "2021-03-01T01:00:00+0000",
+				"author": [
+					"username": "Jack"
+				]
+			],
+		]])
+	}
 }

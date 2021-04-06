@@ -9,6 +9,7 @@ import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
+	private var navigationController: UINavigationController?
 	
 	private lazy var httpClient: HTTPClient = {
 		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
@@ -53,16 +54,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
+		navigationController = UINavigationController(
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
+				imageLoader: makeLocalImageLoaderWithRemoteFallback,
+				onImageSelection: showImageCommentViewController))
 		
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {
 		localFeedLoader.validateCache { _ in }
+	}
+	
+	private func showImageCommentViewController(for image: FeedImage) {
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
+		let imageCommentsLoader = RemoteImageCommentsLoader(client: httpClient, url: url)
+		let imageCommentController = ImageCommentsUIComposer.imageCommentsComposedWith(loader: imageCommentsLoader.loadPublisher)
+		navigationController?.pushViewController(imageCommentController, animated: true)
 	}
 	
 	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {

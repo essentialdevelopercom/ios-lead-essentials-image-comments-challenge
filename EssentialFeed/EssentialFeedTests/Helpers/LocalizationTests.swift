@@ -1,17 +1,23 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  LocalizationTests.swift
+//  EssentialFeedTests
+//
+//  Created by alok subedi on 02/03/2021.
+//  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
 import XCTest
-import EssentialFeed
 
-final class FeedLocalizationTests: XCTestCase {
-	
-	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
-		let table = "Feed"
-		let presentationBundle = Bundle(for: FeedPresenter.self)
-		let localizationBundles = allLocalizationBundles(in: presentationBundle)
-		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
+protocol LocalizationTests {
+	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations()
+}
+
+extension LocalizationTests {
+	func assertLocalization(for table: String, in bundle: Bundle, file: StaticString = #filePath, line: UInt = #line) {
+		let table = table
+		let presentationBundle = bundle
+		let localizationBundles = allLocalizationBundles(in: presentationBundle, file: file, line: line)
+		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table, file: file, line: line)
 		
 		localizationBundles.forEach { (bundle, localization) in
 			localizedStringKeys.forEach { key in
@@ -20,7 +26,7 @@ final class FeedLocalizationTests: XCTestCase {
 				if localizedString == key {
 					let language = Locale.current.localizedString(forLanguageCode: localization) ?? ""
 					
-					XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'")
+					XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'", file: file, line: line)
 				}
 			}
 		}
