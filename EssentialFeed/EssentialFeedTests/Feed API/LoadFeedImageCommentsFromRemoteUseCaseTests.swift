@@ -112,12 +112,12 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		let item1 = makeItem(id: UUID(),
 							 message: "a message",
-							 createdAt: "2020-05-20T11:24:59+0000".ISO8601Date,
+							 createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
 							 username: "a username")
 		
 		let item2 = makeItem(id: UUID(),
 							 message: "another message",
-							 createdAt: "2020-05-19T14:23:53+0000".ISO8601Date,
+							 createdAt: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
 							 username: "another username")
 		
 		let items = [item1.model, item2.model]
@@ -195,12 +195,12 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return try! JSONSerialization.data(withJSONObject: json)
 	}
 	
-	private func makeItem(id: UUID, message: String, createdAt: Date, username: String) -> (model: FeedImageComment, json: [String: Any]) {
-		let item = FeedImageComment(id: id, message: message, createdAt: createdAt, author: .init(username: username))
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: FeedImageComment, json: [String: Any]) {
+		let item = FeedImageComment(id: id, message: message, createdAt: createdAt.date, author: .init(username: username))
 		let json = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": createdAt.ISO8601String,
+			"created_at": createdAt.iso8601String,
 			"author": ["username": username]
 		].compactMapValues { $0 }
 		
@@ -231,21 +231,5 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		action()
 		
 		wait(for: [exp], timeout: 1.0)
-	}
-}
-
-private extension Date {
-	var ISO8601String: String {
-		let formatter = ISO8601DateFormatter()
-		formatter.formatOptions = .withInternetDateTime
-		return formatter.string(from: self)
-	}
-}
-
-private extension String {
-	var ISO8601Date: Date {
-		let formatter = ISO8601DateFormatter()
-		formatter.formatOptions = .withInternetDateTime
-		return formatter.date(from: self)!
 	}
 }
