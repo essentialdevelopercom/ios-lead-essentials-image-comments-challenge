@@ -25,8 +25,7 @@ final class FeedImageCommentsViewAdapter: FeedImageCommentsView {
 			let viewModel = FeedImageCommentViewModel(message: model.message,
 													  creationDate: date,
 													  author: model.author.username)
-			let view = FeedImageCommentCellController(viewModel: viewModel)
-			return view
+			return FeedImageCommentCellController(viewModel: viewModel)
 		})
 	}
 }
