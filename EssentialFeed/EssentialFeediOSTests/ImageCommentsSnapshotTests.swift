@@ -48,6 +48,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_LOADING_dark")
 	}
 
+	func test_imageCommentsWithDynamicFonts() {
+		let sut = makeSUT()
+
+		sut.display(imageCommentsWithContent())
+
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraExtraExtraLarge)), named: "IMAGE_COMMENTS_DYNAMIC_FONTS_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, contentSize: .extraExtraExtraLarge)), named: "IMAGE_COMMENTS_DYNAMIC_FONTS_dark")
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> ImageCommentsViewController {

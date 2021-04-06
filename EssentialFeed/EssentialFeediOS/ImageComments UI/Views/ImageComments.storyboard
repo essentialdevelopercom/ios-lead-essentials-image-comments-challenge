@@ -48,22 +48,22 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="162"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ZV-VG-kQB">
-                                            <rect key="frame" x="20" y="11" width="293" height="21"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ZV-VG-kQB">
+                                            <rect key="frame" x="20" y="11" width="310" height="20.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZV-rK-qZ4">
-                                            <rect key="frame" x="20" y="32" width="374" height="119"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eZV-rK-qZ4">
+                                            <rect key="frame" x="20" y="31.5" width="374" height="119.5"/>
                                             <string key="text">Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message </string>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="created-at" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDe-2S-vHw">
-                                            <rect key="frame" x="313" y="11" width="81" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="created-at" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDe-2S-vHw">
+                                            <rect key="frame" x="330" y="11" width="64" height="20.5"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                             <color key="textColor" systemColor="secondaryLabelColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -78,6 +78,7 @@
                                         <constraint firstItem="ZDe-2S-vHw" firstAttribute="leading" secondItem="7ZV-VG-kQB" secondAttribute="trailing" id="e7H-ii-VJl"/>
                                         <constraint firstItem="ZDe-2S-vHw" firstAttribute="trailing" secondItem="aNs-pv-pxP" secondAttribute="trailingMargin" id="fPx-tv-Gju"/>
                                         <constraint firstItem="ZDe-2S-vHw" firstAttribute="top" secondItem="aNs-pv-pxP" secondAttribute="topMargin" id="gK3-cf-Uo8"/>
+                                        <constraint firstItem="ZDe-2S-vHw" firstAttribute="bottom" secondItem="7ZV-VG-kQB" secondAttribute="bottom" id="uWF-K7-RJ1"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
