@@ -10,11 +10,16 @@ public protocol FeedImageView {
 	func display(_ model: FeedImageViewModel<Image>)
 }
 
+public protocol FeedImageRouter {
+	func goToComments(for image: FeedImage)
+}
+
 public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
 	private let view: View
 	private let imageTransformer: (Data) -> Image?
 	
-	public init(view: View, imageTransformer: @escaping (Data) -> Image?) {
+	public init(view: View, 
+				imageTransformer: @escaping (Data) -> Image?) {
 		self.view = view
 		self.imageTransformer = imageTransformer
 	}

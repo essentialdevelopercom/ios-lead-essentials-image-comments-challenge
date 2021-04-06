@@ -5,7 +5,7 @@
 import UIKit
 import EssentialFeediOS
 
-extension FeedImageCell {
+extension FeedImageCell {	
 	func simulateRetryAction() {
 		feedImageRetryButton.simulateTap()
 	}

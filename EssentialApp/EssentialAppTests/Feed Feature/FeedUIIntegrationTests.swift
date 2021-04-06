@@ -106,6 +106,20 @@ final class FeedUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_errorView_dismissesErrorMessageOnTap() {
+		let (sut, loader) = makeSUT()
+		UIView.setAnimationsEnabled(false)
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeFeedLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateErrorViewTap()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	func test_feedImageView_loadsImageURLWhenVisible() {
 		let image0 = makeImage(url: URL(string: "http://url-0.com")!)
 		let image1 = makeImage(url: URL(string: "http://url-1.com")!)
@@ -161,6 +175,19 @@ final class FeedUIIntegrationTests: XCTestCase {
 		view1?.simulateRetryAction()
 		XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator state change for first view once second image loading completes with error")
 		XCTAssertEqual(view1?.isShowingImageLoadingIndicator, true, "Expected loading indicator state change for second view on retry action")
+	}
+	
+	func test_feedImageView_callsRouterOnTap() {
+		let router = FeedImageRouterSpy()
+		let (sut, loader) = makeSUT(router: router)
+		let image0 = makeImage()
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [image0])
+		let _ = sut.simulateFeedImageViewVisible(at: 0)
+		sut.simulateFeedImageTap(at: 0)
+		
+		XCTAssertEqual(router.routerMessages, [image0])
 	}
 	
 	func test_feedImageView_rendersImageLoadedFromURL() {
@@ -319,9 +346,9 @@ final class FeedUIIntegrationTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(router: FeedImageRouter = FeedImageRouterSpy(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, router: router)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
@@ -333,5 +360,15 @@ final class FeedUIIntegrationTests: XCTestCase {
 	
 	private func anyImageData() -> Data {
 		return UIImage.make(withColor: .red).pngData()!
+	}
+	
+	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+		let table = "Feed"
+		let bundle = Bundle(for: FeedPresenter.self)
+		let value = bundle.localizedString(forKey: key, value: nil, table: table)
+		if value == key {
+			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
+		}
+		return value
 	}
 }

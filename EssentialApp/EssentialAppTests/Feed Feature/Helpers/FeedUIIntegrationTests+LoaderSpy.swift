@@ -63,4 +63,15 @@ extension FeedUIIntegrationTests {
 		}
 	}
 	
+	// MARK: - FeedImageRouter
+	
+	class FeedImageRouterSpy: FeedImageRouter {
+		
+		var routerMessages = [FeedImage]()
+		
+		func goToComments(for image: FeedImage) {
+			routerMessages.append(image)
+		}
+	}
+	
 }

@@ -26,6 +26,12 @@ extension FeedViewController {
 		return view
 	}
 	
+	func simulateFeedImageTap(at row: Int) {
+		let delegate = tableView.delegate
+		let index = IndexPath(row: row, section: feedImagesSection)
+		delegate?.tableView?(tableView, didSelectRowAt: index)
+	}
+	
 	func simulateFeedImageViewNearVisible(at row: Int) {
 		let ds = tableView.prefetchDataSource
 		let index = IndexPath(row: row, section: feedImagesSection)
@@ -45,7 +51,11 @@ extension FeedViewController {
 	}
 	
 	var errorMessage: String? {
-		return errorView?.message
+		return errorView.message
+	}
+	
+	func simulateErrorViewTap() {
+		errorView.simulateTap()
 	}
 	
 	var isShowingLoadingIndicator: Bool {

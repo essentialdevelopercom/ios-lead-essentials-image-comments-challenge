@@ -118,3 +118,19 @@ extension DispatchQueue {
 		}
 	}
 }
+
+public extension FeedImageCommentLoader {
+	typealias Publisher = AnyPublisher<[FeedImageComment], Error>
+	
+	func loadImageCommentPublisher() -> Publisher {
+		var task: FeedImageCommentLoaderTask?
+		
+		return Deferred {
+			Future { completion in
+				task = self.loadImageCommentData(completion: completion)
+			}
+		}
+		.handleEvents(receiveCancel: { task?.cancel() })
+		.eraseToAnyPublisher()
+	}
+}

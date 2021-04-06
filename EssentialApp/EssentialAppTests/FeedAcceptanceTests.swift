@@ -52,16 +52,36 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
+	func test_onFeedImageTap_displaysFeedImageComments() throws {
+		let sut = makeSUT(httpClient: .online(response), store: .empty)
+		let feed = topController(for: sut.window) as! FeedViewController
+		
+		feed.simulateFeedImageTap(at: 0)
+		
+		executeRunLoop()
+		
+		let feedCommentsController = try XCTUnwrap(topController(for: sut.window) as? FeedImageCommentViewController, "Expected a feed image comment controller as top view controller, got \(String(describing: topController)) instead")
+		
+		feedCommentsController.loadViewIfNeeded()
+		
+		XCTAssertEqual(feedCommentsController.numberOfRenderedFeedImageCommentsViews(), 3)
+	}
+		
 	// MARK: - Helpers
 	
-	private func launch(
-		httpClient: HTTPClientStub = .offline,
-		store: InMemoryFeedStore = .empty
-	) -> FeedViewController {
+	private func makeSUT(httpClient: HTTPClientStub,
+						 store: InMemoryFeedStore, 
+						 file: StaticString = #file, line: UInt = #line) -> SceneDelegate {
 		let sut = SceneDelegate(httpClient: httpClient, store: store)
 		sut.window = UIWindow()
 		sut.configureWindow()
-		
+		return sut
+	}
+	
+	private func launch(
+		httpClient: HTTPClientStub = .offline,
+		store: InMemoryFeedStore = .empty) -> FeedViewController {
+		let sut = makeSUT(httpClient: httpClient, store: store)
 		let nav = sut.window?.rootViewController as? UINavigationController
 		return nav?.topViewController as! FeedViewController
 	}
@@ -71,18 +91,27 @@ class FeedAcceptanceTests: XCTestCase {
 		sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
 	}
 	
+	private func topController(for window: UIWindow?) -> UIViewController? {
+		let root = window?.rootViewController
+		let rootNavigation = root as? UINavigationController
+		return rootNavigation?.topViewController
+	}
+	
 	private func response(for url: URL) -> (Data, HTTPURLResponse) {
 		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
 		return (makeData(for: url), response)
 	}
 	
 	private func makeData(for url: URL) -> Data {
-		switch url.absoluteString {
-		case "http://image.com":
-			return makeImageData()
+		switch url.pathComponents.last {
+		case "comments":
+			return makeFeedCommentData()
+			
+		case "feed":
+			return makeFeedData()
 			
 		default:
-			return makeFeedData()
+			return makeImageData()
 		}
 	}
 	
@@ -97,4 +126,35 @@ class FeedAcceptanceTests: XCTestCase {
 		]])
 	}
 	
+	private func responseForFeedComments(for url: URL) -> (Data, HTTPURLResponse) {
+		let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
+		return (makeFeedCommentData(), response)
+	}
+	
+	private func makeFeedCommentData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString, 
+				"message": "a messege", 
+				"created_at": "2020-05-20T11:24:59+0000",
+				"author": ["username": "An Author"]
+			],
+			[
+				"id": UUID().uuidString, 
+				"message": "a messege", 
+				"created_at": "2020-05-20T11:24:59+0000",
+				"author": ["username": "An Author"]
+			],
+			[
+				"id": UUID().uuidString, 
+				"message": "a messege", 
+				"created_at": "2020-05-20T11:24:59+0000",
+				"author": ["username": "An Author"]
+			]
+		]])
+	}
+	
+	private func executeRunLoop() {
+		RunLoop.current.run(until: Date())
+	}
 }

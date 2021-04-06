@@ -8,7 +8,8 @@ import EssentialFeed
 class FeedPresenterTests: XCTestCase {
 	
 	func test_title_isLocalized() {
-		XCTAssertEqual(FeedPresenter.title, localized("FEED_VIEW_TITLE"))
+		XCTAssertEqual(FeedPresenter.title, localized(for: FeedPresenter.self, 
+													  "FEED_VIEW_TITLE"))
 	}
 	
 	func test_init_doesNotSendMessagesToView() {
@@ -46,7 +47,8 @@ class FeedPresenterTests: XCTestCase {
 		sut.didFinishLoadingFeed(with: anyNSError())
 		
 		XCTAssertEqual(view.messages, [
-			.display(errorMessage: localized("FEED_VIEW_CONNECTION_ERROR")),
+			.display(errorMessage: localized(for: FeedPresenter.self,
+											 "FEED_VIEW_CONNECTION_ERROR")),
 			.display(isLoading: false)
 		])
 	}
@@ -61,9 +63,9 @@ class FeedPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
-	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
+	private func localized(for classType: AnyClass,_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "Feed"
-		let bundle = Bundle(for: FeedPresenter.self)
+		let bundle = Bundle(for: classType)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
 		if value == key {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
