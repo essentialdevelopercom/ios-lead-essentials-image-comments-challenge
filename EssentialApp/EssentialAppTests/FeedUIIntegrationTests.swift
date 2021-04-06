@@ -317,11 +317,28 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	func test_onFeedSelection_callsImageSelectionHandlerForExactFeedImage() {
+		let firstImage = makeImage()
+		let secondImage = makeImage()
+		var capturedFeedImages = [FeedImage]()
+		let (sut, loader) = makeSUT { feed in
+			capturedFeedImages.append(feed)
+		}
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [firstImage, secondImage], at: 0)
+		
+		sut.simulateFeedImageSelection(at: 0)
+		XCTAssertEqual(capturedFeedImages, [firstImage] , "Expected to capture firstImage")
+		
+		sut.simulateFeedImageSelection(at: 1)
+		XCTAssertEqual(capturedFeedImages, [firstImage, secondImage], "Expected to capture secondImage this time")
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(imageSelection: @escaping (FeedImage) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, imageSelection: imageSelection)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

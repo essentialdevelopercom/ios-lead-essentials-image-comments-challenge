@@ -10,6 +10,13 @@ extension FeedViewController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
+	func simulateFeedImageSelection(at row: Int) {
+		guard numberOfRenderedFeedImageViews() > row else { return }
+		let delegate = tableView.delegate
+		let indexPath = IndexPath(row: row, section: feedImagesSection)
+		delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+	}
+	
 	@discardableResult
 	func simulateFeedImageViewVisible(at index: Int) -> FeedImageCell? {
 		return feedImageView(at: index) as? FeedImageCell

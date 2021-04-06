@@ -52,6 +52,16 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 	
+	func test_feedImageSelect_callsimageSelectionToImageComments() {
+		let feed = launch(httpClient: .online(response), store: .empty)
+		feed.view.enforceLayoutCycle()
+		
+		feed.simulateFeedImageSelection(at: 0)
+		feed.view.enforceLayoutCycle()
+		
+		XCTAssertNotNil(feed.navigationController?.topViewController as? ImageCommentsViewController, "Expected `ImageViewController` to be shown on the top of view hierarchy")
+	}
+	
 	// MARK: - Helpers
 	
 	private func launch(
@@ -81,6 +91,12 @@ class FeedAcceptanceTests: XCTestCase {
 		case "http://image.com":
 			return makeImageData()
 			
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed":
+			return makeFeedData()
+			
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/e8ab0ee8-8728-11eb-8dcd-0242ac130003/comments":
+			return Data()
+			
 		default:
 			return makeFeedData()
 		}
@@ -92,8 +108,8 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
-			["id": UUID().uuidString, "image": "http://image.com"]
+			["id": "e8ab0ee8-8728-11eb-8dcd-0242ac130003", "image": "http://image.com"],
+			["id": "867c7e6b-0031-49a3-b07d-37cf811fc856", "image": "http://image.com"]
 		]])
 	}
 	

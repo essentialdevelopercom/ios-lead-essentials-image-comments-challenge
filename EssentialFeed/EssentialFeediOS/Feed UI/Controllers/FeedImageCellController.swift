@@ -8,6 +8,7 @@ import EssentialFeed
 public protocol FeedImageCellControllerDelegate {
 	func didRequestImage()
 	func didCancelImageRequest()
+	func didSelectImage()
 }
 
 public final class FeedImageCellController: FeedImageView {
@@ -41,6 +42,10 @@ public final class FeedImageCellController: FeedImageView {
 		cell?.feedImageContainer.isShimmering = viewModel.isLoading
 		cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
 		cell?.onRetry = delegate.didRequestImage
+	}
+
+	public func select() {
+		delegate.didSelectImage()
 	}
 	
 	private func releaseCellForReuse() {
