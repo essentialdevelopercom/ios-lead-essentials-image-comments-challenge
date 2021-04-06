@@ -12,14 +12,16 @@ import EssentialFeed
 class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_init_doesNotRequestDataFromURL() {
-		let (_, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (_, client) = makeSUT(baseURL: baseURL)
 		
 		XCTAssertTrue(client.requestedURLs.isEmpty)
 	}
 	
 	func test_loadImageCommentsFromURL_requestsCommentsFromURL() {
+		let baseURL = URL(string: "https://a-given-url.com")!
 		let image = anyImage()
-		let (sut, client) = makeSUT(image: image)
+		let (sut, client) = makeSUT(baseURL: baseURL, image: image)
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
 		
 		_ = sut.load() { _ in }
@@ -28,9 +30,10 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURLTwice_requestsCommentsFromURLTwice() {
+		let baseURL = URL(string: "https://a-given-url.com")!
 		let image = anyImage()
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
-		let (sut, client) = makeSUT(image: image)
+		let (sut, client) = makeSUT(baseURL: baseURL, image: image)
 		
 		_ = sut.load() { _ in }
 		_ = sut.load() { _ in }
@@ -39,7 +42,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURL_deliversConnectivityErrorOnClientError() {
-		let (sut, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(baseURL: baseURL)
 		let clientError = NSError(domain: "a client error", code: 0)
 		
 		expect(sut, toCompleteWith: failure(.connectivity), when: {
@@ -48,7 +52,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURL_deliversInvalidDataErrorOnNon2xxHTTPResponse() {
-		let (sut, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(baseURL: baseURL)
 		
 		let samples = [199, 150, 300, 400, 500]
 		
@@ -60,7 +65,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURL_deliversInvalidDataErrorOn2xxHTTPResponseWithEmptyData() {
-		let (sut, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(baseURL: baseURL)
 		
 		let samples = [200, 201, 299]
 		
@@ -73,7 +79,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
-		let (sut, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(baseURL: baseURL)
 		
 		let samples = [200, 201, 299]
 		
@@ -86,7 +93,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() {
-		let (sut, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(baseURL: baseURL)
 		
 		let samples = [200, 201, 299]
 		
@@ -99,7 +107,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
-		let (sut, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(baseURL: baseURL)
 		
 		let item1 = makeItem(id: UUID(),
 							 message: "a message",
@@ -124,9 +133,10 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_cancelLoadImageCommentsURLTask_cancelsClientURLRequest() {
+		let baseURL = URL(string: "https://a-given-url.com")!
 		let image = anyImage()
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
-		let (sut, client) = makeSUT(image: image)
+		let (sut, client) = makeSUT(baseURL: baseURL, image: image)
 		
 		let task = sut.load() { _ in }
 		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
@@ -136,7 +146,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURL_doesNotDeliverResultAfterCancellingTask() {
-		let (sut, client) = makeSUT()
+		let baseURL = URL(string: "https://a-given-url.com")!
+		let (sut, client) = makeSUT(baseURL: baseURL)
 		let nonEmptyData = Data("non-empty data".utf8)
 		
 		var received = [FeedImageCommentsLoader.Result]()
@@ -167,10 +178,9 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line, image: FeedImage = anyImage()) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(baseURL: URL, file: StaticString = #filePath, line: UInt = #line, image: FeedImage = anyImage()) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let url = URL(string: "https://a-given-url.com")!
-		let sut = RemoteFeedImageCommentsLoader(baseURL: url, client: client, feedImage: image)
+		let sut = RemoteFeedImageCommentsLoader(baseURL: baseURL, client: client, feedImage: image)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
 		return (sut, client)
