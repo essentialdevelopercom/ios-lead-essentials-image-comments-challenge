@@ -39,6 +39,15 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_ERROR_MESSAGE_dark")
 	}
 
+	func test_imageCommentsLoading() {
+		let sut = makeSUT()
+
+		sut.display(.init(isLoading: true))
+
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_LOADING_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_LOADING_dark")
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> ImageCommentsViewController {
