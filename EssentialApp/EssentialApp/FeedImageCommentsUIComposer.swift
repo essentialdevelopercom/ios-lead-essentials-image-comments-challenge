@@ -22,9 +22,9 @@ public final class FeedImageCommentsUIComposer {
 		let feedImageCommentsController = makeFeedImageCommentsViewController(delegate: presentationAdapter, title: FeedImageCommentsPresenter.title)
 		
 		presentationAdapter.presenter = FeedImageCommentsPresenter(
-			feedImageCommentsView: FeedImageCommentsViewAdapter(controller: feedImageCommentsController, formatter: .init()),
+			feedImageCommentsView: FeedImageCommentsViewAdapter(controller: feedImageCommentsController),
 			loadingView: WeakRefVirtualProxy(feedImageCommentsController),
-			errorView: WeakRefVirtualProxy(feedImageCommentsController))
+			errorView: WeakRefVirtualProxy(feedImageCommentsController), formatter: .init())
 		
 		return feedImageCommentsController
 	}

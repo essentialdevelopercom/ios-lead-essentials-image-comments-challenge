@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct FeedImageCommentViewModel {
+public struct FeedImageCommentViewModel: Hashable {
 	public let message: String
 	public let creationDate: String
 	public let author: String

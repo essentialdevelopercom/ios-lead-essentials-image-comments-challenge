@@ -16,6 +16,7 @@ public final class FeedImageCommentsPresenter {
 	private let feedImageCommentsView: FeedImageCommentsView
 	private let loadingView: FeedLoadingView
 	private let errorView: FeedErrorView
+	private let formatter: RelativeDateTimeFormatter
 	
 	private var feedImageCommentsLoadError: String {
 		return NSLocalizedString("FEED_VIEW_CONNECTION_ERROR",
@@ -24,10 +25,11 @@ public final class FeedImageCommentsPresenter {
 			 comment: "Error message displayed when we can't load the image feed comments from the server")
 	}
 	
-	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView) {
+	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView, formatter: RelativeDateTimeFormatter) {
 		self.feedImageCommentsView = feedImageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.formatter = formatter
 	}
 	
 	public static var title: String {
@@ -43,7 +45,13 @@ public final class FeedImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [FeedImageComment]) {
-		feedImageCommentsView.display(FeedImageCommentsViewModel(comments: comments))
+		let commentViewModels = comments.map { model -> FeedImageCommentViewModel in
+			let date = formatter.localizedString(for: model.createdAt, relativeTo: Date())
+			return FeedImageCommentViewModel(message: model.message,
+											 creationDate: date,
+											 author: model.author.username)
+		}
+		feedImageCommentsView.display(FeedImageCommentsViewModel(comments: commentViewModels))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
