@@ -25,7 +25,6 @@ public final class RemoteCommentsLoader: ImageCommentsLoader {
 		self.client = client
 	}
 	
-	@discardableResult
 	public func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion: completion)
 		task.wrappedTask = client.get(from: url) { [weak self] result in
