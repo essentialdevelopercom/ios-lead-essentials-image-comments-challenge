@@ -14,7 +14,6 @@ extension ImageCommentsUIIntegrationTests {
 	class LoaderSpy: ImageCommentsLoader {
 		
 		private struct TaskSpy: ImageCommentsLoaderTask {
-			let id: UUID
 			let cancelCallback: () -> Void
 			
 			func cancel() {
@@ -42,9 +41,8 @@ extension ImageCommentsUIIntegrationTests {
 		@discardableResult
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			imageCommentsRequests.append(completion)
-			let taskId = UUID()
-			return TaskSpy(id: taskId) { [weak self] in
-				self?.cancelledRequests.append(taskId)
+			return TaskSpy() { [weak self] in
+				self?.cancelledRequests.append(UUID())
 			}
 		}
 	}

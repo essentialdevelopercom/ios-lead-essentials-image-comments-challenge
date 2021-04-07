@@ -37,8 +37,8 @@ extension ImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(ImageCommentCell.self) instance", file: file, line: line)
 		}
 		
-		XCTAssertEqual(cell.usernameText, imageComment.author, "Expected username text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.createdAtText, imageComment.createdAt, "Expected created at text to be \(String(describing: imageComment.createdAt)) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.commentText, imageComment.message, "Expected comment text to be \(String(describing: imageComment.author)) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.usernameText, imageComment.author, "username at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.createdAtText, imageComment.createdAt, "createdAt at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.commentText, imageComment.message, "comment at index \(index)", file: file, line: line)
 	}
 }

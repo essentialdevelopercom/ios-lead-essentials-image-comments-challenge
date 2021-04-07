@@ -4,6 +4,7 @@
 
 import Foundation
 import EssentialFeed
+import XCTest
 
 func anyNSError() -> NSError {
 	return NSError(domain: "any error", code: 0)
@@ -20,8 +21,6 @@ func anyData() -> Data {
 func uniqueFeed() -> [FeedImage] {
 	return [FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())]
 }
-
-import XCTest
 
 func localized(_ key: String, in table: String, from bundle: Bundle, file: StaticString = #filePath, line: UInt = #line) -> String {
 	let value = bundle.localizedString(forKey: key, value: nil, table: table)
