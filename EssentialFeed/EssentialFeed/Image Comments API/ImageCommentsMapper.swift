@@ -14,7 +14,7 @@ final class ImageCommentsMapper {
 	}
 	
 	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteImageComment] {
-		guard response.isOK else {
+		guard response.statusCodeIs2XX() else {
 			throw RemoteCommentsLoader.Error.invalidData
 		}
 		
@@ -26,5 +26,11 @@ final class ImageCommentsMapper {
 		} catch {
 			throw RemoteCommentsLoader.Error.invalidData
 		}
+	}
+}
+
+private extension HTTPURLResponse {
+	func statusCodeIs2XX() -> Bool {
+		(200...299).contains(statusCode)
 	}
 }
