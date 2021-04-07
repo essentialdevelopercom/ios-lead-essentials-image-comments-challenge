@@ -132,7 +132,10 @@ class ImageCommentViewControllerTest: XCTestCase {
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentViewController(loader: loader)
+		let bundle = Bundle(for: ImageCommentViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComment", bundle: bundle)
+		let sut = storyboard.instantiateInitialViewController() as! ImageCommentViewController
+		sut.loader = loader
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

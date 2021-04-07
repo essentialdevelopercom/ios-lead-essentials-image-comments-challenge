@@ -13,7 +13,7 @@ import EssentialFeed
 public final class ImageCommentViewController: UITableViewController {
 	@IBOutlet public weak var errorView: UIView!
 	
-	private var loader: ImageCommentLoader?
+	public var loader: ImageCommentLoader?
 	private var tableModel = [ImageComment]()
 	private var loadCommentTask: ImageCommentLoaderTask?
 	
@@ -59,10 +59,10 @@ public final class ImageCommentViewController: UITableViewController {
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellModel = tableModel[indexPath.row]
-		let cell = ImageCommentCell()
+		let cell: ImageCommentCell = tableView.dequeueReusableCell()
 		cell.nameLabel.text = cellModel.author.username
-		cell.datePostedLabel.text = cellModel.message
-		cell.commentLabel.text = cellModel.createdAt.description
+		cell.datePostedLabel.text = cellModel.createdAt.description
+		cell.commentLabel.text = cellModel.message
 		return cell
 	}
 }
