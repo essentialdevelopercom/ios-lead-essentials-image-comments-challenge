@@ -191,7 +191,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			"message": message,
 			"created_at": createdAt.iso8601String,
 			"author": ["username": username]
-		].compactMapValues { $0 }
+		].mapValues { $0 }
 		
 		return (item, json)
 	}
