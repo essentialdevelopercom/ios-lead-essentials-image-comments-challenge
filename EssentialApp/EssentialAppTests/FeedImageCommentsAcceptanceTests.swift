@@ -21,19 +21,19 @@ class FeedImageCommentsAcceptanceTests: XCTestCase {
 		
 		let commentsVC = feed.navigationController!.topViewController! as! FeedImageCommentsViewController
 		
-		XCTAssertEqual(commentsVC.numberOfRenderedFeedImageCommentViews(), 2, "Expected to render two comments")
-		XCTAssertNil(commentsVC.errorMessage, "Expected not to display an error message")
+		XCTAssertEqual(commentsVC.numberOfRenderedFeedImageCommentViews(), 2, "Render two comments")
+		XCTAssertNil(commentsVC.errorMessage, "No display an error message")
 		
 		let comment1 = commentsVC.feedImageCommentView(at: 0)
 		let comment2 = commentsVC.feedImageCommentView(at: 1)
-		XCTAssertNotNil(comment1, "Expected first comment to not be nil")
-		XCTAssertNotNil(comment2, "Expected second comment to not be nil")
+		XCTAssertNotNil(comment1, "Non nil first comment")
+		XCTAssertNotNil(comment2, "Non nil second comment")
 		
-		XCTAssertEqual(comment1?.messageText, "a message", "Expected first comment message not be `a message`")
-		XCTAssertEqual(comment2?.messageText, "another message", "Expected second comment message to be `another message`")
+		XCTAssertEqual(comment1?.messageText, "a message", "First comment message")
+		XCTAssertEqual(comment2?.messageText, "another message", "Second comment message")
 		
-		XCTAssertEqual(comment1?.authorText, "a username", "Expected first comment author to be `a username`")
-		XCTAssertEqual(comment2?.authorText, "another username", "Expected first comment author to be `another username`")
+		XCTAssertEqual(comment1?.authorText, "a username", "First comment author")
+		XCTAssertEqual(comment2?.authorText, "another username", "First comment author")
 	}
 	
 	// MARK: - Helpers
