@@ -111,7 +111,7 @@ class ImageCommentViewControllerTest: XCTestCase {
 			
 			XCTAssertEqual(view?.authorNameText, imageComment.author.username)
 			XCTAssertEqual(view?.commentText, imageComment.message)
-			XCTAssertEqual(view?.dateText, imageComment.createdAt.description)
+			XCTAssertEqual(view?.dateText, imageComment.createdAt.relativeDate())
 		}
 	}
 	
@@ -126,6 +126,43 @@ class ImageCommentViewControllerTest: XCTestCase {
 		sut = nil
 		
 		XCTAssertEqual(loader.cancelledCompletions.count, 1)
+	}
+	
+	func test_loadCommentActions_displaysCorrectRelativeDateFormatting() {
+		let (sut, loader) = makeSUT()
+		var view: ImageCommentCell
+		
+		sut.loadViewIfNeeded()
+		
+		view = makeImageCommentCell(to: sut, loader, .minute, -1)
+		XCTAssertEqual(view.dateText, "1 minute ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .minute, -2)
+		XCTAssertEqual(view.dateText, "2 minutes ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .hour, -1)
+		XCTAssertEqual(view.dateText, "1 hour ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .hour, -2)
+		XCTAssertEqual(view.dateText, "2 hours ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .day, -1)
+		XCTAssertEqual(view.dateText, "1 day ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .day, -2)
+		XCTAssertEqual(view.dateText, "2 days ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .month, -1)
+		XCTAssertEqual(view.dateText, "1 month ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .month, -2)
+		XCTAssertEqual(view.dateText, "2 months ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .year, -1)
+		XCTAssertEqual(view.dateText, "1 year ago")
+		
+		view = makeImageCommentCell(to: sut, loader, .year, -2)
+		XCTAssertEqual(view.dateText, "2 years ago")
 	}
 	
 	// MARK: - Helpers
@@ -155,5 +192,13 @@ class ImageCommentViewControllerTest: XCTestCase {
 										createdAt: date,
 										author: author)
 		return imageComment
+	}
+	
+	func makeImageCommentCell(to sut: ImageCommentViewController, _ loader: LoaderSpy, _ calendarComponent: Calendar.Component, _ timeComponentValue: Int) -> ImageCommentCell {
+		let todaysDate = Date()
+		let relativeDate = Calendar(identifier: .gregorian).date(byAdding: calendarComponent, value: timeComponentValue, to: todaysDate)!
+		let imageComment = makeImageComment(comment: "comment", date: relativeDate, authorName: "authorName")
+		loader.completeCommentLoading(with: [imageComment])
+		return sut.imageCommentView(at: 0) as! ImageCommentCell
 	}
 }
