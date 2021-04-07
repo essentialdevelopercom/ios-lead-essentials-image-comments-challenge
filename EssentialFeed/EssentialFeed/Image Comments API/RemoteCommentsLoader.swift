@@ -10,8 +10,6 @@ import Foundation
 
 public final class RemoteCommentsLoader: ImageCommentsLoader {
 	
-	// MARK: - Types
-	
 	public enum Error: Swift.Error {
 		case connectivity
 		case invalidData
@@ -19,19 +17,13 @@ public final class RemoteCommentsLoader: ImageCommentsLoader {
 	
 	public typealias Result = ImageCommentsLoader.Result
 	
-	// MARK: - Properties
-	
 	private let url: URL
 	private let client: HTTPClient
-	
-	// MARK: - Init
 	
 	public init(url: URL, client: HTTPClient) {
 		self.url = url
 		self.client = client
 	}
-	
-	// MARK: - Public interface
 	
 	@discardableResult
 	public func load(completion: @escaping (Result) -> Void) -> ImageCommentsLoaderTask {
@@ -49,8 +41,6 @@ public final class RemoteCommentsLoader: ImageCommentsLoader {
 		}
 		return task
 	}
-	
-	// MARK: - Helpers
 	
 	private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
 		do {
