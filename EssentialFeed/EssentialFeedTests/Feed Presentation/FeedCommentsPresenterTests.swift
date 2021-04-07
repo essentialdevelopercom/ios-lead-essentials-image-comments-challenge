@@ -76,7 +76,7 @@ class FeedCommentsPresenterTests: XCTestCase {
 	
 	private func makeSUT(relativeToDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view, formatter: .init(), relativeToDate: relativeToDate)
+		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view, referenceDate: relativeToDate)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)

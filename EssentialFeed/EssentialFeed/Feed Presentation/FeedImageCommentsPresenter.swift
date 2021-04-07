@@ -17,7 +17,7 @@ public final class FeedImageCommentsPresenter {
 	private let loadingView: FeedLoadingView
 	private let errorView: FeedErrorView
 	private let formatter: RelativeDateTimeFormatter
-	private let relativeToDate: Date
+	private let referenceDate: Date
 	
 	private var feedImageCommentsLoadError: String {
 		return NSLocalizedString("FEED_VIEW_CONNECTION_ERROR",
@@ -26,12 +26,12 @@ public final class FeedImageCommentsPresenter {
 			 comment: "Error message displayed when we can't load the image feed comments from the server")
 	}
 	
-	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView, formatter: RelativeDateTimeFormatter, relativeToDate: Date) {
+	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView, referenceDate: Date = Date()) {
 		self.feedImageCommentsView = feedImageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
-		self.formatter = formatter
-		self.relativeToDate = relativeToDate
+		self.formatter = .init()
+		self.referenceDate = referenceDate
 	}
 	
 	public static var title: String {
@@ -47,11 +47,10 @@ public final class FeedImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [FeedImageComment]) {
-		let commentViewModels = comments.map { model -> FeedImageCommentViewModel in
-			let date = formatter.localizedString(for: model.createdAt, relativeTo: relativeToDate)
-			return FeedImageCommentViewModel(message: model.message,
-											 creationDate: date,
-											 author: model.author.username)
+		let commentViewModels = comments.map {
+			FeedImageCommentViewModel(message: $0.message,
+									  creationDate: format(date: $0.createdAt),
+									  author: $0.author.username)
 		}
 		feedImageCommentsView.display(FeedImageCommentsViewModel(comments: commentViewModels))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
@@ -60,5 +59,9 @@ public final class FeedImageCommentsPresenter {
 	public func didFinishLoadingComments(with error: Error) {
 		errorView.display(.error(message: feedImageCommentsLoadError))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
+	}
+	
+	private func format(date: Date) -> String {
+		formatter.localizedString(for: date, relativeTo: referenceDate)
 	}
 }

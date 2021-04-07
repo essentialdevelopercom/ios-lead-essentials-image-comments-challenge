@@ -34,7 +34,7 @@ extension FeedImageCommentsUIIntegrationTests {
 		}
 	
 		let viewSpy = ViewSpy()
-		let presenter = FeedImageCommentsPresenter(feedImageCommentsView: viewSpy, loadingView: viewSpy, errorView: viewSpy, formatter: .init(), relativeToDate: Date())
+		let presenter = FeedImageCommentsPresenter(feedImageCommentsView: viewSpy, loadingView: viewSpy, errorView: viewSpy)
 		
 		presenter.didFinishLoadingComments(with: [imageComment])
 		
