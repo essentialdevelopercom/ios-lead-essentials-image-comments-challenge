@@ -61,12 +61,12 @@ class CommentsSnapshotTests: XCTestCase {
 		}
 	}
 	
-	private func anyComments() -> [Comment] {
-		return [
+	private func anyComments() -> [CommentViewModel] {
+		return CommentViewModelAdapter.models(from: [
 			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. Et sapiente saepe officia consectetur molestiae. Libero earum assumenda qui architecto repellendus ut iste non voluptatem optio", createdAt: Date().adding(days: -14), author: "Jen"),
 			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis.", createdAt: Date().adding(days: -7), author: "Megan"),
 			Comment(id: UUID(), message: "💯", createdAt: Date().adding(days: -3), author: "Jim"),
 			Comment(id: UUID(), message: "Facilis ea harum deleniti officia veritatis. ☀️\n.\n.\n.\n.\n.\n.\n✅\nLibero earum assumenda qui architecto repellendus explicabo.", createdAt: Date().adding(hours: -1), author: "Brian")
-		]
+		])
 	}
 }

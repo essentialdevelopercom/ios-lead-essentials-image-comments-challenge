@@ -40,7 +40,7 @@ private final class CommentsAdapter: CommentView {
 		self.controller = controller
 	}
 	
-	func display(_ viewModel: CommentViewModel) {
+	func display(_ viewModel: CommentListViewModel) {
 		controller?.display(viewModel.comments.map {
 			CommentCellController(model: $0)
 		})

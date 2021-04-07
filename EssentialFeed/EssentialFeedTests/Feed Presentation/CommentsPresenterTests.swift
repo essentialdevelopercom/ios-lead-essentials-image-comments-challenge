@@ -39,7 +39,7 @@ class CommentsPresenterTests: XCTestCase {
 		sut.didFinishLoadingComments(comments: comments)
 		
 		XCTAssertEqual(view.messages, [
-			.display(comments: comments),
+			.display(comments: comments.map { $0.message }),
 			.display(isLoading: false)
 		])
 	}
@@ -77,7 +77,7 @@ class CommentsPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
-			case display(comments: [Comment])
+			case display(comments: [String])
 		}
 		private(set) var messages = Set<Message>()
 		
@@ -89,28 +89,18 @@ class CommentsPresenterTests: XCTestCase {
 			messages.insert(.display(isLoading: viewModel.isLoading))
 		}
 		
-		
-		func display(_ viewModel: CommentViewModel) {
-			messages.insert(.display(comments: viewModel.comments))
+		func display(_ viewModel: CommentListViewModel) {
+			messages.insert(.display(comments: viewModel.comments.map { $0.message }))
 		}
 	}
 	
 	private func uniqueComments() -> [Comment] {
-		let comment0 = makeItem(message: "comment0", author: "author0").model
-		let comment1 = makeItem(message: "comment1", author: "author1").model
+		let comment0 = makeItem(message: "comment0", author: "author0")
+		let comment1 = makeItem(message: "comment1", author: "author1")
 		return [comment0, comment1]
 	}
 	
-	private func makeItem(id: UUID = UUID(), message: String, createdAt: Date = Date(), author: String ) -> (model: Comment, json: [String: Any]) {
-		let model = Comment(id: id, message: message, createdAt: createdAt, author: author)
-		let json = [
-			"id": id.uuidString,
-			"message": message,
-			"created_at": createdAt,
-			"author": [
-				"username": author
-			]
-		] as [String : Any]
-		return (model: model, json: json)
+	private func makeItem(id: UUID = UUID(), message: String, createdAt: Date = Date(), author: String ) -> Comment {
+		return Comment(id: id, message: message, createdAt: createdAt, author: author)
 	}
 }

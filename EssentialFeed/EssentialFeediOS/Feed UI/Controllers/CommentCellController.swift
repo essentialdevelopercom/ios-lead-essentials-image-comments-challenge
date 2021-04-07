@@ -10,19 +10,16 @@ import UIKit
 import EssentialFeed
 
 public final class CommentCellController {
-	private let model: Comment
+	private let model: CommentViewModel
 	
-	public init(model: Comment) {
+	public init(model: CommentViewModel) {
 		self.model = model
 	}
 	
 	func view(for tableView: UITableView) -> UITableViewCell {
-		let formatter = RelativeDateTimeFormatter()
-		let relativeDate = formatter.localizedString(for: model.createdAt, relativeTo: Date())
-
 		let cell: CommentCell = tableView.dequeueReusableCell()
 		cell.authorLabel.text = model.author
-		cell.dateLabel.text = relativeDate
+		cell.dateLabel.text = model.date
 		cell.commentLabel.text = model.message
 		return cell
 	}

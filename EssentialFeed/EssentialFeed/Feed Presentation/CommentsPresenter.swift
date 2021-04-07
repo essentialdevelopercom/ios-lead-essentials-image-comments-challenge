@@ -17,7 +17,7 @@ public protocol CommentErrorView {
 }
 
 public protocol CommentView {
-	func display(_ viewModel: CommentViewModel)
+	func display(_ viewModel: CommentListViewModel)
 }
 
 public final class CommentsPresenter {
@@ -51,12 +51,23 @@ public final class CommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(comments: [Comment]) {
-		commentsView.display(CommentViewModel(comments: comments))
+		let model = CommentListViewModel(comments: CommentViewModelAdapter.models(from: comments))
+		commentsView.display(model)
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
 		errorView.display(CommentErrorViewModel(message: commentsLoadError))
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
+	}
+}
+
+public class CommentViewModelAdapter {
+	public static func models(from comments: [Comment]) -> [CommentViewModel] {
+		let formatter = RelativeDateTimeFormatter()
+		return comments.map {
+			let date = formatter.localizedString(for: $0.createdAt, relativeTo: Date())
+			return CommentViewModel(message: $0.message, author: $0.author, date: date)
+		}
 	}
 }
