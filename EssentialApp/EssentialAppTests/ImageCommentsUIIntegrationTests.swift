@@ -145,7 +145,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader, date: date)
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader, date: { date })
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
@@ -167,7 +167,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			),
 		]
 		
-		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: currentDate)
+		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: { currentDate })
 		
 		return (comments, presentableComments)
 	}

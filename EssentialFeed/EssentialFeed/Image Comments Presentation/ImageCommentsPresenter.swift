@@ -24,7 +24,7 @@ public final class ImageCommentsPresenter {
 	private let imageCommentsView: ImageCommentsView
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
-	private let currentDate: Date
+	private let currentDate: () -> Date
 	
 	public static var title: String {
 		NSLocalizedString(
@@ -47,7 +47,7 @@ public final class ImageCommentsPresenter {
 		imageCommentsView: ImageCommentsView,
 		loadingView: ImageCommentsLoadingView,
 		errorView: ImageCommentsErrorView,
-		currentDate: Date = Date()
+		currentDate: @escaping () -> Date = Date.init
 	) {
 		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
@@ -73,7 +73,7 @@ public final class ImageCommentsPresenter {
 	
 	public static func map(
 		_ comments: [ImageComment],
-		currentDate: Date = Date(),
+		currentDate: () -> Date = Date.init,
 		locale: Locale = .current,
 		calendar: Calendar = .current
 	) -> [PresentableImageComment] {
@@ -83,7 +83,7 @@ public final class ImageCommentsPresenter {
 		
 		return comments.map { comment in
 			PresentableImageComment(
-				createdAt: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate),
+				createdAt: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate()),
 				message: comment.message,
 				author: comment.author.username)
 		}
