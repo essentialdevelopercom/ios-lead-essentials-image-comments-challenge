@@ -50,7 +50,8 @@ public final class RemoteFeedImageCommentsLoader: FeedImageCommentsLoader {
 	}
 	
 	public func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-		let url = URL(string: "image/\(feedImage.id.uuidString)/comments", relativeTo: baseURL)!.absoluteURL
+		
+		let url = baseURL.appendingPathComponent("image/\(feedImage.id.uuidString)/comments").absoluteURL
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
