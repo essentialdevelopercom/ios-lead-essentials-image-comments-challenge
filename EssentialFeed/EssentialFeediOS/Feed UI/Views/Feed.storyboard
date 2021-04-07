@@ -15,32 +15,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="uSC-1N-09L" customClass="ErrorView" customModule="MVP" customModuleProvider="target">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="kEm-fw-HAb" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6xO-Zq-Yf9">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="41a-Ng-YDi">
+                                    <rect key="frame" x="8" y="8" width="398" height="18"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <color key="textColor" systemColor="systemBackgroundColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Npv-wY-7ed">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <color key="tintColor" systemColor="systemBackgroundColor"/>
                                     <inset key="contentEdgeInsets" minX="0.0" minY="8" maxX="0.0" maxY="8"/>
-                                    <state key="normal" title="Error label">
+                                    <state key="normal">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
                                     <connections>
-                                        <action selector="hideMessageAnimated" destination="uSC-1N-09L" eventType="touchUpInside" id="oVD-V7-eGw"/>
+                                        <action selector="hideMessageAnimated" destination="kEm-fw-HAb" eventType="touchUpInside" id="Hae-mp-OE8"/>
                                     </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <gestureRecognizers/>
                             <constraints>
-                                <constraint firstItem="6xO-Zq-Yf9" firstAttribute="leading" secondItem="uSC-1N-09L" secondAttribute="leading" id="4DC-XG-bO4"/>
-                                <constraint firstAttribute="trailing" secondItem="6xO-Zq-Yf9" secondAttribute="trailing" id="UGu-Fs-FW7"/>
-                                <constraint firstAttribute="bottom" secondItem="6xO-Zq-Yf9" secondAttribute="bottom" id="eOc-FX-iUH"/>
-                                <constraint firstItem="6xO-Zq-Yf9" firstAttribute="top" secondItem="uSC-1N-09L" secondAttribute="top" id="rfo-g5-hRd"/>
+                                <constraint firstAttribute="bottomMargin" secondItem="41a-Ng-YDi" secondAttribute="bottom" id="F5U-KE-ssK"/>
+                                <constraint firstAttribute="trailing" secondItem="Npv-wY-7ed" secondAttribute="trailing" id="Gcj-VM-jVm"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="41a-Ng-YDi" secondAttribute="trailing" id="GnH-LM-Koq"/>
+                                <constraint firstAttribute="bottom" secondItem="Npv-wY-7ed" secondAttribute="bottom" priority="999" id="Nqx-dR-KiY"/>
+                                <constraint firstItem="Npv-wY-7ed" firstAttribute="top" secondItem="kEm-fw-HAb" secondAttribute="top" priority="999" id="Xyk-jy-yBO"/>
+                                <constraint firstItem="Npv-wY-7ed" firstAttribute="leading" secondItem="kEm-fw-HAb" secondAttribute="leading" id="Yf1-bd-gJG"/>
+                                <constraint firstItem="41a-Ng-YDi" firstAttribute="top" secondItem="kEm-fw-HAb" secondAttribute="topMargin" id="c01-xr-y0S"/>
+                                <constraint firstItem="41a-Ng-YDi" firstAttribute="leading" secondItem="kEm-fw-HAb" secondAttribute="leadingMargin" id="zMt-Mq-VUH"/>
                             </constraints>
                             <connections>
-                                <outlet property="button" destination="6xO-Zq-Yf9" id="n7C-WK-kwc"/>
+                                <outlet property="button" destination="Npv-wY-7ed" id="5zK-6N-Hi1"/>
+                                <outlet property="label" destination="41a-Ng-YDi" id="Yvk-NL-XfH"/>
                             </connections>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="pGT-Qn-vv2">
@@ -169,7 +181,7 @@ Location</string>
                         </connections>
                     </refreshControl>
                     <connections>
-                        <outlet property="errorView" destination="uSC-1N-09L" id="n5u-qA-zQu"/>
+                        <outlet property="errorView" destination="kEm-fw-HAb" id="0Ul-ec-e8a"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RzX-Pc-Xwa" userLabel="First Responder" sceneMemberID="firstResponder"/>

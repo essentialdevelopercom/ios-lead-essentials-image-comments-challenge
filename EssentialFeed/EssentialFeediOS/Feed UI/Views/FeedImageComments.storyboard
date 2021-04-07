@@ -19,11 +19,18 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1jU-rN-7cN">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rvj-h9-UIC">
+                                    <rect key="frame" x="8" y="8" width="398" height="18"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <color key="textColor" systemColor="systemBackgroundColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="1jU-rN-7cN">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <color key="tintColor" systemColor="systemBackgroundColor"/>
                                     <inset key="contentEdgeInsets" minX="0.0" minY="8" maxX="0.0" maxY="8"/>
-                                    <state key="normal" title="Error label">
+                                    <state key="normal">
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
                                     <connections>
@@ -34,13 +41,18 @@
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <gestureRecognizers/>
                             <constraints>
-                                <constraint firstItem="1jU-rN-7cN" firstAttribute="top" secondItem="pYd-Zp-bQR" secondAttribute="top" id="R5Z-ga-eIA"/>
+                                <constraint firstAttribute="bottomMargin" secondItem="Rvj-h9-UIC" secondAttribute="bottom" id="ElC-a2-bg9"/>
+                                <constraint firstItem="Rvj-h9-UIC" firstAttribute="top" secondItem="pYd-Zp-bQR" secondAttribute="topMargin" id="GzH-pw-cZC"/>
+                                <constraint firstItem="Rvj-h9-UIC" firstAttribute="leading" secondItem="pYd-Zp-bQR" secondAttribute="leadingMargin" id="Lyf-mm-X7h"/>
+                                <constraint firstItem="1jU-rN-7cN" firstAttribute="top" secondItem="pYd-Zp-bQR" secondAttribute="top" priority="999" id="R5Z-ga-eIA"/>
                                 <constraint firstAttribute="trailing" secondItem="1jU-rN-7cN" secondAttribute="trailing" id="b6G-IE-wCe"/>
-                                <constraint firstAttribute="bottom" secondItem="1jU-rN-7cN" secondAttribute="bottom" id="hgG-uE-B4w"/>
+                                <constraint firstAttribute="bottom" secondItem="1jU-rN-7cN" secondAttribute="bottom" priority="999" id="hgG-uE-B4w"/>
                                 <constraint firstItem="1jU-rN-7cN" firstAttribute="leading" secondItem="pYd-Zp-bQR" secondAttribute="leading" id="jaM-vZ-RPs"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="Rvj-h9-UIC" secondAttribute="trailing" id="pwa-zP-biO"/>
                             </constraints>
                             <connections>
                                 <outlet property="button" destination="1jU-rN-7cN" id="diG-EM-Uda"/>
+                                <outlet property="label" destination="Rvj-h9-UIC" id="BmS-cL-7yG"/>
                             </connections>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="9J9-af-67g">
