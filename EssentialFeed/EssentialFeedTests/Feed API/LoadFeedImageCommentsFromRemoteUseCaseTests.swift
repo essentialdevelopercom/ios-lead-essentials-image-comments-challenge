@@ -20,7 +20,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_loadImageCommentsFromURL_requestsCommentsFromURL() {
 		let baseURL = URL(string: "https://a-given-url.com")!
-		let image = anyImage()
+		let image = uniqueImage()
 		let (sut, client) = makeSUT(baseURL: baseURL, image: image)
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
 		
@@ -31,7 +31,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_loadImageCommentsFromURLTwice_requestsCommentsFromURLTwice() {
 		let baseURL = URL(string: "https://a-given-url.com")!
-		let image = anyImage()
+		let image = uniqueImage()
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
 		let (sut, client) = makeSUT(baseURL: baseURL, image: image)
 		
@@ -134,7 +134,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_cancelLoadImageCommentsURLTask_cancelsClientURLRequest() {
 		let baseURL = URL(string: "https://a-given-url.com")!
-		let image = anyImage()
+		let image = uniqueImage()
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
 		let (sut, client) = makeSUT(baseURL: baseURL, image: image)
 		
@@ -163,7 +163,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_loadImageCommentsFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
 		let client = HTTPClientSpy()
-		let image = anyImage()
+		let image = uniqueImage()
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
 		var sut: RemoteFeedImageCommentsLoader? = RemoteFeedImageCommentsLoader(baseURL: url, client: client, feedImage: image)
 		
@@ -178,7 +178,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(baseURL: URL, file: StaticString = #filePath, line: UInt = #line, image: FeedImage = anyImage()) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(baseURL: URL, file: StaticString = #filePath, line: UInt = #line, image: FeedImage = uniqueImage()) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteFeedImageCommentsLoader(baseURL: baseURL, client: client, feedImage: image)
 		trackForMemoryLeaks(sut, file: file, line: line)
