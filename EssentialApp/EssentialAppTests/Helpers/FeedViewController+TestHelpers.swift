@@ -41,8 +41,9 @@ extension FeedViewController {
 	}
 
 	func simulateFeedImageViewTap(at row: Int) {
+		let delegate = tableView.delegate
 		let index = IndexPath(row: row, section: feedImagesSection)
-		tableView(tableView, didSelectRowAt: index)
+		delegate?.tableView?(tableView, didSelectRowAt: index)
 	}
 	
 	func renderedFeedImageData(at index: Int) -> Data? {
