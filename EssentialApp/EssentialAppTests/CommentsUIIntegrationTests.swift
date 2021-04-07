@@ -125,7 +125,7 @@ final class CommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	private func assertThat(_ sut: CommentsController, hasViewConfiguredFor comment: Comment, at index: Int, file: StaticString = #file, line: UInt = #line) {
-		let view = sut.CommentView(at: index)
+		let view = sut.commentView(at: index)
 		
 		guard let cell = view as? CommentCell else {
 			return XCTFail("Expected \(CommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
