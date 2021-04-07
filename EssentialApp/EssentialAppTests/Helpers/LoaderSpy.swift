@@ -67,12 +67,12 @@ class LoaderSpy: FeedLoader, FeedImageDataLoader, FeedImageCommentsLoader {
 	}
 	
 	func completeFeedImageCommentsLoading(with feed: [FeedImageComment] = [], at index: Int = 0) {
-		imageCommentRequests[index].completion(.success(feed))
+		imageCommentRequests[index](.success(feed))
 	}
 	
 	func completeFeedImageCommentsLoadingWithError(at index: Int = 0) {
 		let error = NSError(domain: "an error", code: 0)
-		imageCommentRequests[index].completion(.failure(error))
+		imageCommentRequests[index](.failure(error))
 	}
 	
 	private struct ImageCommentTaskSpy: FeedImageCommentsLoaderTask {
@@ -82,12 +82,12 @@ class LoaderSpy: FeedLoader, FeedImageDataLoader, FeedImageCommentsLoader {
 		}
 	}
 	
-	private var imageCommentRequests = [(String, completion: (FeedImageCommentsLoader.Result) -> Void)]()
+	private var imageCommentRequests = [(FeedImageCommentsLoader.Result) -> Void]()
 	
-	private(set) var cancelledTasks = [(String, completion: (FeedImageCommentsLoader.Result) -> Void)]()
+	private(set) var cancelledTasks = [(FeedImageCommentsLoader.Result) -> Void]()
 	
 	func load(completion: @escaping (FeedImageCommentsLoader.Result) -> Void) -> FeedImageCommentsLoaderTask {
-		imageCommentRequests.append(("", completion))
-		return ImageCommentTaskSpy { [weak self] in self?.cancelledTasks.append(("", completion)) }
+		imageCommentRequests.append((completion))
+		return ImageCommentTaskSpy { [weak self] in self?.cancelledTasks.append((completion)) }
 	}
 }
