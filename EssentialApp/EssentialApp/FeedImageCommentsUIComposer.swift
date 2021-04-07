@@ -24,7 +24,7 @@ public final class FeedImageCommentsUIComposer {
 		presentationAdapter.presenter = FeedImageCommentsPresenter(
 			feedImageCommentsView: FeedImageCommentsViewAdapter(controller: feedImageCommentsController),
 			loadingView: WeakRefVirtualProxy(feedImageCommentsController),
-			errorView: WeakRefVirtualProxy(feedImageCommentsController), formatter: .init())
+			errorView: WeakRefVirtualProxy(feedImageCommentsController), formatter: .init(), relativeToDate: Date())
 		
 		return feedImageCommentsController
 	}

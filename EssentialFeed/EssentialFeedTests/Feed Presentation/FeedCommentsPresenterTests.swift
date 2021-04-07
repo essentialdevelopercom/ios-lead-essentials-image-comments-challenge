@@ -33,12 +33,26 @@ class FeedCommentsPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let formatter = RelativeDateTimeFormatter()
-		formatter.locale = .init(identifier: "en_US_POSIX")
-		let comments = uniqueImageFeedComments(formatter: formatter)
-		let models = comments.map { $0.model }
-		let viewModels = comments.map { $0.viewModel }
+		let (sut, view) = makeSUT(relativeToDate: Date(timeIntervalSince1970: 1617828532))
+		
+		let coment1 = FeedImageComment(id: UUID(),
+									   message: "a message",
+									   createdAt: Date(timeIntervalSince1970: 1598627222),
+									   author: .init(username: "a username"))
+		let viewModel1 = FeedImageCommentViewModel(message: coment1.message,
+												  creationDate: "7 months ago",
+												  author: coment1.author.username)
+		
+		let coment2 = FeedImageComment(id: UUID(),
+									   message: "another message",
+									   createdAt: Date(timeIntervalSince1970: 1608627222),
+									   author: .init(username: "another username"))
+		let viewModel2 = FeedImageCommentViewModel(message: coment2.message,
+												  creationDate: "3 months ago",
+												  author: coment2.author.username)
+		
+		let models = [coment1, coment2]
+		let viewModels = [viewModel1, viewModel2]
 		sut.didFinishLoadingComments(with: models)
 		
 		XCTAssertEqual(view.messages, [
@@ -60,9 +74,9 @@ class FeedCommentsPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(formatter: RelativeDateTimeFormatter = .init(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(relativeToDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view, formatter: formatter)
+		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view, formatter: .init(), relativeToDate: relativeToDate)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
