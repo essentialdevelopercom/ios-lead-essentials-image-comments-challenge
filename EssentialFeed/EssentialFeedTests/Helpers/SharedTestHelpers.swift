@@ -3,7 +3,7 @@
 //
 
 import Foundation
-@testable import EssentialFeed
+import EssentialFeed
 
 func anyNSError() -> NSError {
 	return NSError(domain: "any error", code: 0)
