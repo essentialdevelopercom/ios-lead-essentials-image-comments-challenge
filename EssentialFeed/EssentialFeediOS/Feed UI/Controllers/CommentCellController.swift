@@ -17,14 +17,10 @@ public final class CommentCellController {
 	}
 	
 	func view(for tableView: UITableView) -> UITableViewCell {
-		let cell: CommentCell = tableView.dequeueReusableCell()
-		return binded(cell)
-	}
-	
-	private func binded(_ cell: CommentCell) -> CommentCell {
 		let formatter = RelativeDateTimeFormatter()
 		let relativeDate = formatter.localizedString(for: model.createdAt, relativeTo: Date())
 
+		let cell: CommentCell = tableView.dequeueReusableCell()
 		cell.authorLabel.text = model.author
 		cell.dateLabel.text = relativeDate
 		cell.commentLabel.text = model.message
