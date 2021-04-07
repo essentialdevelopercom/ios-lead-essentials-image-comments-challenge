@@ -3,7 +3,6 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,26 +18,8 @@
                         <view key="tableHeaderView" contentMode="scaleToFill" id="acF-aL-btj" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kDt-Hf-Xfh">
-                                    <rect key="frame" x="8" y="8" width="398" height="18"/>
-                                    <viewLayoutGuide key="safeArea" id="WY2-ot-vqx"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <gestureRecognizers/>
-                            <constraints>
-                                <constraint firstAttribute="bottom" secondItem="kDt-Hf-Xfh" secondAttribute="bottom" constant="8" id="0NR-2k-zwW"/>
-                                <constraint firstItem="kDt-Hf-Xfh" firstAttribute="leading" secondItem="acF-aL-btj" secondAttribute="leadingMargin" id="9s0-ek-VA6"/>
-                                <constraint firstItem="kDt-Hf-Xfh" firstAttribute="top" secondItem="acF-aL-btj" secondAttribute="top" constant="8" id="RBU-6m-EFJ"/>
-                                <constraint firstAttribute="trailingMargin" secondItem="kDt-Hf-Xfh" secondAttribute="trailing" id="iof-vi-KBR"/>
-                            </constraints>
-                            <connections>
-                                <outlet property="label" destination="kDt-Hf-Xfh" id="Hyb-eW-iRg"/>
-                            </connections>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageCommentCell" id="NSd-dE-Nry" customClass="ImageCommentCell" customModule="EssentialFeediOS" customModuleProvider="target">
@@ -109,6 +90,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="N29-wz-Vmh">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
                             <action selector="refresh" destination="y8Q-45-fSI" eventType="valueChanged" id="BO8-md-9zE"/>

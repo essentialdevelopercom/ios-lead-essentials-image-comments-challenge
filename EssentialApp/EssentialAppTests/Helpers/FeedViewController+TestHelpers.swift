@@ -54,6 +54,10 @@ extension FeedViewController {
 		return errorView?.message
 	}
 	
+	func simulateErrorViewTap() {
+		errorView?.simulateTap()
+	}
+	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}

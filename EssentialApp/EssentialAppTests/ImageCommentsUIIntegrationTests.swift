@@ -99,6 +99,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_tapOnErrorView_hidesErrorMessage() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+		
+		loader.completeCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_VIEW_CONNECTION_ERROR"))
+		
+		sut.simulateErrorViewTap()
+		XCTAssertEqual(sut.errorMessage, nil)
+	}
+	
 	func test_cancelsCommentsLoading_whenViewIsNotVisible() {
 		let (sut, loader) = makeSUT()
 		

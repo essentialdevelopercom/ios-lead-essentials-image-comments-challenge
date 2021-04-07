@@ -38,6 +38,10 @@ extension ImageCommentsViewController {
 		errorView?.message
 	}
 	
+	func simulateErrorViewTap() {
+		errorView?.simulateTap()
+	}
+	
 	private var imageCommentsSection: Int { 0 }
 	
 	private func numberOfRows(in section: Int) -> Int {
