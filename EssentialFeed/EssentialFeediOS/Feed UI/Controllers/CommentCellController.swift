@@ -17,7 +17,7 @@ public final class CommentCellController {
 	}
 	
 	func view(for tableView: UITableView) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell") as! CommentCell
+		let cell: CommentCell = tableView.dequeueReusableCell()
 		return binded(cell)
 	}
 	
