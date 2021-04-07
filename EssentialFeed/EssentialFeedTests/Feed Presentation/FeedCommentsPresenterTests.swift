@@ -33,7 +33,8 @@ class FeedCommentsPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT(relativeToDate: Date(timeIntervalSince1970: 1617828532))
+		let locale = Locale(identifier: "en_US_POSIX")
+		let (sut, view) = makeSUT(relativeToDate: Date(timeIntervalSince1970: 1617828532), locale: locale)
 		
 		let coment1 = FeedImageComment(id: UUID(),
 									   message: "a message",
@@ -74,9 +75,9 @@ class FeedCommentsPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(relativeToDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(relativeToDate: Date = Date(), locale: Locale = .init(identifier: "en_US_POSIX"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view, referenceDate: relativeToDate)
+		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view, referenceDate: relativeToDate, locale: locale)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)

@@ -26,12 +26,13 @@ public final class FeedImageCommentsPresenter {
 			 comment: "Error message displayed when we can't load the image feed comments from the server")
 	}
 	
-	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView, referenceDate: Date = Date()) {
+	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView, referenceDate: Date = Date(), locale: Locale = .current) {
 		self.feedImageCommentsView = feedImageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
 		self.formatter = .init()
 		self.referenceDate = referenceDate
+		self.formatter.locale = locale
 	}
 	
 	public static var title: String {
