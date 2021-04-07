@@ -33,14 +33,39 @@ extension FeedImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(FeedImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 	
-		XCTAssertEqual(cell.messageText, imageComment.message, "message at index \(index)", file: file, line: line)
+		let viewSpy = ViewSpy()
+		let presenter = FeedImageCommentsPresenter(feedImageCommentsView: viewSpy, loadingView: viewSpy, errorView: viewSpy, formatter: .init())
 		
-		XCTAssertEqual(cell.createdAtText, imageComment.formattedDate, "'created at' date at index \(index)", file: file, line: line)
+		presenter.didFinishLoadingComments(with: [imageComment])
 		
-		XCTAssertEqual(cell.authorText, imageComment.author.username, "author at index \(index)", file: file, line: line)
+		let commentViewModel = viewSpy.message(at: 0).comments.first!
+		
+		XCTAssertEqual(cell.messageText, commentViewModel.message, "message at index \(index)", file: file, line: line)
+		
+		XCTAssertEqual(cell.createdAtText, commentViewModel.creationDate, "'created at' date at index \(index)", file: file, line: line)
+		
+		XCTAssertEqual(cell.authorText, commentViewModel.author, "author at index \(index)", file: file, line: line)
 	}
 	
 	private func executeRunLoopToCleanUpReferences() {
 		RunLoop.current.run(until: Date())
+	}
+}
+
+private class ViewSpy: FeedImageCommentsView, FeedLoadingView, FeedErrorView {
+	private(set) var messages = Array<FeedImageCommentsViewModel>()
+	
+	func display(_ viewModel: FeedErrorViewModel) {
+	}
+	
+	func display(_ viewModel: FeedLoadingViewModel) {
+	}
+	
+	func display(_ viewModel: FeedImageCommentsViewModel) {
+		messages.append(viewModel)
+	}
+	
+	func message(at index: Int) -> FeedImageCommentsViewModel {
+		return messages[index]
 	}
 }
