@@ -24,6 +24,8 @@ public final class ImageCommentsPresenter {
 	private let imageCommentsView: ImageCommentsView
 	private let loadingView: ImageCommentsLoadingView
 	private let errorView: ImageCommentsErrorView
+	private let locale: Locale
+	private let calendar: Calendar
 	private let currentDate: () -> Date
 	
 	public static var title: String {
@@ -47,11 +49,15 @@ public final class ImageCommentsPresenter {
 		imageCommentsView: ImageCommentsView,
 		loadingView: ImageCommentsLoadingView,
 		errorView: ImageCommentsErrorView,
+		locale: Locale = .current,
+		calendar: Calendar = .current,
 		currentDate: @escaping () -> Date = Date.init
 	) {
 		self.imageCommentsView = imageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
+		self.locale = locale
+		self.calendar = calendar
 		self.currentDate = currentDate
 	}
 	
@@ -61,7 +67,7 @@ public final class ImageCommentsPresenter {
 	}
 	
 	public func didFinishLoading(with comments: [ImageComment]) {
-		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: currentDate)
+		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: currentDate, locale: locale, calendar: calendar)
 		imageCommentsView.display(ImageCommentsViewModel(comments: presentableComments))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
