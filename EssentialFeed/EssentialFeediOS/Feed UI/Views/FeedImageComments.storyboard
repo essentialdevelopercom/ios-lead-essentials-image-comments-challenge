@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,18 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="pYd-Zp-bQR" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Eks-ne-8UK" customClass="ErrorView" customModule="EssentialFeediOS" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rvj-h9-UIC">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H1g-PD-m8d">
                                     <rect key="frame" x="8" y="8" width="398" height="18"/>
-                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                    <color key="textColor" systemColor="systemBackgroundColor"/>
+                                    <viewLayoutGuide key="safeArea" id="tVe-9U-EFf"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="1jU-rN-7cN">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="j9A-GR-eFl">
+                                    <rect key="frame" x="8" y="8" width="398" height="18"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <color key="tintColor" systemColor="systemBackgroundColor"/>
                                     <inset key="contentEdgeInsets" minX="0.0" minY="8" maxX="0.0" maxY="8"/>
@@ -34,25 +36,25 @@
                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </state>
                                     <connections>
-                                        <action selector="hideMessageAnimated" destination="pYd-Zp-bQR" eventType="touchUpInside" id="XN7-He-Z3b"/>
+                                        <action selector="hideMessageAnimated" destination="Eks-ne-8UK" eventType="touchUpInside" id="ZLh-cI-LuF"/>
                                     </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <gestureRecognizers/>
                             <constraints>
-                                <constraint firstAttribute="bottomMargin" secondItem="Rvj-h9-UIC" secondAttribute="bottom" id="ElC-a2-bg9"/>
-                                <constraint firstItem="Rvj-h9-UIC" firstAttribute="top" secondItem="pYd-Zp-bQR" secondAttribute="topMargin" id="GzH-pw-cZC"/>
-                                <constraint firstItem="Rvj-h9-UIC" firstAttribute="leading" secondItem="pYd-Zp-bQR" secondAttribute="leadingMargin" id="Lyf-mm-X7h"/>
-                                <constraint firstItem="1jU-rN-7cN" firstAttribute="top" secondItem="pYd-Zp-bQR" secondAttribute="top" priority="999" id="R5Z-ga-eIA"/>
-                                <constraint firstAttribute="trailing" secondItem="1jU-rN-7cN" secondAttribute="trailing" id="b6G-IE-wCe"/>
-                                <constraint firstAttribute="bottom" secondItem="1jU-rN-7cN" secondAttribute="bottom" priority="999" id="hgG-uE-B4w"/>
-                                <constraint firstItem="1jU-rN-7cN" firstAttribute="leading" secondItem="pYd-Zp-bQR" secondAttribute="leading" id="jaM-vZ-RPs"/>
-                                <constraint firstAttribute="trailingMargin" secondItem="Rvj-h9-UIC" secondAttribute="trailing" id="pwa-zP-biO"/>
+                                <constraint firstItem="H1g-PD-m8d" firstAttribute="leading" secondItem="Eks-ne-8UK" secondAttribute="leadingMargin" id="23p-j2-g5t"/>
+                                <constraint firstItem="j9A-GR-eFl" firstAttribute="leading" secondItem="Eks-ne-8UK" secondAttribute="leadingMargin" id="2he-nj-qJc"/>
+                                <constraint firstItem="H1g-PD-m8d" firstAttribute="top" secondItem="Eks-ne-8UK" secondAttribute="top" constant="8" id="8UN-5n-6Do"/>
+                                <constraint firstItem="j9A-GR-eFl" firstAttribute="bottom" secondItem="Eks-ne-8UK" secondAttribute="bottomMargin" id="BRk-iI-MpD"/>
+                                <constraint firstAttribute="bottom" secondItem="H1g-PD-m8d" secondAttribute="bottom" constant="8" id="TEr-lQ-yfy"/>
+                                <constraint firstItem="j9A-GR-eFl" firstAttribute="top" secondItem="Eks-ne-8UK" secondAttribute="topMargin" id="dn4-sp-Pv4"/>
+                                <constraint firstItem="j9A-GR-eFl" firstAttribute="trailing" secondItem="Eks-ne-8UK" secondAttribute="trailingMargin" id="hXt-Uu-phG"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="H1g-PD-m8d" secondAttribute="trailing" id="mw5-EB-hH4"/>
                             </constraints>
                             <connections>
-                                <outlet property="button" destination="1jU-rN-7cN" id="diG-EM-Uda"/>
-                                <outlet property="label" destination="Rvj-h9-UIC" id="BmS-cL-7yG"/>
+                                <outlet property="button" destination="j9A-GR-eFl" id="MRp-Br-A1I"/>
+                                <outlet property="label" destination="H1g-PD-m8d" id="DQd-L9-VXG"/>
                             </connections>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="9J9-af-67g">
@@ -123,7 +125,7 @@
                         </connections>
                     </refreshControl>
                     <connections>
-                        <outlet property="errorView" destination="pYd-Zp-bQR" id="pqu-o5-QQl"/>
+                        <outlet property="errorView" destination="Eks-ne-8UK" id="mVo-51-dz8"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aYx-cb-Jay" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
