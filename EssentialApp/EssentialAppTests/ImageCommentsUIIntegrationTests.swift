@@ -112,17 +112,20 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
-	func test_cancelsCommentsLoading_whenViewIsNotVisible() {
-		let (sut, loader) = makeSUT()
+	func test_deinit_cancelsRunningRequest() {
+		var sut: ImageCommentsViewController?
+		let loader = LoaderSpy()
 		
-		sut.loadViewIfNeeded()
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader)
+			
+			sut?.loadViewIfNeeded()
+		}
+		
 		XCTAssertEqual(loader.cancelledRequests, [], "Expected no cancelled requests until comments are not visibile")
 		
-		loader.completeCommentsLoading()
-		XCTAssertEqual(loader.cancelledRequests, [], "Expected no cancelled requests after loading")
+		sut = nil
 		
-		sut.simulateUserInitiatedImageCommentsReload()
-		sut.viewWillDisappear(false)
 		XCTAssertEqual(loader.cancelledRequests.count, 1, "Expected one cancelled request")
 	}
 	

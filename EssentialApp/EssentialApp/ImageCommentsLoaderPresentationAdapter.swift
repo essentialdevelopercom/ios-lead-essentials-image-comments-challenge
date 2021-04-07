@@ -19,6 +19,10 @@ public final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewCont
 		self.loader = loader
 	}
 	
+	deinit {
+		task?.cancel()
+	}
+	
 	public func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
@@ -33,9 +37,5 @@ public final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewCont
 				self.presenter?.didFinishLoading(with: error)
 			}
 		}
-	}
-	
-	public func didCancelCommentsRequest() {
-		task?.cancel()
-	}
+	}	
 }
