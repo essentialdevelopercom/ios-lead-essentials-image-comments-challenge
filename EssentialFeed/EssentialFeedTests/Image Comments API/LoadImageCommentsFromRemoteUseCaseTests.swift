@@ -49,7 +49,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
-				client.complete(withStatusCode: code, data: anyData(), at: index)
+				client.complete(withStatusCode: code, data: makeItemsJSON([]), at: index)
 			})
 		}
 	}
@@ -182,7 +182,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		let json = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": ISO8601DateFormatter().string(from: createdAt),
+			"created_at": "2021-03-27T16:43:10+00:00",
 			"author": [
 				"username": authorName
 			]
