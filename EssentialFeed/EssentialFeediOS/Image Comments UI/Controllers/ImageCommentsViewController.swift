@@ -50,11 +50,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 	
 	public func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		if viewModel.isLoading {
-			refreshControl?.beginRefreshing()
-		} else {
-			refreshControl?.endRefreshing()
-		}
+		refreshControl?.update(isRefreshing: viewModel.isLoading)
 	}
 	
 	override public func numberOfSections(in _: UITableView) -> Int {
@@ -66,7 +62,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 	
 	override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "ImageCommentCell") as! ImageCommentCell
+		let cell: ImageCommentCell = tableView.dequeueReusableCell()
 		let model = models[indexPath.row]
 		cell.usernameLabel?.text = model.author
 		cell.createdAtLabel?.text = model.createdAt
