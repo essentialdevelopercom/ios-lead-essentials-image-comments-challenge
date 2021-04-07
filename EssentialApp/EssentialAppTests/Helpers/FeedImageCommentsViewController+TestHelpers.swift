@@ -34,13 +34,13 @@ extension FeedImageCommentsViewController {
 		return tableView.numberOfRows(inSection: feedImageCommentsSection)
 	}
 	
-	func feedImageCommentView(at row: Int) -> UITableViewCell? {
+	func feedImageCommentView(at row: Int) -> FeedImageCommentCell? {
 		guard numberOfRenderedFeedImageCommentViews() > row else {
 			return nil
 		}
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: feedImageCommentsSection)
-		return ds?.tableView(tableView, cellForRowAt: index)
+		return ds?.tableView(tableView, cellForRowAt: index) as? FeedImageCommentCell
 	}
 	
 	private var feedImageCommentsSection: Int {

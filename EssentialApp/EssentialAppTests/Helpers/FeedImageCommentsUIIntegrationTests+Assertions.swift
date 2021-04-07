@@ -29,7 +29,7 @@ extension FeedImageCommentsUIIntegrationTests {
 	func assertThat(_ sut: FeedImageCommentsViewController, hasViewConfiguredFor imageComment: FeedImageComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.feedImageCommentView(at: index)
 		
-		guard let cell = view as? FeedImageCommentCell else {
+		guard let cell = view else {
 			return XCTFail("Expected \(FeedImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 	
