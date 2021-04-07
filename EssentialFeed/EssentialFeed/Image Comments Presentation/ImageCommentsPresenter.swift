@@ -61,12 +61,7 @@ public final class ImageCommentsPresenter {
 	}
 	
 	public func didFinishLoading(with comments: [ImageComment]) {
-		let presentableComments = comments.map { comment in
-			PresentableImageComment(
-				createdAt: relativeDate(from: comment.createdAt),
-				message: comment.message,
-				author: comment.author.username)
-		}
+		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: currentDate)
 		imageCommentsView.display(ImageCommentsViewModel(comments: presentableComments))
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
@@ -76,15 +71,21 @@ public final class ImageCommentsPresenter {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 	}
 	
-	private static var relativeDateFormatter: RelativeDateTimeFormatter {
+	public static func map(
+		_ comments: [ImageComment],
+		currentDate: Date = Date(),
+		locale: Locale = .current,
+		calendar: Calendar = .current
+	) -> [PresentableImageComment] {
 		let formatter = RelativeDateTimeFormatter()
-		formatter.unitsStyle = .full
-		formatter.locale = .current
-		formatter.calendar = Calendar(identifier: .gregorian)
-		return formatter
-	}
-	
-	private func relativeDate(from date: Date) -> String {
-		return ImageCommentsPresenter.relativeDateFormatter.localizedString(for: date, relativeTo: currentDate)
+		formatter.locale = locale
+		formatter.calendar = calendar
+		
+		return comments.map { comment in
+			PresentableImageComment(
+				createdAt: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate),
+				message: comment.message,
+				author: comment.author.username)
+		}
 	}
 }

@@ -167,15 +167,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			),
 		]
 		
-		let presentableComments = [
-			PresentableImageComment(createdAt: "1 day ago", message: comments[0].message, author: comments[0].author.username),
-			PresentableImageComment(createdAt: "1 hour ago", message: comments[1].message, author: comments[1].author.username)
-		]
+		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: currentDate)
 		
 		return (comments, presentableComments)
-	}
-	
-	private func anyDate() -> Date {
-		return Date(timeIntervalSinceReferenceDate: 638556190)
 	}
 }
