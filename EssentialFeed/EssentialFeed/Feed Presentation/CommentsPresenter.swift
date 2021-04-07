@@ -27,14 +27,14 @@ public final class CommentsPresenter {
 	
 	public static var title: String {
 		return NSLocalizedString("COMMENTS_VIEW_TITLE",
-			tableName: "Feed",
+			tableName: "ImageComments",
 			bundle: Bundle(for: CommentsPresenter.self),
 			comment: "Title for the comments view")
 	}
 	
 	private var commentsLoadError: String {
 		return NSLocalizedString("COMMENTS_VIEW_CONNECTION_ERROR",
-			 tableName: "Feed",
+			 tableName: "ImageComments",
 			 bundle: Bundle(for: CommentsPresenter.self),
 			 comment: "Error message displayed when we can't load the comments from the server")
 	}

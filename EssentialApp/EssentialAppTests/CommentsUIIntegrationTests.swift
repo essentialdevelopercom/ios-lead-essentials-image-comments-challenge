@@ -106,7 +106,7 @@ final class CommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
-		let table = "Feed"
+		let table = "ImageComments"
 		let bundle = Bundle(for: CommentsPresenter.self)
 		let value = bundle.localizedString(forKey: key, value: nil, table: table)
 		if value == key {
