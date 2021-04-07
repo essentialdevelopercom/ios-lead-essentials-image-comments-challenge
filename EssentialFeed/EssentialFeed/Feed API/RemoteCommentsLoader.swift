@@ -50,8 +50,7 @@ public final class RemoteCommentsLoader: CommentsLoader {
 
 private extension Array where Element == RemoteComment {
 	func toModels() -> [Comment] {
-		let formatter = ISO8601DateFormatter()
-		return map { Comment(id: $0.id, message: $0.message, createdAt: formatter.date(from: $0.createdAt) ?? Date(), author: $0.author.username) }
+		return map { Comment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: $0.author.username) }
 	}
 }
 
@@ -61,9 +60,11 @@ private class CommentsMapper {
 	}
 	
 	static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [RemoteComment] {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .iso8601
 		guard
 			response.isOK,
-			let root = try? JSONDecoder().decode(Root.self, from: data)
+			let root = try? decoder.decode(Root.self, from: data)
 		else {
 			throw RemoteCommentsLoader.Error.invalidData
 		}
