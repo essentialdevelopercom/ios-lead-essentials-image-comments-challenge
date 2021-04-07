@@ -320,15 +320,18 @@ final class FeedUIIntegrationTests: XCTestCase {
 	func test_feedImageView_imageSelectionTapExecutesImageSelectionBlock() {
 		let image0 = makeImage(url: URL(string: "http://url-0.com")!)
 		let image1 = makeImage(url: URL(string: "http://url-1.com")!)
-				
-		let (sut, loader) = makeSUT { image in
-			XCTAssertEqual(image, image0, "Expect the first image to be selected")
-		}
+		
+		var selectedImages: [FeedImage] = []
+		let (sut, loader) = makeSUT { selectedImages.append($0) }
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [image0, image1])
 		
 		sut.simulateFeedImageViewTap(at: 0)
+		XCTAssertEqual(selectedImages, [image0])
+		
+		sut.simulateFeedImageViewTap(at: 1)
+		XCTAssertEqual(selectedImages, [image0, image1])
 	}
 	
 	// MARK: - Helpers
