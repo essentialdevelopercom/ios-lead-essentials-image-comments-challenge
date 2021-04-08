@@ -40,7 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}()
 	
 	private func makeRemoteFeedImageCommentsLoader(feedImage: FeedImage) -> RemoteFeedImageCommentsLoader {
-		let url = baseURL.appendingPathComponent("image/\(feedImage.id.uuidString)/comments").absoluteURL
+		let url = baseURL.appendingPathComponent("image/\(feedImage.id.uuidString)/comments")
 		return RemoteFeedImageCommentsLoader(url: url, client: httpClient)
 	}
 	
