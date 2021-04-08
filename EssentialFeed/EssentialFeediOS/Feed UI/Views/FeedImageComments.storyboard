@@ -27,8 +27,9 @@
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="j9A-GR-eFl">
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="j9A-GR-eFl">
                                     <rect key="frame" x="8" y="8" width="398" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <color key="tintColor" systemColor="systemBackgroundColor"/>
                                     <inset key="contentEdgeInsets" minX="0.0" minY="8" maxX="0.0" maxY="8"/>
@@ -44,12 +45,8 @@
                             <gestureRecognizers/>
                             <constraints>
                                 <constraint firstItem="H1g-PD-m8d" firstAttribute="leading" secondItem="Eks-ne-8UK" secondAttribute="leadingMargin" id="23p-j2-g5t"/>
-                                <constraint firstItem="j9A-GR-eFl" firstAttribute="leading" secondItem="Eks-ne-8UK" secondAttribute="leadingMargin" id="2he-nj-qJc"/>
                                 <constraint firstItem="H1g-PD-m8d" firstAttribute="top" secondItem="Eks-ne-8UK" secondAttribute="top" constant="8" id="8UN-5n-6Do"/>
-                                <constraint firstItem="j9A-GR-eFl" firstAttribute="bottom" secondItem="Eks-ne-8UK" secondAttribute="bottomMargin" id="BRk-iI-MpD"/>
                                 <constraint firstAttribute="bottom" secondItem="H1g-PD-m8d" secondAttribute="bottom" constant="8" id="TEr-lQ-yfy"/>
-                                <constraint firstItem="j9A-GR-eFl" firstAttribute="top" secondItem="Eks-ne-8UK" secondAttribute="topMargin" id="dn4-sp-Pv4"/>
-                                <constraint firstItem="j9A-GR-eFl" firstAttribute="trailing" secondItem="Eks-ne-8UK" secondAttribute="trailingMargin" id="hXt-Uu-phG"/>
                                 <constraint firstAttribute="trailingMargin" secondItem="H1g-PD-m8d" secondAttribute="trailing" id="mw5-EB-hH4"/>
                             </constraints>
                             <connections>
