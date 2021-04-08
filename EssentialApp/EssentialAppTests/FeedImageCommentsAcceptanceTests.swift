@@ -26,8 +26,6 @@ class FeedImageCommentsAcceptanceTests: XCTestCase {
 		
 		let comment1 = commentsVC.feedImageCommentView(at: 0)
 		let comment2 = commentsVC.feedImageCommentView(at: 1)
-		XCTAssertNotNil(comment1, "Non nil first comment")
-		XCTAssertNotNil(comment2, "Non nil second comment")
 		
 		XCTAssertEqual(comment1?.messageText, "a message", "First comment message")
 		XCTAssertEqual(comment2?.messageText, "another message", "Second comment message")
