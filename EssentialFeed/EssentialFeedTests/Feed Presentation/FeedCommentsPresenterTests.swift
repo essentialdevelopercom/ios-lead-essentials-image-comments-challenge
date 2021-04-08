@@ -32,32 +32,55 @@ class FeedCommentsPresenterTests: XCTestCase {
 		])
 	}
 	
-	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
+	func test_mappingToFeedImageCommentViewModel() {
+		let calendar = Calendar.current
 		let locale = Locale(identifier: "en_US_POSIX")
-		let (sut, view) = makeSUT(relativeToDate: Date(timeIntervalSince1970: 1617828532), locale: locale)
-		
+		let referenceDate = Date(timeIntervalSince1970: 1617828532)
+
 		let coment1 = FeedImageComment(id: UUID(),
 									   message: "a message",
 									   createdAt: Date(timeIntervalSince1970: 1598627222),
 									   author: .init(username: "a username"))
-		let viewModel1 = FeedImageCommentViewModel(message: coment1.message,
+		let viewModel1 = FeedImageCommentViewModel(message: "a message",
 												  creationDate: "7 months ago",
-												  author: coment1.author.username)
+												  author: "a username")
 		
 		let coment2 = FeedImageComment(id: UUID(),
 									   message: "another message",
 									   createdAt: Date(timeIntervalSince1970: 1608627222),
 									   author: .init(username: "another username"))
-		let viewModel2 = FeedImageCommentViewModel(message: coment2.message,
+		let viewModel2 = FeedImageCommentViewModel(message: "another message",
 												  creationDate: "3 months ago",
-												  author: coment2.author.username)
+												  author: "another username")
 		
-		let models = [coment1, coment2]
-		let viewModels = [viewModel1, viewModel2]
-		sut.didFinishLoadingComments(with: models)
+		let viewModel = FeedImageCommentsPresenter.map([coment1, coment2],
+													   referenceDate: referenceDate,
+													   locale: locale,
+													   calendar: calendar)
+		
+		XCTAssertEqual(viewModel.comments, [viewModel1, viewModel2])
+	}
+	
+	func test_didFinishLoadingComments_displaysCommentsAndStopsLoading() {
+		let (sut, view) = makeSUT()
+		
+		let coment1 = FeedImageComment(id: UUID(),
+									   message: "a message",
+									   createdAt: Date(timeIntervalSince1970: 1598627222),
+									   author: .init(username: "a username"))
+		
+		let coment2 = FeedImageComment(id: UUID(),
+									   message: "another message",
+									   createdAt: Date(timeIntervalSince1970: 1608627222),
+									   author: .init(username: "another username"))
+		
+		let comments = [coment1, coment2]
+		let viewModel = FeedImageCommentsPresenter.map(comments)
+		
+		sut.didFinishLoadingComments(with: comments)
 		
 		XCTAssertEqual(view.messages, [
-			.display(comments: viewModels),
+			.display(comments: viewModel.comments),
 			.display(isLoading: false)
 		])
 	}
@@ -75,9 +98,9 @@ class FeedCommentsPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(relativeToDate: Date = Date(), locale: Locale = .init(identifier: "en_US_POSIX"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view, referenceDate: relativeToDate, locale: locale)
+		let sut = FeedImageCommentsPresenter(feedImageCommentsView: view, loadingView: view, errorView: view)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)

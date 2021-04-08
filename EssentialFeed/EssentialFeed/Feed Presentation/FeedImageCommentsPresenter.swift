@@ -16,8 +16,6 @@ public final class FeedImageCommentsPresenter {
 	private let feedImageCommentsView: FeedImageCommentsView
 	private let loadingView: FeedLoadingView
 	private let errorView: FeedErrorView
-	private let formatter: RelativeDateTimeFormatter
-	private let referenceDate: Date
 	
 	private var feedImageCommentsLoadError: String {
 		return NSLocalizedString("FEED_VIEW_CONNECTION_ERROR",
@@ -26,13 +24,10 @@ public final class FeedImageCommentsPresenter {
 			 comment: "Error message displayed when we can't load the image feed comments from the server")
 	}
 	
-	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView, referenceDate: Date = Date(), locale: Locale = .current) {
+	public init(feedImageCommentsView: FeedImageCommentsView, loadingView: FeedLoadingView, errorView: FeedErrorView) {
 		self.feedImageCommentsView = feedImageCommentsView
 		self.loadingView = loadingView
 		self.errorView = errorView
-		self.formatter = .init()
-		self.referenceDate = referenceDate
-		self.formatter.locale = locale
 	}
 	
 	public static var title: String {
@@ -48,8 +43,7 @@ public final class FeedImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [FeedImageComment]) {
-		let commentViewModels = comments.map { toViewModel($0) }
-		feedImageCommentsView.display(FeedImageCommentsViewModel(comments: commentViewModels))
+		feedImageCommentsView.display(FeedImageCommentsPresenter.map(comments))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
@@ -58,13 +52,17 @@ public final class FeedImageCommentsPresenter {
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
 	
-	private func toViewModel(_ comment: FeedImageComment) -> FeedImageCommentViewModel {
-		.init(message: comment.message,
-			  creationDate: format(date: comment.createdAt),
-			  author: comment.author.username)
-	}
-	
-	private func format(date: Date) -> String {
-		formatter.localizedString(for: date, relativeTo: referenceDate)
+	public static func map(_ comments: [FeedImageComment],
+						   referenceDate: Date = Date(),
+						   locale: Locale = .current,
+						   calendar: Calendar = .current) -> FeedImageCommentsViewModel {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.locale = locale
+		formatter.calendar = calendar
+		return .init(comments: comments.map {
+			FeedImageCommentViewModel(message: $0.message,
+									  creationDate: formatter.localizedString(for: $0.createdAt, relativeTo: referenceDate),
+									  author:$0.author.username)
+		})
 	}
 }
