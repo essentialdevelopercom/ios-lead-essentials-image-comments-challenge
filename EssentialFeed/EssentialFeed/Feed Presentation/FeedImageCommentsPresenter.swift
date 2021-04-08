@@ -48,11 +48,7 @@ public final class FeedImageCommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [FeedImageComment]) {
-		let commentViewModels = comments.map {
-			FeedImageCommentViewModel(message: $0.message,
-									  creationDate: format(date: $0.createdAt),
-									  author: $0.author.username)
-		}
+		let commentViewModels = comments.map { toViewModel($0) }
 		feedImageCommentsView.display(FeedImageCommentsViewModel(comments: commentViewModels))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
 	}
@@ -60,6 +56,12 @@ public final class FeedImageCommentsPresenter {
 	public func didFinishLoadingComments(with error: Error) {
 		errorView.display(.error(message: feedImageCommentsLoadError))
 		loadingView.display(FeedLoadingViewModel(isLoading: false))
+	}
+	
+	private func toViewModel(_ comment: FeedImageComment) -> FeedImageCommentViewModel {
+		.init(message: comment.message,
+			  creationDate: format(date: comment.createdAt),
+			  author: comment.author.username)
 	}
 	
 	private func format(date: Date) -> String {
