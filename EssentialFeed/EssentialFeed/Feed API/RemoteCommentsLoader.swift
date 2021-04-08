@@ -63,12 +63,16 @@ private class CommentsMapper {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 		guard
-			response.isOK,
+			isOK(response),
 			let root = try? decoder.decode(Root.self, from: data)
 		else {
 			throw RemoteCommentsLoader.Error.invalidData
 		}
 		
 		return root.items
+	}
+	
+	private static func isOK(_ response: HTTPURLResponse) -> Bool {
+		(200...299).contains(response.statusCode)
 	}
 }
