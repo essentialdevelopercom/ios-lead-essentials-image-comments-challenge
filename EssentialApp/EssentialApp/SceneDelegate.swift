@@ -69,9 +69,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func displayImage(feedImage: FeedImage) {
-		let feedImageCommentsLoaderPublisher = self.makeRemoteFeedImageCommentsLoaderPublisher(image: feedImage)
 		let feedImageCommentsViewController = FeedImageCommentsUIComposer
-			.feedImageCommentsComposedWith(feedImageCommentsLoader: feedImageCommentsLoaderPublisher)
+			.feedImageCommentsComposedWith(
+				feedImageCommentsLoader: makeRemoteFeedImageCommentsLoader(feedImage: feedImage).loadPublisher)
 		navigationController.pushViewController(feedImageCommentsViewController, animated: true)
 	}
 	
@@ -94,9 +94,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					.loadImageDataPublisher(from: url)
 					.caching(to: localImageLoader, using: url)
 			})
-	}
-	
-	private func makeRemoteFeedImageCommentsLoaderPublisher(image: FeedImage) -> () -> FeedImageCommentsLoader.Publisher {
-		return makeRemoteFeedImageCommentsLoader(feedImage: image).loadPublisher
 	}
 }
