@@ -18,9 +18,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURL_requestsCommentsFromURL() {
-		let image = uniqueImage()
-		let (sut, client) = makeSUT(image: image)
-		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
+		let url = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!
+		let (sut, client) = makeSUT(url: url)
 		
 		_ = sut.load() { _ in }
 		
@@ -28,9 +27,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURLTwice_requestsCommentsFromURLTwice() {
-		let image = uniqueImage()
-		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
-		let (sut, client) = makeSUT(image: image)
+		let url = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!
+		let (sut, client) = makeSUT(url: url)
 		
 		_ = sut.load() { _ in }
 		_ = sut.load() { _ in }
@@ -124,9 +122,8 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_cancelLoadImageCommentsURLTask_cancelsClientURLRequest() {
-		let image = uniqueImage()
-		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
-		let (sut, client) = makeSUT(image: image)
+		let url = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!
+		let (sut, client) = makeSUT(url: url)
 		
 		let task = sut.load() { _ in }
 		XCTAssertTrue(client.cancelledURLs.isEmpty, "Expected no cancelled URL request until task is cancelled")
@@ -167,9 +164,10 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line, image: FeedImage = uniqueImage()) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!,
+						 file: StaticString = #filePath,
+						 line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
-		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
 		let sut = RemoteFeedImageCommentsLoader(url: url, client: client)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(client, file: file, line: line)
