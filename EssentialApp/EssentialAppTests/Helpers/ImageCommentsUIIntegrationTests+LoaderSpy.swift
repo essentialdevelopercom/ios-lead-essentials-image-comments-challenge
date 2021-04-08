@@ -12,7 +12,6 @@ import EssentialFeediOS
 
 extension ImageCommentsUIIntegrationTests {
 	class LoaderSpy: ImageCommentsLoader {
-		
 		private struct TaskSpy: ImageCommentsLoaderTask {
 			let cancelCallback: () -> Void
 			
