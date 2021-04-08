@@ -19,7 +19,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	
 	public var delegate: ImageCommentsViewControllerDelegate?
 	
-	var models = [PresentableImageComment]() {
+	private var models = [PresentableImageComment]() {
 		didSet {
 			tableView.reloadData()
 		}
@@ -31,7 +31,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		refresh()
 	}
 	
-	@IBAction func refresh() {
+	@IBAction private func refresh() {
 		delegate?.didRequestCommentsRefresh()
 	}
 	
@@ -67,7 +67,6 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		cell.usernameLabel?.text = model.author
 		cell.createdAtLabel?.text = model.createdAt
 		cell.commentLabel?.text = model.message
-		cell.selectionStyle = .none
 		return cell
 	}
 }

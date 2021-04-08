@@ -30,12 +30,27 @@ final class ImageCommentsPresenterTests: XCTestCase {
 	
 	func test_didFinishLoadingComments_displaysCommentsUsingRelativeTimesAndStopsLoading() {
 		let fixedDate = anyDate()
-		let (sut, view) = makeSUT(date: fixedDate)
-		let comments = uniqueComments(currentDate: fixedDate)
+		let locale = Locale(identifier: "en_US_POSIX")
+		let calendar = Calendar(identifier: .gregorian)
+		let (sut, view) = makeSUT(date: fixedDate, locale: locale, calendar: calendar)
+		let comments = [
+			ImageComment(id: UUID(),
+						 message: "a message",
+						 createdAt: Date(timeInterval: -dayInSeconds, since: fixedDate),
+						 author: ImageCommentAuthor(username: "a username")),
+			ImageComment(id: UUID(),
+						 message: "another message",
+						 createdAt: Date(timeInterval: -hourInSeconds, since: fixedDate),
+						 author: ImageCommentAuthor(username: "another username"))]
 		
-		sut.didFinishLoading(with: comments.comments)
+		let presentableComments = [
+			PresentableImageComment(createdAt: "1 day ago", message: comments[0].message, author: comments[0].author.username),
+			PresentableImageComment(createdAt: "1 hour ago", message: comments[1].message, author: comments[1].author.username)
+		]
 		
-		XCTAssertEqual(view.messages, [.display(comments: comments.presentableComments), .display(isLoading: false)])
+		sut.didFinishLoading(with: comments)
+		
+		XCTAssertEqual(view.messages, [.display(comments: presentableComments), .display(isLoading: false)])
 	}
 	
 	func test_didFinishLoadingCommentsWithError_displaysLocalizedErrorMessageAndStopsLoading() {
@@ -49,16 +64,45 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		])
 	}
 	
+	func test_map_transformsImageCommentsToPresentableImageComments () {
+		let fixedDate = anyDate()
+		let locale = Locale(identifier: "en_US_POSIX")
+		let calendar = Calendar(identifier: .gregorian)
+		
+		let imageComments = [
+			ImageComment(id: UUID(),
+						 message: "a message",
+						 createdAt: Date(timeInterval: -dayInSeconds, since: fixedDate),
+						 author: ImageCommentAuthor(username: "a username")),
+			ImageComment(id: UUID(),
+						 message: "another message",
+						 createdAt: Date(timeInterval: -hourInSeconds, since: fixedDate),
+						 author: ImageCommentAuthor(username: "another username"))]
+		
+		let results = ImageCommentsPresenter.map(imageComments, currentDate: { fixedDate }, locale: locale, calendar: calendar)
+		
+		XCTAssertEqual(results, [
+			PresentableImageComment(createdAt: "1 day ago", message: imageComments[0].message, author: imageComments[0].author.username),
+			PresentableImageComment(createdAt: "1 hour ago", message: imageComments[1].message, author: imageComments[1].author.username)
+		])
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(
+		date: Date = Date(),
+		locale: Locale = .current,
+		calendar: Calendar = .current,
+		file: StaticString = #filePath,
+		line: UInt = #line
+	) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
 		let sut = ImageCommentsPresenter(
 			imageCommentsView: view,
 			loadingView: view,
 			errorView: view,
-			locale: Locale(identifier: "en_US_POSIX"),
-			calendar: Calendar(identifier: .gregorian),
+			locale: locale,
+			calendar: calendar,
 			currentDate: { date })
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
@@ -74,31 +118,7 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		}
 		return value
 	}
-	
-	private func uniqueComments(currentDate: Date) -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
-		let comments = [
-			ImageComment(
-				id: UUID(),
-				message: "a message",
-				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60 * 24),
-				author: ImageCommentAuthor(username: "a username")
-			),
-			ImageComment(
-				id: UUID(),
-				message: "another message",
-				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60),
-				author: ImageCommentAuthor(username: "another username")
-			),
-		]
 		
-		let presentableComments = [
-			PresentableImageComment(createdAt: "1 day ago", message: comments[0].message, author: comments[0].author.username),
-			PresentableImageComment(createdAt: "1 hour ago", message: comments[1].message, author: comments[1].author.username)
-		]
-		
-		return (comments, presentableComments)
-	}
-	
 	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
 		enum Message: Equatable {
 			case display(comments: [PresentableImageComment])
@@ -121,3 +141,6 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		}
 	}
 }
+
+private let hourInSeconds: TimeInterval = 3_600
+private let dayInSeconds: TimeInterval = 24 * hourInSeconds

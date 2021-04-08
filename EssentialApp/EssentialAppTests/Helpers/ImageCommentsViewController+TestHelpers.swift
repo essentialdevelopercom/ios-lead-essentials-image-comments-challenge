@@ -23,7 +23,7 @@ extension ImageCommentsViewController {
 	}
 	
 	func imageCommentView(at row: Int) -> ImageCommentCell? {
-		guard row < numberOfRows(in: imageCommentsSection) else { return nil }
+		guard row < numberOfRenderedImageComments() else { return nil }
 		
 		let indexPath = IndexPath(row: row, section: imageCommentsSection)
 		let ds = tableView.dataSource

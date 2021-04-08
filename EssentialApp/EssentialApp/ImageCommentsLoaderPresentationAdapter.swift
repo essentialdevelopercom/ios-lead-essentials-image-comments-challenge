@@ -10,12 +10,12 @@ import EssentialFeed
 import EssentialFeediOS
 import Foundation
 
-public final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
+final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewControllerDelegate {
 	private let loader: ImageCommentsLoader
 	var presenter: ImageCommentsPresenter?
 	private var task: ImageCommentsLoaderTask?
 	
-	public init(loader: ImageCommentsLoader) {
+	init(loader: ImageCommentsLoader) {
 		self.loader = loader
 	}
 	
@@ -23,7 +23,7 @@ public final class ImageCommentsLoaderPresentationAdapter: ImageCommentsViewCont
 		task?.cancel()
 	}
 	
-	public func didRequestCommentsRefresh() {
+	func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
 		task = loader.load { [weak self] result in

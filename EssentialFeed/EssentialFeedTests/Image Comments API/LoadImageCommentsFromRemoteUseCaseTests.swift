@@ -81,9 +81,8 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	func test_load_deliversItemsOn2XXHTTPResponseWithJSONItems() {
 		let (sut, client) = makeSUT()
 		
-		let item1 = makeItem(id: UUID(), message: "a message", authorName: "a username")
-		
-		let item2 = makeItem(id: UUID(), message: "another message", authorName: "another username")
+		let item1 = makeItem(id: UUID(), message: "a message", createdAt: (date: Date(timeIntervalSinceReferenceDate: 638556190), iso8601String: "2021-03-27T16:43:10+00:00"), authorName: "a username")
+		let item2 = makeItem(id: UUID(), message: "another message", createdAt: (date:Date(timeIntervalSinceReferenceDate: 638590000), iso8601String: "2021-03-28T02:06:40+00:00"), authorName: "another username")
 		
 		let items = [item1.model, item2.model]
 		
@@ -175,14 +174,13 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 		return (sut, client)
 	}
 	
-	private func makeItem(id: UUID, message: String, authorName: String) -> (model: ImageComment, json: [String: Any]) {
-		let createdAt = anyDate()
-		let item = ImageComment(id: id, message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), authorName: String) -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, author: ImageCommentAuthor(username: authorName))
 		
 		let json = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": "2021-03-27T16:43:10+00:00",
+			"created_at": createdAt.iso8601String,
 			"author": [
 				"username": authorName
 			]

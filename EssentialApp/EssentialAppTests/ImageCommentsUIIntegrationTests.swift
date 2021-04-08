@@ -122,11 +122,11 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			sut?.loadViewIfNeeded()
 		}
 		
-		XCTAssertEqual(loader.cancelledRequests, [], "Expected no cancelled requests until comments are not visibile")
+		XCTAssertEqual(loader.cancelCallCount, 0, "Expected no cancelled requests until comments are not visibile")
 		
 		sut = nil
 		
-		XCTAssertEqual(loader.cancelledRequests.count, 1, "Expected one cancelled request")
+		XCTAssertEqual(loader.cancelCallCount, 1, "Expected one cancelled request")
 	}
 	
 	func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
@@ -143,9 +143,9 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		
 	// MARK: - Helpers
 	
-	private func makeSUT(date: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader, date: { date })
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(commentsLoader: loader)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
@@ -153,22 +153,20 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	
 	private func uniqueComments(currentDate: Date = Date()) -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
 		let comments = [
-			ImageComment(
-				id: UUID(),
-				message: "a message",
-				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60 * 24),
-				author: ImageCommentAuthor(username: "a username")
-			),
-			ImageComment(
-				id: UUID(),
-				message: "another message",
-				createdAt: Date(timeIntervalSinceReferenceDate: currentDate.timeIntervalSinceReferenceDate - 60 * 60),
-				author: ImageCommentAuthor(username: "another username")
-			),
-		]
+			ImageComment(id: UUID(),
+						 message: "a message",
+						 createdAt: Date(timeInterval: -dayInSeconds, since: currentDate),
+						 author: ImageCommentAuthor(username: "a username")),
+			ImageComment(id: UUID(),
+						 message: "another message",
+						 createdAt: Date(timeInterval: -hourInSeconds, since: currentDate),
+						 author: ImageCommentAuthor(username: "another username"))]
 		
 		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: { currentDate })
 		
 		return (comments, presentableComments)
 	}
 }
+
+private let hourInSeconds: TimeInterval = 3_600
+private let dayInSeconds: TimeInterval = 24 * hourInSeconds

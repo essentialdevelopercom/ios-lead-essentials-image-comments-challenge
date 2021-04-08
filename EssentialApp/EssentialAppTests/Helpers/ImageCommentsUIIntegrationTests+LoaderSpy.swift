@@ -23,7 +23,7 @@ extension ImageCommentsUIIntegrationTests {
 		
 		private var imageCommentsRequests = [(ImageCommentsLoader.Result) -> Void]()
 		
-		private(set) var cancelledRequests = [UUID]()
+		private(set) var cancelCallCount = 0
 		
 		var loadImageCommentsCallCount: Int {
 			return imageCommentsRequests.count
@@ -42,7 +42,7 @@ extension ImageCommentsUIIntegrationTests {
 		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
 			imageCommentsRequests.append(completion)
 			return TaskSpy() { [weak self] in
-				self?.cancelledRequests.append(UUID())
+				self?.cancelCallCount += 1
 			}
 		}
 	}

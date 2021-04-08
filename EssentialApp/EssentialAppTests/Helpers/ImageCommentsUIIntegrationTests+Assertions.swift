@@ -22,7 +22,7 @@ extension ImageCommentsUIIntegrationTests {
 		}
 		
 		for (index, imageComment) in imageComments.enumerated() {
-			assertThat(sut, hasViewConfiguredFor: imageComment, at: index)
+			assertThat(sut, hasViewConfiguredFor: imageComment, at: index, file: file, line: line)
 		}
 	}
 	
