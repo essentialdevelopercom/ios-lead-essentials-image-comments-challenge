@@ -10,7 +10,7 @@ public struct CommentListViewModel {
 	public let comments: [CommentViewModel]
 }
 
-public struct CommentViewModel {
+public struct CommentViewModel: Hashable {
 	public let message: String
 	public let author: String
 	public let date: String

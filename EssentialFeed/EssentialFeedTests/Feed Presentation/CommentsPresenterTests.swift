@@ -38,8 +38,10 @@ class CommentsPresenterTests: XCTestCase {
 		
 		sut.didFinishLoadingComments(comments: comments)
 		
+		let model = CommentsPresenter.map(comments)
+		
 		XCTAssertEqual(view.messages, [
-			.display(comments: comments.map { $0.message }),
+			.display(comments: model.comments),
 			.display(isLoading: false)
 		])
 	}
@@ -77,7 +79,7 @@ class CommentsPresenterTests: XCTestCase {
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
-			case display(comments: [String])
+			case display(comments: [CommentViewModel])
 		}
 		private(set) var messages = Set<Message>()
 		
@@ -90,7 +92,7 @@ class CommentsPresenterTests: XCTestCase {
 		}
 		
 		func display(_ viewModel: CommentListViewModel) {
-			messages.insert(.display(comments: viewModel.comments.map { $0.message }))
+			messages.insert(.display(comments: viewModel.comments))
 		}
 	}
 	

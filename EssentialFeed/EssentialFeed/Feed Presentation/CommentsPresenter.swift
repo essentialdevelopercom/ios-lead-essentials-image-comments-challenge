@@ -51,7 +51,7 @@ public final class CommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(comments: [Comment]) {
-		let model = CommentListViewModel(comments: CommentViewModelAdapter.models(from: comments))
+		let model = CommentsPresenter.map(comments)
 		commentsView.display(model)
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
@@ -60,14 +60,13 @@ public final class CommentsPresenter {
 		errorView.display(CommentErrorViewModel(message: commentsLoadError))
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
-}
-
-public class CommentViewModelAdapter {
-	public static func models(from comments: [Comment]) -> [CommentViewModel] {
+	
+	public static func map(_ comments: [Comment]) -> CommentListViewModel {
 		let formatter = RelativeDateTimeFormatter()
-		return comments.map {
-			let date = formatter.localizedString(for: $0.createdAt, relativeTo: Date())
-			return CommentViewModel(message: $0.message, author: $0.author, date: date)
+		let models = comments.map { comment -> CommentViewModel in
+			let date = formatter.localizedString(for: comment.createdAt, relativeTo: Date())
+			return CommentViewModel(message: comment.message, author: comment.author, date: date)
 		}
+		return CommentListViewModel(comments: models)
 	}
 }
