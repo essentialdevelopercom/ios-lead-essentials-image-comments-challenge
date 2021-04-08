@@ -38,10 +38,13 @@ class CommentsPresenterTests: XCTestCase {
 		
 		sut.didFinishLoadingComments(comments: comments)
 		
-		let model = CommentsPresenter.map(comments)
+		let models = [
+			CommentViewModel(message:"Some comment", author: "Some author", date: "5 days ago"),
+			CommentViewModel(message:"Another comment", author: "Another author", date: "2 weeks ago")
+		]
 		
 		XCTAssertEqual(view.messages, [
-			.display(comments: model.comments),
+			.display(comments: models),
 			.display(isLoading: false)
 		])
 	}
@@ -97,12 +100,19 @@ class CommentsPresenterTests: XCTestCase {
 	}
 	
 	private func uniqueComments() -> [Comment] {
-		let comment0 = makeItem(message: "comment0", author: "author0")
-		let comment1 = makeItem(message: "comment1", author: "author1")
+		let now = Date()
+		let comment0 = makeItem(message: "Some comment", createdAt: now.adding(days: -5), author: "Some author")
+		let comment1 = makeItem(message: "Another comment", createdAt: now.adding(days: -14), author: "Another author")
 		return [comment0, comment1]
 	}
 	
 	private func makeItem(id: UUID = UUID(), message: String, createdAt: Date = Date(), author: String ) -> Comment {
 		return Comment(id: id, message: message, createdAt: createdAt, author: author)
+	}
+}
+
+private extension Date {
+	func adding(days: Int) -> Date {
+		return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
 	}
 }

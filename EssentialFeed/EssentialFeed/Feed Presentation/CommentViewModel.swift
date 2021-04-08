@@ -14,4 +14,10 @@ public struct CommentViewModel: Hashable {
 	public let message: String
 	public let author: String
 	public let date: String
+	
+	public init(message: String, author: String, date: String) {
+		self.message = message
+		self.author = author
+		self.date = date
+	}
 }
