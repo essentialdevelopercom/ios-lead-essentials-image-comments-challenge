@@ -164,9 +164,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(url: URL = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!,
-						 file: StaticString = #filePath,
-						 line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let sut = RemoteFeedImageCommentsLoader(url: url, client: client)
 		trackForMemoryLeaks(sut, file: file, line: line)
