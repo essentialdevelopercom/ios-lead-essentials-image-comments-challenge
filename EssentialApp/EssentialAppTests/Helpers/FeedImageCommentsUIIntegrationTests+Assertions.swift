@@ -19,26 +19,21 @@ extension FeedImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageCommentViews()) instead.", file: file, line: line)
 		}
 		
-		feed.enumerated().forEach { index, image in
-			assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
+		let viewModels = FeedImageCommentsPresenter.map(feed).comments
+
+		viewModels.enumerated().forEach { index, viewModel in
+			assertThat(sut, hasViewConfiguredFor: viewModel, at: index, file: file, line: line)
 		}
 		
 		executeRunLoopToCleanUpReferences()
 	}
 	
-	func assertThat(_ sut: FeedImageCommentsViewController, hasViewConfiguredFor imageComment: FeedImageComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+	func assertThat(_ sut: FeedImageCommentsViewController, hasViewConfiguredFor commentViewModel: FeedImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.feedImageCommentView(at: index)
 		
 		guard let cell = view else {
 			return XCTFail("Expected \(FeedImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
-	
-		let viewSpy = ViewSpy()
-		let presenter = FeedImageCommentsPresenter(feedImageCommentsView: viewSpy, loadingView: viewSpy, errorView: viewSpy)
-		
-		presenter.didFinishLoadingComments(with: [imageComment])
-		
-		let commentViewModel = viewSpy.message(at: 0).comments.first!
 		
 		XCTAssertEqual(cell.messageText, commentViewModel.message, "message at index \(index)", file: file, line: line)
 		
