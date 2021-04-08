@@ -18,7 +18,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURL_requestsCommentsFromURL() {
-		let url = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!
+		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
 		_ = sut.load() { _ in }
@@ -27,7 +27,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_loadImageCommentsFromURLTwice_requestsCommentsFromURLTwice() {
-		let url = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!
+		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
 		_ = sut.load() { _ in }
@@ -122,7 +122,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_cancelLoadImageCommentsURLTask_cancelsClientURLRequest() {
-		let url = URL(string: "https://a-given-url.com/image/\(UUID().uuidString)/comments")!
+		let url = URL(string: "https://a-given-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
 		let task = sut.load() { _ in }
@@ -149,8 +149,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_loadImageCommentsFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
 		let client = HTTPClientSpy()
-		let image = uniqueImage()
-		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
+		let url = URL(string: "https://a-given-url.com")!
 		var sut: RemoteFeedImageCommentsLoader? = RemoteFeedImageCommentsLoader(url: url, client: client)
 		
 		var capturedResults = [FeedImageCommentsLoader.Result]()
