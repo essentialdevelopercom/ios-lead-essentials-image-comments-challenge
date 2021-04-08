@@ -29,7 +29,7 @@ public final class ImageCommentViewController: UITableViewController {
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		title = "Comments"
+		title = NSLocalizedString("IMAGE_COMMENT_TITLE", tableName: "ImageComment", bundle: Bundle(for: ImageCommentViewController.self), comment: "Title for the image comment view")
 		
 		refreshControl = UIRefreshControl()
 		refreshControl?.beginRefreshing()

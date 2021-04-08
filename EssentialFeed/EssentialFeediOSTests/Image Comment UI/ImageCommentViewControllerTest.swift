@@ -170,7 +170,12 @@ class ImageCommentViewControllerTest: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		
-		XCTAssertEqual(sut.title, "Comments")
+		let bundle = Bundle(for: ImageCommentViewController.self)
+		let localizedKey = "IMAGE_COMMENT_TITLE"
+		let localizedTitle = bundle.localizedString(forKey: localizedKey, value: nil, table: "ImageComment")
+		
+		XCTAssertNotEqual(localizedKey, localizedTitle, "Missing localized string for key: \(localizedKey)")
+		XCTAssertEqual(sut.title, localizedTitle)
 	}
 	
 	// MARK: - Helpers
