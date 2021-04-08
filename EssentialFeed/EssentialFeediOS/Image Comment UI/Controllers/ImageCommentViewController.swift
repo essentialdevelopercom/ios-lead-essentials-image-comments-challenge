@@ -12,6 +12,7 @@ import EssentialFeed
 
 public final class ImageCommentViewController: UITableViewController {
 	@IBOutlet public weak var errorView: UIView!
+	@IBOutlet public weak var errorViewLabel: UILabel!
 	
 	public var loader: ImageCommentLoader?
 	private var tableModel = [ImageComment]()
@@ -45,6 +46,7 @@ public final class ImageCommentViewController: UITableViewController {
 			
 				case .failure(_):
 					self?.errorView?.isHidden = false
+					self?.errorViewLabel.text = NSLocalizedString("IMAGE_COMMENT_ERROR", tableName: "ImageComment", bundle: Bundle(for: ImageCommentViewController.self), comment: "Error message for the image comment error view")
 					
 				case .success(let imageComments):
 					self?.tableModel = imageComments

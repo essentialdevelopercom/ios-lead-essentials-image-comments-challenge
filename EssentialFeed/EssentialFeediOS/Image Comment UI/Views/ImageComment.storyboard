@@ -99,6 +99,7 @@
                     </refreshControl>
                     <connections>
                         <outlet property="errorView" destination="rR3-L7-YMP" id="iEC-Yv-PTK"/>
+                        <outlet property="errorViewLabel" destination="45z-Eo-X7u" id="74U-if-R8i"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7e2-C3-OUS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

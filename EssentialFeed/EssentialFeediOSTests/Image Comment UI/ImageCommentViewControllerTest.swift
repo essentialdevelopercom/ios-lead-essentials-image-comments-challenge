@@ -178,6 +178,20 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertEqual(sut.title, localizedTitle)
 	}
 	
+	func test_imageCommentView_errorMessage() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.failedCommentLoading()
+		
+		let bundle = Bundle(for: ImageCommentViewController.self)
+		let localizedKey = "IMAGE_COMMENT_ERROR"
+		let localizedTitle = bundle.localizedString(forKey: localizedKey, value: nil, table: "ImageComment")
+		
+		XCTAssertNotEqual(localizedKey, localizedTitle, "Missing localized string for key: \(localizedKey)")
+		XCTAssertEqual(sut.errorViewLabel.text, localizedTitle)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentViewController, loader: LoaderSpy) {
