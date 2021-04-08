@@ -184,7 +184,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			"author": [
 				"username": authorName
 			]
-		].compactMapValues { $0 }
+		] as [String : Any]
 		
 		return (item, json)
 	}

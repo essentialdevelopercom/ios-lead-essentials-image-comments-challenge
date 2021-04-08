@@ -34,14 +34,15 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		let calendar = Calendar(identifier: .gregorian)
 		let (sut, view) = makeSUT(date: fixedDate, locale: locale, calendar: calendar)
 		let comments = [
-			ImageComment(id: UUID(),
-						 message: "a message",
-						 createdAt: Date(timeInterval: -dayInSeconds, since: fixedDate),
-						 author: ImageCommentAuthor(username: "a username")),
-			ImageComment(id: UUID(),
-						 message: "another message",
-						 createdAt: Date(timeInterval: -hourInSeconds, since: fixedDate),
-						 author: ImageCommentAuthor(username: "another username"))]
+			makeComment(
+			   message: "a message",
+			   createdAt: Date(timeInterval: -dayInSeconds, since: fixedDate),
+			   username: "a username"),
+			makeComment(
+			   message: "another message",
+			   createdAt: Date(timeInterval: -hourInSeconds, since: fixedDate),
+			   username: "another username")
+		]
 		
 		let presentableComments = [
 			PresentableImageComment(createdAt: "1 day ago", message: comments[0].message, author: comments[0].author.username),
@@ -70,14 +71,15 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		let calendar = Calendar(identifier: .gregorian)
 		
 		let imageComments = [
-			ImageComment(id: UUID(),
-						 message: "a message",
-						 createdAt: Date(timeInterval: -dayInSeconds, since: fixedDate),
-						 author: ImageCommentAuthor(username: "a username")),
-			ImageComment(id: UUID(),
-						 message: "another message",
-						 createdAt: Date(timeInterval: -hourInSeconds, since: fixedDate),
-						 author: ImageCommentAuthor(username: "another username"))]
+			makeComment(
+			   message: "a message",
+			   createdAt: Date(timeInterval: -dayInSeconds, since: fixedDate),
+			   username: "a username"),
+			makeComment(
+			   message: "another message",
+			   createdAt: Date(timeInterval: -hourInSeconds, since: fixedDate),
+			   username: "another username")
+		]
 		
 		let results = ImageCommentsPresenter.map(imageComments, currentDate: { fixedDate }, locale: locale, calendar: calendar)
 		
@@ -107,6 +109,10 @@ final class ImageCommentsPresenterTests: XCTestCase {
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
+	}
+	
+	private func makeComment(message: String, createdAt: Date, username: String) -> ImageComment {
+		ImageComment(id: UUID(), message: message, createdAt: createdAt, author: ImageCommentAuthor(username: username))
 	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {

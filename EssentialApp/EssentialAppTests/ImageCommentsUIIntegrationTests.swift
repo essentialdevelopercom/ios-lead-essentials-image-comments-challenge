@@ -151,22 +151,19 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 	
-	private func uniqueComments(currentDate: Date = Date()) -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
+	private func uniqueComments() -> (comments: [ImageComment], presentableComments: [PresentableImageComment]) {
 		let comments = [
 			ImageComment(id: UUID(),
 						 message: "a message",
-						 createdAt: Date(timeInterval: -dayInSeconds, since: currentDate),
+						 createdAt: Date(timeIntervalSinceReferenceDate: 638556190),
 						 author: ImageCommentAuthor(username: "a username")),
 			ImageComment(id: UUID(),
 						 message: "another message",
-						 createdAt: Date(timeInterval: -hourInSeconds, since: currentDate),
+						 createdAt: Date(timeIntervalSinceReferenceDate: 638590000),
 						 author: ImageCommentAuthor(username: "another username"))]
 		
-		let presentableComments = ImageCommentsPresenter.map(comments, currentDate: { currentDate })
+		let presentableComments = ImageCommentsPresenter.map(comments)
 		
 		return (comments, presentableComments)
 	}
 }
-
-private let hourInSeconds: TimeInterval = 3_600
-private let dayInSeconds: TimeInterval = 24 * hourInSeconds
