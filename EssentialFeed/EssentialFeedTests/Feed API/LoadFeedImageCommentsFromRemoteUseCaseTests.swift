@@ -167,7 +167,7 @@ class LoadFeedImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(baseURL: URL = URL(string: "https://a-given-url.com")!, file: StaticString = #filePath, line: UInt = #line, image: FeedImage = uniqueImage()) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line, image: FeedImage = uniqueImage()) -> (sut: RemoteFeedImageCommentsLoader, client: HTTPClientSpy) {
 		let client = HTTPClientSpy()
 		let url = URL(string: "https://a-given-url.com/image/\(image.id.uuidString)/comments")!
 		let sut = RemoteFeedImageCommentsLoader(url: url, client: client)
