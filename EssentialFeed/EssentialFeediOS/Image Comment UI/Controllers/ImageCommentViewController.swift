@@ -29,6 +29,8 @@ public final class ImageCommentViewController: UITableViewController {
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		title = "Comments"
+		
 		refreshControl = UIRefreshControl()
 		refreshControl?.beginRefreshing()
 		refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)

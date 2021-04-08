@@ -165,6 +165,14 @@ class ImageCommentViewControllerTest: XCTestCase {
 		XCTAssertEqual(view.dateText, "2 years ago")
 	}
 	
+	func test_imageCommentView_hasTitle() {
+		let (sut, _) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		
+		XCTAssertEqual(sut.title, "Comments")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentViewController, loader: LoaderSpy) {
