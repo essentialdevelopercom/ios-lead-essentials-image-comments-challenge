@@ -322,7 +322,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		let image1 = makeImage(url: URL(string: "http://url-1.com")!)
 		
 		var selectedImages: [FeedImage] = []
-		let (sut, loader) = makeSUT { selectedImages.append($0) }
+		let (sut, loader) = makeSUT(imageSelection: { selectedImages.append($0) })
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [image0, image1])
