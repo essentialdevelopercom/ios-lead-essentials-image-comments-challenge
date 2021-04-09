@@ -317,11 +317,28 @@ final class FeedUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	
+	func test_feedImageView_callOnSelectClosureWhenImageSelected() {
+		let image = makeImage()
+		let exp = expectation(description: "Wait for callback closure")
+		let onSelect: (FeedImage) -> Void = { selectedImage  in
+			XCTAssertEqual(image, selectedImage, "Expected image to be selected")
+			exp.fulfill()
+		}
+		
+		let (sut, loader) = makeSUT(onSelect: onSelect)
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [image])
+		sut.simelateUserInteractedWithImage(at: 0)
+		
+		wait(for: [exp], timeout: 1.0)
+	}
+	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
+	private func makeSUT(onSelect: @escaping (FeedImage) -> Void = { _ in }, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, onSelect: { _ in })
+		let sut = FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher, onSelect: onSelect)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
