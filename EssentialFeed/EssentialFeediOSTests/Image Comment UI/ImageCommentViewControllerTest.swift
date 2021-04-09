@@ -193,8 +193,8 @@ class ImageCommentViewControllerTest: XCTestCase {
 	}
 	
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
-		let table = "Feed"
-		let presentationBundle = Bundle(for: FeedPresenter.self)
+		let table = "ImageComment"
+		let presentationBundle = Bundle(for: ImageCommentViewController.self)
 		let localizationBundles = allLocalizationBundles(in: presentationBundle)
 		let localizationStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
 		
