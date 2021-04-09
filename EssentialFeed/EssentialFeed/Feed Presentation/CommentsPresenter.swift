@@ -25,7 +25,7 @@ public final class CommentsPresenter {
 	private let loadingView: CommentLoadingView
 	private let commentsView: CommentView
 	
-	public static var title: String {
+	public var title: String {
 		return NSLocalizedString("COMMENTS_VIEW_TITLE",
 			tableName: "ImageComments",
 			bundle: Bundle(for: CommentsPresenter.self),

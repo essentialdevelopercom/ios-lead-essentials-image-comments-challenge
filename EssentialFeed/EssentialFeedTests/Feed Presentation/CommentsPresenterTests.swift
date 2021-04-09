@@ -12,7 +12,8 @@ import EssentialFeed
 class CommentsPresenterTests: XCTestCase {
 	
 	func test_title_isLocalized() {
-		XCTAssertEqual(CommentsPresenter.title, localized("COMMENTS_VIEW_TITLE"))
+		let (presenter, _) = makeSUT()
+		XCTAssertEqual(presenter.title, localized("COMMENTS_VIEW_TITLE"))
 	}
 	
 	func test_init_doesNotSendMessagesToView() {

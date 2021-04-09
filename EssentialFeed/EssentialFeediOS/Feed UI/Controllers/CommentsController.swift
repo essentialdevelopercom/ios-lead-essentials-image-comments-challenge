@@ -23,7 +23,7 @@ public final class CommentsController: UITableViewController, CommentErrorView, 
 	
 	override public func viewDidLoad() {
 		super.viewDidLoad()
-		title = CommentsPresenter.title
+		
 		refresh()
 	}
 	

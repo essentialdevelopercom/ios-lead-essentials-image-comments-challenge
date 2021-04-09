@@ -21,6 +21,7 @@ public final class CommentsUIComposer {
 			errorView: WeakRefVirtualProxy(commentsController),
 			loadingView: WeakRefVirtualProxy(commentsController),
 			commentsView: CommentsAdapter(controller: commentsController))
+		commentsController.title = presenter.title
 		presentationAdapter.presenter = presenter
 		return commentsController
 	}
