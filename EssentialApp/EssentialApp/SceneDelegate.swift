@@ -21,10 +21,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
 	
+	private lazy var baseURL: URL = { URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/")! }()
+	
 	private lazy var remoteFeedLoader: RemoteFeedLoader = {
-		RemoteFeedLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
-			client: httpClient)
+		RemoteFeedLoader(url: baseURL.appendingPathComponent("feed"), client: httpClient)
 	}()
 	
 	private lazy var localFeedLoader: LocalFeedLoader = {
@@ -39,6 +39,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		LocalFeedImageDataLoader(store: store)
 	}()
 	
+	private func makeRemoteFeedImageCommentsLoader(feedImage: FeedImage) -> RemoteFeedImageCommentsLoader {
+		let url = baseURL.appendingPathComponent("image/\(feedImage.id.uuidString)/comments")
+		return RemoteFeedImageCommentsLoader(url: url, client: httpClient)
+	}
+	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
 		self.httpClient = httpClient
@@ -52,13 +57,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		configureWindow()
 	}
 	
+	private lazy var navigationController = UINavigationController(
+		rootViewController: FeedUIComposer.feedComposedWith(
+			   feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+			   imageLoader: makeLocalImageLoaderWithRemoteFallback,
+			imageSelection: displayImage))
+	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback))
-		
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
+	}
+	
+	func displayImage(feedImage: FeedImage) {
+		let feedImageCommentsViewController = FeedImageCommentsUIComposer
+			.feedImageCommentsComposedWith(
+				feedImageCommentsLoader: makeRemoteFeedImageCommentsLoader(feedImage: feedImage).loadPublisher)
+		navigationController.pushViewController(feedImageCommentsViewController, animated: true)
 	}
 	
 	func sceneWillResignActive(_ scene: UIScene) {

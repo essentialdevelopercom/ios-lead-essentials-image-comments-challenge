@@ -16,7 +16,8 @@ struct SnapshotConfiguration {
 	let layoutMargins: UIEdgeInsets
 	let traitCollection: UITraitCollection
 	
-	static func iPhone8(style: UIUserInterfaceStyle) -> SnapshotConfiguration {
+	static func iPhone8(style: UIUserInterfaceStyle,
+						contentSizeCategory: UIContentSizeCategory = .medium) -> SnapshotConfiguration {
 		return SnapshotConfiguration(
 			size: CGSize(width: 375, height: 667),
 			safeAreaInsets: UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0),
@@ -24,7 +25,7 @@ struct SnapshotConfiguration {
 			traitCollection: UITraitCollection(traitsFrom: [
 				.init(forceTouchCapability: .available),
 				.init(layoutDirection: .leftToRight),
-				.init(preferredContentSizeCategory: .medium),
+				.init(preferredContentSizeCategory: contentSizeCategory),
 				.init(userInterfaceIdiom: .phone),
 				.init(horizontalSizeClass: .compact),
 				.init(verticalSizeClass: .regular),
@@ -36,7 +37,7 @@ struct SnapshotConfiguration {
 }
 
 private final class SnapshotWindow: UIWindow {
-	private var configuration: SnapshotConfiguration = .iPhone8(style: .light)
+	private var configuration: SnapshotConfiguration = .iPhone8(style: .light, contentSizeCategory: .medium)
 	
 	convenience init(configuration: SnapshotConfiguration, root: UIViewController) {
 		self.init(frame: CGRect(origin: .zero, size: configuration.size))
