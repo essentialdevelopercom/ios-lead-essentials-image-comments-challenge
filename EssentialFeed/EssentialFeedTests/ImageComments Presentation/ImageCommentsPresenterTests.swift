@@ -57,11 +57,11 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	// MARK: - Helpers
 
-	private func makeSUT() -> (sut: ImageCommentsPresenter, view: ViewSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
 		let view = ViewSpy()
 		let sut = ImageCommentsPresenter(imageCommentsView: view, imageCommentsLoadingView: view, imageCommentsErrorView: view)
-		trackForMemoryLeaks(view)
-		trackForMemoryLeaks(sut)
+		trackForMemoryLeaks(view, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
 	}
 
