@@ -13,7 +13,7 @@ import EssentialFeediOS
 
 class FeedImageCommentsAcceptanceTests: XCTestCase {
 	
-	func test_onImageSelection_displaysFirstFeedImageCommets() {
+	func test_onImageSelection_displaysImageComments() {
 		let feed = launch(httpClient: .online(response), store: .empty)
 		
 		feed.simulateFeedImageViewTap(at: 0)
