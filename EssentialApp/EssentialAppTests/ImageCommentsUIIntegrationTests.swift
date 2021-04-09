@@ -154,77 +154,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 
-	private func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
-		guard sut.numberOfRenderedImageCommentViews() == imageComments.count else {
-			return XCTFail("Expected \(imageComments.count) image comments, got \(sut.numberOfRenderedImageCommentViews()) instead.", file: file, line: line)
-		}
-
-		imageComments.enumerated().forEach { index, imageComment in
-			assertThat(sut, hasViewConfiguredFor: imageComment, at: index, file: file, line: line)
-		}
-	}
-
-	private func assertThat(_ sut: ImageCommentsViewController, hasViewConfiguredFor imageComment: ImageComment, at index: Int, file: StaticString = #file, line: UInt = #line) {
-		let view = sut.imageCommentView(at: index)
-
-		guard let cell = view as? ImageCommentCell else {
-			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
-		}
-
-		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message to be \(imageComment.message) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.authorNameText, imageComment.author.username, "Expected author to be \(imageComment.author) for image comment view at index \(index)", file: file, line: line)
-	}
-
-	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
-		let table = "ImageComments"
-		let bundle = Bundle(for: ImageCommentsPresenter.self)
-		let value = bundle.localizedString(forKey: key, value: nil, table: table)
-		if value == key {
-			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
-		}
-		return value
-	}
-
 	private func makeImageComment(message: String = "a message", authorName: String = "a user", createdAt: Date = Date()) -> ImageComment {
 		ImageComment(id: UUID(), message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
-	}
-
-	class LoaderSpy: ImageCommentsLoader {
-		private struct TaskSpy: ImageCommentsLoaderTask {
-			let cancelCallback: () -> Void
-
-			func cancel() {
-				cancelCallback()
-			}
-		}
-
-		private(set) var completions = [(ImageCommentsLoader.Result) -> Void]()
-
-		private(set) var cancelledImageCommentsCompletions = [(ImageCommentsLoader.Result) -> Void]()
-
-		var loadCallCount: Int {
-			completions.count
-		}
-
-		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-			completions.append(completion)
-			return TaskSpy { [weak self] in
-				self?.cancelledImageCommentsCompletions.append(completion)
-			}
-		}
-
-		func completeImageCommentsLoading(at index: Int) {
-			completions[index](.success([]))
-		}
-
-		func completeImageCommentsLoading(with imageComments: [ImageComment] = [], at index: Int = 0) {
-			completions[index](.success(imageComments))
-		}
-
-		func completeImageCommentsLoadingWithError(at index: Int = 0) {
-			let error = NSError(domain: "an error", code: 0)
-			completions[index](.failure(error))
-		}
 	}
 
 }
