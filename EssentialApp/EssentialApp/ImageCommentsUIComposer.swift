@@ -7,14 +7,15 @@
 //
 
 import UIKit
+import Combine
 import EssentialFeed
 import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
 	private init() {}
 
-	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: MainQueueDispatchDecorator(decoratee: imageCommentsLoader))
+	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
+		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
 
 		let imageCommentsController = ImageCommentsViewController.makeWith(
 			delegate: presentationAdapter,
@@ -84,28 +85,31 @@ private final class ImageCommentPresentationAdapter: ImageCommentCellControllerD
 
 private final class ImageCommentsPresentationAdapter: ImageCommentsViewControllerDelegate {
 	var presenter: ImageCommentsPresenter?
-	private let imageCommentsLoader: ImageCommentsLoader
-	private var imageCommentsLoadTask: ImageCommentsLoaderTask?
+	private let imageCommentsLoader: ImageCommentsLoader.Publisher
+	private var cancellable: Cancellable?
 
-	init(imageCommentsLoader: ImageCommentsLoader) {
+	init(imageCommentsLoader: ImageCommentsLoader.Publisher) {
 		self.imageCommentsLoader = imageCommentsLoader
 	}
 
 	func didRequestImageCommentsRefresh() {
 		presenter?.didStartLoadingImageComments()
 
-		imageCommentsLoadTask = imageCommentsLoader.load { [weak self] result in
-			switch result {
-			case let .success(imageComments):
-				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
+		cancellable = imageCommentsLoader
+			.dispatchOnMainQueue()
+			.sink { [weak self] completion in
+				switch completion {
+				case .finished: break
 
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingImageComments(with: error)
+				case let .failure(error):
+					self?.presenter?.didFinishLoadingImageComments(with: error)
+				}
+			} receiveValue: { [weak self] imageComments in
+				self?.presenter?.didFinishLoadingImageComments(with: imageComments)
 			}
-		}
 	}
 
 	func didCancelImageCommentsRequest() {
-		imageCommentsLoadTask?.cancel()
+		cancellable?.cancel()
 	}
 }

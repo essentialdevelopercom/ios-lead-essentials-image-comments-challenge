@@ -114,11 +114,9 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-
-		loader.completeImageCommentsLoading(with: [makeImageComment()], at: 0)
+		XCTAssertEqual(loader.cancelledImageCommentsCompletions.count, 0)
 
 		sut.simulateViewDidDisappear()
-
 		XCTAssertEqual(loader.cancelledImageCommentsCompletions.count, 1)
 	}
 
@@ -150,7 +148,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: loader)
+		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: loader.loadPublisher())
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)

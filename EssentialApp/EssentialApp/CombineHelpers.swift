@@ -6,6 +6,22 @@ import Foundation
 import Combine
 import EssentialFeed
 
+public extension ImageCommentsLoader {
+	typealias Publisher = AnyPublisher<[ImageComment], Error>
+
+	func loadPublisher() -> Publisher {
+		var task: ImageCommentsLoaderTask?
+
+		return Deferred {
+			Future { completion in
+				task = self.load(completion: completion)
+			}
+		}
+		.handleEvents(receiveCancel: { task?.cancel() })
+		.eraseToAnyPublisher()
+	}
+}
+
 public extension FeedImageDataLoader {
 	typealias Publisher = AnyPublisher<Data, Error>
 	

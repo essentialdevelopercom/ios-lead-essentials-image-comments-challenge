@@ -40,7 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		LocalFeedImageDataLoader(store: store)
 	}()
 
-	private func remoteImageCommentsLoader(imageID id: String) -> ImageCommentsLoader {
+	private func remoteImageCommentsLoader(imageID id: String) -> RemoteImageCommentsLoader {
 		RemoteImageCommentsLoader(url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!,
 								  client: httpClient)
 	}
@@ -78,7 +78,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	func navigateToDetails(with imageID: String, animated: Bool = true) {
 		let detailsViewController = ImageCommentsUIComposer.imageCommentsComposedWith(
-			imageCommentsLoader: remoteImageCommentsLoader(imageID: imageID)
+			imageCommentsLoader: makeRemoteImageCommentsLoader(id: imageID)
 		)
 		(window?.rootViewController as? UINavigationController)?.pushViewController(detailsViewController, animated: animated)
 	}
@@ -102,6 +102,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					.loadImageDataPublisher(from: url)
 					.caching(to: localImageLoader, using: url)
 			})
+	}
+
+	private func makeRemoteImageCommentsLoader(id: String) -> ImageCommentsLoader.Publisher {
+		remoteImageCommentsLoader(imageID: id).loadPublisher()
 	}
 }
 
