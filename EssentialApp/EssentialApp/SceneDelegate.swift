@@ -42,7 +42,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	private func remoteImageCommentsLoader(imageID id: String) -> RemoteImageCommentsLoader {
 		RemoteImageCommentsLoader(url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(id)/comments")!,
-								  client: httpClient)
+		                          client: httpClient)
 	}
 
 	private lazy var animationsEnabled: Bool = {

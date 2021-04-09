@@ -10,7 +10,6 @@ import XCTest
 import EssentialFeed
 
 extension ImageCommentsUIIntegrationTests {
-
 	func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
 		let bundle = Bundle(for: ImageCommentsPresenter.self)
@@ -20,5 +19,4 @@ extension ImageCommentsUIIntegrationTests {
 		}
 		return value
 	}
-
 }

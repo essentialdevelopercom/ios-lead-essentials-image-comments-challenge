@@ -18,7 +18,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	@IBOutlet private(set) public var errorView: ErrorView?
 
 	public var delegate: ImageCommentsViewControllerDelegate?
-	
+
 	private var tableModel = [ImageCommentCellController]() {
 		didSet {
 			tableView.reloadData()

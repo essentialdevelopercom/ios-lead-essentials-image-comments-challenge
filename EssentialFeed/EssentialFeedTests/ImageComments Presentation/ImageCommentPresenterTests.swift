@@ -10,7 +10,6 @@ import XCTest
 import EssentialFeed
 
 final class ImageCommentPresenterTests: XCTestCase {
-
 	func test_init_doesNotSentMessagesToView() {
 		let (_, view) = makeSUT()
 
@@ -58,5 +57,4 @@ final class ImageCommentPresenterTests: XCTestCase {
 			messages.append(viewModel)
 		}
 	}
-
 }

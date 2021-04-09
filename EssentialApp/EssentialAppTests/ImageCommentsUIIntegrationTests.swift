@@ -12,7 +12,6 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
-
 	func test_imageCommentsView_hasTitle() {
 		let (sut, _) = makeSUT()
 
@@ -157,5 +156,4 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	private func makeImageComment(message: String = "a message", authorName: String = "a user", createdAt: Date = Date()) -> ImageComment {
 		ImageComment(id: UUID(), message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
 	}
-
 }

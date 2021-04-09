@@ -12,7 +12,6 @@ import EssentialFeediOS
 @testable import EssentialApp
 
 final class ImageCommentsAcceptanceTests: XCTestCase {
-
 	func test_onLaunch_displaysRemoteImageCommentsWhenCustomerHasConnectivity() {
 		let imageComments = launch(httpClient: .online(response))
 
@@ -48,5 +47,4 @@ final class ImageCommentsAcceptanceTests: XCTestCase {
 			["id": UUID().uuidString, "message": "another message", "created_at": "2020-05-19T14:23:53+0000", "author": ["username": "another username"]],
 		]])
 	}
-
 }

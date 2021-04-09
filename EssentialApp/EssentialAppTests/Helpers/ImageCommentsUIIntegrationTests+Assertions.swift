@@ -11,7 +11,6 @@ import EssentialFeed
 import EssentialFeediOS
 
 extension ImageCommentsUIIntegrationTests {
-
 	func assertThat(_ sut: ImageCommentsViewController, isRendering imageComments: [ImageComment], file: StaticString = #file, line: UInt = #line) {
 		guard sut.numberOfRenderedImageCommentViews() == imageComments.count else {
 			return XCTFail("Expected \(imageComments.count) image comments, got \(sut.numberOfRenderedImageCommentViews()) instead.", file: file, line: line)
@@ -32,5 +31,4 @@ extension ImageCommentsUIIntegrationTests {
 		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message to be \(imageComment.message) for image comment view at index \(index)", file: file, line: line)
 		XCTAssertEqual(cell.authorNameText, imageComment.author.username, "Expected author to be \(imageComment.author) for image comment view at index \(index)", file: file, line: line)
 	}
-
 }

@@ -10,7 +10,6 @@ import XCTest
 import EssentialFeed
 
 class ImageCommentsPresenterTests: XCTestCase {
-
 	func test_title_isLocalized() {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_TITLE"))
 	}
@@ -81,6 +80,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 			case display(isLoading: Bool)
 			case display(errorMessage: String?)
 		}
+
 		private(set) var messages: Set<Messages> = []
 
 		func display(_ viewModel: ImageCommentsViewModel) {
@@ -95,5 +95,4 @@ class ImageCommentsPresenterTests: XCTestCase {
 			messages.insert(.display(errorMessage: viewModel.message))
 		}
 	}
-
 }

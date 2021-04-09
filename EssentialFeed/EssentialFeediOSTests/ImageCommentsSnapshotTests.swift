@@ -11,7 +11,6 @@ import EssentialFeediOS
 @testable import EssentialFeed
 
 class ImageCommentsSnapshotTests: XCTestCase {
-
 	func test_emptyImageComments() {
 		let sut = makeSUT()
 
@@ -85,7 +84,6 @@ class ImageCommentsSnapshotTests: XCTestCase {
 			),
 		]
 	}
-
 }
 
 private extension ImageCommentsViewController {

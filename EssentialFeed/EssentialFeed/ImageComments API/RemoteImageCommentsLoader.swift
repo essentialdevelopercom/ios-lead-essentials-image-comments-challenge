@@ -56,7 +56,7 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 				.mapError { _ in Error.connectivity }
 				.flatMap { data, response in
 					Self.map(data, from: response)
-			})
+				})
 		}
 		return task
 	}
@@ -70,7 +70,6 @@ public final class RemoteImageCommentsLoader: ImageCommentsLoader {
 		}
 	}
 }
-
 
 private extension Array where Element == RemoteImageComment {
 	func toModels() -> [ImageComment] {

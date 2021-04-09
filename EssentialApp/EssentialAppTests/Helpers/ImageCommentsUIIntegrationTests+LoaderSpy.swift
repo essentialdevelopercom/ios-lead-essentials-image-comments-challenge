@@ -10,7 +10,6 @@ import Foundation
 import EssentialFeed
 
 extension ImageCommentsUIIntegrationTests {
-
 	class LoaderSpy: ImageCommentsLoader {
 		private struct TaskSpy: ImageCommentsLoaderTask {
 			let cancelCallback: () -> Void
@@ -48,5 +47,4 @@ extension ImageCommentsUIIntegrationTests {
 			completions[index](.failure(error))
 		}
 	}
-
 }

@@ -10,7 +10,6 @@ import XCTest
 import EssentialFeed
 
 extension XCTestCase {
-
 	func uniqueImageComment() -> ImageComment {
 		ImageComment(id: UUID(), message: "a message", createdAt: Date(), author: ImageCommentAuthor(username: "a username"))
 	}
@@ -18,5 +17,4 @@ extension XCTestCase {
 	func uniqueImageComments() -> [ImageComment] {
 		[uniqueImageComment(), uniqueImageComment()]
 	}
-
 }
