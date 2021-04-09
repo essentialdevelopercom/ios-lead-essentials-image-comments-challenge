@@ -20,10 +20,10 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H1g-PD-m8d">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H1g-PD-m8d">
                                     <rect key="frame" x="8" y="8" width="398" height="18"/>
                                     <viewLayoutGuide key="safeArea" id="tVe-9U-EFf"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -44,10 +44,10 @@
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <gestureRecognizers/>
                             <constraints>
-                                <constraint firstItem="H1g-PD-m8d" firstAttribute="leading" secondItem="Eks-ne-8UK" secondAttribute="leadingMargin" id="23p-j2-g5t"/>
-                                <constraint firstItem="H1g-PD-m8d" firstAttribute="top" secondItem="Eks-ne-8UK" secondAttribute="top" constant="8" id="8UN-5n-6Do"/>
-                                <constraint firstAttribute="bottom" secondItem="H1g-PD-m8d" secondAttribute="bottom" constant="8" id="TEr-lQ-yfy"/>
-                                <constraint firstAttribute="trailingMargin" secondItem="H1g-PD-m8d" secondAttribute="trailing" id="mw5-EB-hH4"/>
+                                <constraint firstItem="H1g-PD-m8d" firstAttribute="trailing" secondItem="Eks-ne-8UK" secondAttribute="trailingMargin" id="Zke-k1-rrU"/>
+                                <constraint firstItem="H1g-PD-m8d" firstAttribute="bottom" secondItem="Eks-ne-8UK" secondAttribute="bottomMargin" id="byJ-iM-WNX"/>
+                                <constraint firstItem="H1g-PD-m8d" firstAttribute="leading" secondItem="Eks-ne-8UK" secondAttribute="leadingMargin" id="c6h-KH-n3u"/>
+                                <constraint firstItem="H1g-PD-m8d" firstAttribute="top" secondItem="Eks-ne-8UK" secondAttribute="topMargin" id="w2u-WY-x5n"/>
                             </constraints>
                             <connections>
                                 <outlet property="button" destination="j9A-GR-eFl" id="MRp-Br-A1I"/>
