@@ -61,10 +61,17 @@ public final class CommentsPresenter {
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
 	
-	public static func map(_ comments: [Comment]) -> CommentListViewModel {
+	public static func map(
+		_ comments: [Comment],
+		currentDate: Date = Date(),
+		calendar: Calendar = .current,
+		locale: Locale = .current
+	) -> CommentListViewModel {
 		let formatter = RelativeDateTimeFormatter()
+		formatter.calendar = calendar
+		formatter.locale = locale
 		let models = comments.map { comment -> CommentViewModel in
-			let date = formatter.localizedString(for: comment.createdAt, relativeTo: Date())
+			let date = formatter.localizedString(for: comment.createdAt, relativeTo: currentDate)
 			return CommentViewModel(message: comment.message, author: comment.author, date: date)
 		}
 		return CommentListViewModel(comments: models)
