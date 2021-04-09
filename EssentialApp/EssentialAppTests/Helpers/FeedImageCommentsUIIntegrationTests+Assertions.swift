@@ -46,21 +46,3 @@ extension FeedImageCommentsUIIntegrationTests {
 		RunLoop.current.run(until: Date())
 	}
 }
-
-private class ViewSpy: FeedImageCommentsView, FeedLoadingView, FeedErrorView {
-	private(set) var messages = Array<FeedImageCommentsViewModel>()
-	
-	func display(_ viewModel: FeedErrorViewModel) {
-	}
-	
-	func display(_ viewModel: FeedLoadingViewModel) {
-	}
-	
-	func display(_ viewModel: FeedImageCommentsViewModel) {
-		messages.append(viewModel)
-	}
-	
-	func message(at index: Int) -> FeedImageCommentsViewModel {
-		return messages[index]
-	}
-}
