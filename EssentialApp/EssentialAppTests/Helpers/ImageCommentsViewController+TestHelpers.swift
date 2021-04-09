@@ -23,7 +23,7 @@ extension ImageCommentsViewController {
 	}
 
 	func simulateViewDidDisappear() {
-		viewDidDisappear(false)
+		delegate?.didCancelImageCommentsRequest()
 	}
 
 	func numberOfRenderedImageCommentViews() -> Int {

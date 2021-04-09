@@ -37,12 +37,6 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 		tableView.sizeTableHeaderToFit()
 	}
 
-	public override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-
-		delegate?.didCancelImageCommentsRequest()
-	}
-
 	@IBAction private func refresh() {
 		delegate?.didRequestImageCommentsRefresh()
 	}
@@ -81,5 +75,9 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 
 	private func removeCellController(forRowAt indexPath: IndexPath) {
 		tableModel[indexPath.row].removeCell()
+	}
+
+	deinit {
+		delegate?.didCancelImageCommentsRequest()
 	}
 }
