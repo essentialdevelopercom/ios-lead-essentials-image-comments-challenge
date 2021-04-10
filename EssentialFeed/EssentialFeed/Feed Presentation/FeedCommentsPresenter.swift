@@ -44,15 +44,15 @@ public class FeedCommentsPresenter {
 	}
 	
 	public func didFinishLoadingFeedComments(with comments: [FeedComment]) {
-		feedCommentsView.display(FeedCommentsViewModel(comments: comments.toViewModels(formatter: timeFormatter)))
+		feedCommentsView.display(FeedCommentsViewModel(comments: Self.convertToViewModels(comments: comments, locale: locale)))
 		loadingView.display(FeedCommentsLoadingViewModel(isLoading: false))
 	}
 	
-	private lazy var timeFormatter: RelativeDateTimeFormatter = {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.locale = locale
-		return formatter
-	}()
+	public static func convertToViewModels(comments: [FeedComment], locale: Locale) -> [FeedCommentViewModel] {
+		let timeFormatter = RelativeDateTimeFormatter()
+		timeFormatter.locale = locale
+		return comments.toViewModels(formatter: timeFormatter)
+	}
 	
 	public func didFinishLoadingFeedComments(with error: Error) {
 		errorView.display(.error(message: commentsLoadError))

@@ -50,30 +50,42 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	
 	func test_loadFeedCommentsCompletion_rendersSuccessfullyLoadedFeedComments() {
 		let calendar = Calendar(identifier: .gregorian)
-		let data0 = makeComment(dateInfo: (Date().adding(days: -1, calendar: calendar), "1 day ago"))
-		let data1 = makeComment(dateInfo: (Date().adding(hours: -1, calendar: calendar), "1 hour ago"))
-		let data2 = makeComment(dateInfo: (Date().adding(mins: -3, calendar: calendar), "3 minutes ago"))
+		let comment0 = makeComment(
+			message: "any message",
+			date: Date().adding(days: -1, calendar: calendar),
+			authorName: "any name"
+		)
+		let comment1 = makeComment(
+			message: "another message",
+			date: Date().adding(hours: -1, calendar: calendar),
+			authorName: "another name"
+		)
+		let comment2 = makeComment(
+			message: "different message",
+			date: Date().adding(mins: -3, calendar: calendar),
+			authorName: "different name"
+		)
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 		
-		loader.completeCommentsLoading(with: [data0.comment], at: 0)
-		assertThat(sut, isRendering: [data0])
+		loader.completeCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
 		
 		sut.simulateUserInitiatedFeedCommentsReload()
-		loader.completeCommentsLoading(with: [data0.comment, data1.comment, data2.comment], at: 1)
-		assertThat(sut, isRendering: [data0, data1, data2])
+		loader.completeCommentsLoading(with: [comment0, comment1, comment2], at: 1)
+		assertThat(sut, isRendering: [comment0, comment1, comment2])
 	}
 	
 	func test_loadFeedCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
-		let data0 = makeComment()
-		let data1 = makeComment()
+		let comment0 = makeComment()
+		let comment1 = makeComment()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		loader.completeCommentsLoading(with: [data0.comment, data1.comment], at: 0)
-		assertThat(sut, isRendering: [data0, data1])
+		loader.completeCommentsLoading(with: [comment0, comment1], at: 0)
+		assertThat(sut, isRendering: [comment0, comment1])
 		
 		sut.simulateUserInitiatedFeedCommentsReload()
 		loader.completeCommentsLoading(with: [], at: 1)
@@ -81,16 +93,16 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_loadFeedCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
-		let data = makeComment()
+		let comment = makeComment()
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		loader.completeCommentsLoading(with: [data.comment], at: 0)
-		assertThat(sut, isRendering: [data])
+		loader.completeCommentsLoading(with: [comment], at: 0)
+		assertThat(sut, isRendering: [comment])
 		
 		sut.simulateUserInitiatedFeedCommentsReload()
 		loader.completeCommentsLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [data])
+		assertThat(sut, isRendering: [comment])
 	}
 	
 	func test_loadFeedCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
@@ -151,12 +163,15 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
-		let locale = Locale(identifier: "en_US_POSIX")
 		let loader = LoaderSpy()
 		let sut = FeedCommentsUIComposer.commentsComposedWith(feedCommentsLoader: loader, locale: locale)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
+	}
+	
+	private var locale: Locale {
+		Locale(identifier: "en_US_POSIX")
 	}
 	
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
@@ -204,34 +219,35 @@ class FeedCommentsUIIntegrationTests: XCTestCase {
 		}
 	}
 	
-	private func assertThat(_ sut: FeedCommentsViewController, isRendering commentsData: [(comment: FeedComment, presentableDate: String)], file: StaticString = #filePath, line: UInt = #line) {
+	private func assertThat(_ sut: FeedCommentsViewController, isRendering comments: [FeedComment], file: StaticString = #filePath, line: UInt = #line) {
 		sut.view.enforceLayoutCycle()
 		
-		guard sut.numberOfRenderedFeedCommentViews() == commentsData.count else {
-			return XCTFail("Expected \(commentsData.count) comments, got \(sut.numberOfRenderedFeedCommentViews()) instead.", file: file, line: line)
+		guard sut.numberOfRenderedFeedCommentViews() == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedFeedCommentViews()) instead.", file: file, line: line)
 		}
 		
-		commentsData.enumerated().forEach { index, comment in
+		let viewModels = FeedCommentsPresenter.convertToViewModels(comments: comments, locale: locale)
+		viewModels.enumerated().forEach { index, comment in
 			assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
 		}
 		
 		executeRunLoopToCleanUpReferences()
 	}
 	
-	private func assertThat(_ sut: FeedCommentsViewController, hasViewConfiguredFor data: (comment: FeedComment, presentableDate: String), at index: Int, file: StaticString = #filePath, line: UInt = #line) {
-		XCTAssertEqual(sut.commentUsername(at: index), data.comment.authorName, "author name at index (\(index))", file: file, line: line)
+	private func assertThat(_ sut: FeedCommentsViewController, hasViewConfiguredFor comment: FeedCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+		XCTAssertEqual(sut.commentUsername(at: index), comment.name, "author name at index (\(index))", file: file, line: line)
 		
-		XCTAssertEqual(sut.commentMessage(at: index), data.comment.message, "message at index (\(index)", file: file, line: line)
+		XCTAssertEqual(sut.commentMessage(at: index), comment.message, "message at index (\(index)", file: file, line: line)
 		
-		XCTAssertEqual(sut.commentDate(at: index), data.presentableDate, "date at index (\(index)", file: file, line: line)
+		XCTAssertEqual(sut.commentDate(at: index), comment.formattedDate, "date at index (\(index)", file: file, line: line)
 	}
 	
 	private func executeRunLoopToCleanUpReferences() {
 		RunLoop.current.run(until: Date())
 	}
 	
-	private func makeComment(message: String = "any message", dateInfo: (date: Date, presentation: String) = (Date().adding(days: -1, calendar: Calendar(identifier: .gregorian)), "1 day ago"), authorName: String = "any name") -> (comment: FeedComment, presentableDate: String) {
-		return (FeedComment(id: UUID(), message: message, date: dateInfo.date, authorName: authorName), dateInfo.presentation)
+	private func makeComment(message: String = "any message", date: Date = Date(), authorName: String = "any name") -> FeedComment {
+		return FeedComment(id: UUID(), message: message, date: date, authorName: authorName)
 	}
 }
 
