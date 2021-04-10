@@ -65,6 +65,11 @@ extension FeedViewController {
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 	
+	func simulateFeedCommentDidSelect(at index: Int) {
+		tableView.delegate?.tableView?(tableView, didSelectRowAt: IndexPath(row: index, section: feedImagesSection))
+		RunLoop.current.run(until: Date())
+	}
+	
 	private var feedImagesSection: Int {
 		return 0
 	}

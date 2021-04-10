@@ -10,7 +10,21 @@ final class FeedLocalizationTests: XCTestCase {
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
 		let table = "Feed"
 		let presentationBundle = Bundle(for: FeedPresenter.self)
-		let localizationBundles = allLocalizationBundles(in: presentationBundle)
+		
+		assertThatLocalizedStringsHaveKeysAndValuesForAllSupportedLocalizations(table: table, bundle: presentationBundle)
+	}
+	
+	func test_commentsLocalizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
+		let table = "FeedComments"
+		let presentationBundle = Bundle(for: FeedCommentsPresenter.self)
+		
+		assertThatLocalizedStringsHaveKeysAndValuesForAllSupportedLocalizations(table: table, bundle: presentationBundle)
+	}
+	
+	// MARK: - Helpers
+	
+	private func assertThatLocalizedStringsHaveKeysAndValuesForAllSupportedLocalizations(table: String, bundle: Bundle, file: StaticString = #filePath, line: UInt = #line) {
+		let localizationBundles = allLocalizationBundles(in: bundle)
 		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
 		
 		localizationBundles.forEach { (bundle, localization) in
@@ -20,13 +34,11 @@ final class FeedLocalizationTests: XCTestCase {
 				if localizedString == key {
 					let language = Locale.current.localizedString(forLanguageCode: localization) ?? ""
 					
-					XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'")
+					XCTFail("Missing \(language) (\(localization)) localized string for key: '\(key)' in table: '\(table)'", file: file, line: line)
 				}
 			}
 		}
 	}
-	
-	// MARK: - Helpers
 	
 	private typealias LocalizedBundle = (bundle: Bundle, localization: String)
 	
