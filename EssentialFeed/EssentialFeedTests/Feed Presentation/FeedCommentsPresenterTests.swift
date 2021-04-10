@@ -37,8 +37,10 @@ class FeedCommentsPresenterTests: XCTestCase {
 		
 		let nowMinus5Min = now.adding(mins: -5, calendar: calendar)
 		let nowMinus1Day = now.adding(days: -1, calendar: calendar)
-		let comments = [makeComment(message: "any message", date: nowMinus5Min, name: "any name"),
-						makeComment(message: "another message", date: nowMinus1Day, name: "another name")]
+		let comments = [
+			makeComment(message: "any message", date: nowMinus5Min, name: "any name"),
+			makeComment(message: "another message", date: nowMinus1Day, name: "another name")
+		]
 		
 		sut.didFinishLoadingFeedComments(with: comments)
 		

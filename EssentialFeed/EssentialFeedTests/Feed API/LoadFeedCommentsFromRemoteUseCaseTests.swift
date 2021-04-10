@@ -63,14 +63,18 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
-		let item1 = makeFeedCommentWithJSON(id: UUID(),
-											message: "a message",
-											createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
-											authorName: "an author name")
-		let item2 = makeFeedCommentWithJSON(id: UUID(),
-											message: "another message",
-											createdAt: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
-											authorName: "another name")
+		let item1 = makeFeedCommentWithJSON(
+			id: UUID(),
+			message: "a message",
+			createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
+			authorName: "an author name"
+		)
+		let item2 = makeFeedCommentWithJSON(
+			id: UUID(),
+			message: "another message",
+			createdAt: (Date(timeIntervalSince1970: 1577881882), "2020-01-01T12:31:22+00:00"),
+			authorName: "another name"
+		)
 		let json = ["items": [
 			item1.json,
 			item2.json
@@ -162,12 +166,14 @@ class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	private func makeFeedCommentWithJSON(id: UUID, message: String, createdAt: (date: Date, stringRepresentation: String), authorName: String) -> (comment: FeedComment, json: [String: Any]) {
-		let json: [String: Any] = ["id": id.uuidString,
-								   "message": message,
-								   "created_at": createdAt.stringRepresentation,
-								   "author": [
-									   "username": authorName
-								   ]]
+		let json: [String: Any] = [
+			"id": id.uuidString,
+			"message": message,
+			"created_at": createdAt.stringRepresentation,
+			"author": [
+				"username": authorName
+			]
+		]
 		let comment = FeedComment(id: id, message: message, date: createdAt.date, authorName: authorName)
 		return (comment, json)
 	}

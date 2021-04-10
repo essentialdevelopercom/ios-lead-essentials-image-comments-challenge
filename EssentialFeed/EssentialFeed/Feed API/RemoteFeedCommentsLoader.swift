@@ -45,9 +45,8 @@ public class RemoteFeedCommentsLoader: FeedCommentsLoader {
 	
 	public func load(completion: @escaping (FeedCommentsLoader.Result) -> Void) -> FeedCommentsLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
-		task.wrapped = client.get(from: url, completion: {[weak self] result in
-			guard let self = self else { return }
-			self.handle(result, task)
+		task.wrapped = client.get(from: url, completion: { [weak self] result in
+			self?.handle(result, task)
 		})
 		return task
 	}

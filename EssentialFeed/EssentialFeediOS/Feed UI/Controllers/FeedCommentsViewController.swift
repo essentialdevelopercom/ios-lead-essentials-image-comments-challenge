@@ -8,7 +8,7 @@ public protocol FeedCommentsViewControllerDelegate {
 public class FeedCommentsViewController: UITableViewController, FeedCommentsView, FeedCommentsLoadingView, FeedCommentsErrorView {
 	public var delegate: FeedCommentsViewControllerDelegate?
 	
-    @IBOutlet private(set) public var errorView: ErrorView!
+	@IBOutlet private(set) public var errorView: ErrorView!
     
 	private var tableModel = [FeedCommentViewModel]() {
 		didSet { tableView.reloadData() }
