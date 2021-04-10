@@ -51,15 +51,20 @@ private final class CommentsAdapter: CommentView {
 private final class CommentsLoaderPresentationAdapter: CommentsControllerDelegate {
 	private let loader: CommentsLoader
 	var presenter: CommentsPresenter?
+	var task: CancelableTask?
 	
 	init(loader: CommentsLoader) {
 		self.loader = loader
 	}
 	
+	deinit {
+		task?.cancel()
+	}
+	
 	func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		loader.load { [weak self] result in
+		task = loader.load { [weak self] result in
 			switch result {
 			case let .success(comments):
 				self?.presenter?.didFinishLoadingComments(comments: comments)

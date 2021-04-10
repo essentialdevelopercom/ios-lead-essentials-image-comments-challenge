@@ -11,5 +11,5 @@ import Foundation
 public protocol CommentsLoader {
 	typealias Result = Swift.Result<[Comment], Error>
 	
-	func load(completion: @escaping (Result) -> Void) -> Void
+	func load(completion: @escaping (Result) -> Void) -> CancelableTask
 }

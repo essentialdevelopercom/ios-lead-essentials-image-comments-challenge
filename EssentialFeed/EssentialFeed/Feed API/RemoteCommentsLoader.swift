@@ -25,8 +25,9 @@ public final class RemoteCommentsLoader: CommentsLoader {
 		self.url = url
 	}
 	
-	public func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url, completion: { [weak self] result in
+	public func load(completion: @escaping (Result) -> Void) -> CancelableTask {
+		let task = HTTPClientTaskWrapper(completion)
+		task.wrapped = client.get(from: url, completion: { [weak self] result in
 			guard self != nil else { return }
 			
 			switch result {
@@ -36,6 +37,7 @@ public final class RemoteCommentsLoader: CommentsLoader {
 				completion(.failure(Error.connectivity))
 			}
 		})
+		return task
 	}
 	
 	private static func map(_ data: Data, _ response: HTTPURLResponse) -> Result {

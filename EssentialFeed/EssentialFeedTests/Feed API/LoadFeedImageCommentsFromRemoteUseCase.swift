@@ -21,7 +21,7 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		let url = URL(string: "http://a-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -30,8 +30,8 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		let url = URL(string: "http://a-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load() { _ in }
-		sut.load() { _ in }
+		_ = sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
@@ -112,12 +112,24 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		var sut: RemoteCommentsLoader? = RemoteCommentsLoader(client: client, url: url)
 		
 		var capturesResults = [RemoteCommentsLoader.Result]()
-		sut?.load { capturesResults.append($0) }
+		_ = sut?.load { capturesResults.append($0) }
 		
 		sut = nil
 		client.complete(withStatusCode: 200, data: anyData())
 		
 		XCTAssertTrue(capturesResults.isEmpty)
+	}
+	
+	func test_cancelTask_cancelLoadingRequest() {
+		let url = URL(string: "https://a-url.com")!
+		let client = HTTPClientSpy()
+		let sut: RemoteCommentsLoader? = RemoteCommentsLoader(client: client, url: url)
+		
+		let task = sut?.load { _ in }
+		XCTAssertEqual(client.cancelledURLs, [])
+		
+		task?.cancel()
+		XCTAssertEqual(client.cancelledURLs, [url])
 	}
 	
 	// MARK - Helpers
@@ -155,7 +167,7 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 	func expect(_ sut: RemoteCommentsLoader, toCompleteWith expectedResult: RemoteCommentsLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
-		sut.load { receivedResult in
+		_ = sut.load { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)

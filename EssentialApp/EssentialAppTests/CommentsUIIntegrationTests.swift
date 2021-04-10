@@ -149,8 +149,15 @@ final class CommentsUIIntegrationTests: XCTestCase {
 			return completions.count
 		}
 		
-		func load(completion: @escaping (CommentsLoader.Result) -> Void) {
+		private final class CancelableTaskSpy: CancelableTask {
+			func cancel() {
+				
+			}
+		}
+		
+		func load(completion: @escaping (CommentsLoader.Result) -> Void) -> CancelableTask {
 			completions.append(completion)
+			return CancelableTaskSpy()
 		}
 		
 		func completeCommentsLoading(with comments: [Comment] = [], at: Int) {
