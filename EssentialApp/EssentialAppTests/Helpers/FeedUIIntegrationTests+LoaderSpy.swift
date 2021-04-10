@@ -33,7 +33,7 @@ extension FeedUIIntegrationTests {
 		
 		// MARK: - FeedImageDataLoader
 		
-		private struct TaskSpy: FeedImageDataLoaderTask {
+		private struct TaskSpy: CancelableTask {
 			let cancelCallback: () -> Void
 			func cancel() {
 				cancelCallback()
@@ -48,7 +48,7 @@ extension FeedUIIntegrationTests {
 		
 		private(set) var cancelledImageURLs = [URL]()
 		
-		func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+		func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> CancelableTask {
 			imageRequests.append((url, completion))
 			return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
 		}

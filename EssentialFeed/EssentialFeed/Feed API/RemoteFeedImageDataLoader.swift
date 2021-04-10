@@ -16,30 +16,7 @@ public final class RemoteFeedImageDataLoader: FeedImageDataLoader {
 		case invalidData
 	}
 	
-	private final class HTTPClientTaskWrapper: FeedImageDataLoaderTask {
-		private var completion: ((FeedImageDataLoader.Result) -> Void)?
-		
-		var wrapped: HTTPClientTask?
-		
-		init(_ completion: @escaping (FeedImageDataLoader.Result) -> Void) {
-			self.completion = completion
-		}
-		
-		func complete(with result: FeedImageDataLoader.Result) {
-			completion?(result)
-		}
-		
-		func cancel() {
-			preventFurtherCompletions()
-			wrapped?.cancel()
-		}
-		
-		private func preventFurtherCompletions() {
-			completion = nil
-		}
-	}
-	
-	public func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+	public func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> CancelableTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(from: url) { [weak self] result in
 			guard self != nil else { return }
