@@ -13,7 +13,7 @@ public protocol ImageCommentLoaderTask {
 }
 
 public protocol ImageCommentLoader {
-	typealias LoadImageCommentResult = Swift.Result<[ImageComment], Error>
+	typealias LoadImageCommentResult = Swift.Result<[ImageComment], Swift.Error>
 	
 	func load(completion: @escaping (LoadImageCommentResult) -> Void) -> ImageCommentLoaderTask
 }
