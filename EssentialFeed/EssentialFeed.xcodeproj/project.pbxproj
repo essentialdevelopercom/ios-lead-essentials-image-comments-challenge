@@ -118,6 +118,7 @@
 		73E7C6D5261E39FC0047B20A /* COMMENTS_WITH_ERROR_MESSAGE_light_extraExtraExtraLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 73E7C6C5261E39FB0047B20A /* COMMENTS_WITH_ERROR_MESSAGE_light_extraExtraExtraLarge.png */; };
 		73F29D3E26217A3E00EC538C /* CancelableTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D3D26217A3E00EC538C /* CancelableTask.swift */; };
 		73F29D4426217A9900EC538C /* HTTPClientTaskWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D4326217A9900EC538C /* HTTPClientTaskWrapper.swift */; };
+		73F29D4A2622D47000EC538C /* UIView+Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D492622D47000EC538C /* UIView+Container.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -260,6 +261,7 @@
 		73E7C6C5261E39FB0047B20A /* COMMENTS_WITH_ERROR_MESSAGE_light_extraExtraExtraLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = COMMENTS_WITH_ERROR_MESSAGE_light_extraExtraExtraLarge.png; sourceTree = "<group>"; };
 		73F29D3D26217A3E00EC538C /* CancelableTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTask.swift; sourceTree = "<group>"; };
 		73F29D4326217A9900EC538C /* HTTPClientTaskWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientTaskWrapper.swift; sourceTree = "<group>"; };
+		73F29D492622D47000EC538C /* UIView+Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Container.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -510,6 +512,7 @@
 				0822D0F6230581D2004B3345 /* UIImageView+Animations.swift */,
 				08A3F2BA232BA64700127C15 /* UIRefreshControl+Helpers.swift */,
 				086AEFBD23A7E75400EE8933 /* UITableView+HeaderSizing.swift */,
+				73F29D492622D47000EC538C /* UIView+Container.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -913,6 +916,7 @@
 				086AEFBE23A7E75400EE8933 /* UITableView+HeaderSizing.swift in Sources */,
 				730D6E7F25F2868E0001ED91 /* CommentsController.swift in Sources */,
 				08A3F2B2232AA1C200127C15 /* ErrorView.swift in Sources */,
+				73F29D4A2622D47000EC538C /* UIView+Container.swift in Sources */,
 				08A3F2BB232BA64700127C15 /* UIRefreshControl+Helpers.swift in Sources */,
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,

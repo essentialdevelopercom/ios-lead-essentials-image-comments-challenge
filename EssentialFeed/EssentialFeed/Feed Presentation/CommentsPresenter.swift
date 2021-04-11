@@ -32,7 +32,7 @@ public final class CommentsPresenter {
 			comment: "Title for the comments view")
 	}
 	
-	private var commentsLoadError: String {
+	public static var commentsLoadError: String {
 		return NSLocalizedString("COMMENTS_VIEW_CONNECTION_ERROR",
 			 tableName: "ImageComments",
 			 bundle: Bundle(for: CommentsPresenter.self),
@@ -57,7 +57,7 @@ public final class CommentsPresenter {
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
-		errorView.display(CommentErrorViewModel(message: commentsLoadError))
+		errorView.display(CommentErrorViewModel(message: CommentsPresenter.commentsLoadError))
 		loadingView.display(CommentLoadingViewModel(isLoading: false))
 	}
 	

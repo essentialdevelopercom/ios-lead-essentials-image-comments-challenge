@@ -95,6 +95,32 @@ final class CommentsUIIntegrationTests: XCTestCase {
 		wait(for: [exp], timeout: 1.0)
 	}
 	
+	func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil, "Expected error message to be hidden")
+		
+		loader.completeCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, CommentsPresenter.commentsLoadError, "Expected error message to be shown")
+		
+		sut.simulateUserInitiatedCommentsReload()
+		XCTAssertEqual(sut.errorMessage, nil, "Expected error message to be hidden")
+	}
+	
+	func test_loadCommentsCompletion_hidesErrorMessageOnUserTap() {
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil, "Expected error message to be hidden")
+		
+		loader.completeCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, CommentsPresenter.commentsLoadError, "Expected error message to be shown")
+		
+		sut.simulateUserTapOnErrorMessage()
+		XCTAssertEqual(sut.errorMessage, nil, "Expected error message to be hidden")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: CommentsController, loader: LoaderSpy) {
@@ -176,12 +202,20 @@ private extension CommentsController {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
+	func simulateUserTapOnErrorMessage() {
+		errorView?.simulateTap()
+	}
+	
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
 	}
 	
 	var numberOfRenderedCommentViews: Int {
 		return tableView.numberOfRows(inSection: 0)
+	}
+	
+	var errorMessage: String? {
+		return errorView?.message
 	}
 	
 	func commentView(at index: Int) -> UITableViewCell? {
