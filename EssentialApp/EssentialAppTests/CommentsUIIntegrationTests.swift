@@ -10,6 +10,7 @@ import XCTest
 import EssentialFeed
 import EssentialFeediOS
 import EssentialApp
+import Combine
 
 final class CommentsUIIntegrationTests: XCTestCase {
 	
@@ -121,6 +122,22 @@ final class CommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil, "Expected error message to be hidden")
 	}
 	
+	func test_deinit_cancelRunningRequest() {
+		var sut: CommentsController?
+		var loader: LoaderSpy?
+		
+		autoreleasepool {
+			(sut, loader) = makeSUT()
+			sut?.loadViewIfNeeded()
+		}
+		
+		XCTAssertEqual(loader?.cancelCallCount, 0)
+		
+		sut = nil
+		
+		XCTAssertEqual(loader?.cancelCallCount, 1)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: CommentsController, loader: LoaderSpy) {
@@ -175,15 +192,25 @@ final class CommentsUIIntegrationTests: XCTestCase {
 			return completions.count
 		}
 		
+		var cancelCallCount = 0
+		
 		private final class CancelableTaskSpy: CancelableTask {
+			private let onCancel: () -> Void
+			
+			init (onCancel: @escaping () -> Void) {
+				self.onCancel = onCancel
+			}
+			
 			func cancel() {
-				
+				onCancel()
 			}
 		}
 		
 		func load(completion: @escaping (CommentsLoader.Result) -> Void) -> CancelableTask {
 			completions.append(completion)
-			return CancelableTaskSpy()
+			return CancelableTaskSpy() { [weak self] in
+				self?.cancelCallCount += 1
+			}
 		}
 		
 		func completeCommentsLoading(with comments: [Comment] = [], at: Int) {
