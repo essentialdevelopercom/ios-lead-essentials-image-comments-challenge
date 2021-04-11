@@ -15,7 +15,7 @@ public protocol ImageCommentsViewControllerDelegate {
 }
 
 public final class ImageCommentsViewController: UITableViewController, ImageCommentsLoadingView, ImageCommentsErrorView {
-	@IBOutlet private(set) public var errorView: ErrorView?
+	private(set) public var errorView = ErrorView()
 
 	public var delegate: ImageCommentsViewControllerDelegate?
 
@@ -28,7 +28,18 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
+		configureTableView()
 		refresh()
+	}
+
+	private func configureTableView() {
+		tableView.tableHeaderView = errorView.makeContainer()
+
+		errorView.onHide = { [weak self] in
+			self?.tableView.beginUpdates()
+			self?.tableView.sizeTableHeaderToFit()
+			self?.tableView.endUpdates()
+		}
 	}
 
 	public override func viewDidLayoutSubviews() {
@@ -54,7 +65,7 @@ public final class ImageCommentsViewController: UITableViewController, ImageComm
 	}
 
 	public func display(_ viewModel: ImageCommentsErrorViewModel) {
-		errorView?.message = viewModel.message
+		errorView.message = viewModel.message
 	}
 
 	public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

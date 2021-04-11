@@ -31,7 +31,7 @@ extension ImageCommentsViewController {
 	}
 
 	var errorMessage: String? {
-		errorView?.message
+		errorView.message
 	}
 
 	@discardableResult

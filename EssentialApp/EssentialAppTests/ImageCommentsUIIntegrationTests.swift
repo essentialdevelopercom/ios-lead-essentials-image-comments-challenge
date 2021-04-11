@@ -87,7 +87,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 
 		loader.completeImageCommentsLoadingWithError(at: 0)
-		XCTAssertEqual(sut.errorMessage, localized("IMAGE_COMMENTS_CONNECTION_ERROR"))
+		XCTAssertEqual(sut.errorMessage, loadError)
 
 		sut.simulateUserInitiatedImageCommentsReload()
 		XCTAssertEqual(sut.errorMessage, nil)

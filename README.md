@@ -8,16 +8,20 @@ You are called to add a new feature to the Feed App: displaying image comments w
 
 The goal is to implement this feature using what you learned in the program.
 
-You'll develop the API, Presentation, and UI layers for this feature.
+You'll develop the API, Presentation, UI, and Composition for the 'Image Comments' feature.
 
 *Important: There's no need to cache comments.*
 
+*Important: As a **minimum requirement** to take this challenge, you must have seen the live lectures #001 until #004.*
 
-## Goals
+---
+
+## Your challenge
 
 1) Display a list of comments when the user taps on an image in the feed.
 
 2) Loading the comments can fail, so you must handle the UI states accordingly. 
+	
 	- Show a loading spinner while loading the comments.
 		
 		- If it fails to load: Show an error message.
@@ -25,14 +29,19 @@ You'll develop the API, Presentation, and UI layers for this feature.
 		- If it loads successfully: Show all loaded comments in the order they were returned by the remote API.
 
 3) The loading should start automatically when the user navigates to the screen.
+	
 	- The user should also be able to reload the comments manually (Pull-to-refresh).
 
 4) At all times, the user should have a back button to return to the feed screen.
+	
 	- Cancel any running comments API requests when the user navigates back.
+	
 		- Important: Only cancel when the scene has been deallocated.
+		
 		- **Don't** cancel the request on `viewWillDisappear`/`viewDidDisappear` because it doesn't mean the view has been deallocated (the view may appear again!).
 
 5) The comments screen layout should match the UI specs.
+	
 	- Present the comment date using relative date formatting, e.g., "1 day ago."
 
 6) The comments screen title should be localized in all languages supported in the project.
@@ -45,67 +54,11 @@ You'll develop the API, Presentation, and UI layers for this feature.
 
 9) Follow the specs below and test-drive this feature from scratch:
 
----
-
-## UI Specs
-
-Follow the UI specs for loading, error, and success states:
-
-![Image Comments UI](image-comments-ui.png)
-
-![Image Comments UI](image-comments-ui-specs.png)
 
 ---
 
-## BDD Specs
 
-### Story: Image Comments
-
-### Narrative
-
-```
-As an online customer
-I want the app to load image commments
-So I can see how people are engaging with images in my feed
-```
-
-#### Scenarios (Acceptance criteria)
-
-```
-Given the customer has connectivity
- When the customer requests to see comments on an image
- Then the app should display all comments for that image
-```
-
-```
-Given the customer doesn't have connectivity
- When the customer requests to see comments on an image
- Then the app should display an error message
-```
-
-## Use Cases
-
-### Load Image Comments From Remote Use Case
-
-#### Data:
-- ImageID
-
-#### Primary course (happy path):
-1. Execute "Load Image Comments" command with above data.
-2. System loads data from remote service.
-3. System validates data.
-4. System creates comments from valid data.
-5. System delivers comments.
-
-#### Invalid data – error course (sad path):
-1. System delivers invalid data error.
-
-#### No connectivity – error course (sad path):
-1. System delivers connectivity error.
-
----
-
-## Model Specs
+## API Specs
 
 ### Feed Image Comment
 
@@ -168,7 +121,70 @@ Base URL + /v1/image/{image-id}/comments
 
 https://ile-api.essentialdeveloper.com/essential-feed/v1/image/{image-id}/comments
 
+
 ---
+
+
+## UI Specs
+
+Follow the UI specs for loading, error, and success states:
+
+![Image Comments UI](image-comments-ui.png)
+
+![Image Comments UI](image-comments-ui-specs.png)
+
+
+---
+
+## BDD Specs
+
+### Story: Image Comments
+
+### Narrative
+
+```
+As an online customer
+I want the app to load image commments
+So I can see how people are engaging with images in my feed
+```
+
+#### Scenarios (Acceptance criteria)
+
+```
+Given the customer has connectivity
+ When the customer requests to see comments on an image
+ Then the app should display all comments for that image
+```
+
+```
+Given the customer doesn't have connectivity
+ When the customer requests to see comments on an image
+ Then the app should display an error message
+```
+
+## Use Cases
+
+### Load Image Comments From Remote Use Case
+
+#### Data:
+- ImageID
+
+#### Primary course (happy path):
+1. Execute "Load Image Comments" command with above data.
+2. System loads data from remote service.
+3. System validates data.
+4. System creates comments from valid data.
+5. System delivers comments.
+
+#### Invalid data – error course (sad path):
+1. System delivers invalid data error.
+
+#### No connectivity – error course (sad path):
+1. System delivers connectivity error.
+
+
+---
+
 
 ## Instructions
 
@@ -190,18 +206,58 @@ https://ile-api.essentialdeveloper.com/essential-feed/v1/image/{image-id}/commen
 
 	- Important: Every time you build the project, it'll automatically reformat the modified files with SwiftFormat to maintain the code consistent.
 
-3) You can develop the platform-agnostic logic in the `EssentialFeed` target using the `macOS` platform to speed up the TDD cycle.
+3) You need to implement the API, Presentation, UI, and Composition for the Image Comments feature.
 
-4) Feel free to organize the 'Image Comments' feature in any way you want in the project. You can use the existing projects and targets, or create new ones if you want to.
+	- API:
+		- Create a Test file: EssentialFeedTests/ImageComments/API/ImageCommentsMapperTests.swift
 	
-	- If you add new projects, make sure to add them to the `EssentialApp` workspace.
+		- Create a Prod file: EssentialFeed/ImageComments/API/ImageCommentsMapper.swift
+	
+		- Test-drive the ImageCommentsMapper following the API specs above. 
+			- Look at the Feed API tests and implementation as a guide.
 
-	- If you add new targets, make sure to add them to the `CI_macOS` and `CI_iOS` schemes as needed, so we can run all tests on the CI server.
+	- Presentation: 
+		- Create a Test file: EssentialFeedTests/ImageComments/Presentation/ImageCommentsPresenterTests.swift
+	
+		- Create a Prod file: EssentialFeed/ImageComments/Presentation/ImageCommentsPresenter.swift
+	
+		- Create a strings file: EssentialFeed/ImageComments/Presentation/ImageComments.string
 
-5) You can see/interact with your solution by running the Application on the simulator (or device). 
+		- Test-drive the ImageCommentsPresenter following the Presentation specs.
+			- Look at the Feed Presentation tests and implementation as a guide.
+
+		- Create EssentialFeed/ImageComments/Presentation/ImageCommentsLocalizationTests.swift to ensure the ImageComments.string file supports all localizations in the project.
+
+	- UI
+		- Create a Test file: EssentialFeediOSTests/ImageComments UI/ImageCommentsSnapshotTests.swift
+
+		- Create a Prod file: EssentialFeediOS/ImageComments UI/Controllers/ImageCommentCellController.swift
+	
+		- Create a Prod file: EssentialFeediOS/ImageComments UI/Views/ImageComments.storyboard
+	
+		- Test-drive the ImageCommentCellController with snapshot tests following the UI specs.
+			- Look at the Feed UI tests and implementation as a guide.
+
+	- Comments UI Composer
+ 		- Create a Test file: EssentialAppTests/ImageCommentsUIIntegrationTests.swift
+
+		- Create a Prod file: EssentialApp/CommentsUIComposer.swift
+		
+		- Test-drive the CommentsUIComposer implementation with integration tests.
+			- Look at the Feed UI integration tests and FeedUIComposer implementation as a guide.
+
+	- Composition
+ 		- Open the EssentialAppTests/FeedAcceptanceTests.swift
+
+		- Test-drive the composition with an acceptance test (select an image in the list and check the comments view was shown on screen with the expect comments).
+			- The composition must be implemented in the `SceneDelegate.showComments()` method.
+
+			- Look at the Feed acceptance tests and implementation as a guide.
+
+4) You can see/interact with your solution by running the Application on the simulator (or device). 
 	- Switch to the `EssentialApp` scheme and press CMD+R.
 
-6) Errors should be handled accordingly.
+5) Errors should be handled accordingly.
 
 	- There shouldn't be *any* `fatalError` in production code.
 
@@ -218,6 +274,9 @@ https://ile-api.essentialdeveloper.com/essential-feed/v1/image/{image-id}/commen
 	- The title of the Pull Request should be: **Your Name - Image Comments Challenge**.
 
 8) Post a comment in the challenge page in the academy with the link to your PR, so we can review your solution and provide feedback.
+
+
+---
 
 
 ## Guidelines
