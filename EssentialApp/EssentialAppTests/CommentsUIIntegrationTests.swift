@@ -185,7 +185,7 @@ final class CommentsUIIntegrationTests: XCTestCase {
 		return Comment(id: id, message: message, createdAt: createdAt, author: author)
 	}
 	
-	class LoaderSpy: CommentsLoader {
+	private final class LoaderSpy: CommentsLoader {
 		private var completions = [(CommentsLoader.Result) -> Void]()
 		var loadCallCount: Int {
 			return completions.count
