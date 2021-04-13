@@ -30,6 +30,20 @@ class ImageCommentSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_WITH_COMMENTS_dark")
 	}
 	
+	func test_feedImageWithCommentsWithExtraExtraExtraLargeContentSize() {
+		let sut = makeSUT()
+		
+		sut.display(comments())
+		
+		let lightConfiguration: SnapshotConfiguration = .iPhone8(style: .light,
+																 contentSizeCategory: .extraExtraExtraLarge)
+		let darkConfiguration: SnapshotConfiguration = .iPhone8(style: .dark,
+																contentSizeCategory: .extraExtraExtraLarge)
+		
+		assert(snapshot: sut.snapshot(for: lightConfiguration), named: "FEED_IMAGE_WITH_ExtraExtraLarge_COMMENTS_light")
+		assert(snapshot: sut.snapshot(for: darkConfiguration), named: "FEED_IMAGE_WITH_ExtraExtraLarge_COMMENTS_dark")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT() -> ImageCommentViewController {
