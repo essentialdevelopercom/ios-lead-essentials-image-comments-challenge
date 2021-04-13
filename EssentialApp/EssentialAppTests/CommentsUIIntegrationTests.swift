@@ -162,23 +162,24 @@ final class CommentsUIIntegrationTests: XCTestCase {
 		guard sut.numberOfRenderedCommentViews == comments.count else {
 			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedCommentViews) instead", file: file, line: line)
 		}
-		comments.enumerated().forEach { index, comment in
+		
+		let viewModel = CommentsPresenter.map(comments)
+		
+		viewModel.comments.enumerated().forEach { index, comment in
 			assertThat(sut, hasViewConfiguredFor: comment, at: index, file: file, line: line)
 		}
 	}
 	
-	private func assertThat(_ sut: CommentsController, hasViewConfiguredFor comment: Comment, at index: Int, file: StaticString = #file, line: UInt = #line) {
+	private func assertThat(_ sut: CommentsController, hasViewConfiguredFor viewModel: CommentViewModel, at index: Int, file: StaticString = #file, line: UInt = #line) {
 		let view = sut.commentView(at: index)
 		
 		guard let cell = view as? CommentCell else {
 			return XCTFail("Expected \(CommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
-		let model = CommentsPresenter.map([comment]).comments.first!
-		
-		XCTAssertEqual(cell.author, comment.author, "author at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.date, model.date, "date at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.comment, comment.message, "message at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.author, viewModel.author, "author at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.date, viewModel.date, "date at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.comment, viewModel.message, "message at index \(index)", file: file, line: line)
 	}
 	
 	private func makeComment(id: UUID = UUID(), message: String = "message", createdAt: Date = Date(), author: String = "author") -> Comment {
