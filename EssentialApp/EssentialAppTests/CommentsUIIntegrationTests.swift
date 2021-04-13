@@ -192,7 +192,7 @@ final class CommentsUIIntegrationTests: XCTestCase {
 			return completions.count
 		}
 		
-		var cancelCallCount = 0
+		private(set) var cancelCallCount = 0
 		
 		private final class CancelableTaskSpy: CancelableTask {
 			private let onCancel: () -> Void
