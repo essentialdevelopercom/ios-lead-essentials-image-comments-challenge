@@ -39,21 +39,8 @@ class CommentsPresenterTests: XCTestCase {
 		
 		sut.didFinishLoadingComments(comments: comments)
 		
-		let models = [
-			CommentViewModel(
-				message:"Some comment",
-				author: "Some author",
-				date: "5 days ago"
-			),
-			CommentViewModel(
-				message:"Another comment",
-				author: "Another author",
-				date: "2 weeks ago"
-			)
-		]
-		
 		XCTAssertEqual(view.messages, [
-			.display(comments: models),
+			.display(comments: CommentsPresenter.map(comments).comments),
 			.display(isLoading: false)
 		])
 	}
