@@ -246,10 +246,6 @@ private extension CommentsController {
 		return errorView?.message
 	}
 	
-	var commentsSection: Int {
-		return 0
-	}
-	
 	func commentView(at index: Int) -> UITableViewCell? {
 		let ds = tableView.dataSource
 		let indexPath = IndexPath(row: index, section: commentsSection)
