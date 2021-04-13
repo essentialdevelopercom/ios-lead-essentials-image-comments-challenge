@@ -174,11 +174,10 @@ final class CommentsUIIntegrationTests: XCTestCase {
 			return XCTFail("Expected \(CommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 		
-		let formatter = RelativeDateTimeFormatter()
-		let relativeDate = formatter.localizedString(for: comment.createdAt, relativeTo: Date())
+		let model = CommentsPresenter.map([comment]).comments.first!
 		
 		XCTAssertEqual(cell.author, comment.author, "author at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.date, relativeDate, "date at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.date, model.date, "date at index \(index)", file: file, line: line)
 		XCTAssertEqual(cell.comment, comment.message, "message at index \(index)", file: file, line: line)
 	}
 	
