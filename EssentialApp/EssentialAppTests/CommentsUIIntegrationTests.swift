@@ -192,7 +192,7 @@ final class CommentsUIIntegrationTests: XCTestCase {
 			return completions.count
 		}
 		
-		var cancelCallCount = 0
+		private(set) var cancelCallCount = 0
 		
 		private final class CancelableTaskSpy: CancelableTask {
 			private let onCancel: () -> Void
@@ -247,7 +247,7 @@ private extension CommentsController {
 	
 	func commentView(at index: Int) -> UITableViewCell? {
 		let ds = tableView.dataSource
-		let indexPath = IndexPath(row: index, section: 0)
+		let indexPath = IndexPath(row: index, section: commentsSection)
 		return ds?.tableView(tableView, cellForRowAt: indexPath)
 	}
 }

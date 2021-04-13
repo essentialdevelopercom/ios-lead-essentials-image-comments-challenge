@@ -39,9 +39,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		LocalFeedImageDataLoader(store: store)
 	}()
 	
-	private lazy var navigationController: UINavigationController? = {
-		window?.rootViewController as? UINavigationController
-	}()
+	private lazy var navigationController = UINavigationController(
+			rootViewController: FeedUIComposer.feedComposedWith(
+				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+				imageLoader: makeLocalImageLoaderWithRemoteFallback,
+				onSelect: onFeedImageSelect))
 	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
