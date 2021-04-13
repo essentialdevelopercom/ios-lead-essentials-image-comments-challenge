@@ -50,8 +50,8 @@ private final class CommentsAdapter: CommentView {
 
 private final class CommentsLoaderPresentationAdapter: CommentsControllerDelegate {
 	private let loader: CommentsLoader
+	private var task: CancelableTask?
 	var presenter: CommentsPresenter?
-	var task: CancelableTask?
 	
 	init(loader: CommentsLoader) {
 		self.loader = loader
