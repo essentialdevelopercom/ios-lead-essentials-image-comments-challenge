@@ -65,7 +65,7 @@ public final class ImageCommentViewController: UITableViewController {
 		let cellModel = tableModel[indexPath.row]
 		let cell: ImageCommentCell = tableView.dequeueReusableCell()
 		cell.nameLabel.text = cellModel.author.username
-		cell.datePostedLabel.text = cellModel.createdAt.relativeDate()
+		cell.datePostedLabel.text = cellModel.createdAt
 		cell.commentLabel.text = cellModel.message
 		return cell
 	}

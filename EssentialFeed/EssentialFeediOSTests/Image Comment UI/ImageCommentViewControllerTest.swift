@@ -111,7 +111,7 @@ class ImageCommentViewControllerTest: XCTestCase {
 			
 			XCTAssertEqual(view?.authorNameText, imageComment.author.username)
 			XCTAssertEqual(view?.commentText, imageComment.message)
-			XCTAssertEqual(view?.dateText, imageComment.createdAt.relativeDate())
+			XCTAssertEqual(view?.dateText, imageComment.createdAt)
 		}
 	}
 	
@@ -233,9 +233,10 @@ class ImageCommentViewControllerTest: XCTestCase {
 	
 	private func makeImageComment(comment: String, date: Date = Date(), authorName: String) -> ImageComment {
 		let author = ImageCommentAuthor(username: authorName)
+		let relativeDate = date.relativeDate()
 		let imageComment = ImageComment(id: UUID(),
 										message: comment,
-										createdAt: date,
+										createdAt: relativeDate,
 										author: author)
 		return imageComment
 	}

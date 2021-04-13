@@ -11,6 +11,6 @@ import Foundation
 public struct RemoteImageComment: Decodable {
 	let id: UUID
 	let message: String
-	let created_at: Date
+	let created_at: String
 	let author: ImageCommentAuthor
 }
