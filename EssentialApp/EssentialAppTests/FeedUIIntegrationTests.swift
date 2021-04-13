@@ -321,20 +321,18 @@ final class FeedUIIntegrationTests: XCTestCase {
 	func test_feedImageView_callOnSelectClosureWhenImageSelected() {
 		let image1 = makeImage()
 		let image2 = makeImage()
-
+		var selectedImages = [FeedImage]()
 		
-		[image1, image2].enumerated().forEach { index, image in
-			let onSelect: (FeedImage) -> Void = { selectedImage  in
-				XCTAssertEqual(image, selectedImage, "Expected image at \(index) to be selected")
-			}
+		let (sut, loader) = makeSUT(onSelect: { selectedImages.append($0) })
+		
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [image1, image2])
 			
-			let (sut, loader) = makeSUT(onSelect: onSelect)
-			
-			sut.loadViewIfNeeded()
-			loader.completeFeedLoading(with: [image1, image2])
-			
-			sut.simulateUserInteractedWithImage(at: index)
-		}
+		sut.simulateUserInteractedWithImage(at: 0)
+		XCTAssertEqual(selectedImages, [image1])
+		
+		sut.simulateUserInteractedWithImage(at: 1)
+		XCTAssertEqual(selectedImages, [image1, image2])
 	}
 	
 	// MARK: - Helpers
