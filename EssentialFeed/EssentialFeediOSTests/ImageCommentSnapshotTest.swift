@@ -21,6 +21,15 @@ class ImageCommentSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "EMPTY_IMAGE_COMMENTS_FEED_dark")
 	}
 	
+	func test_feedImageWithComments() {
+		let sut = makeSUT()
+		
+		sut.display(comments())
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_IMAGE_WITH_COMMENTS_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_WITH_COMMENTS_dark")
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT() -> ImageCommentViewController {
@@ -39,16 +48,16 @@ class ImageCommentSnapshotTests: XCTestCase {
 	
 	private func comments() -> [ImageCommentStub] {
 		return [
-			ImageCommentStub(message: "I'm baby kickstarter banjo microdosing +1 gentrify trust fund, cray craft beer selvage skateboard distillery lo-fi cred. Quinoa jean shorts fingerstache, kitsch beard normcore before they sold out mixtape master cleanse flannel.",
+			ImageCommentStub(message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 							 creationDate: "2019-01-10T18:12:10+0000",
-							 author: "Jen"),
-			ImageCommentStub(message: "Austin pour-over street art, sriracha gastropub snackwave ramps bicycle rights. Tumblr tumeric synth tattooed fanny pack, wayfarers bitters pinterest microdosing swag helvetica seitan try-hard. Vaporware cloud bread listicle, pinterest sustainable poutine farm-to-table deep v ethical salvia freegan church-key sriracha la croix.",
+							 author: "Be"),
+			ImageCommentStub(message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
 							 creationDate: "2020-05-20T11:24:59+0000",
-							 author: "Megan"),
+							 author: "Brian"),
 			ImageCommentStub(message: "💯",
 							 creationDate: "2021-04-12T12:21:57+0000",
-							 author: "Jim"),
-			ImageCommentStub(message: "Selfies neutra trust fund humblebrag before 🐵 \n.\n.\n.\n🐯 they sold out tumblr mumblecore hella occupy gochujang.",
+							 author: "Tim"),
+			ImageCommentStub(message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 🐵\n.\n.\n.\n🐯 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 							 creationDate: "2021-04-13T11:24:59+0000",
 							 author: "Jim")
 		]
