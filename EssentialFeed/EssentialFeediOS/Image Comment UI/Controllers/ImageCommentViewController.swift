@@ -15,7 +15,7 @@ public final class ImageCommentViewController: UITableViewController {
 	@IBOutlet public weak var errorViewLabel: UILabel!
 	
 	public var loader: ImageCommentLoader?
-	private var tableModel = [ImageComment]()
+	public var tableModel = [ImageComment]()
 	private var loadCommentTask: ImageCommentLoaderTask?
 	
 	public convenience init(loader: ImageCommentLoader) {
