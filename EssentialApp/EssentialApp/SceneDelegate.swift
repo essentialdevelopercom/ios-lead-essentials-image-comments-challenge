@@ -39,11 +39,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		LocalFeedImageDataLoader(store: store)
 	}()
 	
-	private lazy var navigationController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				onSelect: onFeedImageSelect))
+	private lazy var feedViewController: UIViewController = {
+		FeedUIComposer.feedComposedWith(
+			feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+			imageLoader: makeLocalImageLoaderWithRemoteFallback,
+			onSelect: onFeedImageSelect)
+	}()
+	
+	var navigationFactory: NavigationFactory = DefaultNavigationFactory()
+	
+	private lazy var navigationController: UINavigationController = {
+		return navigationFactory.makeControllerWith(rootViewController: FeedUIComposer.feedComposedWith(
+						   feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+						   imageLoader: makeLocalImageLoaderWithRemoteFallback,
+						   onSelect: onFeedImageSelect))
+	}()
 	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
@@ -59,12 +69,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				onSelect: onFeedImageSelect))
-		
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 	}
 	

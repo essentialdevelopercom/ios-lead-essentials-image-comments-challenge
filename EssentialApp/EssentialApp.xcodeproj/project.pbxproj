@@ -41,6 +41,7 @@
 		73B4365B25FF578500099924 /* CommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4365A25FF578400099924 /* CommentsUIComposer.swift */; };
 		73B4365C25FF578500099924 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4365925FF578400099924 /* MainQueueDispatchDecorator.swift */; };
 		73B4366B2603A16600099924 /* CommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4366A2603A16600099924 /* CommentsUIIntegrationTests.swift */; };
+		73F29D932625DDA100EC538C /* NavigationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D922625DDA100EC538C /* NavigationFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 		73B4365925FF578400099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		73B4365A25FF578400099924 /* CommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIComposer.swift; sourceTree = "<group>"; };
 		73B4366A2603A16600099924 /* CommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
+		73F29D922625DDA100EC538C /* NavigationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,19 +176,20 @@
 		0895DA85234B3B950031BB2D /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
-				73B4365A25FF578400099924 /* CommentsUIComposer.swift */,
-				73B4365925FF578400099924 /* MainQueueDispatchDecorator.swift */,
 				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
-				0895DA88234B3B950031BB2D /* SceneDelegate.swift */,
+				0895DA8F234B3B970031BB2D /* Assets.xcassets */,
 				0835BF6C24850F9800A793D2 /* CombineHelpers.swift */,
-				08073B42238D2DF900A75DC6 /* FeedUIComposer.swift */,
-				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
+				73B4365A25FF578400099924 /* CommentsUIComposer.swift */,
 				08073B3F238D2DF900A75DC6 /* FeedImageDataLoaderPresentationAdapter.swift */,
 				08073B41238D2DF900A75DC6 /* FeedLoaderPresentationAdapter.swift */,
+				08073B42238D2DF900A75DC6 /* FeedUIComposer.swift */,
 				08073B43238D2DFA00A75DC6 /* FeedViewAdapter.swift */,
-				0895DA8F234B3B970031BB2D /* Assets.xcassets */,
-				0895DA91234B3B970031BB2D /* LaunchScreen.storyboard */,
 				0895DA94234B3B970031BB2D /* Info.plist */,
+				0895DA91234B3B970031BB2D /* LaunchScreen.storyboard */,
+				73B4365925FF578400099924 /* MainQueueDispatchDecorator.swift */,
+				73F29D922625DDA100EC538C /* NavigationFactory.swift */,
+				0895DA88234B3B950031BB2D /* SceneDelegate.swift */,
+				08073B40238D2DF900A75DC6 /* WeakRefVirtualProxy.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 				73B4365B25FF578500099924 /* CommentsUIComposer.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				73B4365C25FF578500099924 /* MainQueueDispatchDecorator.swift in Sources */,
+				73F29D932625DDA100EC538C /* NavigationFactory.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
 				08073B49238D2DFA00A75DC6 /* FeedViewAdapter.swift in Sources */,
 				0835BF6D24850F9800A793D2 /* CombineHelpers.swift in Sources */,
