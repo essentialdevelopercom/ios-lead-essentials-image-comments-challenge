@@ -98,7 +98,7 @@
 		73B434FB25FA271B00099924 /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */; };
 		73B4350125FA276600099924 /* CommentErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4350025FA276600099924 /* CommentErrorViewModel.swift */; };
 		73B4350725FA279400099924 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4350625FA279400099924 /* CommentViewModel.swift */; };
-		73B69B1B261A09BF00D717E9 /* Date+Teselpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B69B1A261A09BF00D717E9 /* Date+Teselpers.swift */; };
+		73B69B1B261A09BF00D717E9 /* Date+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B69B1A261A09BF00D717E9 /* Date+TestHelpers.swift */; };
 		73E7C69D261E17470047B20A /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 73E7C69F261E17470047B20A /* ImageComments.strings */; };
 		73E7C6C6261E39FC0047B20A /* FEED_WITH_ERROR_MESSAGE_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 73E7C6B6261E39FB0047B20A /* FEED_WITH_ERROR_MESSAGE_dark.png */; };
 		73E7C6C7261E39FC0047B20A /* COMMENTS_WITH_ERROR_MESSAGE_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 73E7C6B7261E39FB0047B20A /* COMMENTS_WITH_ERROR_MESSAGE_dark.png */; };
@@ -239,7 +239,7 @@
 		73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLoadingViewModel.swift; sourceTree = "<group>"; };
 		73B4350025FA276600099924 /* CommentErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentErrorViewModel.swift; sourceTree = "<group>"; };
 		73B4350625FA279400099924 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
-		73B69B1A261A09BF00D717E9 /* Date+Teselpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Teselpers.swift"; sourceTree = "<group>"; };
+		73B69B1A261A09BF00D717E9 /* Date+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TestHelpers.swift"; sourceTree = "<group>"; };
 		73E7C69E261E17470047B20A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		73E7C6A4261E174A0047B20A /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		73E7C6A5261E174C0047B20A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
@@ -400,7 +400,7 @@
 				0800314623B68FAB00720217 /* UIViewController+Snapshot.swift */,
 				0800314823B6909A00720217 /* XCTestCase+Snapshot.swift */,
 				730D6EA725F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift */,
-				73B69B1A261A09BF00D717E9 /* Date+Teselpers.swift */,
+				73B69B1A261A09BF00D717E9 /* Date+TestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -940,7 +940,7 @@
 				730D6EA825F54C2D0001ED91 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				0800314723B68FAB00720217 /* UIViewController+Snapshot.swift in Sources */,
 				086AEFBC23A7E5C300EE8933 /* UIImage+TestHelpers.swift in Sources */,
-				73B69B1B261A09BF00D717E9 /* Date+Teselpers.swift in Sources */,
+				73B69B1B261A09BF00D717E9 /* Date+TestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
