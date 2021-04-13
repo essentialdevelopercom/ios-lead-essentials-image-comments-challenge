@@ -247,7 +247,7 @@ private extension CommentsController {
 	
 	func commentView(at index: Int) -> UITableViewCell? {
 		let ds = tableView.dataSource
-		let indexPath = IndexPath(row: index, section: 0)
+		let indexPath = IndexPath(row: index, section: commentsSection)
 		return ds?.tableView(tableView, cellForRowAt: indexPath)
 	}
 }
