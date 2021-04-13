@@ -238,8 +238,10 @@ private extension CommentsController {
 	}
 	
 	var numberOfRenderedCommentViews: Int {
-		return tableView.numberOfRows(inSection: 0)
+		return tableView.numberOfRows(inSection: commentsSection)
 	}
+	
+	var commentsSection: Int { 0 }
 	
 	var errorMessage: String? {
 		return errorView?.message
