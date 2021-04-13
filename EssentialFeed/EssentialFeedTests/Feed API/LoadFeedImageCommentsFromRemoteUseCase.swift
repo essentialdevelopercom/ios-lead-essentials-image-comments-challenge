@@ -70,7 +70,7 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+	func test_load_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() {
 		let (sut, client) = makeSUT()
 		
 		let samples = [200, 201, 249, 290, 299]
@@ -83,7 +83,7 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+	func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
 		let (sut, client) = makeSUT()
 		
 		let item1 = makeItem(
