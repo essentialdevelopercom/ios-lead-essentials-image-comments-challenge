@@ -93,6 +93,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let remoteCommentsLoader = RemoteCommentsLoader(client: httpClient,
 			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImage.id)/comments")!)
 		let commentsController = CommentsUIComposer.commentsComposedWith(commentsLoader: remoteCommentsLoader)
-		navigationController?.pushViewController(commentsController, animated: true)
+		navigationController.pushViewController(commentsController, animated: true)
 	}
 }
