@@ -100,10 +100,14 @@ class LoadCommentsFromRemoteUseCase: XCTestCase {
 		
 		let items = [item1.model, item2.model]
 		
-		expect(sut, toCompleteWith: .success(items), when: {
-			let json = makeItemsJSON([item1.json, item2.json])
-			client.complete(withStatusCode: 200, data: json)
-		})
+		let samples = [200, 201, 249, 290, 299]
+		
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success(items), when: {
+				let json = makeItemsJSON([item1.json, item2.json])
+				client.complete(withStatusCode: code, data: json, at: index)
+			})
+		}
 	}
 	
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
