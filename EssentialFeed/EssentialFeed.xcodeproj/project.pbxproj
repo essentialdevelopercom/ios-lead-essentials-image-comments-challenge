@@ -228,9 +228,9 @@
 		4B67C1B926193D31009DC9C2 /* ImageComment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComment.storyboard; sourceTree = "<group>"; };
 		4B67C1C026195282009DC9C2 /* ImageCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentViewController.swift; sourceTree = "<group>"; };
 		4B67C1C9261952EF009DC9C2 /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
-		4B67C1CE261958A3009DC9C2 /* ImageCommentViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentViewController+TestHelpers.swift"; sourceTree = "<group>"; };
-		4B67C1D326195938009DC9C2 /* ImageCommentCell+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageCommentCell+TestHelpers.swift"; sourceTree = "<group>"; };
-		4B67C1D826195975009DC9C2 /* LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderSpy.swift; sourceTree = "<group>"; };
+		4B67C1CE261958A3009DC9C2 /* ImageCommentViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ImageCommentViewController+TestHelpers.swift"; path = "../../../EssentialApp/EssentialAppTests/Helpers/ImageCommentViewController+TestHelpers.swift"; sourceTree = "<group>"; };
+		4B67C1D326195938009DC9C2 /* ImageCommentCell+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ImageCommentCell+TestHelpers.swift"; path = "../../../EssentialApp/EssentialAppTests/Helpers/ImageCommentCell+TestHelpers.swift"; sourceTree = "<group>"; };
+		4B67C1D826195975009DC9C2 /* LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoaderSpy.swift; path = ../../../EssentialApp/EssentialAppTests/Helpers/LoaderSpy.swift; sourceTree = "<group>"; };
 		4B75970F26025E4B00D9B606 /* ImageCommentViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentViewControllerTest.swift; sourceTree = "<group>"; };
 		4B8881A3261DFC810054D801 /* Date+RelativeDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+RelativeDate.swift"; sourceTree = "<group>"; };
 		4BB1ED2125F1693E0008E33E /* ImageCommentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentLoader.swift; sourceTree = "<group>"; };
@@ -380,9 +380,9 @@
 				086AEFBB23A7E5C300EE8933 /* UIImage+TestHelpers.swift */,
 				0800314623B68FAB00720217 /* UIViewController+Snapshot.swift */,
 				0800314823B6909A00720217 /* XCTestCase+Snapshot.swift */,
-				4B67C1CE261958A3009DC9C2 /* ImageCommentViewController+TestHelpers.swift */,
 				4B67C1D326195938009DC9C2 /* ImageCommentCell+TestHelpers.swift */,
 				4B67C1D826195975009DC9C2 /* LoaderSpy.swift */,
+				4B67C1CE261958A3009DC9C2 /* ImageCommentViewController+TestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
