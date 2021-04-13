@@ -40,7 +40,7 @@ extension FeedViewController {
 		ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
 	}
 	
-	func simelateUserInteractedWithImage(at row: Int) {
+	func simulateUserInteractedWithImage(at row: Int) {
 		let delegate = tableView.delegate
 		let index = IndexPath(row: row, section: feedImagesSection)
 		delegate?.tableView?(tableView, didSelectRowAt: index)
