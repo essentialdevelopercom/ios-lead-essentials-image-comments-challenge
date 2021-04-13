@@ -28,7 +28,7 @@ public final class CommentsUIComposer {
 	
 	private static func makeCommentsController() -> CommentsController {
 		let bundle = Bundle(for: CommentsController.self)
-		let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let commentsController = storyboard.instantiateViewController(identifier: "CommentsController") as! CommentsController
 		return commentsController
 	}

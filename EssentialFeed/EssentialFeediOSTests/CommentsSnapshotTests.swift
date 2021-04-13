@@ -45,7 +45,7 @@ class CommentsSnapshotTests: XCTestCase {
 	
 	private func makeSUT() -> CommentsController {
 		let bundle = Bundle(for: FeedViewController.self)
-		let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
 		let controller = storyboard.instantiateViewController(identifier: "CommentsController") as! CommentsController
 		controller.loadViewIfNeeded()
 		controller.tableView.showsVerticalScrollIndicator = false

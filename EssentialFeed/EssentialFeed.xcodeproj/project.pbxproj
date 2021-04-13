@@ -119,6 +119,7 @@
 		73F29D3E26217A3E00EC538C /* CancelableTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D3D26217A3E00EC538C /* CancelableTask.swift */; };
 		73F29D4426217A9900EC538C /* HTTPClientTaskWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D4326217A9900EC538C /* HTTPClientTaskWrapper.swift */; };
 		73F29D4A2622D47000EC538C /* UIView+Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D492622D47000EC538C /* UIView+Container.swift */; };
+		73F29D892625C60700EC538C /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73F29D882625C60700EC538C /* ImageComments.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -262,6 +263,7 @@
 		73F29D3D26217A3E00EC538C /* CancelableTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelableTask.swift; sourceTree = "<group>"; };
 		73F29D4326217A9900EC538C /* HTTPClientTaskWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientTaskWrapper.swift; sourceTree = "<group>"; };
 		73F29D492622D47000EC538C /* UIView+Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Container.swift"; sourceTree = "<group>"; };
+		73F29D882625C60700EC538C /* ImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -590,6 +592,7 @@
 			children = (
 				08A3F2B1232AA1C200127C15 /* ErrorView.swift */,
 				0822D0F023056FEB004B3345 /* Feed.storyboard */,
+				73F29D882625C60700EC538C /* ImageComments.storyboard */,
 				0822D0F2230570F3004B3345 /* Feed.xcassets */,
 				08B5EB4D22CE244400FE8683 /* FeedImageCell.swift */,
 				730D6E8425F287100001ED91 /* FeedImageCommentCell.swift */,
@@ -797,6 +800,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
+				73F29D892625C60700EC538C /* ImageComments.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
