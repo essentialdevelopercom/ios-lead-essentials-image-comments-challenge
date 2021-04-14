@@ -19,8 +19,8 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error View" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45z-Eo-X7u" userLabel="Error View Label">
-                                    <rect key="frame" x="167.5" y="6" width="79" height="20.5"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error View" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45z-Eo-X7u" userLabel="Error View Label">
+                                    <rect key="frame" x="8" y="8" width="398" height="16"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -28,8 +28,10 @@
                             </subviews>
                             <color key="backgroundColor" red="1" green="0.49327188729999999" blue="0.47399842739999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstItem="45z-Eo-X7u" firstAttribute="centerX" secondItem="rR3-L7-YMP" secondAttribute="centerX" id="Ian-v5-UHa"/>
-                                <constraint firstItem="45z-Eo-X7u" firstAttribute="centerY" secondItem="rR3-L7-YMP" secondAttribute="centerY" id="mID-Id-1KR"/>
+                                <constraint firstItem="45z-Eo-X7u" firstAttribute="leading" secondItem="rR3-L7-YMP" secondAttribute="leadingMargin" id="meo-01-ABH"/>
+                                <constraint firstAttribute="bottomMargin" secondItem="45z-Eo-X7u" secondAttribute="bottom" id="qAx-Ef-BNk"/>
+                                <constraint firstItem="45z-Eo-X7u" firstAttribute="top" secondItem="rR3-L7-YMP" secondAttribute="topMargin" id="wyF-kT-gmn"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="45z-Eo-X7u" secondAttribute="trailing" id="y8W-sB-7Vh"/>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="bb7-VY-SXu">

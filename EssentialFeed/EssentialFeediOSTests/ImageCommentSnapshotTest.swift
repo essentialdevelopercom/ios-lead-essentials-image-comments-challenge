@@ -47,13 +47,10 @@ class ImageCommentSnapshotTests: XCTestCase {
 	func test_feedImageWithErrorMessage() {
 		let sut = makeSUT()
 		
-		sut.displayError(message: "This is b\nmulti-line\nerror message")
-		
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_IMAGE_WITH_ERROR_MESSAGE_light")
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_WITH_ERROR_MESSAGE_dark")
-		
-//		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_IMAGE_WITH_ERROR_MESSAGE_light")
-//		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_WITH_ERROR_MESSAGE_dark")
+		sut.displayError(message: "This is a\nmulti-line\nerror message")
+				
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_IMAGE_WITH_ERROR_MESSAGE_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_WITH_ERROR_MESSAGE_dark")
 	}
 	
 	// MARK: - Helpers

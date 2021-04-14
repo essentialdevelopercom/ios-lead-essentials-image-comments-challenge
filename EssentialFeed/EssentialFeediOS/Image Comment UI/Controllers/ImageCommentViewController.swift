@@ -40,6 +40,12 @@ public final class ImageCommentViewController: UITableViewController {
 		errorView?.isHidden = true
 	}
 	
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		tableView.sizeTableHeaderToFit()
+	}
+	
 	@objc func load() {
 		loadCommentTask = loader?.load(completion: { [weak self] result in
 			switch result {
