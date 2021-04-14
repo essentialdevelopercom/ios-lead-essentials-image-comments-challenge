@@ -112,7 +112,7 @@ class ImageCommentUIIntegrationTests: XCTestCase {
 			
 			XCTAssertEqual(view?.authorNameText, imageComment.author.username)
 			XCTAssertEqual(view?.commentText, imageComment.message)
-			XCTAssertEqual(view?.dateText, imageComment.createdAt.relativeDate())
+			XCTAssertEqual(view?.dateText, imageComment.createdAt)
 		}
 	}
 	
@@ -234,7 +234,7 @@ class ImageCommentUIIntegrationTests: XCTestCase {
 		let author = ImageCommentAuthor(username: authorName)
 		let imageComment = ImageComment(id: UUID(),
 										message: comment,
-										createdAt: date,
+										createdAt: date.relativeDate(),
 										author: author)
 		return imageComment
 	}
