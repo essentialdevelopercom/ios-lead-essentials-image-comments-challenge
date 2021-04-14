@@ -41,6 +41,7 @@
 		73B4365B25FF578500099924 /* CommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4365A25FF578400099924 /* CommentsUIComposer.swift */; };
 		73B4365C25FF578500099924 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4365925FF578400099924 /* MainQueueDispatchDecorator.swift */; };
 		73B4366B2603A16600099924 /* CommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4366A2603A16600099924 /* CommentsUIIntegrationTests.swift */; };
+		73F29D9B2626D5D100EC538C /* CommetnsViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F29D9A2626D5D100EC538C /* CommetnsViewController+TestHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 		73B4365925FF578400099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		73B4365A25FF578400099924 /* CommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIComposer.swift; sourceTree = "<group>"; };
 		73B4366A2603A16600099924 /* CommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
+		73F29D9A2626D5D100EC538C /* CommetnsViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommetnsViewController+TestHelpers.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,20 +135,21 @@
 		082C00022359E43F008927D3 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				08073B4A238D2E0E00A75DC6 /* UIImage+TestHelpers.swift */,
-				08073B50238D2E0F00A75DC6 /* UIRefreshControl+TestHelpers.swift */,
-				08073B4C238D2E0E00A75DC6 /* UIButton+TestHelpers.swift */,
-				08073B4F238D2E0F00A75DC6 /* UIControl+TestHelpers.swift */,
-				08367CD72486FB51009CD536 /* UIView+TestHelpers.swift */,
-				08073B51238D2E0F00A75DC6 /* FeedViewController+TestHelpers.swift */,
+				73F29D9A2626D5D100EC538C /* CommetnsViewController+TestHelpers.swift */,
 				08073B4E238D2E0E00A75DC6 /* FeedImageCell+TestHelpers.swift */,
-				08073B4D238D2E0E00A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift */,
 				08073B52238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift */,
+				08073B4D238D2E0E00A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift */,
 				08073B4B238D2E0E00A75DC6 /* FeedUIIntegrationTests+Localization.swift */,
-				082C00032359E46C008927D3 /* XCTestCase+MemoryLeakTracking.swift */,
-				082C00052359E4C6008927D3 /* SharedTestHelpers.swift */,
+				08073B51238D2E0F00A75DC6 /* FeedViewController+TestHelpers.swift */,
 				0851CDAB239AB13100C19B1D /* HTTPClientStub.swift */,
 				0851CDAD239AB19000C19B1D /* InMemoryFeedStore.swift */,
+				082C00052359E4C6008927D3 /* SharedTestHelpers.swift */,
+				08073B4C238D2E0E00A75DC6 /* UIButton+TestHelpers.swift */,
+				08073B4F238D2E0F00A75DC6 /* UIControl+TestHelpers.swift */,
+				08073B4A238D2E0E00A75DC6 /* UIImage+TestHelpers.swift */,
+				08073B50238D2E0F00A75DC6 /* UIRefreshControl+TestHelpers.swift */,
+				08367CD72486FB51009CD536 /* UIView+TestHelpers.swift */,
+				082C00032359E46C008927D3 /* XCTestCase+MemoryLeakTracking.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -349,6 +352,7 @@
 				08073B5A238D2E1000A75DC6 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,
+				73F29D9B2626D5D100EC538C /* CommetnsViewController+TestHelpers.swift in Sources */,
 				08073B5F238D2FF100A75DC6 /* FeedAcceptanceTests.swift in Sources */,
 				08073B5D238D2E2600A75DC6 /* FeedUIIntegrationTests.swift in Sources */,
 				082C00042359E46C008927D3 /* XCTestCase+MemoryLeakTracking.swift in Sources */,

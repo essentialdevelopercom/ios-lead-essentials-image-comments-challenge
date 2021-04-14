@@ -59,7 +59,15 @@ class FeedAcceptanceTests: XCTestCase {
 		feed.simulateUserInteractedWithImage(at: 0)
 		RunLoop.current.run(until: Date())
 
-		XCTAssertTrue(navigationController?.topViewController is CommentsController)
+		let comments = navigationController?.topViewController as? CommentsController
+		XCTAssertNotNil(comments, "Expected CommentsController to be presented")
+		
+		XCTAssertEqual(comments?.numberOfRenderedImageComments(), 2)
+		XCTAssertNotNil(comments?.imageCommentView(at: 0), "Expected a comment on view")
+		XCTAssertEqual(comments?.imageCommentMessage(at: 0), "a message")
+
+		XCTAssertNotNil(comments?.imageCommentView(at: 1), "Expected a comment on view")
+		XCTAssertEqual(comments?.imageCommentMessage(at: 1), "another message")
 	}
 	
 	// MARK: - Helpers
@@ -86,11 +94,21 @@ class FeedAcceptanceTests: XCTestCase {
 		return (makeData(for: url), response)
 	}
 	
+	private let feedImageID1 = UUID().uuidString
+	private let feedImageID2 = UUID().uuidString
+	
 	private func makeData(for url: URL) -> Data {
 		switch url.absoluteString {
 		case "http://image.com":
 			return makeImageData()
+		
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed":
+			return makeFeedData()
 			
+		case "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImageID1)/comments",
+			 "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImageID2)/comments":
+			return makeCommentsData()
+		
 		default:
 			return makeFeedData()
 		}
@@ -102,9 +120,29 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	private func makeFeedData() -> Data {
 		return try! JSONSerialization.data(withJSONObject: ["items": [
-			["id": UUID().uuidString, "image": "http://image.com"],
-			["id": UUID().uuidString, "image": "http://image.com"]
+			["id": feedImageID1, "image": "http://image.com"],
+			["id": feedImageID2, "image": "http://image.com"]
 		]])
 	}
 	
+	private func makeCommentsData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString,
+				"message": "a message",
+				"created_at": "2021-04-01T00:00:00+0000",
+				"author": [
+					"username": "a username"
+				]
+			],
+			[
+				"id": UUID().uuidString,
+				"message": "another message",
+				"created_at": "2021-04-01T00:00:00+0000",
+				"author": [
+					"username": "another username"
+				]
+			],
+		]])
+	}
 }
