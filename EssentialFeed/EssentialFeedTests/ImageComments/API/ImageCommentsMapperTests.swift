@@ -11,7 +11,7 @@ import EssentialFeed
 
 class ImageCommentsMapperTests: XCTestCase {
 	func test_map_throwsErrorOnNon2xxHTTPResponse() throws {
-		let json = makeCommentsJSON([])
+		let json = makeItemsJSON([])
 		let samples = [199, 170, 300, 400, 500]
 
 		try samples.forEach { code in
@@ -30,7 +30,7 @@ class ImageCommentsMapperTests: XCTestCase {
 	}
 
 	func test_map_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() throws {
-		let emptyListJSON = makeCommentsJSON([])
+		let emptyListJSON = makeItemsJSON([])
 		let samples = [200, 210, 222, 299]
 
 		try samples.forEach { code in
@@ -54,7 +54,7 @@ class ImageCommentsMapperTests: XCTestCase {
 			username: "another username"
 		)
 
-		let json = makeCommentsJSON([item1.json, item2.json])
+		let json = makeItemsJSON([item1.json, item2.json])
 		let samples = [200, 201, 250, 298]
 
 		try samples.forEach { code in
@@ -79,10 +79,5 @@ class ImageCommentsMapperTests: XCTestCase {
 		]
 
 		return (item, json)
-	}
-
-	private func makeCommentsJSON(_ items: [[String: Any]]) -> Data {
-		let json = ["items": items]
-		return try! JSONSerialization.data(withJSONObject: json)
 	}
 }
