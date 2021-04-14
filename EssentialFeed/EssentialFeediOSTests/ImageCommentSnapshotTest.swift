@@ -44,7 +44,7 @@ class ImageCommentSnapshotTests: XCTestCase {
 		assert(snapshot: sut.snapshot(for: darkConfiguration), named: "FEED_IMAGE_WITH_ExtraExtraLarge_COMMENTS_dark")
 	}
 	
-	func test_feedImageWithErrorMessage() {
+	func test_feedImageCommentWithErrorMessage() {
 		let sut = makeSUT()
 		
 		sut.displayError(message: "This is a\nmulti-line\nerror message")
