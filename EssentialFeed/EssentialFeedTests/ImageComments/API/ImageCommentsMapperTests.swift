@@ -43,14 +43,14 @@ class ImageCommentsMapperTests: XCTestCase {
 		let item1 = makeItem(
 			id: UUID(),
 			message: "a message",
-			date: "2020-05-20T11:24:59+0000",
+			createdAt: (Date(timeIntervalSince1970: 1589973899.0), "2020-05-20T11:24:59+0000"),
 			username: "a username"
 		)
 
 		let item2 = makeItem(
 			id: UUID(),
 			message: "another message",
-			date: "2020-05-19T14:23:53+0000",
+			createdAt: (Date(timeIntervalSince1970: 1589898233.0), "2020-05-19T14:23:53+0000"),
 			username: "another username"
 		)
 
@@ -64,27 +64,19 @@ class ImageCommentsMapperTests: XCTestCase {
 	}
 
 	// MARK: - Helpers
-	lazy var iso8601DateFormatter: DateFormatter = {
-		let df = DateFormatter()
-		df.dateFormat = "yyy-MM-dd'T'HH:mm:ssZ"
-		return df
-	}()
 
-	private func makeItem(id: UUID, message: String, date: String, username: String) -> (model: ImageComment, json: [String: Any]) {
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: ImageComment, json: [String: Any]) {
 		let author = ImageCommentAuthor(username: username)
-		let createdAt = iso8601DateFormatter.date(from: date)!
-		let item = ImageComment(id: id, message: message, createdAt: createdAt, author: author)
-
-		let authorJson: [String: Any] = [
-			"username": author.username
-		]
+		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, author: author)
 
 		let json: [String: Any] = [
 			"id": item.id.uuidString,
 			"message": item.message,
-			"created_at": date,
-			"author": authorJson
-		].compactMapValues { $0 }
+			"created_at": createdAt.iso8601String,
+			"author": [
+				"username": author.username
+			]
+		]
 
 		return (item, json)
 	}
