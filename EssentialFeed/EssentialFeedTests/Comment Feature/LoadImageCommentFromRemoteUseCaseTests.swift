@@ -138,12 +138,11 @@ class LoadImageCommentFromRemoteUseCaseTests: XCTestCase {
 	}
 	
 	private func makeImageComment(_ message: String, createdAt: String, authorUsername: String) -> ImageComment {
-		let date = ISO8601DateFormatter().date(from: createdAt)!
 		let commentAuthor = ImageCommentAuthor(username: authorUsername)
 		let imageComment = ImageComment(
 			id: UUID(),
 			message: message,
-			createdAt: date,
+			createdAt: createdAt,
 			author: commentAuthor
 		)
 		
@@ -154,7 +153,7 @@ class LoadImageCommentFromRemoteUseCaseTests: XCTestCase {
 		let imageCommentJSON: [String: Any] = [
 			"id": imageComment.id.uuidString,
 			"message": imageComment.message,
-			"created_at": ISO8601DateFormatter().string(from: imageComment.createdAt),
+			"created_at": imageComment.createdAt,
 			"author": [
 				"username": imageComment.author.username
 			]
