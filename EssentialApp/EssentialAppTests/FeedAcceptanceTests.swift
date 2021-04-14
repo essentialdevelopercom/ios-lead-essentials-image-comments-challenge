@@ -53,7 +53,7 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	func test_onTapOnImage_displaysImageComments() {
-		let scene = makeScene(httpClient: .online(response), navigationFactory: NoAnimationNavigationFactory())
+		let scene = makeScene(httpClient: .online(response), navigationControllerFactory: NoAnimationNavigationFactory())
 		let navigationController = scene.window?.rootViewController as? UINavigationController
 		let feed = navigationController?.topViewController as! FeedViewController
 		
@@ -68,10 +68,10 @@ class FeedAcceptanceTests: XCTestCase {
 	private func makeScene(
 		httpClient: HTTPClientStub = .offline,
 		store: InMemoryFeedStore = .empty,
-		navigationFactory: NavigationFactory = DefaultNavigationFactory()
+		navigationControllerFactory: NavigationFactory = DefaultNavigationFactory()
 	) -> SceneDelegate {
 		let scene = SceneDelegate(httpClient: httpClient, store: store)
-		scene.navigationFactory = navigationFactory
+		scene.navigationFactory = navigationControllerFactory
 		scene.window = UIWindow()
 		scene.configureWindow()
 		return scene
