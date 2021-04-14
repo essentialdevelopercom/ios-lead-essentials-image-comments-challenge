@@ -327,6 +327,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 		
 		sut.loadViewIfNeeded()
 		loader.completeFeedLoading(with: [image1, image2])
+		XCTAssertEqual(selectedImages, [])
 			
 		sut.simulateUserInteractedWithImage(at: 0)
 		XCTAssertEqual(selectedImages, [image1])
