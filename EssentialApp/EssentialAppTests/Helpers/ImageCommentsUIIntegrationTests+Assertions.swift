@@ -29,6 +29,6 @@ extension ImageCommentsUIIntegrationTests {
 		}
 
 		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message to be \(imageComment.message) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.authorNameText, imageComment.author.username, "Expected author to be \(imageComment.author) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.userNameText, imageComment.username, "Expected username to be \(imageComment.username) for image comment view at index \(index)", file: file, line: line)
 	}
 }

@@ -26,7 +26,7 @@ final class ImageCommentPresenterTests: XCTestCase {
 		let message = view.messages.first
 		XCTAssertEqual(view.messages.count, 1)
 		XCTAssertEqual(message?.message, imageComment.message)
-		XCTAssertEqual(message?.author, imageComment.author.username)
+		XCTAssertEqual(message?.username, imageComment.username)
 		XCTAssertEqual(message?.createdAt, formattedDate)
 	}
 
@@ -38,7 +38,7 @@ final class ImageCommentPresenterTests: XCTestCase {
 		let message = view.messages.first
 		XCTAssertEqual(view.messages.count, 1)
 		XCTAssertEqual(message?.message, nil)
-		XCTAssertEqual(message?.author, nil)
+		XCTAssertEqual(message?.username, nil)
 		XCTAssertEqual(message?.createdAt, nil)
 	}
 

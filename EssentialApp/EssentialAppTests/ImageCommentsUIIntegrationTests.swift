@@ -51,9 +51,9 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	func test_loadImageCommentsCompletion_rendersSuccessfullyLoadedImageComments() {
-		let imageComment0 = makeImageComment(message: "a message", authorName: "a user", createdAt: Date())
-		let imageComment1 = makeImageComment(message: "another message", authorName: "another user", createdAt: Date())
-		let imageComment2 = makeImageComment(message: "yet another message", authorName: "yet another user", createdAt: Date())
+		let imageComment0 = makeImageComment(message: "a message", username: "a user", createdAt: Date())
+		let imageComment1 = makeImageComment(message: "another message", username: "another user", createdAt: Date())
+		let imageComment2 = makeImageComment(message: "yet another message", username: "yet another user", createdAt: Date())
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
@@ -68,7 +68,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	func test_loadImageCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
-		let imageComment0 = makeImageComment(message: "a message", authorName: "a user", createdAt: Date())
+		let imageComment0 = makeImageComment(message: "a message", username: "a user", createdAt: Date())
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
@@ -99,7 +99,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		sut.loadViewIfNeeded()
 
-		loader.completeImageCommentsLoading(with: [makeImageComment(message: "a message", authorName: "an author", createdAt: oneHourAgo)], at: 0)
+		loader.completeImageCommentsLoading(with: [makeImageComment(message: "a message", username: "an author", createdAt: oneHourAgo)], at: 0)
 
 		let view = sut.imageCommentView(at: 0)
 		guard let cell = view as? ImageCommentCell else {
@@ -127,7 +127,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let view = sut.simulateImageCommentNotVisible(at: 0)
 
 		XCTAssertNil(view?.messageText, "Expected no rendered message text when the view is no longer visible")
-		XCTAssertNil(view?.authorNameText, "Expected no rendered author name text when the view is no longer visible")
+		XCTAssertNil(view?.userNameText, "Expected no rendered username name text when the view is no longer visible")
 		XCTAssertNil(view?.createdAtText, "Expected no rendered created at text when the view is no longer visible")
 	}
 
@@ -153,7 +153,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 
-	private func makeImageComment(message: String = "a message", authorName: String = "a user", createdAt: Date = Date()) -> ImageComment {
-		ImageComment(id: UUID(), message: message, createdAt: createdAt, author: ImageCommentAuthor(username: authorName))
+	private func makeImageComment(message: String = "a message", username: String = "a user", createdAt: Date = Date()) -> ImageComment {
+		ImageComment(id: UUID(), message: message, createdAt: createdAt, username: username)
 	}
 }

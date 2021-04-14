@@ -57,9 +57,9 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="authorNameLabel" destination="7ZV-VG-kQB" id="OQQ-a6-Ci1"/>
                                     <outlet property="createdAtLabel" destination="ZDe-2S-vHw" id="5Qv-6m-XVf"/>
                                     <outlet property="messageLabel" destination="eZV-rK-qZ4" id="tZp-Zg-xoF"/>
+                                    <outlet property="userNameLabel" destination="7ZV-VG-kQB" id="OQQ-a6-Ci1"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

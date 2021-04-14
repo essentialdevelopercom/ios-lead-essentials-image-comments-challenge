@@ -8,6 +8,6 @@
 
 public struct ImageCommentViewModel {
 	public let message: String?
-	public let author: String?
+	public let username: String?
 	public let createdAt: String?
 }

@@ -10,6 +10,6 @@ import UIKit
 
 public final class ImageCommentCell: UITableViewCell {
 	@IBOutlet private(set) public var messageLabel: UILabel!
-	@IBOutlet private(set) public var authorNameLabel: UILabel!
+	@IBOutlet private(set) public var userNameLabel: UILabel!
 	@IBOutlet private(set) public var createdAtLabel: UILabel!
 }

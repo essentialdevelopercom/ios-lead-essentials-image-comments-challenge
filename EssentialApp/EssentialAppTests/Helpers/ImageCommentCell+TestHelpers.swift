@@ -13,8 +13,8 @@ extension ImageCommentCell {
 		messageLabel.text
 	}
 
-	var authorNameText: String? {
-		authorNameLabel.text
+	var userNameText: String? {
+		userNameLabel.text
 	}
 
 	var createdAtText: String? {

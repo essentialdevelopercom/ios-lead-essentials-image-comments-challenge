@@ -26,7 +26,7 @@ public final class ImageCommentPresenter {
 		imageCommentView.display(
 			ImageCommentViewModel(
 				message: imageComment.message,
-				author: imageComment.author.username,
+				username: imageComment.username,
 				createdAt: formattedDate(imageComment.createdAt)
 			)
 		)
@@ -36,7 +36,7 @@ public final class ImageCommentPresenter {
 		imageCommentView.display(
 			ImageCommentViewModel(
 				message: nil,
-				author: nil,
+				username: nil,
 				createdAt: nil
 			)
 		)

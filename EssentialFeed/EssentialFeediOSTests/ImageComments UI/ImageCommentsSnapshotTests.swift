@@ -74,12 +74,12 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		[
 			ImageCommentStub(
 				message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dignissim volutpat condimentum. Nam elementum tincidunt ligula, vitae auctor arcu pulvinar sed",
-				author: "Author",
+				username: "Username",
 				createdAt: "Today"
 			),
 			ImageCommentStub(
 				message: "Message",
-				author: "Another author",
+				username: "Another username",
 				createdAt: "One hour ago"
 			),
 		]
@@ -102,10 +102,10 @@ private class ImageCommentStub: ImageCommentCellControllerDelegate {
 	let viewModel: ImageCommentViewModel
 	weak var controller: ImageCommentCellController?
 
-	init(message: String?, author: String?, createdAt: String?) {
+	init(message: String?, username: String?, createdAt: String?) {
 		viewModel = ImageCommentViewModel(
 			message: message,
-			author: author,
+			username: username,
 			createdAt: createdAt
 		)
 	}

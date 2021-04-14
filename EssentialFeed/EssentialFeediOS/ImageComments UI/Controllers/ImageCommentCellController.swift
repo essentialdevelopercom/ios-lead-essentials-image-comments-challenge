@@ -39,7 +39,7 @@ public final class ImageCommentCellController: ImageCommentView {
 
 	public func display(_ viewModel: ImageCommentViewModel) {
 		cell?.messageLabel.text = viewModel.message
-		cell?.authorNameLabel.text = viewModel.author
+		cell?.userNameLabel.text = viewModel.username
 		cell?.createdAtLabel.text = viewModel.createdAt
 	}
 }

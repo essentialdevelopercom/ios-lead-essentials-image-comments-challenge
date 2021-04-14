@@ -24,7 +24,7 @@ public final class ImageCommentsMapper {
 		}
 
 		var comments: [ImageComment] {
-			items.map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: ImageCommentAuthor(username: $0.author.username)) }
+			items.map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, username: $0.author.username) }
 		}
 	}
 
