@@ -10,9 +10,9 @@ import XCTest
 import EssentialFeed
 
 class ImageCommentsMapperTests: XCTestCase {
-	func test_load_deliversErrorOnNon200HTTPResponse() throws {
+	func test_map_throwsErrorOnNon2xxHTTPResponse() throws {
 		let json = makeCommentsJSON([])
-		let samples = [199, 201, 300, 400, 500]
+		let samples = [199, 170, 300, 400, 500]
 
 		try samples.forEach { code in
 			XCTAssertThrowsError(
@@ -21,7 +21,7 @@ class ImageCommentsMapperTests: XCTestCase {
 		}
 	}
 
-	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+	func test_map_throwsErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let invalidJSON = Data("invalid json".utf8)
 
 		XCTAssertThrowsError(
@@ -29,15 +29,17 @@ class ImageCommentsMapperTests: XCTestCase {
 		)
 	}
 
-	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() throws {
+	func test_map_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() throws {
 		let emptyListJSON = makeCommentsJSON([])
+		let samples = [200, 210, 222, 299]
 
-		let result = try ImageCommentsMapper.map(emptyListJSON, from: HTTPURLResponse(statusCode: 200))
-
-		XCTAssertEqual(result, [])
+		try samples.forEach { code in
+			let result = try ImageCommentsMapper.map(emptyListJSON, from: HTTPURLResponse(statusCode: code))
+			XCTAssertEqual(result, [])
+		}
 	}
 
-	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() throws {
+	func test_map_deliversItemsOn2xxHTTPResponseWithJSONItems() throws {
 		let item1 = makeItem(
 			id: UUID(),
 			message: "a message",
@@ -53,10 +55,12 @@ class ImageCommentsMapperTests: XCTestCase {
 		)
 
 		let json = makeCommentsJSON([item1.json, item2.json])
+		let samples = [200, 201, 250, 298]
 
-		let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: 200))
-
-		XCTAssertEqual(result, [item1.model, item2.model])
+		try samples.forEach { code in
+			let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: code))
+			XCTAssertEqual(result, [item1.model, item2.model])
+		}
 	}
 
 	// MARK: - Helpers
