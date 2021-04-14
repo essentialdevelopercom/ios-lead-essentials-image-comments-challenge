@@ -21,7 +21,7 @@ class LoadImageCommentFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://another-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load { (_) in }
+		_ = sut.load { (_) in }
 		
 		XCTAssertEqual(client.requestedURLs, [url])
 	}
@@ -30,8 +30,8 @@ class LoadImageCommentFromRemoteUseCaseTests: XCTestCase {
 		let url = URL(string: "https://another-url.com")!
 		let (sut, client) = makeSUT(url: url)
 		
-		sut.load { (_) in }
-		sut.load { (_) in }
+		_ = sut.load { (_) in }
+		_ = sut.load { (_) in }
 		
 		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
