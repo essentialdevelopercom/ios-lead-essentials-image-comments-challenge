@@ -53,9 +53,8 @@ class FeedAcceptanceTests: XCTestCase {
 	}
 	
 	func test_onTapOnImage_displaysImageComments() {
-		let scene = makeScene(httpClient: .online(response), navigationControllerFactory: NoAnimationNavigationFactory())
-		let navigationController = scene.window?.rootViewController as? UINavigationController
-		let feed = navigationController?.topViewController as! FeedViewController
+		let feed = launch(httpClient: .online(response))
+		let navigationController = feed.navigationController
 		
 		feed.simulateUserInteractedWithImage(at: 0)
 		RunLoop.current.run(until: Date())
@@ -65,25 +64,16 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeScene(
-		httpClient: HTTPClientStub = .offline,
-		store: InMemoryFeedStore = .empty,
-		navigationControllerFactory: NavigationFactory = DefaultNavigationFactory()
-	) -> SceneDelegate {
-		let scene = SceneDelegate(httpClient: httpClient, store: store)
-		scene.navigationFactory = navigationControllerFactory
-		scene.window = UIWindow()
-		scene.configureWindow()
-		return scene
-	}
-	
 	private func launch(
 		httpClient: HTTPClientStub = .offline,
 		store: InMemoryFeedStore = .empty
 	) -> FeedViewController {
-		let scene = makeScene(httpClient: httpClient, store: store)
-		let navigationController = scene.window?.rootViewController as? UINavigationController
-		return navigationController?.topViewController as! FeedViewController
+		let sut = SceneDelegate(httpClient: httpClient, store: store)
+		sut.window = UIWindow()
+		sut.configureWindow()
+		
+		let nav = sut.window?.rootViewController as? UINavigationController
+		return nav?.topViewController as! FeedViewController
 	}
 	
 	private func enterBackground(with store: InMemoryFeedStore) {
@@ -117,16 +107,4 @@ class FeedAcceptanceTests: XCTestCase {
 		]])
 	}
 	
-	private final class NoAnimationNavigationFactory: NavigationFactory {
-		
-		private final class NavigationController: UINavigationController {
-			override public func pushViewController(_ viewController: UIViewController, animated: Bool) {
-				super.pushViewController(viewController, animated: false)
-			}
-		}
-		
-		func makeControllerWith(rootViewController: UIViewController) -> UINavigationController {
-			return NavigationController(rootViewController: rootViewController)
-		}
-	}
 }
