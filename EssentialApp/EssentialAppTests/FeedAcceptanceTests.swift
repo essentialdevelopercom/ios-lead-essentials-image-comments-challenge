@@ -58,6 +58,7 @@ class FeedAcceptanceTests: XCTestCase {
 		let feed = navigationController?.topViewController as! FeedViewController
 		
 		feed.simulateUserInteractedWithImage(at: 0)
+		RunLoop.current.run(until: Date())
 
 		XCTAssertTrue(navigationController?.topViewController is CommentsController)
 	}
