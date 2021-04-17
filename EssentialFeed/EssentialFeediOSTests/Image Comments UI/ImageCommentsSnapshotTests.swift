@@ -9,8 +9,8 @@ class ImageCommentsSnapshotTests: XCTestCase {
 
 		sut.display(comments())
 
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_light")
-		record(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENT_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENT_dark")
 	}
 
 	// MARK: - Helpers
