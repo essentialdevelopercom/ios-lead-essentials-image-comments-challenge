@@ -13,7 +13,6 @@ public final class FeedImageCell: UITableViewCell {
 	@IBOutlet private(set) public var descriptionLabel: UILabel!
 	
 	var onRetry: (() -> Void)?
-	var onTap: (() -> Void)?
 	
 	@IBAction private func retryButtonTapped() {
 		onRetry?()
