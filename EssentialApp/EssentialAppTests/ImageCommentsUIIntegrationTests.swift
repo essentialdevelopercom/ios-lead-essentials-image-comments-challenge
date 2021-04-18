@@ -10,6 +10,7 @@ import XCTest
 import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 final class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_imageCommentsView_hasTitle() {
@@ -103,6 +104,28 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 			exp.fulfill()
 		}
 		wait(for: [exp], timeout: 1.0)
+	}
+
+	func test_deinit_cancelsRunningRequest() {
+		var cancelCallCount = 0
+
+		var sut: ListViewController?
+
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: {
+				PassthroughSubject<[ImageComment], Error>()
+					.handleEvents(receiveCancel: {
+						cancelCallCount += 1
+					}).eraseToAnyPublisher()
+			})
+			sut?.loadViewIfNeeded()
+		}
+
+		XCTAssertEqual(cancelCallCount, 0)
+
+		sut = nil
+
+		XCTAssertEqual(cancelCallCount, 1)
 	}
 
 	// MARK: - Helpers
