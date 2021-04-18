@@ -222,6 +222,6 @@ class ImageCommentsIntegrationTests: XCTestCase {
 	}
 	
 	private func makePresentableViewModels(from imageComments: [ImageComment], currentDate: @escaping () -> Date) -> [ImageCommentViewModel] {
-		imageComments.map { ImageCommentsListPresenter.viewModel(for: $0, currentDate: currentDate) }
+		ImageCommentViewModelMapper.map(imageComments, currentDate: currentDate, locale: Locale(identifier: "en_US_POSIX"))
 	}
 }

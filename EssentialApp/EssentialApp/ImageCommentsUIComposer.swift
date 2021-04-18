@@ -20,7 +20,7 @@ public final class ImageCommentsUIComposer {
 			loader: MainQueueDispatchDecorator(decoratee: loader)
 		)
 		let controller = ImageCommentsViewController.makeWith(title: Localized.ImageComments.title)
-		let imageCommentsListView = ImageCommentsAdapter(currentDate: currentDate, controller: controller)
+		let imageCommentsListView = ImageCommentsAdapter(controller: controller)
 		
 		let refreshController = controller.refreshController!
 		refreshController.delegate = presentationAdapter
@@ -28,7 +28,8 @@ public final class ImageCommentsUIComposer {
 		let presenter = ImageCommentsListPresenter(
 			loadingView: WeakRefVirtualProxy(refreshController),
 			commentsView: imageCommentsListView,
-			errorView: WeakRefVirtualProxy(refreshController)
+			errorView: WeakRefVirtualProxy(refreshController),
+			currentDate: currentDate
 		)
 		presentationAdapter.presenter = presenter
 		

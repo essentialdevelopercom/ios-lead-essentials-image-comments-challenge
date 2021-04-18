@@ -15,17 +15,23 @@ public struct ImageCommentsLoadingViewModel {
 }
 
 public struct ImageCommentsListViewModel {
-	public let comments: [ImageComment]
+	public let comments: [ImageCommentViewModel]
 }
 
 public struct ImageCommentsErrorViewModel {
 	public let message: String?
 }
 
-public struct ImageCommentViewModel {
+public struct ImageCommentViewModel: Hashable {
 	public let author: String
 	public let message: String
 	public let creationDate: String
+	
+	public init(author: String, message: String, creationDate: String) {
+		self.author = author
+		self.message = message
+		self.creationDate = creationDate
+	}
 }
 
 // MARK: - View Protocols
@@ -49,10 +55,15 @@ public final class ImageCommentsListPresenter {
 	private let commentsView: ImageCommentsListView
 	private let errorView: ImageCommentsErrorView
 	
-	public init(loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView) {
+	private let currentDate: () -> Date
+	private let locale: Locale
+	
+	public init(loadingView: ImageCommentsLoadingView, commentsView: ImageCommentsListView, errorView: ImageCommentsErrorView, currentDate: @escaping () -> Date, locale: Locale = Locale.current) {
 		self.loadingView = loadingView
 		self.commentsView = commentsView
 		self.errorView = errorView
+		self.currentDate = currentDate
+		self.locale = locale
 	}
 	
 	public func didStartLoadingComments() {
@@ -62,25 +73,35 @@ public final class ImageCommentsListPresenter {
 	
 	public func didFinishLoadingComments(with comments: [ImageComment]) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-		commentsView.display(ImageCommentsListViewModel(comments: comments))
+		commentsView.display(
+			ImageCommentsListViewModel(
+				comments: ImageCommentViewModelMapper.map(comments, currentDate: currentDate, locale: locale)
+			)
+		)
 	}
 	
 	public func didFinishLoadingComments(with error: Error) {
 		loadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
 		errorView.display(ImageCommentsErrorViewModel(message: Localized.ImageComments.errorMessage))
 	}
-	
-	public static func viewModel(for comment: ImageComment, currentDate: () -> Date, locale: Locale = Locale.current) -> ImageCommentViewModel {
-		ImageCommentViewModel(
-			author: comment.author,
-			message: comment.message,
-			creationDate: relativeDateString(for: comment.creationDate, relativeTo: currentDate(), locale: locale)
-		)
+}
+
+public final class ImageCommentViewModelMapper {
+	public static func map(_ comments: [ImageComment], currentDate: () -> Date, locale: Locale) -> [ImageCommentViewModel] {
+		comments.map { comment in
+			ImageCommentViewModel(
+				author: comment.author,
+				message: comment.message,
+				creationDate: comment.creationDate.dateString(relativeTo: currentDate(), locale: locale)
+			)
+		}
 	}
-	
-	private static func relativeDateString(for date: Date, relativeTo currentDate: Date, locale: Locale) -> String {
+}
+
+private extension Date {
+	func dateString(relativeTo date: Date, locale: Locale) -> String {
 		let formatter = RelativeDateTimeFormatter()
 		formatter.locale = locale
-		return formatter.localizedString(for: date, relativeTo: currentDate)
+		return formatter.localizedString(for: self, relativeTo: date)
 	}
 }
