@@ -1,15 +1,19 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  ImageCommentsLocalizationTests.swift
+//  EssentialFeediOSTests
+//
+//  Created by Ángel Vázquez on 24/03/21.
+//  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
 import XCTest
 import EssentialFeed
 
-final class FeedLocalizationTests: XCTestCase, LocalizationTest {
+final class ImageCommentsLocalizationTests: XCTestCase, LocalizationTest {
 	
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
-		let table = "Feed"
-		let presentationBundle = Bundle(for: FeedPresenter.self)
+		let table = "ImageComments"
+		let presentationBundle = Bundle(for: ImageCommentsListPresenter.self)
 		let localizationBundles = allLocalizationBundles(in: presentationBundle)
 		let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
 		
