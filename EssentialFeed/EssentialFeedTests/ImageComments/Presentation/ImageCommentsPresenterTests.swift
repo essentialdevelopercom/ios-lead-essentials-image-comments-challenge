@@ -14,44 +14,33 @@ class ImageCommentsPresenterTests: XCTestCase {
 		XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_TITLE"))
 	}
 
-	func test_init_doesNotSendMessagesToView() {
-		let (_, view) = makeSUT()
+	func test_map_createsViewModel() {
+		let now = Date()
 
-		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
-	}
+		let imageComments = [
+			ImageComment(
+				id: UUID(),
+				message: "a message",
+				createdAt: now.adding(minutes: -5),
+				username: "a username"
+			),
+			ImageComment(
+				id: UUID(),
+				message: "another message",
+				createdAt: now.adding(days: -5),
+				username: "another username"
+			)
+		]
 
-	func test_didStartLoadingImageComments_displaysNoErrorMessageAndStartsLoading() {
-		let (sut, view) = makeSUT()
+		let viewModel = ImageCommentsPresenter.map(imageComments)
 
-		sut.didStartLoadingImageComments()
-
-		XCTAssertEqual(view.messages, [
-			.display(errorMessage: .none),
-			.display(isLoading: true)
-		])
-	}
-
-	func test_didFinishLoadingImageComments_displaysImageCommentsAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let imageComments = uniqueImageComments()
-
-		sut.didFinishLoadingImageComments(with: imageComments)
-
-		XCTAssertEqual(view.messages, [
-			.display(imageComments: imageComments),
-			.display(isLoading: false)
+		XCTAssertEqual(viewModel.imageComments, [
+			ImageCommentViewModel(message: "a message", username: "a username", createdAt: "5 minutes ago"),
+			ImageCommentViewModel(message: "another message", username: "another username", createdAt: "5 days ago")
 		])
 	}
 
 	// MARK: - Helpers
-
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ImageCommentsPresenter, view: ViewSpy) {
-		let view = ViewSpy()
-		let sut = ImageCommentsPresenter(imageCommentsView: view, imageCommentsLoadingView: view, imageCommentsErrorView: view)
-		trackForMemoryLeaks(view, file: file, line: line)
-		trackForMemoryLeaks(sut, file: file, line: line)
-		return (sut, view)
-	}
 
 	private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
 		let table = "ImageComments"
@@ -61,27 +50,5 @@ class ImageCommentsPresenterTests: XCTestCase {
 			XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
 		}
 		return value
-	}
-
-	private class ViewSpy: ImageCommentsView, ImageCommentsLoadingView, ImageCommentsErrorView {
-		enum Messages: Hashable {
-			case display(imageComments: [ImageComment])
-			case display(isLoading: Bool)
-			case display(errorMessage: String?)
-		}
-
-		private(set) var messages: Set<Messages> = []
-
-		func display(_ viewModel: ImageCommentsViewModel) {
-			messages.insert(.display(imageComments: viewModel.imageComments))
-		}
-
-		func display(_ viewModel: ImageCommentsLoadingViewModel) {
-			messages.insert(.display(isLoading: viewModel.isLoading))
-		}
-
-		func display(_ viewModel: ImageCommentsErrorViewModel) {
-			messages.insert(.display(errorMessage: viewModel.message))
-		}
 	}
 }

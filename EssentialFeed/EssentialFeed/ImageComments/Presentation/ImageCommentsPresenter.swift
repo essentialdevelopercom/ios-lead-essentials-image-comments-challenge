@@ -8,23 +8,7 @@
 
 import Foundation
 
-public protocol ImageCommentsView {
-	func display(_ viewModel: ImageCommentsViewModel)
-}
-
-public protocol ImageCommentsLoadingView {
-	func display(_ viewModel: ImageCommentsLoadingViewModel)
-}
-
-public protocol ImageCommentsErrorView {
-	func display(_ viewModel: ImageCommentsErrorViewModel)
-}
-
 public final class ImageCommentsPresenter {
-	public let imageCommentsView: ImageCommentsView
-	public let imageCommentsLoadingView: ImageCommentsLoadingView
-	public let imageCommentsErrorView: ImageCommentsErrorView
-
 	public static var title: String {
 		NSLocalizedString(
 			"IMAGE_COMMENTS_TITLE",
@@ -34,33 +18,15 @@ public final class ImageCommentsPresenter {
 		)
 	}
 
-	private var imageCommentsLoadError: String {
-		NSLocalizedString(
-			"GENERIC_CONNECTION_ERROR",
-			tableName: "Shared",
-			bundle: Bundle(for: Self.self),
-			comment: "Error message displayed when we can't load the image comments from the server"
-		)
-	}
+	public static func map(_ imageComments: [ImageComment]) -> ImageCommentsViewModel {
+		let formatter = RelativeDateTimeFormatter()
 
-	public init(imageCommentsView: ImageCommentsView, imageCommentsLoadingView: ImageCommentsLoadingView, imageCommentsErrorView: ImageCommentsErrorView) {
-		self.imageCommentsView = imageCommentsView
-		self.imageCommentsLoadingView = imageCommentsLoadingView
-		self.imageCommentsErrorView = imageCommentsErrorView
-	}
-
-	public func didStartLoadingImageComments() {
-		imageCommentsErrorView.display(.noError)
-		imageCommentsLoadingView.display(ImageCommentsLoadingViewModel(isLoading: true))
-	}
-
-	public func didFinishLoadingImageComments(with imageComments: [ImageComment]) {
-		imageCommentsView.display(ImageCommentsViewModel(imageComments: imageComments))
-		imageCommentsLoadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
-	}
-
-	public func didFinishLoadingImageComments(with error: Error) {
-		imageCommentsErrorView.display(.error(message: imageCommentsLoadError))
-		imageCommentsLoadingView.display(ImageCommentsLoadingViewModel(isLoading: false))
+		return ImageCommentsViewModel(imageComments: imageComments.map { comment in
+			ImageCommentViewModel(
+				message: comment.message,
+				username: comment.username,
+				createdAt: formatter.localizedString(for: comment.createdAt, relativeTo: Date())
+			)
+		})
 	}
 }

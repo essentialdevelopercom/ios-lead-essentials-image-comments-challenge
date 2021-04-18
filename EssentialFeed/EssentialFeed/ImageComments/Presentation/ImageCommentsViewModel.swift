@@ -7,5 +7,5 @@
 //
 
 public struct ImageCommentsViewModel {
-	public let imageComments: [ImageComment]
+	public let imageComments: [ImageCommentViewModel]
 }

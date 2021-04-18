@@ -17,7 +17,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		sut.loadViewIfNeeded()
 
-		XCTAssertEqual(sut.title, localized("IMAGE_COMMENTS_TITLE"))
+		XCTAssertEqual(sut.title, imageCommentsTitle)
 	}
 
 	func test_loadImageCommentsActions_requestImageCommentsFromLoader() {
@@ -27,10 +27,10 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.loadCallCount, 1, "Expected a loading request once view is loaded")
 
-		sut.simulateUserInitiatedImageCommentsReload()
+		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(loader.loadCallCount, 2, "Expected another loading request once user initiates a load")
 
-		sut.simulateUserInitiatedImageCommentsReload()
+		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(loader.loadCallCount, 3, "Expected a third loading request once user initiates another load")
 	}
 
@@ -43,7 +43,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeImageCommentsLoading(at: 0)
 		XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected no loading indicator once loading is completed successfully")
 
-		sut.simulateUserInitiatedImageCommentsReload()
+		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected loading indicator once user initiates a reload")
 
 		loader.completeImageCommentsLoadingWithError(at: 1)
@@ -57,12 +57,12 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		assertThat(sut, isRendering: [])
+		assertThat(sut, isRendering: [ImageComment]())
 
 		loader.completeImageCommentsLoading(with: [imageComment0], at: 0)
 		assertThat(sut, isRendering: [imageComment0])
 
-		sut.simulateUserInitiatedImageCommentsReload()
+		sut.simulateUserInitiatedReload()
 		loader.completeImageCommentsLoading(with: [imageComment0, imageComment1, imageComment2], at: 1)
 		assertThat(sut, isRendering: [imageComment0, imageComment1, imageComment2])
 	}
@@ -75,7 +75,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeImageCommentsLoading(with: [imageComment0], at: 0)
 		assertThat(sut, isRendering: [imageComment0])
 
-		sut.simulateUserInitiatedImageCommentsReload()
+		sut.simulateUserInitiatedReload()
 		loader.completeImageCommentsLoadingWithError(at: 1)
 		assertThat(sut, isRendering: [imageComment0])
 	}
@@ -89,46 +89,8 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 		loader.completeImageCommentsLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, loadError)
 
-		sut.simulateUserInitiatedImageCommentsReload()
+		sut.simulateUserInitiatedReload()
 		XCTAssertEqual(sut.errorMessage, nil)
-	}
-
-	func test_loadImageCommentsCompletion_rendersRelativeFormattedDate() {
-		let oneHourAgo = Date().addingTimeInterval(-3600)
-		let (sut, loader) = makeSUT()
-
-		sut.loadViewIfNeeded()
-
-		loader.completeImageCommentsLoading(with: [makeImageComment(message: "a message", username: "an author", createdAt: oneHourAgo)], at: 0)
-
-		let view = sut.imageCommentView(at: 0)
-		guard let cell = view as? ImageCommentCell else {
-			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead")
-		}
-
-		XCTAssertEqual(cell.createdAtText, RelativeDateTimeFormatter().localizedString(for: oneHourAgo, relativeTo: Date()))
-	}
-
-	func test_imageCommentsView_cancelsImageCommentsRequestWhenUserNavigatesBack() {
-		let (sut, loader) = makeSUT()
-
-		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.cancelledImageCommentsCompletions.count, 0)
-
-		sut.simulateViewDidDisappear()
-		XCTAssertEqual(loader.cancelledImageCommentsCompletions.count, 1)
-	}
-
-	func test_imageCommentsView_doesNotRenderImageCommentWhenNoLongerVisible() {
-		let (sut, loader) = makeSUT()
-		sut.loadViewIfNeeded()
-		loader.completeImageCommentsLoading(with: [makeImageComment()])
-
-		let view = sut.simulateImageCommentNotVisible(at: 0)
-
-		XCTAssertNil(view?.messageText, "Expected no rendered message text when the view is no longer visible")
-		XCTAssertNil(view?.userNameText, "Expected no rendered username name text when the view is no longer visible")
-		XCTAssertNil(view?.createdAtText, "Expected no rendered created at text when the view is no longer visible")
 	}
 
 	func test_loadImageCommentsCompletion_dispatchesFromBackgroundToMainThread() {
@@ -145,7 +107,7 @@ final class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	// MARK: - Helpers
 
-	private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: ImageCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ListViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
 		let sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: loader.loadPublisher())
 		trackForMemoryLeaks(loader, file: file, line: line)

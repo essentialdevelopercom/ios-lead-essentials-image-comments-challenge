@@ -13,30 +13,27 @@ import EssentialFeediOS
 public final class ImageCommentsUIComposer {
 	private init() {}
 
-	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader.Publisher) -> ImageCommentsViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(imageCommentsLoader: imageCommentsLoader)
+	private typealias ImageCommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], ImageCommentViewAdapter>
 
-		let imageCommentsController = ImageCommentsViewController.makeWith(
-			delegate: presentationAdapter,
-			title: ImageCommentsPresenter.title
-		)
+	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader.Publisher) -> ListViewController {
+		let presentationAdapter = ImageCommentsPresentationAdapter(loader: { imageCommentsLoader })
 
-		presentationAdapter.presenter = ImageCommentsPresenter(
-			imageCommentsView: ImageCommentsViewAdapter(controller: imageCommentsController),
-			imageCommentsLoadingView: WeakRefVirtualProxy(imageCommentsController),
-			imageCommentsErrorView: WeakRefVirtualProxy(imageCommentsController)
-		)
+		let imageCommentsController = makeImageCommentsViewController(title: ImageCommentsPresenter.title)
+		imageCommentsController.onRefresh = presentationAdapter.loadResource
+
+		presentationAdapter.presenter = LoadResourcePresenter(
+			resourceView: ImageCommentViewAdapter(controller: imageCommentsController),
+			loadingView: WeakRefVirtualProxy(imageCommentsController),
+			errorView: WeakRefVirtualProxy(imageCommentsController),
+			mapper: ImageCommentsPresenter.map)
 
 		return imageCommentsController
 	}
-}
 
-private extension ImageCommentsViewController {
-	static func makeWith(delegate: ImageCommentsViewControllerDelegate, title: String) -> ImageCommentsViewController {
-		let bundle = Bundle(for: ImageCommentsViewController.self)
+	private static func makeImageCommentsViewController(title: String) -> ListViewController {
+		let bundle = Bundle(for: ListViewController.self)
 		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
-		let imageCommentsController = storyboard.instantiateInitialViewController() as! ImageCommentsViewController
-		imageCommentsController.delegate = delegate
+		let imageCommentsController = storyboard.instantiateInitialViewController() as! ListViewController
 		imageCommentsController.title = title
 		return imageCommentsController
 	}

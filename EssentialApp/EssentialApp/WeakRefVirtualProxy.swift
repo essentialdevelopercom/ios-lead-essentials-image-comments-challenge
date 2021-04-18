@@ -31,18 +31,6 @@ extension WeakRefVirtualProxy: ResourceView where T: ResourceView, T.ResourceVie
 	}
 }
 
-extension WeakRefVirtualProxy: ImageCommentsLoadingView where T: ImageCommentsLoadingView {
-	func display(_ viewModel: ImageCommentsLoadingViewModel) {
-		object?.display(viewModel)
-	}
-}
-
-extension WeakRefVirtualProxy: ImageCommentsErrorView where T: ImageCommentsErrorView {
-	func display(_ viewModel: ImageCommentsErrorViewModel) {
-		object?.display(viewModel)
-	}
-}
-
 extension WeakRefVirtualProxy: ImageCommentView where T: ImageCommentView {
 	func display(_ viewModel: ImageCommentViewModel) {
 		object?.display(viewModel)
