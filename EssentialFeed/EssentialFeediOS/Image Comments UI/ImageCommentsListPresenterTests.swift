@@ -64,10 +64,6 @@ class ImageCommentsListPresenterTests: XCTestCase {
 		return (sut, view)
 	}
 	
-	private func dateFromTimestamp(_ timestamp: TimeInterval, description: String, file: StaticString = #file, line: UInt = #line) -> Date {
-		Date(timeIntervalSince1970: timestamp)
-	}
-	
 	private func makeModels(timestamp: TimeInterval, relativeDate: String) -> (comment: ImageComment, viewModel: ImageCommentViewModel) {
 		let model = comment(date: Date(timeIntervalSince1970: timestamp))
 		let viewModel = ImageCommentViewModel(author: model.author, message: model.message, creationDate: relativeDate)
