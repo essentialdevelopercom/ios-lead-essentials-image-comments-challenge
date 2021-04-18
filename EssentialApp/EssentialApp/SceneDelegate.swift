@@ -85,12 +85,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			})
 	}
 
-	private func makeRemoteImageCommentsLoader(imageID: String) -> AnyPublisher<[ImageComment], Error> {
+	private func makeRemoteImageCommentsLoader(imageID: String) -> () -> AnyPublisher<[ImageComment], Error> {
 		let url = ImageCommentsEndpoint.get.url(baseURL: baseURL, imageID: imageID)
 
-		return httpClient
-			.getPublisher(url: url)
-			.tryMap(ImageCommentsMapper.map)
-			.eraseToAnyPublisher()
+		return { [httpClient] in
+			httpClient
+				.getPublisher(url: url)
+				.tryMap(ImageCommentsMapper.map)
+				.eraseToAnyPublisher()
+		}
 	}
 }

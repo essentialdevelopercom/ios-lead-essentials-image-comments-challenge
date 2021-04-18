@@ -9,14 +9,15 @@
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 public final class ImageCommentsUIComposer {
 	private init() {}
 
 	private typealias ImageCommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], ImageCommentViewAdapter>
 
-	public static func imageCommentsComposedWith(imageCommentsLoader: ImageCommentsLoader.Publisher) -> ListViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(loader: { imageCommentsLoader })
+	public static func imageCommentsComposedWith(imageCommentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>) -> ListViewController {
+		let presentationAdapter = ImageCommentsPresentationAdapter(loader: imageCommentsLoader)
 
 		let imageCommentsController = makeImageCommentsViewController(title: ImageCommentsPresenter.title)
 		imageCommentsController.onRefresh = presentationAdapter.loadResource

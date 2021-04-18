@@ -8,43 +8,33 @@
 
 import Foundation
 import EssentialFeed
+import Combine
 
 extension ImageCommentsUIIntegrationTests {
-	class LoaderSpy: ImageCommentsLoader {
-		private struct TaskSpy: ImageCommentsLoaderTask {
-			let cancelCallback: () -> Void
-
-			func cancel() {
-				cancelCallback()
-			}
-		}
-
-		private(set) var completions = [(ImageCommentsLoader.Result) -> Void]()
-
-		private(set) var cancelledImageCommentsCompletions = [(ImageCommentsLoader.Result) -> Void]()
+	class LoaderSpy {
+		private(set) var requests = [PassthroughSubject<[ImageComment], Error>]()
 
 		var loadCallCount: Int {
-			completions.count
+			requests.count
 		}
 
-		func load(completion: @escaping (ImageCommentsLoader.Result) -> Void) -> ImageCommentsLoaderTask {
-			completions.append(completion)
-			return TaskSpy { [weak self] in
-				self?.cancelledImageCommentsCompletions.append(completion)
-			}
+		func loadPublisher() -> AnyPublisher<[ImageComment], Error> {
+			let publisher = PassthroughSubject<[ImageComment], Error>()
+			requests.append(publisher)
+			return publisher.eraseToAnyPublisher()
 		}
 
 		func completeImageCommentsLoading(at index: Int) {
-			completions[index](.success([]))
+			requests[index].send([])
 		}
 
 		func completeImageCommentsLoading(with imageComments: [ImageComment] = [], at index: Int = 0) {
-			completions[index](.success(imageComments))
+			requests[index].send(imageComments)
 		}
 
 		func completeImageCommentsLoadingWithError(at index: Int = 0) {
 			let error = NSError(domain: "an error", code: 0)
-			completions[index](.failure(error))
+			requests[index].send(completion: .failure(error))
 		}
 	}
 }
