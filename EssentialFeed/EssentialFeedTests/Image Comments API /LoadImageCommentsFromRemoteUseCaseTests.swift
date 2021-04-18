@@ -57,7 +57,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client) = makeSUT(url: anyURL())
-		let samples = [200, 201, 202, 206, 207, 226]
+		let samples = [200, 201, 202, 206, 207, 226, 299]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
@@ -69,7 +69,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 	
 	func test_load_deliversNoCommentsOn2xxHTTPResponseWithEmptyList() {
 		let (sut, client) = makeSUT(url: anyURL())
-		let samples = [200, 201, 202, 206, 207, 226]
+		let samples = [200, 201, 202, 206, 207, 226, 299]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: .success([]), when: {
@@ -94,7 +94,7 @@ class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 			creationDate: (timestamp: 1_589_898_233, iso8601Representation: "2020-05-19T14:23:53+0000"),
 			author: "another username"
 		)
-		let samples = [200, 201, 202, 206, 207, 226]
+		let samples = [200, 201, 202, 206, 207, 226, 299]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: .success([comment1.model, comment2.model]), when: {
