@@ -210,15 +210,21 @@ final class FeedUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(view1?.isShowingRetryAction, false, "Expected no retry action for second view on retry")
 	}
 	
-	func test_feedImageView_forwardsFeedImageIDOnTapWhenImageHasLoadSuccessfully() {
-		let image = makeImage()
+	func test_feedImageView_forwardsSelectedImageOnSelection() {
+		let image1 = makeImage()
+		let image2 = makeImage()
 		var capturedImages = [FeedImage]()
 		let (sut, loader) = makeSUT(imageHandler: { capturedImages.append($0) })
 		
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image])
+		XCTAssertTrue(capturedImages.isEmpty, "Expected no images to be selected before tapping")
+		
+		loader.completeFeedLoading(with: [image1, image2])
 		sut.simulateTapOnFeedImageView(at: 0)
-		XCTAssertEqual(capturedImages, [image], "Expected tapped image to be forwarded without changes")
+		XCTAssertEqual(capturedImages, [image1], "Expected tapped image to be forwarded without changes")
+		
+		sut.simulateTapOnFeedImageView(at: 1)
+		XCTAssertEqual(capturedImages, [image1, image2], "Expected a second image to be forwarded on selection")
 	}
 	
 	func test_feedImageViewRetryButton_isVisibleOnInvalidImageData() {
