@@ -27,6 +27,12 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(loader.commentsCallCount, 1, "Expected to load when view did load")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.commentsCallCount, 2, "Expected to show the loading indicator when the user initiates a reload")
+		
+		sut.simulateUserInitiatedReload()
+		XCTAssertEqual(loader.commentsCallCount, 3, "Expected to show the loading indicator when the user initiates a reload")
 	}
 
 	
