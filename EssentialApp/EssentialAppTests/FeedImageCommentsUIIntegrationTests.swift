@@ -21,6 +21,15 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.title, localized("FEED_COMMENT_TITLE"))
 	}
 	
+	func test_loadImageCommentsAction_requestsCommentsFromLoader() {
+		let (sut, loader) = makeSUT()
+		XCTAssertEqual(loader.commentsCallCount, 0)
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(loader.commentsCallCount, 1, "Expected to load when view did load")
+	}
+
+	
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {

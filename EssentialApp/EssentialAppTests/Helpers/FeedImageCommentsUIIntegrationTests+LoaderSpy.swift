@@ -13,8 +13,15 @@ import EssentialFeediOS
 extension FeedImageCommentsUIIntegrationTests {
 	
 	class LoaderSpy: FeedImageCommentLoader {
+		
+		private var commentsRequests = [(FeedImageCommentLoader.Result) -> Void]()
+		
+		var commentsCallCount: Int {
+			commentsRequests.count
+		}
+
 		func load(completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
-			
+			commentsRequests.append(completion)
 		}
 	}
 }
