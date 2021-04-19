@@ -17,19 +17,18 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 	
 	public typealias Result = FeedImageCommentLoader.Result
 
-	private let imageUrlProvider: ((String) -> URL)
+	private let url: URL
 	private let client: HTTPClient
 	
-	public init(imageUrlProvider: @escaping ((String) -> URL), client: HTTPClient) {
-		self.imageUrlProvider = imageUrlProvider
+	public init(url: URL, client: HTTPClient) {
+		self.url = url
 		self.client = client
 	}
 	
-	public func load(imageId: String, completion: @escaping (Result) -> Void) {
-		let url = imageUrlProvider(imageId)
+	public func load(completion: @escaping (Result) -> Void) {
 		client.get(from: url, completion: { [weak self] result in
 			guard self != nil else { return }
-			
+
 			switch result {
 			case let .success(result):
 				do {

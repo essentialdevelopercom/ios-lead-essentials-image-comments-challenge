@@ -39,6 +39,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		LocalFeedImageDataLoader(store: store)
 	}()
 	
+	private lazy var navigationController: UINavigationController = {
+		UINavigationController(
+			rootViewController: FeedUIComposer.feedComposedWith(
+				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+				imageLoader: makeLocalImageLoaderWithRemoteFallback,
+				selectionHandler: self.openComments
+			)
+		)
+	}()
+	
 	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
 		self.init()
 		self.httpClient = httpClient
@@ -53,14 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func configureWindow() {
-		window?.rootViewController = UINavigationController(
-			rootViewController: FeedUIComposer.feedComposedWith(
-				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				selectionHandler: { _ in }
-			)
-		)
-		
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 	}
 	
@@ -68,6 +71,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		localFeedLoader.validateCache { _ in }
 	}
 	
+	private func openComments(for imageId: String) {
+		let commentsVC = FeedUIComposer.feedCommentsComposedWith(
+			commentLoader: RemoteFeedImageCommentLoader(
+				url: APIEndpoint.comments(imageId: imageId).url,
+				client: httpClient
+			).loadPublisher
+		)
+		navigationController.pushViewController(commentsVC, animated: true)
+	}
+//
+//	private func makeRemoteCommentLoader(imageId: String) -> FeedImageCommentLoader.Publisher {
+//		remoteImageLoader.loadImageDataPublisher(from: URL(string: "")!)
+//	}
+//
 	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
 		return remoteFeedLoader
 			.loadPublisher()
