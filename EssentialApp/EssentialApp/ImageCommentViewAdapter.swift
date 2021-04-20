@@ -13,7 +13,7 @@ import EssentialFeediOS
 final class ImageCommentViewAdapter: ResourceView {
 	private weak var controller: ListViewController?
 
-	init(controller: ListViewController? = nil) {
+	init(controller: ListViewController) {
 		self.controller = controller
 	}
 
