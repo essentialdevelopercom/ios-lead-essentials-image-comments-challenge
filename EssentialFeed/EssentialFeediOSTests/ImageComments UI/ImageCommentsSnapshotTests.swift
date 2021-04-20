@@ -55,36 +55,3 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		]
 	}
 }
-
-//private extension ListViewController {
-//	func display(_ stubs: [ImageCommentStub]) {
-//		let cells: [CellController] = stubs.map { stub in
-//			let cellController = ImageCommentCellController(viewModel: stub.viewModel, delegate: stub)
-//			stub.controller = cellController
-//			return cellController
-//		}
-//
-//		display(cells)
-//	}
-//}
-//
-//private class ImageCommentStub: ImageCommentCellControllerDelegate {
-//	let viewModel: ImageCommentViewModel
-//	weak var controller: ImageCommentCellController?
-//
-//	init(message: String?, username: String?, createdAt: String?) {
-//		viewModel = ImageCommentViewModel(
-//			message: message,
-//			username: username,
-//			createdAt: createdAt
-//		)
-//	}
-//
-//	func didLoadCell() {
-//		controller?.display(ResourceLoadingViewModel(isLoading: false))
-//		controller?.display(ResourceErrorViewModel(message: .none))
-//		controller?.display(viewModel)
-//	}
-//
-//	func willReleaseCell() {}
-//}
