@@ -18,22 +18,25 @@ extension ImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(imageComments.count) image comments, got \(sut.numberOfRenderedImageCommentViews()) instead.", file: file, line: line)
 		}
 
+		let viewModel = ImageCommentsPresenter.map(imageComments)
+
 		imageComments.enumerated().forEach { index, imageComment in
-			assertThat(sut, hasViewConfiguredFor: imageComment, at: index, file: file, line: line)
+			assertThat(sut, hasViewConfiguredFor: viewModel, at: index, file: file, line: line)
 		}
 
 		executeRunLoopToCleanUpReferences()
 	}
 
-	func assertThat(_ sut: ListViewController, hasViewConfiguredFor imageComment: ImageComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+	func assertThat(_ sut: ListViewController, hasViewConfiguredFor viewModel: ImageCommentsViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.imageCommentView(at: index)
 
 		guard let cell = view as? ImageCommentCell else {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 
-		XCTAssertEqual(cell.messageText, imageComment.message, "messageText at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.userNameText, imageComment.username, "userNameText at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.messageText, viewModel.imageComments[index].message, "messageText at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.userNameText, viewModel.imageComments[index].username, "userNameText at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.createdAtText, viewModel.imageComments[index].createdAt, "createdAtText at index \(index)", file: file, line: line)
 	}
 
 	private func executeRunLoopToCleanUpReferences() {
