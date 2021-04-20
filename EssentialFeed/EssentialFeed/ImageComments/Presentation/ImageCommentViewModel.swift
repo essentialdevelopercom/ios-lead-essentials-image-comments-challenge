@@ -7,11 +7,11 @@
 //
 
 public struct ImageCommentViewModel: Hashable {
-	public let message: String?
-	public let username: String?
-	public let createdAt: String?
+	public let message: String
+	public let username: String
+	public let createdAt: String
 
-	public init(message: String?, username: String?, createdAt: String?) {
+	public init(message: String, username: String, createdAt: String) {
 		self.message = message
 		self.username = username
 		self.createdAt = createdAt
