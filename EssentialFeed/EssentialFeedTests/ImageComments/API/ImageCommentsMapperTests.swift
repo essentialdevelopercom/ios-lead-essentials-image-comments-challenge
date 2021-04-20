@@ -55,7 +55,7 @@ class ImageCommentsMapperTests: XCTestCase {
 		)
 
 		let json = makeItemsJSON([item1.json, item2.json])
-		let samples = [200, 201, 250, 298]
+		let samples = [200, 201, 250, 298, 299]
 
 		try samples.forEach { code in
 			let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: code))
