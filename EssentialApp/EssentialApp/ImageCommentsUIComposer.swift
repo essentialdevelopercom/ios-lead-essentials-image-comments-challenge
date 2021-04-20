@@ -26,7 +26,7 @@ public final class ImageCommentsUIComposer {
 			resourceView: ImageCommentViewAdapter(controller: imageCommentsController),
 			loadingView: WeakRefVirtualProxy(imageCommentsController),
 			errorView: WeakRefVirtualProxy(imageCommentsController),
-			mapper: ImageCommentsPresenter.map)
+			mapper: { ImageCommentsPresenter.map($0) })
 
 		return imageCommentsController
 	}
