@@ -32,8 +32,8 @@ extension ImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 
-		XCTAssertEqual(cell.messageText, imageComment.message, "Expected message to be \(imageComment.message) for image comment view at index \(index)", file: file, line: line)
-		XCTAssertEqual(cell.userNameText, imageComment.username, "Expected username to be \(imageComment.username) for image comment view at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.messageText, imageComment.message, "messageText at index \(index)", file: file, line: line)
+		XCTAssertEqual(cell.userNameText, imageComment.username, "userNameText at index \(index)", file: file, line: line)
 	}
 
 	private func executeRunLoopToCleanUpReferences() {
