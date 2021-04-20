@@ -95,11 +95,6 @@ extension ListViewController {
 }
 
 extension ListViewController {
-	@discardableResult
-	func simulateImageCommentViewVisible(at index: Int) -> ImageCommentCell? {
-		imageCommentView(at: index) as? ImageCommentCell
-	}
-
 	func numberOfRenderedImageCommentViews() -> Int {
 		numberOfRows(in: imageCommentsSection)
 	}
