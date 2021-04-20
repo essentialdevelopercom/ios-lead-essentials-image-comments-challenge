@@ -59,7 +59,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let detailsViewController = ImageCommentsUIComposer.imageCommentsComposedWith(
 			imageCommentsLoader: makeRemoteImageCommentsLoader(imageID: image.id.uuidString)
 		)
-		(window?.rootViewController as? UINavigationController)?.pushViewController(detailsViewController, animated: true)
+		navigationController.pushViewController(detailsViewController, animated: true)
 	}
 
 	private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
