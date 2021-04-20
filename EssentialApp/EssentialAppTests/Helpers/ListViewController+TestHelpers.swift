@@ -100,17 +100,6 @@ extension ListViewController {
 		imageCommentView(at: index) as? ImageCommentCell
 	}
 
-	@discardableResult
-	func simulateImageCommentNotVisible(at row: Int) -> ImageCommentCell? {
-		let view = simulateImageCommentViewVisible(at: row)
-
-		let delegate = tableView.delegate
-		let index = IndexPath(row: row, section: imageCommentsSection)
-		delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: index)
-
-		return view
-	}
-
 	func numberOfRenderedImageCommentViews() -> Int {
 		numberOfRows(in: imageCommentsSection)
 	}
