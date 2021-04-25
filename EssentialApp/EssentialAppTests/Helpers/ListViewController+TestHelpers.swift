@@ -8,12 +8,24 @@ import EssentialFeediOS
 extension ListViewController {
 	public override func loadViewIfNeeded() {
 		super.loadViewIfNeeded()
-
+		
 		tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
 	}
-
+	
 	func simulateUserInitiatedFeedReload() {
 		refreshControl?.simulatePullToRefresh()
+	}
+	
+	var isShowingLoadingIndicator: Bool {
+		return refreshControl?.isRefreshing == true
+	}
+	
+	func simulateErrorViewTap() {
+		errorView.simulateTap()
+	}
+	
+	var errorMessage: String? {
+		return errorView.message
 	}
 	
 	@discardableResult
@@ -48,18 +60,6 @@ extension ListViewController {
 	
 	func renderedFeedImageData(at index: Int) -> Data? {
 		return simulateFeedImageViewVisible(at: index)?.renderedImage
-	}
-	
-	func simulateErrorViewTap() {
-		errorView.simulateTap()
-	}
-	
-	var errorMessage: String? {
-		return errorView.message
-	}
-	
-	var isShowingLoadingIndicator: Bool {
-		return refreshControl?.isRefreshing == true
 	}
 	
 	func numberOfRenderedFeedImageViews() -> Int {
