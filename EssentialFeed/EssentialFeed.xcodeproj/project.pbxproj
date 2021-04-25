@@ -83,8 +83,8 @@
 		4BFFD8732634EBE0002302AE /* EssentialFeedAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8642634EB98002302AE /* EssentialFeedAPIEndToEndTests.swift */; };
 		4BFFD8892634EE1A002302AE /* FeedImageDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8882634EE1A002302AE /* FeedImageDataMapper.swift */; };
 		4BFFD88F2634EE54002302AE /* FeedImageDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD88E2634EE54002302AE /* FeedImageDataMapperTests.swift */; };
-		4BFFD8A22634FFE1002302AE /* LoadResourcePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8A12634FFE1002302AE /* LoadResourcePresenter.swift */; };
 		4BFFD8A926350026002302AE /* LoadResourcePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8A826350026002302AE /* LoadResourcePresenterTests.swift */; };
+		4BFFD8BB26350414002302AE /* LoadResourcePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8BA26350414002302AE /* LoadResourcePresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -188,8 +188,8 @@
 		4BFFD8642634EB98002302AE /* EssentialFeedAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		4BFFD8882634EE1A002302AE /* FeedImageDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataMapper.swift; sourceTree = "<group>"; };
 		4BFFD88E2634EE54002302AE /* FeedImageDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataMapperTests.swift; sourceTree = "<group>"; };
-		4BFFD8A12634FFE1002302AE /* LoadResourcePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoadResourcePresenter.swift; path = ../../../../../../../../LoadResourcePresenter.swift; sourceTree = "<group>"; };
 		4BFFD8A826350026002302AE /* LoadResourcePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenterTests.swift; sourceTree = "<group>"; };
+		4BFFD8BA26350414002302AE /* LoadResourcePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -567,7 +567,7 @@
 		4BFFD8A02634FFC9002302AE /* Shared Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				4BFFD8A12634FFE1002302AE /* LoadResourcePresenter.swift */,
+				4BFFD8BA26350414002302AE /* LoadResourcePresenter.swift */,
 			);
 			path = "Shared Presentation";
 			sourceTree = "<group>";
@@ -776,7 +776,7 @@
 				089C40DE22170F2300DE552E /* FeedStore.swift in Sources */,
 				4B3F41342630667B00E37A99 /* ImageCommentMapper.swift in Sources */,
 				089C40DC22170EC500DE552E /* LocalFeedLoader.swift in Sources */,
-				4BFFD8A22634FFE1002302AE /* LoadResourcePresenter.swift in Sources */,
+				4BFFD8BB26350414002302AE /* LoadResourcePresenter.swift in Sources */,
 				08C0880C21E4EED600ACFB30 /* HTTPClient.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
