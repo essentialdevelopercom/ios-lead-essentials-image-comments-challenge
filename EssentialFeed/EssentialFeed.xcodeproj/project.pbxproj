@@ -100,6 +100,7 @@
 		4BFFD9662635319B002302AE /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BFFD9652635319B002302AE /* ImageComments.storyboard */; };
 		4BFFD96D263531E8002302AE /* ImageCommentsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD96C263531E8002302AE /* ImageCommentsSnapshotTests.swift */; };
 		4BFFD97C263535F6002302AE /* CellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD97B263535F6002302AE /* CellController.swift */; };
+		4BFFD9A7263545AC002302AE /* UIView+Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD9A6263545AC002302AE /* UIView+Container.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -224,6 +225,7 @@
 		4BFFD9652635319B002302AE /* ImageComments.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
 		4BFFD96C263531E8002302AE /* ImageCommentsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsSnapshotTests.swift; sourceTree = "<group>"; };
 		4BFFD97B263535F6002302AE /* CellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellController.swift; sourceTree = "<group>"; };
+		4BFFD9A6263545AC002302AE /* UIView+Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Container.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -679,6 +681,7 @@
 				0822D0F423058078004B3345 /* UITableView+Dequeueing.swift */,
 				08A3F2BA232BA64700127C15 /* UIRefreshControl+Helpers.swift */,
 				086AEFBD23A7E75400EE8933 /* UITableView+HeaderSizing.swift */,
+				4BFFD9A6263545AC002302AE /* UIView+Container.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -992,6 +995,7 @@
 				086AEFBE23A7E75400EE8933 /* UITableView+HeaderSizing.swift in Sources */,
 				08A3F2B2232AA1C200127C15 /* ErrorView.swift in Sources */,
 				08A3F2BB232BA64700127C15 /* UIRefreshControl+Helpers.swift in Sources */,
+				4BFFD9A7263545AC002302AE /* UIView+Container.swift in Sources */,
 				4BFFD97C263535F6002302AE /* CellController.swift in Sources */,
 				08B5EB5022CE328100FE8683 /* UIView+Shimmering.swift in Sources */,
 				0822D0F523058078004B3345 /* UITableView+Dequeueing.swift in Sources */,
