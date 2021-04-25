@@ -85,6 +85,8 @@
 		4BFFD88F2634EE54002302AE /* FeedImageDataMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD88E2634EE54002302AE /* FeedImageDataMapperTests.swift */; };
 		4BFFD8A926350026002302AE /* LoadResourcePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8A826350026002302AE /* LoadResourcePresenterTests.swift */; };
 		4BFFD8BB26350414002302AE /* LoadResourcePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8BA26350414002302AE /* LoadResourcePresenter.swift */; };
+		4BFFD8C626350696002302AE /* Shared.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BFFD8C826350696002302AE /* Shared.strings */; };
+		4BFFD8D02635075D002302AE /* SharedLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BFFD8CF2635075D002302AE /* SharedLocalizationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -190,6 +192,10 @@
 		4BFFD88E2634EE54002302AE /* FeedImageDataMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataMapperTests.swift; sourceTree = "<group>"; };
 		4BFFD8A826350026002302AE /* LoadResourcePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenterTests.swift; sourceTree = "<group>"; };
 		4BFFD8BA26350414002302AE /* LoadResourcePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenter.swift; sourceTree = "<group>"; };
+		4BFFD8C726350696002302AE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Shared.strings; sourceTree = "<group>"; };
+		4BFFD8CD2635069A002302AE /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Shared.strings; sourceTree = "<group>"; };
+		4BFFD8CE2635069B002302AE /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Shared.strings"; sourceTree = "<group>"; };
+		4BFFD8CF2635075D002302AE /* SharedLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLocalizationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -568,6 +574,7 @@
 			isa = PBXGroup;
 			children = (
 				4BFFD8BA26350414002302AE /* LoadResourcePresenter.swift */,
+				4BFFD8C826350696002302AE /* Shared.strings */,
 			);
 			path = "Shared Presentation";
 			sourceTree = "<group>";
@@ -576,6 +583,7 @@
 			isa = PBXGroup;
 			children = (
 				4BFFD8A826350026002302AE /* LoadResourcePresenterTests.swift */,
+				4BFFD8CF2635075D002302AE /* SharedLocalizationTests.swift */,
 			);
 			path = "Shared Presentation";
 			sourceTree = "<group>";
@@ -729,6 +737,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
+				4BFFD8C626350696002302AE /* Shared.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -811,6 +820,7 @@
 				087148BE232BEDFD00D6BE1A /* FeedLocalizationTests.swift in Sources */,
 				4BDF18C32634E70500D79E2E /* ImageCommentsMapperTests.swift in Sources */,
 				082DB86421F763F900A71F69 /* URLSessionHTTPClientTests.swift in Sources */,
+				4BFFD8D02635075D002302AE /* SharedLocalizationTests.swift in Sources */,
 				08C4E984233E037200D939F8 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */,
 				4BFFD8A926350026002302AE /* LoadResourcePresenterTests.swift in Sources */,
 				086BE4842232725E004CDC26 /* FeedStoreSpy.swift in Sources */,
@@ -882,6 +892,16 @@
 				087148B3232BE90D00D6BE1A /* el */,
 			);
 			name = Feed.strings;
+			sourceTree = "<group>";
+		};
+		4BFFD8C826350696002302AE /* Shared.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4BFFD8C726350696002302AE /* en */,
+				4BFFD8CD2635069A002302AE /* el */,
+				4BFFD8CE2635069B002302AE /* pt-BR */,
+			);
+			name = Shared.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
