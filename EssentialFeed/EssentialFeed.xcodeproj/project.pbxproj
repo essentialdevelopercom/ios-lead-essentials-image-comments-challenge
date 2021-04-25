@@ -255,10 +255,10 @@
 		080EDEF321B6DA7E00813479 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
-				4BFFD8A02634FFC9002302AE /* Shared Presentation */,
 				080EDEF521B6DA7E00813479 /* Info.plist */,
 				4B3F41792631EAF100E37A99 /* Shared API */,
 				4B3F417A2631EB0B00E37A99 /* Shared API Infra */,
+				4BFFD8A02634FFC9002302AE /* Shared Presentation */,
 				4B3F418A2631EC4300E37A99 /* Image Comments API */,
 				080EDF1021B6DFA200813479 /* Feed Feature */,
 				08B42EA221C3F08A00DDA349 /* Feed API */,
