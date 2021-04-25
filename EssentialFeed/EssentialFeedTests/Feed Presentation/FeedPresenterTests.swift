@@ -11,6 +11,14 @@ class FeedPresenterTests: XCTestCase {
 		XCTAssertEqual(FeedPresenter.title, localized("FEED_VIEW_TITLE"))
 	}
 	
+	func test_map_createsViewModel() {
+		let feed = uniqueImageFeed().models
+		
+		let viewModel = FeedPresenter.map(feed)
+		
+		XCTAssertEqual(viewModel.feed, feed)
+	}
+	
 	func test_init_doesNotSendMessagesToView() {
 		let (_, view) = makeSUT()
 		
@@ -46,8 +54,8 @@ class FeedPresenterTests: XCTestCase {
 		sut.didFinishLoadingFeed(with: anyNSError())
 		
 		XCTAssertEqual(view.messages, [
-					.display(errorMessage: localized("GENERIC_CONNECTION_ERROR", table: "Shared")),
-					.display(isLoading: false)
+			.display(errorMessage: localized("GENERIC_CONNECTION_ERROR", table: "Shared")),
+			.display(isLoading: false)
 		])
 	}
 	
