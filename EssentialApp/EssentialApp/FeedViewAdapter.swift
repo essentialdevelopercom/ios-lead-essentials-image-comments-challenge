@@ -22,7 +22,7 @@ final class FeedViewAdapter: FeedView {
 			})
 			
 			let view = FeedImageCellController(
-				viewModel: FeedImagePresenter<FeedImageCellController, UIImage>.map(model),
+				viewModel: FeedImagePresenter.map(model),
 				delegate: adapter)
 			
 			adapter.presenter = LoadResourcePresenter(
