@@ -96,6 +96,19 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.cancelledRequests, 1, "Expected cancelled requests after view is deinited/disappeared")
 	}
 	
+	func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+		let (sut, loader) = makeSUT()
+		sut.loadViewIfNeeded()
+		
+		let exp = expectation(description: "Wait for background queue")
+		DispatchQueue.global().async { [unowned self] in
+			let comment0 = self.makeComment(message: "message0", date: (date: Date().adding(days: -1), string: "1 day ago"), author: "author0")
+			loader.completeCommentsLoading(with: [comment0.model], at: 0)
+			exp.fulfill()
+		}
+		wait(for: [exp], timeout: 1.0)
+	}
+	
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
