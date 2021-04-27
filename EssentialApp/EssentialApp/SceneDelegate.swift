@@ -80,11 +80,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		)
 		navigationController.pushViewController(commentsVC, animated: true)
 	}
-//
-//	private func makeRemoteCommentLoader(imageId: String) -> FeedImageCommentLoader.Publisher {
-//		remoteImageLoader.loadImageDataPublisher(from: URL(string: "")!)
-//	}
-//
+
 	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
 		return remoteFeedLoader
 			.loadPublisher()
