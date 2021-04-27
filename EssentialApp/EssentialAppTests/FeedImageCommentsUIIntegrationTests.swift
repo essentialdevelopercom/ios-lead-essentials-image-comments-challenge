@@ -54,6 +54,21 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		assertThat(sut, isRendering: [comment0.expectedContent, comment1.expectedContent, comment2.expectedContent, comment3.expectedContent])
 	}
 	
+	func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
+		let date = Date()
+		let comment0 = makeComment(message: "message0", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author0")
+		let comment1 = makeComment(message: "message1", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author1")
+		let (sut, loader) = makeSUT()
+		
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: [comment0.model, comment1.model], at: 0)
+		assertThat(sut, isRendering: [comment0.expectedContent, comment1.expectedContent])
+		
+		sut.simulateUserInitiatedReload()
+		loader.completeCommentsLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [])
+	}
+	
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
