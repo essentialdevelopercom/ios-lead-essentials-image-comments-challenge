@@ -14,6 +14,19 @@ extension FeedImageCommentsUIIntegrationTests {
 	
 	class LoaderSpy: FeedImageCommentLoader {
 		
+		private class TaskWrap: FeedImageCommentLoaderTask {
+			let onCancel: () -> Void
+
+			init(onCancel: @escaping () -> Void) {
+				self.onCancel = onCancel
+			}
+
+			func cancel() {
+				onCancel()
+			}
+		}
+		
+		private(set) var cancelledRequests = 0
 		private var commentsRequests = [(FeedImageCommentLoader.Result) -> Void]()
 		
 		var commentsCallCount: Int {
@@ -30,8 +43,11 @@ extension FeedImageCommentsUIIntegrationTests {
 			commentsRequests[index](.failure(error))
 		}
 
-		func load(completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
+		func load(completion: @escaping (FeedImageCommentLoader.Result) -> Void) -> FeedImageCommentLoaderTask {
 			commentsRequests.append(completion)
+			return TaskWrap { [weak self] in
+				self?.cancelledRequests += 1
+			}
 		}
 	}
 }

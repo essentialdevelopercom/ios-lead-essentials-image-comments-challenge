@@ -8,8 +8,12 @@
 
 import Foundation
 
+public protocol FeedImageCommentLoaderTask {
+	func cancel()
+}
+
 public protocol FeedImageCommentLoader {
 	typealias Result = Swift.Result<[FeedComment], Error>
 	
-	func load(completion: @escaping (Result) -> Void)
+	func load(completion: @escaping (Result) -> Void) -> FeedImageCommentLoaderTask
 }

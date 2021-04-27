@@ -82,6 +82,20 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_cancelCommentsLoading_whenViewIsDismissed() {
+		let loader = LoaderSpy()
+		var vc: FeedCommentsViewController?
+		
+		autoreleasepool {
+			vc = FeedUIComposer.feedCommentsComposedWith(commentLoader: loader.loadPublisher) as? FeedCommentsViewController
+			vc?.loadViewIfNeeded()
+		}
+		
+		XCTAssertEqual(loader.cancelledRequests, 0, "Expected no cancelled requests until task is cancelled")
+		vc = nil
+		XCTAssertEqual(loader.cancelledRequests, 1, "Expected cancelled requests after view is deinited/disappeared")
+	}
+	
 	// MARK: - Helpers
 
 	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {

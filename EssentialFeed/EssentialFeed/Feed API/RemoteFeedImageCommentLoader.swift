@@ -25,22 +25,48 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 		self.client = client
 	}
 	
-	public func load(completion: @escaping (Result) -> Void) {
-		client.get(from: url, completion: { [weak self] result in
+	private final class HTTPClientTaskWrapper: FeedImageCommentLoaderTask {
+		private var completion: ((Result) -> Void)?
+		
+		var wrapped: HTTPClientTask?
+		
+		init(_ completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
+			self.completion = completion
+		}
+		
+		func complete(with result: FeedImageCommentLoader.Result) {
+			completion?(result)
+		}
+		
+		func cancel() {
+			preventFurtherCompletions()
+			wrapped?.cancel()
+		}
+		
+		private func preventFurtherCompletions() {
+			completion = nil
+		}
+	}
+	
+	
+	public func load(completion: @escaping (Result) -> Void) -> FeedImageCommentLoaderTask {
+		let task = HTTPClientTaskWrapper(completion)
+		task.wrapped = client.get(
+			from: url
+		) { [weak self] result in
 			guard self != nil else { return }
-
-			switch result {
-			case let .success(result):
-				do {
-					let comments = try RemoteImageCommentMapper.map(result.0, from: result.1)
-					completion(.success(comments.toModels()))
-				} catch {
-					completion(.failure(Error.invalidData))
-				}
-			case .failure:
-				completion(.failure(Error.connectivity))
-			}
-		})
+			
+			task.complete(
+				with: result
+					.mapError { _ in Error.connectivity }
+					.flatMap { data, response in
+						Result {
+							try RemoteImageCommentMapper.map(data, from: response).toModels()
+						}
+					})
+		}
+		
+		return task
 	}
 	
 }
