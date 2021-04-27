@@ -16,7 +16,7 @@ public protocol FeedCommentsViewViewControllerDelegate {
 public final class FeedCommentsViewController: UITableViewController, FeedImageCommentView, FeedImageCommentLoadingView, FeedImageCommentErrorView {
 
 	public var delegate: FeedCommentsViewViewControllerDelegate?
-	@IBOutlet private weak var errorView: ErrorView!
+	@IBOutlet weak var errorView: ErrorView!
 	
 	private var tableModel = [PresentationImageComment]() {
 		didSet { tableView.reloadData() }

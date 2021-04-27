@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import EssentialFeediOS
+@testable import EssentialFeediOS
 
 extension FeedCommentsViewController {
 	func simulateUserInitiatedReload() {
@@ -25,6 +25,10 @@ extension FeedCommentsViewController {
 		let ds = tableView.dataSource
 		let index = IndexPath(row: row, section: 0)
 		return ds?.tableView(tableView, cellForRowAt: index)
+	}
+	
+	var errorMessage: String? {
+		errorView?.message
 	}
 
 	var isShowingLoadingIndicator: Bool {

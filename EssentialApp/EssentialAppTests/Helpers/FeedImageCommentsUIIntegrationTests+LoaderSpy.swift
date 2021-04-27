@@ -24,6 +24,11 @@ extension FeedImageCommentsUIIntegrationTests {
 		func completeCommentsLoading(with comments: [FeedComment] = [], at index: Int = 0) {
 			commentsRequests[index](.success(comments))
 		}
+		
+		func completeCommentsLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			commentsRequests[index](.failure(error))
+		}
 
 		func load(completion: @escaping (FeedImageCommentLoader.Result) -> Void) {
 			commentsRequests.append(completion)
