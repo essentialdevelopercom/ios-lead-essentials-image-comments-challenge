@@ -8,13 +8,13 @@
 
 import UIKit
 
-final class FeedCommentCell: UITableViewCell {
+public final class FeedCommentCell: UITableViewCell {
 	
 	@IBOutlet weak var authorNameLabel: UILabel!
 	@IBOutlet weak var commentTimeLabel: UILabel!
 	@IBOutlet weak var commentTextLabel: UILabel!
 	
-	func configure(authorName: String, commentDate: String, commentText: String) {
+	public func configure(authorName: String, commentDate: String, commentText: String) {
 		authorNameLabel.text = authorName
 		commentTimeLabel.text = commentDate
 		commentTextLabel.text = commentText

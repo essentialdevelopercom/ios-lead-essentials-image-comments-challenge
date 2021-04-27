@@ -35,6 +35,24 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(loader.commentsCallCount, 3, "Expected to show the loading indicator when the user initiates a reload")
 	}
 
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+		let date = Date()
+		let comment0 = makeComment(message: "message0", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author0")
+		let comment1 = makeComment(message: "message1", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author1")
+		let comment2 = makeComment(message: "message2", date: (date: date.adding(days: -31), string: "1 month ago"), author: "author2")
+		let comment3 = makeComment(message: "message3", date: (date: date.adding(days: -366), string: "1 year ago"), author: "author3")
+		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
+
+		sut.loadViewIfNeeded()
+		assertThat(sut, isRendering: [])
+		
+		loader.completeCommentsLoading(with: [comment0.model], at: 0)
+		assertThat(sut, isRendering: [comment0.expectedContent])
+
+		sut.simulateUserInitiatedReload()
+		loader.completeCommentsLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model], at: 1)
+		assertThat(sut, isRendering: [comment0.expectedContent, comment1.expectedContent, comment2.expectedContent, comment3.expectedContent])
+	}
 	
 	// MARK: - Helpers
 
@@ -45,5 +63,18 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
+	
+	private func makeComment(message: String, date: (date: Date, string: String), author: String) -> (model: FeedComment, expectedContent: FeedCommentCellContent) {
+		return (
+			FeedComment(id: .init(), message: message, createdAt: date.date, author: .init(username: author)),
+			FeedCommentCellContent(message: message, username: author, date: date.string)
+		)
+	}
+	
+}
 
+struct FeedCommentCellContent {
+	let message: String
+	let username: String
+	let date: String
 }

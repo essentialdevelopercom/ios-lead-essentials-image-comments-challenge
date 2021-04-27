@@ -13,6 +13,19 @@ extension FeedCommentsViewController {
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
+	
+	func numberOfRenderedFeedCommentViews() -> Int {
+		tableView.numberOfRows(inSection: 0)
+	}
+	
+	func commentView(at row: Int) -> UITableViewCell? {
+		guard numberOfRenderedFeedCommentViews() > row else {
+			return nil
+		}
+		let ds = tableView.dataSource
+		let index = IndexPath(row: row, section: 0)
+		return ds?.tableView(tableView, cellForRowAt: index)
+	}
 
 	var isShowingLoadingIndicator: Bool {
 		return refreshControl?.isRefreshing == true
