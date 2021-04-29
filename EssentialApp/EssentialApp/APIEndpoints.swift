@@ -10,14 +10,13 @@ import Foundation
 
 private let baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 
-
 enum APIEndpoint {
-	case comments(imageId: String)
+	case comments(imageId: UUID)
 	
 	var url: URL {
 		switch self {
 		case .comments(let imageId):
-			return baseURL.appendingPathComponent("v1/image/\(imageId)/comments")
+			return baseURL.appendingPathComponent("v1/image/\(imageId.uuidString)/comments")
 		}
 	}
 }

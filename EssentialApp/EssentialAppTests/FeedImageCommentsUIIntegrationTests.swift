@@ -36,33 +36,32 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
-		let date = Date()
-		let comment0 = makeComment(message: "message0", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author0")
-		let comment1 = makeComment(message: "message1", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author1")
-		let comment2 = makeComment(message: "message2", date: (date: date.adding(days: -31), string: "1 month ago"), author: "author2")
-		let comment3 = makeComment(message: "message3", date: (date: date.adding(days: -366), string: "1 year ago"), author: "author3")
-		let (sut, loader) = makeSUT(currentDate: { date }, locale: .init(identifier: "en_US_POSIX"))
+		let comment0 = makeComment(message: "message0", author: "author0")
+		let comment1 = makeComment(message: "message1", author: "author1")
+		let comment2 = makeComment(message: "message2", author: "author2")
+		let comment3 = makeComment(message: "message3", author: "author3")
+
+		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
-		
-		loader.completeCommentsLoading(with: [comment0.model], at: 0)
-		assertThat(sut, isRendering: [comment0.expectedContent])
+		sut.simulateTapOnErrorView()
+		loader.completeCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeCommentsLoading(with: [comment0.model, comment1.model, comment2.model, comment3.model], at: 1)
-		assertThat(sut, isRendering: [comment0.expectedContent, comment1.expectedContent, comment2.expectedContent, comment3.expectedContent])
+		loader.completeCommentsLoading(with: [comment0, comment1, comment2, comment3], at: 1)
+		assertThat(sut, isRendering: [comment0, comment1, comment2, comment3])
 	}
 	
 	func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
-		let date = Date()
-		let comment0 = makeComment(message: "message0", date: (date: date.adding(days: -1), string: "1 day ago"), author: "author0")
-		let comment1 = makeComment(message: "message1", date: (date: date.adding(days: -2), string: "2 days ago"), author: "author1")
+		let comment0 = makeComment(message: "message0", author: "author0")
+		let comment1 = makeComment(message: "message1", author: "author1")
 		let (sut, loader) = makeSUT()
 		
 		sut.loadViewIfNeeded()
-		loader.completeCommentsLoading(with: [comment0.model, comment1.model], at: 0)
-		assertThat(sut, isRendering: [comment0.expectedContent, comment1.expectedContent])
+		loader.completeCommentsLoading(with: [comment0, comment1], at: 0)
+		assertThat(sut, isRendering: [comment0, comment1])
 		
 		sut.simulateUserInitiatedReload()
 		loader.completeCommentsLoading(with: [], at: 1)
@@ -82,12 +81,31 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
+	func test_loadCommentsCompletion_rendersErrorMessageOnLoaderFailureUntilTap() {
+		let (sut, loader) = makeSUT()
+
+		sut.loadViewIfNeeded()
+		XCTAssertEqual(sut.errorMessage, nil)
+
+		loader.completeCommentsLoadingWithError(at: 0)
+		XCTAssertEqual(sut.errorMessage, localized("FEED_COMMENTS_VIEW_ERROR_MESSAGE"))
+
+		sut.simulateTapOnErrorView()
+
+		let exp = expectation(description: "Waiting for the next run loop iteration for the tap processing")
+		DispatchQueue.main.async { [weak sut] in
+			XCTAssertEqual(sut?.errorMessage, nil)
+			exp.fulfill()
+		}
+		wait(for: [exp], timeout: 0.1)
+	}
+	
 	func test_cancelCommentsLoading_whenViewIsDismissed() {
 		let loader = LoaderSpy()
 		var vc: FeedCommentsViewController?
 		
 		autoreleasepool {
-			vc = FeedUIComposer.feedCommentsComposedWith(commentLoader: loader.loadPublisher) as? FeedCommentsViewController
+			vc = ImageCommentsUIComposer.feedCommentsComposedWith(commentLoader: loader.loadPublisher) as? FeedCommentsViewController
 			vc?.loadViewIfNeeded()
 		}
 		
@@ -100,36 +118,29 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
 		
+		let comment = makeComment(message: "message0", author: "author0")
+		
 		let exp = expectation(description: "Wait for background queue")
-		DispatchQueue.global().async { [unowned self] in
-			let comment0 = self.makeComment(message: "message0", date: (date: Date().adding(days: -1), string: "1 day ago"), author: "author0")
-			loader.completeCommentsLoading(with: [comment0.model], at: 0)
+		DispatchQueue.global().async {
+			loader.completeCommentsLoading(with: [comment], at: 0)
 			exp.fulfill()
 		}
+		
 		wait(for: [exp], timeout: 1.0)
 	}
 	
 	// MARK: - Helpers
 
-	private func makeSUT(currentDate: @escaping () -> Date = Date.init, locale: Locale = .current, file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedCommentsViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedCommentsComposedWith(commentLoader: loader.loadPublisher) as! FeedCommentsViewController
+		let sut = ImageCommentsUIComposer.feedCommentsComposedWith(commentLoader: loader.loadPublisher) as! FeedCommentsViewController
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
 	
-	private func makeComment(message: String, date: (date: Date, string: String), author: String) -> (model: FeedComment, expectedContent: FeedCommentCellContent) {
-		return (
-			FeedComment(id: .init(), message: message, createdAt: date.date, author: .init(username: author)),
-			FeedCommentCellContent(message: message, username: author, date: date.string)
-		)
+	private func makeComment(message: String = "message", author: String = "author") -> FeedComment {
+		FeedComment(id: UUID(), message: message, createdAt: Date(), author: .init(username: author))
 	}
 	
-}
-
-struct FeedCommentCellContent {
-	let message: String
-	let username: String
-	let date: String
 }

@@ -48,7 +48,6 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 		}
 	}
 	
-	
 	public func load(completion: @escaping (Result) -> Void) -> FeedImageCommentLoaderTask {
 		let task = HTTPClientTaskWrapper(completion)
 		task.wrapped = client.get(
@@ -71,29 +70,16 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 	
 }
 
-public struct RemoteImageCommentMapper {
+fileprivate struct RemoteImageCommentMapper {
 	
-	public struct RemoteFeedComment: Codable {
-		
-		enum CodingKeys: String, CodingKey {
-			case id, message, createdAt = "created_at", author
-		}
-		
+	struct RemoteFeedComment: Decodable {
 		let id: UUID
 		let message: String
-		let createdAt: Date
+		let created_at: Date
 		let author: RemoteFeedCommentAuthor
-		
-		init(id: UUID, message: String, createdAt: Date, author: RemoteImageCommentMapper.RemoteFeedCommentAuthor) {
-			self.id = id
-			self.message = message
-			self.createdAt = createdAt
-			self.author = author
-		}
-		
 	}
 	
-	public struct RemoteFeedCommentAuthor: Codable {
+	struct RemoteFeedCommentAuthor: Decodable {
 		let username: String
 	}
 	
@@ -104,7 +90,7 @@ public struct RemoteImageCommentMapper {
 	public static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedComment] {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
-		guard response.isOK, let root = try? decoder.decode(Root.self, from: data) else {
+		guard response.is200x, let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteFeedImageCommentLoader.Error.invalidData
 		}
 		return root.items
@@ -116,7 +102,7 @@ private extension Array where Element == RemoteImageCommentMapper.RemoteFeedComm
 	func toModels() -> [FeedComment] {
 		self.map {
 			let author = FeedCommentAuthor(username: $0.author.username)
-			return FeedComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, author: author)
+			return FeedComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: author)
 		}
 	}
 }

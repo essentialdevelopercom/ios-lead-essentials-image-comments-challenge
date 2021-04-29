@@ -19,14 +19,22 @@ class FeedCommentsSnapshotTests: XCTestCase {
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_IMAGE_COMMENTS_EMPTY_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_COMMENTS_EMPTY_dark")
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, size: .extraExtraExtraLarge)), named: "FEED_IMAGE_COMMENTS_EMPTY_LARGE_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, size: .extraExtraExtraLarge)), named: "FEED_IMAGE_COMMENTS_EMPTY_LARGE_dark")
 	}
 
 	func test_commentsWithErrorMessage() {
 		let sut = makeSUT()
 
 		sut.display(errorMessage("This is\na multi-line\nerror message"))
+		
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_IMAGE_COMMENTS_ERROR_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_COMMENTS_ERROR_dark")
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, size: .extraExtraExtraLarge)), named: "FEED_IMAGE_COMMENTS_ERROR_LARGE_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, size: .extraExtraExtraLarge)), named: "FEED_IMAGE_COMMENTS_ERROR_LARGE_dark")
+
 	}
 
 	func test_commentsWithContent() {
@@ -36,6 +44,10 @@ class FeedCommentsSnapshotTests: XCTestCase {
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "FEED_IMAGE_COMMENTS_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "FEED_IMAGE_COMMENTS_dark")
+		
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, size: .extraExtraExtraLarge)), named: "FEED_IMAGE_COMMENTS_LARGE_light")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark, size: .extraExtraExtraLarge)), named: "FEED_IMAGE_COMMENTS_LARGE_dark")
+
 	}
 
 	// MARK: - Helpers
@@ -59,10 +71,10 @@ class FeedCommentsSnapshotTests: XCTestCase {
 	}
 
 	private func comments() -> FeedImageCommentViewModel {
-		let comment0 = PresentationImageComment(message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.", createdAt: "1 year ago", author: "danil")
-		let comment1 = PresentationImageComment(message: "Lorem ipsum!\n.\n.\n.\n.", createdAt: "6 month ago", author: "danil")
-		let comment2 = PresentationImageComment(message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.", createdAt: "1 day ago", author: "danil")
-		let comment3 = PresentationImageComment(message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.", createdAt: "Just now", author: "danil")
+		let comment0 = PresentationImageComment(message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.", createdAt: "1 year ago", author: "some author")
+		let comment1 = PresentationImageComment(message: "Lorem ipsum!\n.\n.\n.\n.", createdAt: "6 month ago", author: "some author")
+		let comment2 = PresentationImageComment(message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.", createdAt: "1 day ago", author: "some author")
+		let comment3 = PresentationImageComment(message: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.", createdAt: "Just now", author: "some author")
 		return .init(comments: [comment0, comment1, comment2, comment3])
 	}
 	

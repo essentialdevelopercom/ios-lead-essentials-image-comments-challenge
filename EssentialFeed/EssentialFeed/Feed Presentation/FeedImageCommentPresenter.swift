@@ -24,14 +24,14 @@ public final class FeedImageCommentPresenter {
 	private let commentsView: FeedImageCommentView
 	private let errorView: FeedImageCommentErrorView
 	private let loadingView: FeedImageCommentLoadingView
-	private let dateFormatter: RelativeDateTimeFormatter
+	private let locale: Locale
 	private let currentDateProvider: () -> Date
 	
-	public init(commentsView: FeedImageCommentView, errorView: FeedImageCommentErrorView, loadingView: FeedImageCommentLoadingView, dateFormatter: RelativeDateTimeFormatter, currentDateProvider: @escaping () -> Date) {
+	public init(commentsView: FeedImageCommentView, errorView: FeedImageCommentErrorView, loadingView: FeedImageCommentLoadingView, locale: Locale, currentDateProvider: @escaping () -> Date) {
 		self.commentsView = commentsView
 		self.errorView = errorView
 		self.loadingView = loadingView
-		self.dateFormatter = dateFormatter
+		self.locale = locale
 		self.currentDateProvider = currentDateProvider
 	}
 	
@@ -56,7 +56,7 @@ public final class FeedImageCommentPresenter {
 	}
 	
 	public func didFinishLoadingComments(with comments: [FeedComment]) {
-		commentsView.display(.init(comments: presentableComments(from: comments)))
+		commentsView.display(.init(comments: FeedImageCommentPresenter.presentableComments(from: comments, date: currentDateProvider, locale: locale)))
 		loadingView.display(.notLoading)
 	}
 	
@@ -65,16 +65,18 @@ public final class FeedImageCommentPresenter {
 		errorView.display(.error(message: commentsLoadError))
 	}
 	
-	private func presentableComments(from comments: [FeedComment]) -> [PresentationImageComment] {
+	public static func presentableComments(from comments: [FeedComment], date: () -> Date, locale: Locale) -> [PresentationImageComment] {
 		comments.map { PresentationImageComment(
 			message: $0.message,
-			createdAt: format($0.createdAt),
+			createdAt: format(date: $0.createdAt, relativeTo: date(), locale: locale),
 			author: $0.author.username)
 		}
 	}
 	
-	private func format(_ date: Date) -> String {
-		dateFormatter.localizedString(for: date, relativeTo: currentDateProvider())
+	private static func format(date: Date, relativeTo relativeToDate: Date, locale: Locale) -> String {
+		let formatter = RelativeDateTimeFormatter()
+		formatter.locale = locale
+		return formatter.localizedString(for: date, relativeTo: relativeToDate)
 	}
 	
 }

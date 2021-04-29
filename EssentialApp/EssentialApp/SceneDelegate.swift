@@ -71,10 +71,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		localFeedLoader.validateCache { _ in }
 	}
 	
-	private func openComments(for imageId: String) {
-		let commentsVC = FeedUIComposer.feedCommentsComposedWith(
+	private func openComments(for feedImage: FeedImage) {
+		let commentsVC = ImageCommentsUIComposer.feedCommentsComposedWith(
 			commentLoader: RemoteFeedImageCommentLoader(
-				url: APIEndpoint.comments(imageId: imageId).url,
+				url: APIEndpoint.comments(imageId: feedImage.id).url,
 				client: httpClient
 			).loadPublisher
 		)

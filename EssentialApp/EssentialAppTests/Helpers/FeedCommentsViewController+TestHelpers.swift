@@ -10,12 +10,19 @@ import UIKit
 @testable import EssentialFeediOS
 
 extension FeedCommentsViewController {
+	
+	private var imageCommentsSection: Int { 0 }
+	
+	func simulateTapOnErrorView() {
+		errorView.gestureRecognizers?.forEach { $0.state = .ended }
+	}
+	
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
 	}
 	
 	func numberOfRenderedFeedCommentViews() -> Int {
-		tableView.numberOfRows(inSection: 0)
+		tableView.numberOfRows(inSection: imageCommentsSection)
 	}
 	
 	func commentView(at row: Int) -> UITableViewCell? {
@@ -23,7 +30,7 @@ extension FeedCommentsViewController {
 			return nil
 		}
 		let ds = tableView.dataSource
-		let index = IndexPath(row: row, section: 0)
+		let index = IndexPath(row: row, section: imageCommentsSection)
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 	

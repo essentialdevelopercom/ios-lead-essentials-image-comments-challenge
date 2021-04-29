@@ -33,26 +33,82 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 	}
 	
 	func test_didFinishLoadingCommentsInEngLocale_displaysFeedAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let comments = uniqueComments()
+		let date = { Date(timeIntervalSince1970: 1614618409) }
+		let (sut, view) = makeSUT(date: date, locale: .init(identifier: "en_US_POSIX"))
+
+		let comments = [
+			FeedComment(
+				id: UUID(),
+				message: "some message",
+				createdAt: date().adding(seconds: -10),
+				author: .init(username: "some author")
+			),
+			FeedComment(
+				id: UUID(),
+				message: "some message1",
+				createdAt: date().adding(days: -7),
+				author: .init(username: "some author1")
+			)
+		]
 		
-		sut.didFinishLoadingComments(with: comments.comments)
+		let presentation = [
+			PresentationImageComment(
+				message: "some message",
+				createdAt: "10 seconds ago",
+				author: "some author"
+			),
+			PresentationImageComment(
+				message: "some message1",
+				createdAt: "1 week ago",
+				author: "some author1"
+			)
+		]
+		
+		sut.didFinishLoadingComments(with: comments)
 		
 		XCTAssertEqual(view.messages, [
-			.display(comments: comments.presentation),
+			.display(comments: presentation),
 			.display(isLoading: false)
 		])
 	}
 	
 	func test_didFinishLoadingCommentsInRussianLocale_displaysFeedAndStopsLoading() {
 		let russianLocale = Locale(identifier: "ru_RU")
-		let (sut, view) = makeSUT(locale: russianLocale)
-		let comments = uniqueComments(locale: russianLocale)
+		let date = { Date(timeIntervalSince1970: 1614618409) }
+		let (sut, view) = makeSUT(date: date, locale: russianLocale)
+
+		let comments = [
+			FeedComment(
+				id: UUID(),
+				message: "some message",
+				createdAt: date().adding(seconds: -10),
+				author: .init(username: "some author")
+			),
+			FeedComment(
+				id: UUID(),
+				message: "some message1",
+				createdAt: date().adding(days: -7),
+				author: .init(username: "some author1")
+			)
+		]
 		
-		sut.didFinishLoadingComments(with: comments.comments)
-		
+		let presentation = [
+			PresentationImageComment(
+				message: "some message",
+				createdAt: "10 секунд назад",
+				author: "some author"
+			),
+			PresentationImageComment(
+				message: "some message1",
+				createdAt: "1 неделю назад",
+				author: "some author1"
+			)
+		]
+
+		sut.didFinishLoadingComments(with: comments)
+
 		XCTAssertEqual(view.messages, [
-			.display(comments: comments.presentation),
+			.display(comments: presentation),
 			.display(isLoading: false)
 		])
 	}
@@ -70,18 +126,15 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(locale: Locale = Locale(identifier: "en_US_POSIX"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentPresenter, view: ViewSpy) {
+	private func makeSUT(date: @escaping (() -> Date) = Date.init, locale: Locale = Locale(identifier: "en_US_POSIX"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentPresenter, view: ViewSpy) {
 		let view = ViewSpy()
-
-		let dateFormatter = RelativeDateTimeFormatter()
-		dateFormatter.locale = locale
 
 		let sut = FeedImageCommentPresenter(
 			commentsView: view,
 			errorView: view,
 			loadingView: view,
-			dateFormatter: dateFormatter,
-			currentDateProvider: { Date() }
+			locale: locale,
+			currentDateProvider: date
 		)
 		
 		trackForMemoryLeaks(view, file: file, line: line)

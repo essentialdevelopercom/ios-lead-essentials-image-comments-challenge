@@ -9,14 +9,14 @@
 import UIKit
 import EssentialFeed
 
-public protocol FeedCommentsViewViewControllerDelegate {
+public protocol FeedCommentsViewControllerDelegate {
 	func didRequestCommentsRefresh()
 }
 
 public final class FeedCommentsViewController: UITableViewController, FeedImageCommentView, FeedImageCommentLoadingView, FeedImageCommentErrorView {
 
-	public var delegate: FeedCommentsViewViewControllerDelegate?
-	@IBOutlet weak var errorView: ErrorView!
+	public var delegate: FeedCommentsViewControllerDelegate?
+	@IBOutlet private(set) weak var errorView: ErrorView!
 	
 	private var tableModel = [PresentationImageComment]() {
 		didSet { tableView.reloadData() }
@@ -54,7 +54,7 @@ public final class FeedCommentsViewController: UITableViewController, FeedImageC
 	
 	public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let model = tableModel[indexPath.row]
-		let cell = tableView.dequeueReusableCell(withIdentifier: "FeedImageCell", for: indexPath) as! FeedCommentCell
+		let cell: FeedCommentCell = tableView.dequeueReusableCell()
 		cell.configure(authorName: model.author, commentDate: model.createdAt, commentText: model.message)
 		return cell
 	}

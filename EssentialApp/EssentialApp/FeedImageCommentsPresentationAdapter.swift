@@ -11,7 +11,7 @@ import Combine
 import EssentialFeed
 import EssentialFeediOS
 
-final class FeedImageCommentsPresentationAdapter: FeedCommentsViewViewControllerDelegate {
+final class FeedImageCommentsPresentationAdapter: FeedCommentsViewControllerDelegate {
 	private let loader: () -> FeedImageCommentLoader.Publisher
 	private var cancellable: Cancellable?
 	var presenter: FeedImageCommentPresenter?
@@ -38,6 +38,7 @@ final class FeedImageCommentsPresentationAdapter: FeedCommentsViewViewController
 
 	deinit {
 		cancellable?.cancel()
+		cancellable = nil
 	}
 	
 }

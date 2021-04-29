@@ -1,5 +1,5 @@
 //
-//  FeedImageCommentsTests.swift
+//  LoadFeedCommentsFromRemoteUseCaseTests.swift.swift
 //  EssentialFeedTests
 //
 //  Created by Danil Vassyakin on 3/1/21.
@@ -9,7 +9,7 @@
 import XCTest
 import EssentialFeed
 
-final class FeedImageCommentsTests: XCTestCase {
+final class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 
 	func test_init_doesNotRequestDataFromUrl() {
 		let (_, client, _) = makeSUT()
@@ -18,7 +18,7 @@ final class FeedImageCommentsTests: XCTestCase {
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let (loader, client, url) = makeSUT(imageId: "1")
+		let (loader, client, url) = makeSUT()
 
 		_ = loader.load(completion: { _ in })
 		
@@ -43,10 +43,10 @@ final class FeedImageCommentsTests: XCTestCase {
 		})
 	}
 	
-	func test_load_deliversErrorOnNon200HTTPResponse() {
+	func test_load_deliversErrorOnNon2xxHTTPResponse() {
 		let (sut, client, _) = makeSUT()
 		
-		let samples = [199, 201, 300, 400, 500]
+		let samples = [199, 300, 400, 500]
 		
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: failure(.invalidData), when: {
@@ -56,25 +56,33 @@ final class FeedImageCommentsTests: XCTestCase {
 		}
 	}
 	
-	func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
+	func test_load_deliversErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let (sut, client, _) = makeSUT()
 		
-		expect(sut, toCompleteWith: failure(.invalidData), when: {
-			let invalidJSON = Data("invalid json".utf8)
-			client.complete(withStatusCode: 200, data: invalidJSON)
-		})
+		let samples = [200, 205, 206, 290, 299, 289]
+
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: failure(.invalidData), when: {
+				let invalidJSON = Data("invalid json".utf8)
+				client.complete(withStatusCode: code, data: invalidJSON, at: index)
+			})
+		}
 	}
 	
-	func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+	func test_load_deliversNoItemsOn2xxCodeHTTPResponseWithEmptyJSONList() {
 		let (sut, client, _) = makeSUT()
 		
-		expect(sut, toCompleteWith: .success([]), when: {
-			let emptyListJSON = makeItemsJSON([])
-			client.complete(withStatusCode: 200, data: emptyListJSON)
-		})
+		let samples = [200, 205, 206, 290, 299, 289]
+		
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success([]), when: {
+				let emptyListJSON = makeItemsJSON([])
+				client.complete(withStatusCode: code, data: emptyListJSON, at: index)
+			})
+		}
 	}
 	
-	func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
+	func test_load_deliversItemsOn2xxHTTPResponseWithJSONItems() {
 		let (sut, client, _) = makeSUT()
 		
 		let item1 = makeComment(
@@ -85,15 +93,20 @@ final class FeedImageCommentsTests: XCTestCase {
 		let item2 = makeComment(
 			id: UUID(),
 			message: "test comment",
-			createdAt: (Date(timeIntervalSince1970: 1614618409), "2021-03-01T17:06:49+0000")
+			createdAt: (Date(timeIntervalSince1970: 0), "1970-01-01T00:00:00+0000")
 		)
 		
 		let items = [item1.model, item2.model]
 		
-		expect(sut, toCompleteWith: .success(items), when: {
-			let json = makeItemsJSON([item1.json, item2.json])
-			client.complete(withStatusCode: 200, data: json)
-		})
+		let samples = [200, 205, 206, 290, 299, 289]
+
+		samples.enumerated().forEach { index, code in
+			expect(sut, toCompleteWith: .success(items), when: {
+				let json = makeItemsJSON([item1.json, item2.json])
+				client.complete(withStatusCode: 200, data: json, at: index)
+			})
+		}
+
 	}
 	
 	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
@@ -110,22 +123,20 @@ final class FeedImageCommentsTests: XCTestCase {
 		XCTAssertTrue(capturedResults.isEmpty)
 	}
 	
-	private func makeSUT(imageId: String = "any") -> (RemoteFeedImageCommentLoader, HTTPClientSpy, URL) {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
+	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (RemoteFeedImageCommentLoader, HTTPClientSpy, URL) {
 		let client = HTTPClientSpy()
 		let loader = RemoteFeedImageCommentLoader(
 			url: url,
 			client: client
 		)
 
-		trackForMemoryLeaks(client)
-		trackForMemoryLeaks(loader)
+		trackForMemoryLeaks(client, file: file, line: line)
+		trackForMemoryLeaks(loader, file: file, line: line)
 		
 		return (loader, client, url)
 	}
 	
 	private func assert(requestedUrls: [URL], equalsToExpectedUrls: [URL]) {
-		XCTAssertTrue(requestedUrls.count == equalsToExpectedUrls.count, "Expected \(equalsToExpectedUrls.count) urls, Requested \(requestedUrls.count) instead")
 		XCTAssertEqual(requestedUrls, equalsToExpectedUrls)
 	}
 	
@@ -145,12 +156,12 @@ final class FeedImageCommentsTests: XCTestCase {
 		let authorJson = [
 			"username": username
 		]
-		let commentJson = [
+		let commentJson: [String: Any] = [
 			"id": id.uuidString,
 			"message": message,
 			"created_at": createdAt.stringValue,
 			"author": authorJson
-		].compactMapValues { $0 }
+		]
 		
 		return (comment, commentJson)
 	}
