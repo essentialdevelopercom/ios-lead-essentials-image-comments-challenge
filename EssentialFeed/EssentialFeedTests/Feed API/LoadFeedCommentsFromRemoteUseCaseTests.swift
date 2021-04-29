@@ -18,26 +18,20 @@ final class FeedImageCommentsTests: XCTestCase {
 	}
 	
 	func test_load_requestsDataFromURL() {
-		let (loader, client, imageUrlProvider) = makeSUT()
+		let (loader, client, url) = makeSUT(imageId: "1")
 
-		loader.load(imageId: "1", completion: { _ in })
+		_ = loader.load(completion: { _ in })
 		
-		assert(requestedUrls: client.requestedURLs,
-			   imageUrlProvider: imageUrlProvider,
-			   imageIds: "1"
-		)
+		assert(requestedUrls: client.requestedURLs, equalsToExpectedUrls: [url])
 	}
 	
 	func test_loadTwice_requestsDataFromURLTwice() {
-		let (sut, client, imageUrlProvider) = makeSUT()
+		let (sut, client, url) = makeSUT()
 		
-		sut.load(imageId: "1") { _ in }
-		sut.load(imageId: "2") { _ in }
+		_ = sut.load() { _ in }
+		_ = sut.load() { _ in }
 		
-		assert(requestedUrls: client.requestedURLs,
-			   imageUrlProvider: imageUrlProvider,
-			   imageIds: "1", "2"
-		)
+		assert(requestedUrls: client.requestedURLs, equalsToExpectedUrls: [url, url])
 	}
 	
 	func test_load_deliversErrorOnClientError() {
@@ -102,9 +96,37 @@ final class FeedImageCommentsTests: XCTestCase {
 		})
 	}
 	
-	private func assert(requestedUrls: [URL], imageUrlProvider: @escaping ((String) -> URL), imageIds: String...) {
-		let apiUrls = imageIds.map { imageUrlProvider($0) }
-		XCTAssertEqual(requestedUrls, apiUrls)
+	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+		let client = HTTPClientSpy()
+		
+		var sut: RemoteFeedImageCommentLoader? = RemoteFeedImageCommentLoader(url: anyURL(), client: client)
+		
+		var capturedResults = [RemoteFeedImageCommentLoader.Result]()
+		_ = sut?.load() { capturedResults.append($0) }
+		
+		sut = nil
+		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+		
+		XCTAssertTrue(capturedResults.isEmpty)
+	}
+	
+	private func makeSUT(imageId: String = "any") -> (RemoteFeedImageCommentLoader, HTTPClientSpy, URL) {
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
+		let client = HTTPClientSpy()
+		let loader = RemoteFeedImageCommentLoader(
+			url: url,
+			client: client
+		)
+
+		trackForMemoryLeaks(client)
+		trackForMemoryLeaks(loader)
+		
+		return (loader, client, url)
+	}
+	
+	private func assert(requestedUrls: [URL], equalsToExpectedUrls: [URL]) {
+		XCTAssertTrue(requestedUrls.count == equalsToExpectedUrls.count, "Expected \(equalsToExpectedUrls.count) urls, Requested \(requestedUrls.count) instead")
+		XCTAssertEqual(requestedUrls, equalsToExpectedUrls)
 	}
 	
 	private func failure(_ error: RemoteFeedImageCommentLoader.Error) -> RemoteFeedImageCommentLoader.Result {
@@ -133,42 +155,10 @@ final class FeedImageCommentsTests: XCTestCase {
 		return (comment, commentJson)
 	}
 	
-	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
-		let client = HTTPClientSpy()
-		var sut: RemoteFeedImageCommentLoader? = RemoteFeedImageCommentLoader(imageUrlProvider: { imageId in
-			URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
-		}, client: client)
-		
-		var capturedResults = [RemoteFeedImageCommentLoader.Result]()
-		sut?.load(imageId: "1") { capturedResults.append($0) }
-		
-		sut = nil
-		client.complete(withStatusCode: 200, data: makeItemsJSON([]))
-		
-		XCTAssertTrue(capturedResults.isEmpty)
-	}
-	
-	private func makeSUT() -> (RemoteFeedImageCommentLoader, HTTPClientSpy, (String) -> URL) {
-		let imageUrlProvider: (String) -> URL = { imageId in
-			URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(imageId)/comments")!
-		}
-		
-		let client = HTTPClientSpy()
-		let loader = RemoteFeedImageCommentLoader(
-			imageUrlProvider: imageUrlProvider,
-			client: client
-		)
-
-		trackForMemoryLeaks(client)
-		trackForMemoryLeaks(loader)
-		
-		return (loader, client, imageUrlProvider)
-	}
-	
 	private func expect(_ sut: RemoteFeedImageCommentLoader, toCompleteWith expectedResult: RemoteFeedImageCommentLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
-		sut.load(imageId: "any") { receivedResult in
+		_ = sut.load() { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedItems), .success(expectedItems)):
 				XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
