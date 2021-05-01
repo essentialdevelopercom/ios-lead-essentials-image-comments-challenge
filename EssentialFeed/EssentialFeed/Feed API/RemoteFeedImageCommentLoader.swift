@@ -70,7 +70,7 @@ public class RemoteFeedImageCommentLoader: FeedImageCommentLoader {
 	
 }
 
-fileprivate struct RemoteImageCommentMapper {
+private struct RemoteImageCommentMapper {
 	
 	struct RemoteFeedComment: Decodable {
 		let id: UUID
@@ -87,10 +87,10 @@ fileprivate struct RemoteImageCommentMapper {
 		let items: [RemoteFeedComment]
 	}
 	
-	public static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedComment] {
+	static func map(_ data: Data, from response: HTTPURLResponse) throws -> [RemoteFeedComment] {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
-		guard response.is200x, let root = try? decoder.decode(Root.self, from: data) else {
+		guard response.is2xx, let root = try? decoder.decode(Root.self, from: data) else {
 			throw RemoteFeedImageCommentLoader.Error.invalidData
 		}
 		return root.items

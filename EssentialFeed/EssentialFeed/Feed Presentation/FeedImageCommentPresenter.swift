@@ -66,16 +66,20 @@ public final class FeedImageCommentPresenter {
 	}
 	
 	public static func presentableComments(from comments: [FeedComment], date: () -> Date, locale: Locale) -> [PresentationImageComment] {
-		comments.map { PresentationImageComment(
+		let formatter = RelativeDateTimeFormatter()
+		formatter.locale = locale
+
+		return comments.map { PresentationImageComment(
 			message: $0.message,
-			createdAt: format(date: $0.createdAt, relativeTo: date(), locale: locale),
+			createdAt: format(
+				date: $0.createdAt,
+				relativeTo: date(),
+				formatter: formatter),
 			author: $0.author.username)
 		}
 	}
 	
-	private static func format(date: Date, relativeTo relativeToDate: Date, locale: Locale) -> String {
-		let formatter = RelativeDateTimeFormatter()
-		formatter.locale = locale
+	private static func format(date: Date, relativeTo relativeToDate: Date, formatter: RelativeDateTimeFormatter) -> String {
 		return formatter.localizedString(for: date, relativeTo: relativeToDate)
 	}
 	

@@ -318,17 +318,23 @@ final class FeedUIIntegrationTests: XCTestCase {
 	}
 	
 	func test_selectImageOnImageTap() {
+		let image1 = makeImage()
+		let image2 = makeImage()
+		
 		var tappedImages = [FeedImage]()
 		let (sut, loader) = makeSUT(selectionHandler: {
 			tappedImages.append($0)
 		})
 		sut.loadViewIfNeeded()
 		
-		let image = makeImage()
+		loader.completeFeedLoading(with: [image1, image2])
+		XCTAssertEqual(tappedImages, [])
 
-		loader.completeFeedLoading(with: [image])
 		sut.simulateTapOnImage(at: 0)
-		XCTAssertEqual(tappedImages, [image])
+		XCTAssertEqual(tappedImages, [image1])
+		
+		sut.simulateTapOnImage(at: 1)
+		XCTAssertEqual(tappedImages, [image1, image2])
 	}
 	
 	// MARK: - Helpers

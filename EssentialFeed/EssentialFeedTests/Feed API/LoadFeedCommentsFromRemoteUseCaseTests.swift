@@ -22,7 +22,7 @@ final class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 
 		_ = loader.load(completion: { _ in })
 		
-		assert(requestedUrls: client.requestedURLs, equalsToExpectedUrls: [url])
+		XCTAssertEqual(client.requestedURLs, [url])
 	}
 	
 	func test_loadTwice_requestsDataFromURLTwice() {
@@ -31,7 +31,7 @@ final class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		_ = sut.load() { _ in }
 		_ = sut.load() { _ in }
 		
-		assert(requestedUrls: client.requestedURLs, equalsToExpectedUrls: [url, url])
+		XCTAssertEqual(client.requestedURLs, [url, url])
 	}
 	
 	func test_load_deliversErrorOnClientError() {
@@ -103,7 +103,7 @@ final class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		samples.enumerated().forEach { index, code in
 			expect(sut, toCompleteWith: .success(items), when: {
 				let json = makeItemsJSON([item1.json, item2.json])
-				client.complete(withStatusCode: 200, data: json, at: index)
+				client.complete(withStatusCode: code, data: json, at: index)
 			})
 		}
 
@@ -123,7 +123,8 @@ final class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		XCTAssertTrue(capturedResults.isEmpty)
 	}
 	
-	private func makeSUT(url: URL = anyURL(), file: StaticString = #filePath, line: UInt = #line) -> (RemoteFeedImageCommentLoader, HTTPClientSpy, URL) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (RemoteFeedImageCommentLoader, HTTPClientSpy, URL) {
+		let url = anyURL()
 		let client = HTTPClientSpy()
 		let loader = RemoteFeedImageCommentLoader(
 			url: url,
@@ -135,11 +136,7 @@ final class LoadFeedCommentsFromRemoteUseCaseTests: XCTestCase {
 		
 		return (loader, client, url)
 	}
-	
-	private func assert(requestedUrls: [URL], equalsToExpectedUrls: [URL]) {
-		XCTAssertEqual(requestedUrls, equalsToExpectedUrls)
-	}
-	
+
 	private func failure(_ error: RemoteFeedImageCommentLoader.Error) -> RemoteFeedImageCommentLoader.Result {
 		return .failure(error)
 	}

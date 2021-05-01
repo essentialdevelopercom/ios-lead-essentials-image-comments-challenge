@@ -124,6 +124,46 @@ final class FeedImageCommentPresenterTests: XCTestCase {
 		])
 	}
 	
+	func test_correctMappingFromCommentsToPresentableComments() {
+		let date = { Date() }
+		
+		let comments = [
+			FeedComment(
+				id: UUID(),
+				message: "some message",
+				createdAt: date().adding(seconds: -10),
+				author: .init(username: "some author")
+			),
+			FeedComment(
+				id: UUID(),
+				message: "some message1",
+				createdAt: date().adding(days: -7),
+				author: .init(username: "some author1")
+			)
+		]
+		
+		let expectedPresentableComments = [
+			PresentationImageComment(
+				message: "some message",
+				createdAt: "10 seconds ago",
+				author: "some author"
+			),
+			PresentationImageComment(
+				message: "some message1",
+				createdAt: "1 week ago",
+				author: "some author1"
+			)
+		]
+		
+		let presentableComments = FeedImageCommentPresenter.presentableComments(
+			from: comments,
+			date: date,
+			locale: .init(identifier: "en_US_POSIX")
+		)
+		
+		XCTAssertEqual(expectedPresentableComments, presentableComments)
+	}
+	
 	// MARK: - Helpers
 	
 	private func makeSUT(date: @escaping (() -> Date) = Date.init, locale: Locale = Locale(identifier: "en_US_POSIX"), file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageCommentPresenter, view: ViewSpy) {

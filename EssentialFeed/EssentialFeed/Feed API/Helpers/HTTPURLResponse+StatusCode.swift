@@ -13,7 +13,7 @@ extension HTTPURLResponse {
 		return statusCode == HTTPURLResponse.OK_200
 	}
 	
-	var is200x: Bool {
+	var is2xx: Bool {
 		HTTPURLResponse.OK_CODES ~= statusCode
 	}
 	

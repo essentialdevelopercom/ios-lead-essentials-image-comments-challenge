@@ -45,7 +45,7 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
-		sut.simulateTapOnErrorView()
+
 		loader.completeCommentsLoading(with: [comment0], at: 0)
 		assertThat(sut, isRendering: [comment0])
 
@@ -92,12 +92,7 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 
 		sut.simulateTapOnErrorView()
 
-		let exp = expectation(description: "Waiting for the next run loop iteration for the tap processing")
-		DispatchQueue.main.async { [weak sut] in
-			XCTAssertEqual(sut?.errorMessage, nil)
-			exp.fulfill()
-		}
-		wait(for: [exp], timeout: 0.1)
+		XCTAssertEqual(sut.errorMessage, nil)
 	}
 	
 	func test_cancelCommentsLoading_whenViewIsDismissed() {
@@ -118,7 +113,7 @@ class FeedImageCommentsUIIntegrationTests: XCTestCase {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
 		
-		let comment = makeComment(message: "message0", author: "author0")
+		let comment = makeComment()
 		
 		let exp = expectation(description: "Wait for background queue")
 		DispatchQueue.global().async {

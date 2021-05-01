@@ -14,7 +14,16 @@ extension FeedCommentsViewController {
 	private var imageCommentsSection: Int { 0 }
 	
 	func simulateTapOnErrorView() {
-		errorView.gestureRecognizers?.forEach { $0.state = .ended }
+		errorView.gestureRecognizers?.compactMap {
+			$0 as? UITapGestureRecognizer
+		}.forEach {
+			$0.state = .changed
+			RunLoop.current.run(until: Date())
+			
+			$0.state = .ended
+			RunLoop.current.run(until: Date())
+		}
+		RunLoop.current.run(until: Date())
 	}
 	
 	func simulateUserInitiatedReload() {
