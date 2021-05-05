@@ -1,0 +1,10 @@
+/* 
+  Comments.strings
+  EssentialFeed
+
+  Created by Danil Vassyakin on 3/1/21.
+  Copyright © 2021 Essential Developer. All rights reserved.
+*/
+
+"FEED_COMMENT_TITLE" = "Comentários";
+"FEED_COMMENTS_VIEW_ERROR_MESSAGE" = "Não foi possível conectar ao servidor";
