@@ -44,7 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			rootViewController: FeedUIComposer.feedComposedWith(
 				feedLoader: makeRemoteFeedLoaderWithLocalFallback,
 				imageLoader: makeLocalImageLoaderWithRemoteFallback,
-				selectionHandler: self.openComments
+				selectionHandler: showComments
 			)
 		)
 	}()
@@ -71,7 +71,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		localFeedLoader.validateCache { _ in }
 	}
 	
-	private func openComments(for feedImage: FeedImage) {
+	private func showComments(for feedImage: FeedImage) {
 		let commentsVC = ImageCommentsUIComposer.feedCommentsComposedWith(
 			commentLoader: RemoteFeedImageCommentLoader(
 				url: APIEndpoint.comments(imageId: feedImage.id).url,

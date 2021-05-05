@@ -43,6 +43,10 @@ extension FeedCommentsViewController {
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 	
+	func commentMessage(at row: Int) -> String? {
+		(commentView(at: row) as? FeedCommentCell)?.commentTextLabel?.text
+	}
+	
 	var errorMessage: String? {
 		errorView?.message
 	}
