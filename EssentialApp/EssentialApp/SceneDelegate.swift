@@ -20,10 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.defaultDirectoryURL()
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
+
+	private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 	
 	private lazy var remoteFeedLoader: RemoteLoader = {
 		RemoteLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
+			url: baseURL.appendingPathComponent("/v1/feed"),
 			client: httpClient,
 			mapper: FeedItemsMapper.map)
 	}()
@@ -60,7 +62,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	private func showComments(for image: FeedImage) {
-		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(image.id)/comments")!
+		let url = baseURL.appendingPathComponent("/v1/image/\(image.id)/comments")
 		let comments = CommentsUIComposer.commentsComposedWith(commentsLoader: makeRemoteCommentsLoader(url: url))
 		navigationController.pushViewController(comments, animated: true)
 	}
