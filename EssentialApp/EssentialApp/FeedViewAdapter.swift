@@ -9,7 +9,7 @@ import EssentialFeediOS
 final class FeedViewAdapter: ResourceView {
 	private weak var controller: ListViewController?
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
-	private var selection: (FeedImage) -> Void
+	private let selection: (FeedImage) -> Void
 	
 	init(controller: ListViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, selection: @escaping (FeedImage) -> Void) {
 		self.controller = controller
