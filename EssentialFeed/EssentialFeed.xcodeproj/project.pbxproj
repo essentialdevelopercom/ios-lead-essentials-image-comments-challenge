@@ -111,6 +111,7 @@
 		0F2E402C2641291B00999F8D /* RemoteFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2E402B2641291B00999F8D /* RemoteFeedItem.swift */; };
 		0F34DCD82642787E00F62969 /* ImageComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F34DCD72642787E00F62969 /* ImageComment.swift */; };
 		0FDE32FD2648253A00FA80E6 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FDE32FC2648253A00FA80E6 /* RemoteFeedLoader.swift */; };
+		0FDE330326482BCC00FA80E6 /* ImageCommentsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FDE330226482BCC00FA80E6 /* ImageCommentsMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -244,6 +245,7 @@
 		0F2E402B2641291B00999F8D /* RemoteFeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteFeedItem.swift; sourceTree = "<group>"; };
 		0F34DCD72642787E00F62969 /* ImageComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComment.swift; sourceTree = "<group>"; };
 		0FDE32FC2648253A00FA80E6 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
+		0FDE330226482BCC00FA80E6 /* ImageCommentsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -799,6 +801,7 @@
 			isa = PBXGroup;
 			children = (
 				0F2E3FE726411C7E00999F8D /* LoadImageCommentsFromRemoteUseCaseTests.swift */,
+				0FDE330226482BCC00FA80E6 /* ImageCommentsMapper.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -1109,6 +1112,7 @@
 			files = (
 				081C0DB122491E1200AC754E /* FeedCacheTestHelpers.swift in Sources */,
 				08EF9D25250BBA25004539C2 /* SharedLocalizationTestHelpers.swift in Sources */,
+				0FDE330326482BCC00FA80E6 /* ImageCommentsMapper.swift in Sources */,
 				08805A19233A9F8600509F19 /* URLProtocolStub.swift in Sources */,
 				081C0DAF22491A2400AC754E /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				087148AC232BDF6900D6BE1A /* FeedPresenterTests.swift in Sources */,
