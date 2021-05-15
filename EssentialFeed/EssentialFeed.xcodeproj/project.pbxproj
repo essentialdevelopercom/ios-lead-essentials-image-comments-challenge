@@ -107,6 +107,7 @@
 		56A2FB3D264FA337005CB1E1 /* ImageCommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A2FB3C264FA337005CB1E1 /* ImageCommentsPresenterTests.swift */; };
 		56A2FB43264FA3F0005CB1E1 /* ImageCommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A2FB42264FA3F0005CB1E1 /* ImageCommentsPresenter.swift */; };
 		56A2FB4E264FA4E3005CB1E1 /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 56A2FB50264FA4E3005CB1E1 /* ImageComments.strings */; };
+		56A2FB61264FA6B9005CB1E1 /* ImageCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A2FB5B264FA64E005CB1E1 /* ImageCommentsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,6 +239,7 @@
 		56A2FB4F264FA4E3005CB1E1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		56A2FB55264FA4E8005CB1E1 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		56A2FB56264FA4E9005CB1E1 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
+		56A2FB5B264FA64E005CB1E1 /* ImageCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -776,6 +778,7 @@
 			isa = PBXGroup;
 			children = (
 				56A2FB42264FA3F0005CB1E1 /* ImageCommentsPresenter.swift */,
+				56A2FB5B264FA64E005CB1E1 /* ImageCommentsViewModel.swift */,
 				56A2FB50264FA4E3005CB1E1 /* ImageComments.strings */,
 			);
 			path = Presentation;
@@ -1044,6 +1047,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56A2FB61264FA6B9005CB1E1 /* ImageCommentsViewModel.swift in Sources */,
 				08C4E986233E139400D939F8 /* LocalFeedImageDataLoader.swift in Sources */,
 				08285AFB228C17B8000A8987 /* CoreDataHelpers.swift in Sources */,
 				08C0880E21E4EF2900ACFB30 /* FeedItemsMapper.swift in Sources */,
