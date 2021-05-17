@@ -17,9 +17,8 @@ public final class ImageCommentsPresenter {
 		let formatter = RelativeDateTimeFormatter()
 		formatter.calendar = calendar
 		formatter.locale = locale
-		
+
 		return ImageCommentsViewModel(comments: comments.map { comment in
-			
 
 			return ImageCommentViewModel(message: comment.message, date: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate), username: comment.username)
 		})
