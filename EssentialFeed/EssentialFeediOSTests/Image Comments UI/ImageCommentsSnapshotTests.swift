@@ -44,7 +44,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 			ImageCommentCellController(
 				model: ImageCommentViewModel(
 					message: "Garth Pier is a Grade II listed structure in Bangor, Gwynedd, North Wales.",
-					date: "5 days age",
+					date: "5 days ago",
 					username: "a long long username")
 			),
 			ImageCommentCellController(
