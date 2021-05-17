@@ -103,6 +103,14 @@ extension ListViewController {
 		commentView(at: row)?.messageLabel.text
 	}
 
+	func commentDate(at row: Int) -> String? {
+		commentView(at: row)?.dateLabel.text
+	}
+
+	func commentUsername(at row: Int) -> String? {
+		commentView(at: row)?.usernameLabel.text
+	}
+
 	private func commentView(at row: Int) -> ImageCommentCell? {
 		guard numberOfRenderedComments() > row else {
 			return nil
