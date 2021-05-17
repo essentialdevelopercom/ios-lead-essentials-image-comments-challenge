@@ -50,7 +50,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 			ImageCommentCellController(
 				model: ImageCommentViewModel(
 					message: "good",
-					date: "3 minutes age",
+					date: "3 minutes ago",
 					username: "a.")
 			)
 		]
