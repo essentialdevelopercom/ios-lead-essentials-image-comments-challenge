@@ -27,7 +27,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 				username: "another username")
 		]
 
-		let viewModel = ImageCommentsPresenter.map(comments, currentDate: now, calendar: calendar, locale: Locale(identifier: "en_US_POISX"))
+		let viewModel = ImageCommentsPresenter.map(comments, currentDate: now, calendar: calendar, locale: Locale(identifier: "en_US_POSIX"))
 
 		XCTAssertEqual(viewModel.comments, [
 			ImageCommentViewModel(
