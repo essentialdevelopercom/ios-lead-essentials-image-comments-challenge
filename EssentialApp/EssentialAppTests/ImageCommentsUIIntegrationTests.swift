@@ -20,16 +20,16 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 
 	func test_loadCommentsActions_requestCommentsFromLoader() {
 		let (sut, loader) = makeSUT()
-		XCTAssertEqual(loader.loadComeentsCallCount, 0, "Expected no loading requests before view is loaded")
+		XCTAssertEqual(loader.loadCommentsCallCount, 0, "Expected no loading requests before view is loaded")
 
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.loadComeentsCallCount, 1, "Expected a loading request once view is loaded")
+		XCTAssertEqual(loader.loadCommentsCallCount, 1, "Expected a loading request once view is loaded")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadComeentsCallCount, 2, "Expected another loading request once user initiates a reload")
+		XCTAssertEqual(loader.loadCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadComeentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
+		XCTAssertEqual(loader.loadCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 
 	func test_loadingCommentsIndicator_isVisibleWhileLoadingComments() {
@@ -184,7 +184,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	class LoaderSpy {
 		private var requests = [PassthroughSubject<[ImageComment], Error>]()
 
-		var loadComeentsCallCount: Int {
+		var loadCommentsCallCount: Int {
 			return requests.count
 		}
 
