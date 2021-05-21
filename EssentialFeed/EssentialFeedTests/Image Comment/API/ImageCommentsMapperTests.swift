@@ -17,13 +17,17 @@ class ImageCommentsMapperTests: XCTestCase {
 		}
 	}
 
-//	func test_map_throwsErrorOn200HTTPResponseWithInvalidJSON() {
-//		let invalidJSON = Data("invalid json".utf8)
-//
-//		XCTAssertThrowsError(
-//			try ImageCommentsMapper.map(invalidJSON, from: HTTPURLResponse(statusCode: 200))
-//		)
-//	}
+	func test_map_throwsErrorOn2XXHTTPResponseWithInvalidJSON() throws {
+		let invalidJSON = Data("invalid json".utf8)
+		let samples = [200, 201, 250, 270, 299]
+
+		try samples.forEach { code in
+			XCTAssertThrowsError(
+				try ImageCommentsMapper.map(invalidJSON, from: HTTPURLResponse(statusCode: code))
+			)
+		}
+	}
+
 //
 //	func test_map_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() throws {
 //		let emptyListJSON = makeItemsJSON([])
