@@ -28,14 +28,16 @@ class ImageCommentsMapperTests: XCTestCase {
 		}
 	}
 
-//
-//	func test_map_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() throws {
-//		let emptyListJSON = makeItemsJSON([])
-//
-//		let result = try ImageCommentsMapper.map(emptyListJSON, from: HTTPURLResponse(statusCode: 200))
-//
-//		XCTAssertEqual(result, [])
-//	}
+	func test_map_deliversNoItemsOn2XXHTTPResponseWithEmptyJSONList() throws {
+		let emptyListJSON = makeItemsJSON([])
+		let samples = [200, 201, 250, 270, 299]
+
+		try samples.forEach { code in
+			let result = try ImageCommentsMapper.map(emptyListJSON, from: HTTPURLResponse(statusCode: code))
+			XCTAssertEqual(result, [])
+		}
+	}
+
 //
 //	func test_map_deliversItemsOn200HTTPResponseWithJSONItems() throws {
 //		let item1 = makeItem(
