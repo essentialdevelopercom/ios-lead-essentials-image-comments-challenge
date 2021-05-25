@@ -93,3 +93,27 @@ extension ListViewController {
 
 	private var feedImagesSection: Int { 0 }
 }
+
+extension ListViewController {
+	func numberOfRenderedComments() -> Int {
+		numberOfRows(in: commentsSection)
+	}
+
+	func commentMessage(at row: Int) -> String? {
+		commentView(at: row)?.descriptionLabel.text
+	}
+
+	func commentCreatedAt(at row: Int) -> String? {
+		commentView(at: row)?.createAtLabel.text
+	}
+
+	func commentUsername(at row: Int) -> String? {
+		commentView(at: row)?.usernameLabel.text
+	}
+
+	private func commentView(at row: Int) -> ImageCommentCell? {
+		cell(row: row, section: commentsSection) as? ImageCommentCell
+	}
+
+	private var commentsSection: Int { 0 }
+}

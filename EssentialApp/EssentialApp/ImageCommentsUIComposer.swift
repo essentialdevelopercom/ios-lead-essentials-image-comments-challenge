@@ -1,4 +1,4 @@
-//	
+//
 // Copyright © 2021 Essential Developer. All rights reserved.
 //
 
@@ -8,37 +8,32 @@ import EssentialFeed
 import EssentialFeediOS
 
 public final class ImageCommentsUIComposer {
-    private init() {}
-    
-    private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], ImageCommentsViewAdapter>
-    
-    public static func feedComposedWith(
-        feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>,
-        imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
-        selection: @escaping (FeedImage) -> Void = { _ in }
-    ) -> ListViewController {
-        let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
-        
-        let feedController = makeFeedViewController(title: FeedPresenter.title)
-        feedController.onRefresh = presentationAdapter.loadResource
-        
-        presentationAdapter.presenter = LoadResourcePresenter(
-            resourceView: ImageCommentsViewAdapter(
-                controller: feedController,
-                imageLoader: imageLoader,
-                selection: selection),
-            loadingView: WeakRefVirtualProxy(feedController),
-            errorView: WeakRefVirtualProxy(feedController),
-            mapper: FeedPresenter.map)
-        
-        return feedController
-    }
-    
-    private static func makeFeedViewController(title: String) -> ListViewController {
-        let bundle = Bundle(for: ListViewController.self)
-        let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
-        let feedController = storyboard.instantiateInitialViewController() as! ListViewController
-        feedController.title = title
-        return feedController
-    }
+	private init() {}
+
+	private typealias ImageCommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], ImageCommentsViewAdapter>
+
+	public static func commentsComposedWith(
+		commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
+	) -> ListViewController {
+		let presentationAdapter = ImageCommentsPresentationAdapter(loader: commentsLoader)
+
+		let commentsController = makeCommentsViewController(title: ImageCommentsPresenter.title)
+		commentsController.onRefresh = presentationAdapter.loadResource
+
+		presentationAdapter.presenter = LoadResourcePresenter(
+			resourceView: ImageCommentsViewAdapter(controller: commentsController),
+			loadingView: WeakRefVirtualProxy(commentsController),
+			errorView: WeakRefVirtualProxy(commentsController),
+			mapper: { ImageCommentsPresenter.map($0) })
+
+		return commentsController
+	}
+
+	private static func makeCommentsViewController(title: String) -> ListViewController {
+		let bundle = Bundle(for: ListViewController.self)
+		let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
+		let commentsController = storyboard.instantiateInitialViewController() as! ListViewController
+		commentsController.title = title
+		return commentsController
+	}
 }
