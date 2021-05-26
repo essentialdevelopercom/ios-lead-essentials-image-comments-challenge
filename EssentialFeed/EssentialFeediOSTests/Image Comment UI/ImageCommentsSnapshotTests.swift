@@ -42,24 +42,3 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		]
 	}
 }
-
-private extension ListViewController {
-	func display(_ stubs: [CommentStub]) {
-		let cells: [CellController] = stubs.map { stub in
-			let cellController = ImageCommentsCellController(viewModel: stub.viewModel)
-			stub.controller = cellController
-			return CellController(id: UUID(), cellController)
-		}
-
-		display(cells)
-	}
-}
-
-private class CommentStub {
-	let viewModel: ImageCommentViewModel
-	weak var controller: ImageCommentsCellController?
-
-	init(message: String, createdAt: String, username: String) {
-		self.viewModel = ImageCommentViewModel(message: message, createdAt: createdAt, username: username)
-	}
-}
