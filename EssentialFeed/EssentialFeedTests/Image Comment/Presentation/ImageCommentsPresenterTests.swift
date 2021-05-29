@@ -22,7 +22,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 		                ImageComment(
 		                	id: UUID(),
 		                	message: "another message",
-                            createdAt: now.adding(days: -1, calendar: calendar),
+		                	createdAt: now.adding(days: -1, calendar: calendar),
 		                	username: "another username")]
 
 		let viewModel = ImageCommentsPresenter.map(comments,
