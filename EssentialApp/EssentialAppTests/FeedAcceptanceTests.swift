@@ -53,7 +53,6 @@ class FeedAcceptanceTests: XCTestCase {
 
 	func test_onFeedImageSelection_displaysComments() {
 		let comments = showCommentsForFirstImage()
-
 		XCTAssertEqual(comments.numberOfRenderedComments(), 1)
 		XCTAssertEqual(comments.commentMessage(at: 0), makeCommentMessage())
 	}
