@@ -60,12 +60,7 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
 	}
 
 	private func cancelLoad() {
-		releaseCellForReuse()
 		delegate.didCancelImageRequest()
-	}
-
-	private func releaseCellForReuse() {
-		cell = nil
 	}
 }
 
