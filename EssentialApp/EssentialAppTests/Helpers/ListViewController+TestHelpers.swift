@@ -5,9 +5,6 @@
 import UIKit
 import EssentialFeediOS
 
-import UIKit
-import EssentialFeediOS
-
 extension ListViewController {
 	public override func loadViewIfNeeded() {
 		super.loadViewIfNeeded()

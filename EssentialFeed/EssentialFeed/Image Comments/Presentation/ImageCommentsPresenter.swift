@@ -38,7 +38,7 @@ public final class ImageCommentsPresenter {
 
 		return ImageCommentsViewModel(comments: comments.map { comment in
 			ImageCommentViewModel(message: comment.message,
-			                      date: formatter.localizedString(for: comment.created_at,
+			                      date: formatter.localizedString(for: comment.createdAt,
 			                                                      relativeTo: currentDate),
 			                      username: comment.username)
 		})
