@@ -8,7 +8,7 @@ import XCTest
 import EssentialFeed
 
 class ImageCommentsMapperTests: XCTestCase {
-	func test_map_throwsErrorOnNon200HTTPResponse() throws {
+	func test_map_throwsErrorOnNon2xxHTTPResponse() throws {
 		let json = makeItemsJSON([])
 		let samples = [199, 150, 300, 400, 500]
 
@@ -19,7 +19,7 @@ class ImageCommentsMapperTests: XCTestCase {
 		}
 	}
 
-	func test_map_throwsErrorOn200HTTPResponseWithInvalidJSON() {
+	func test_map_throwsErrorOn2xxHTTPResponseWithInvalidJSON() {
 		let invalidJSON = Data("invalid json".utf8)
 
 		XCTAssertThrowsError(
@@ -27,7 +27,7 @@ class ImageCommentsMapperTests: XCTestCase {
 		)
 	}
 
-	func test_map_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() throws {
+	func test_map_deliversNoItemsOn2xxHTTPResponseWithEmptyJSONList() throws {
 		let emptyListJSON = makeItemsJSON([])
 
 		let result = try ImageCommentsMapper.map(emptyListJSON, from: HTTPURLResponse(statusCode: 200))
@@ -35,7 +35,7 @@ class ImageCommentsMapperTests: XCTestCase {
 		XCTAssertEqual(result, [])
 	}
 
-	func test_map_deliversItemsOn200HTTPResponseWithJSONItems() throws {
+	func test_map_deliversItemsOn2xxHTTPResponseWithJSONItems() throws {
 		let item1 = makeItem(id: UUID(),
 		                     message: "a message",
 		                     createdAt: (Date(timeIntervalSince1970: 1598627222), "2020-08-28T15:07:02+00:00"),
