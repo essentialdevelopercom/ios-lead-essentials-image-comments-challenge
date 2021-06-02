@@ -7,13 +7,13 @@ import EssentialFeed
 
 class ImageCommentsPresenterTests: XCTestCase {
 	func test_title_isLocalized() {
-		XCTAssertEqual(FeedPresenter.title, localized("FEED_VIEW_TITLE"))
+		XCTAssertEqual(ImageCommentsPresenter.title, localized("FEED_VIEW_TITLE"))
 	}
 
 	func test_map_createsViewModel() {
 		let feed = uniqueImageFeed().models
 
-		let viewModel = FeedPresenter.map(feed)
+		let viewModel = ImageCommentsPresenter.map(feed)
 
 		XCTAssertEqual(viewModel.feed, feed)
 	}
