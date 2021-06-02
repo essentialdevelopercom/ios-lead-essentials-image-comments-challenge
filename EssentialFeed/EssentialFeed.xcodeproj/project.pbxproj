@@ -108,6 +108,7 @@
 		58501A2E2667383A006FEC4F /* ImageCommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58501A2D2667383A006FEC4F /* ImageCommentsPresenter.swift */; };
 		58501A312667390A006FEC4F /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 58501A332667390A006FEC4F /* ImageComments.strings */; };
 		58501A3726673AD5006FEC4F /* ImageCommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58501A3626673AD5006FEC4F /* ImageCommentsViewModel.swift */; };
+		58501A3926673C4F006FEC4F /* ImageCommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58501A3826673C4F006FEC4F /* ImageCommentsLocalizationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -240,6 +241,7 @@
 		58501A3426673912006FEC4F /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		58501A3526673918006FEC4F /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
 		58501A3626673AD5006FEC4F /* ImageCommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsViewModel.swift; sourceTree = "<group>"; };
+		58501A3826673C4F006FEC4F /* ImageCommentsLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLocalizationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -770,6 +772,7 @@
 			isa = PBXGroup;
 			children = (
 				58501A2B26673690006FEC4F /* ImageCommentsPresenterTests.swift */,
+				58501A3826673C4F006FEC4F /* ImageCommentsLocalizationTests.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -1117,6 +1120,7 @@
 				080F9A3F2531DDFB00EAD475 /* FeedEndpointTests.swift in Sources */,
 				0875468C2272340500542C32 /* FeedStoreSpecs.swift in Sources */,
 				08EF9D17250BB0E4004539C2 /* LoadResourcePresenterTests.swift in Sources */,
+				58501A3926673C4F006FEC4F /* ImageCommentsLocalizationTests.swift in Sources */,
 				0844768F21FCB24E00439BE9 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				08285AEF228BF7E3000A8987 /* CoreDataFeedStoreTests.swift in Sources */,
 				0875468E227234AB00542C32 /* XCTestCase+FeedStoreSpecs.swift in Sources */,
