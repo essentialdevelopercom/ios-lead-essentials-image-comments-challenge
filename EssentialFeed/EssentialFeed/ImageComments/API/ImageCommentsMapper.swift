@@ -9,15 +9,15 @@ public final class ImageCommentsMapper {
 			let id: UUID
 			let message: String
 			let created_at: Date
-			let author: RemoteAuthorItem
+			let author: Author
 		}
 
-		private struct RemoteAuthorItem: Decodable {
+		private struct Author: Decodable {
 			let username: String
 		}
 
 		var comments: [ImageComment] {
-			items.map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, author: Author(username: $0.author.username)) }
+			items.map { ImageComment(id: $0.id, message: $0.message, createdAt: $0.created_at, username: $0.author.username) }
 		}
 	}
 

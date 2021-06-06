@@ -67,9 +67,7 @@ class ImageCommentsMapperTests: XCTestCase {
 			id: id,
 			message: message,
 			createdAt: createdAt,
-			author: Author(
-				username: username
-			)
+			username: username
 		)
 
 		let formatter = ISO8601DateFormatter()

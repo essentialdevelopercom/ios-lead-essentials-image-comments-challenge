@@ -18,7 +18,7 @@ public final class ImageCommentsPresenter {
 			ImageCommentViewModel(
 				message: $0.message,
 				date: formatter.localizedString(for: $0.createdAt, relativeTo: currentDate),
-				username: $0.author.username
+				username: $0.username
 			)
 		})
 	}

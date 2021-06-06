@@ -17,7 +17,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 
 	private func uniqueImageComment() -> ImageComment {
 		let currentDate = Date()
-		return ImageComment(id: UUID(), message: "a message", createdAt: currentDate, author: Author(username: "an username"))
+		return ImageComment(id: UUID(), message: "a message", createdAt: currentDate, username: "an username")
 	}
 
 	private func uniqueImageComments() -> (models: [ImageComment], viewModels: [ImageCommentViewModel]) {
@@ -28,7 +28,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 			ImageCommentViewModel(
 				message: $0.message,
 				date: formatter.localizedString(for: $0.createdAt, relativeTo: currentDate),
-				username: $0.author.username) }
+				username: $0.username) }
 		return (models, viewModels)
 	}
 
