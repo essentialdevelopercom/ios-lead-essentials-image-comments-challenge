@@ -83,8 +83,8 @@ class ImageCommentsMapperTests: XCTestCase {
 		return (item, json)
 	}
 
-	private func assertThat(data: Data, expectedResult: [ImageComment], with statusCode: Int) throws {
+	private func assertThat(data: Data, expectedResult: [ImageComment], with statusCode: Int, file: StaticString = #filePath, line: UInt = #line) throws {
 		let result = try ImageCommentsMapper.map(data, from: HTTPURLResponse(statusCode: statusCode))
-		XCTAssertEqual(result, expectedResult)
+		XCTAssertEqual(result, expectedResult, file: file, line: line)
 	}
 }
