@@ -175,14 +175,16 @@ extension ImageCommentsUIIntegrationTests {
 			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedImageCommentsViews()) instead.", file: file, line: line)
 		}
 
-		comments.enumerated().forEach { index, image in
+		let viewModel = ImageCommentsPresenter.map(comments)
+
+		viewModel.comments.enumerated().forEach { index, image in
 			assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
 		}
 
 		executeRunLoopToCleanUpReferences()
 	}
 
-	func assertThat(_ sut: ListViewController, hasViewConfiguredFor comment: ImageComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+	func assertThat(_ sut: ListViewController, hasViewConfiguredFor comment: ImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
 		let view = sut.imageCommentView(at: index)
 
 		guard let cell = view else {
@@ -191,7 +193,9 @@ extension ImageCommentsUIIntegrationTests {
 
 		XCTAssertEqual(cell.labelMessage.text, comment.message, "Expected message text to be \(String(describing: comment.message)) for comment  view at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(cell.labelUsername.text, comment.username, "Expected username text to be \(String(describing: comment.username)) for comment view at index (\(index)", file: file, line: line)
+		XCTAssertEqual(cell.labelUsername.text, comment.username, "Expected username text to be \(String(describing: comment.username)) for comment view at index (\(index))", file: file, line: line)
+
+		XCTAssertEqual(cell.labelDate.text, comment.date, "Expected date text to be \(String(describing: comment.date)) for comment view at index (\(index))", file: file, line: line)
 	}
 
 	private func executeRunLoopToCleanUpReferences() {
