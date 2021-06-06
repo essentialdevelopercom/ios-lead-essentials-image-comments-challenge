@@ -1,6 +1,7 @@
 
 import XCTest
 import UIKit
+import Combine
 import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
@@ -14,34 +15,18 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		XCTAssertEqual(sut.title, imageCommentsTitle)
 	}
 
-	override func test_imageSelection_notifiesHandler() {
-		let image0 = makeImage()
-		let image1 = makeImage()
-		var selectedImages = [FeedImage]()
-		let (sut, loader) = makeSUT(selection: { selectedImages.append($0) })
-
-		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1], at: 0)
-
-		sut.simulateTapOnFeedImage(at: 0)
-		XCTAssertEqual(selectedImages, [image0])
-
-		sut.simulateTapOnFeedImage(at: 1)
-		XCTAssertEqual(selectedImages, [image0, image1])
-	}
-
-	override func test_loadFeedActions_requestFeedFromLoader() {
+	func test_loadImageCommentsActions_requestImageCommentFromLoader() {
 		let (sut, loader) = makeSUT()
-		XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded")
+		XCTAssertEqual(loader.loadCommentsCallCount, 0, "Expected no loading requests before view is loaded")
 
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected a loading request once view is loaded")
+		XCTAssertEqual(loader.loadCommentsCallCount, 1, "Expected a loading request once view is loaded")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected another loading request once user initiates a reload")
+		XCTAssertEqual(loader.loadCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected yet another loading request once user initiates another reload")
+		XCTAssertEqual(loader.loadCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 
 	override func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
@@ -50,59 +35,59 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		sut.loadViewIfNeeded()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
 
-		loader.completeFeedLoading(at: 0)
+		loader.completeCommentsLoading(at: 0)
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
 
 		sut.simulateUserInitiatedReload()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
 
-		loader.completeFeedLoadingWithError(at: 1)
+		loader.completeCommentsLoadingWithError(at: 1)
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	}
 
-	override func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
-		let image0 = makeImage(description: "a description", location: "a location")
-		let image1 = makeImage(description: nil, location: "another location")
-		let image2 = makeImage(description: "another description", location: nil)
-		let image3 = makeImage(description: nil, location: nil)
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
+		let comment0 = makeComment(message: "message", date: Date(), username: "username")
+		let comment1 = makeComment(message: "message 1", date: Date().addingTimeInterval(-100), username: "username 1")
+		let comment2 = makeComment(message: "message 2", date: Date().addingTimeInterval(-1000), username: "username 2")
+		let comment3 = makeComment(message: "message 3", date: Date().addingTimeInterval(-10000), username: "username 3")
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		assertThat(sut, isRendering: [])
+		assertThat(sut, isRendering: [ImageComment]())
 
-		loader.completeFeedLoading(with: [image0], at: 0)
-		assertThat(sut, isRendering: [image0])
-
-		sut.simulateUserInitiatedReload()
-		loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
-		assertThat(sut, isRendering: [image0, image1, image2, image3])
-	}
-
-	override func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
-		let image0 = makeImage()
-		let image1 = makeImage()
-		let (sut, loader) = makeSUT()
-
-		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1], at: 0)
-		assertThat(sut, isRendering: [image0, image1])
+		loader.completeCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeFeedLoading(with: [], at: 1)
-		assertThat(sut, isRendering: [])
+		loader.completeCommentsLoading(with: [comment0, comment1, comment2, comment3], at: 1)
+		assertThat(sut, isRendering: [comment0, comment1, comment2, comment3])
 	}
+
+//	override func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
+//		let comment0 = makeComment()
+//		let comment1 = makeComment()
+//		let (sut, loader) = makeSUT()
+//
+//		sut.loadViewIfNeeded()
+//		loader.completeCommentsLoading(with: [comment0, comment1], at: 0)
+//		assertThat(sut, isRendering: [comment0, comment1])
+//
+//		sut.simulateUserInitiatedReload()
+//		loader.completeCommentsLoading(with: [], at: 1)
+//		assertThat(sut, isRendering: [ImageComment]())
+//	}
 
 	override func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
-		let image0 = makeImage()
+		let comment0 = makeComment()
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0], at: 0)
-		assertThat(sut, isRendering: [image0])
+		loader.completeCommentsLoading(with: [comment0], at: 0)
+		assertThat(sut, isRendering: [comment0])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeFeedLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [image0])
+		loader.completeCommentsLoadingWithError(at: 1)
+		assertThat(sut, isRendering: [comment0])
 	}
 
 	override func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
@@ -111,7 +96,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 
 		let exp = expectation(description: "Wait for background queue")
 		DispatchQueue.global().async {
-			loader.completeFeedLoading(at: 0)
+			loader.completeCommentsLoading(at: 0)
 			exp.fulfill()
 		}
 		wait(for: [exp], timeout: 1.0)
@@ -123,7 +108,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(sut.errorMessage, nil)
 
-		loader.completeFeedLoadingWithError(at: 0)
+		loader.completeCommentsLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, loadError)
 
 		sut.simulateUserInitiatedReload()
@@ -136,7 +121,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(sut.errorMessage, nil)
 
-		loader.completeFeedLoadingWithError(at: 0)
+		loader.completeCommentsLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, loadError)
 
 		sut.simulateErrorViewTap()
@@ -145,23 +130,72 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 
 	// MARK: - Helpers
 
-	private func makeSUT(
-		selection: @escaping (FeedImage) -> Void = { _ in },
-		file: StaticString = #filePath,
-		line: UInt = #line
-	) -> (sut: ListViewController, loader: LoaderSpy) {
+	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: ListViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = CommentsUIComposer.feedComposedWith(
-			feedLoader: loader.loadPublisher,
-			imageLoader: loader.loadImageDataPublisher,
-			selection: selection
+		let sut = CommentsUIComposer.commentsComposedWith(
+			loader: loader.loadPublisher
 		)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
 
-	private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
-		return FeedImage(id: UUID(), description: description, location: location, url: url)
+	private func makeComment(message: String = "a message", date: Date = Date(), username: String = "username") -> ImageComment {
+		ImageComment(id: UUID(), message: message, createdAt: date, username: username)
+	}
+
+	private class LoaderSpy {
+		private var requests = [PassthroughSubject<[ImageComment], Error>]()
+
+		var loadCommentsCallCount: Int {
+			return requests.count
+		}
+
+		func loadPublisher() -> AnyPublisher<[ImageComment], Error> {
+			let publisher = PassthroughSubject<[ImageComment], Error>()
+			requests.append(publisher)
+			return publisher.eraseToAnyPublisher()
+		}
+
+		func completeCommentsLoading(with comments: [ImageComment] = [], at index: Int = 0) {
+			requests[index].send(comments)
+		}
+
+		func completeCommentsLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			requests[index].send(completion: .failure(error))
+		}
+	}
+}
+
+extension ImageCommentsUIIntegrationTests {
+	func assertThat(_ sut: ListViewController, isRendering comments: [ImageComment], file: StaticString = #filePath, line: UInt = #line) {
+		sut.view.enforceLayoutCycle()
+
+		guard sut.numberOfRenderedImageCommentsViews() == comments.count else {
+			return XCTFail("Expected \(comments.count) comments, got \(sut.numberOfRenderedImageCommentsViews()) instead.", file: file, line: line)
+		}
+
+		comments.enumerated().forEach { index, image in
+			assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
+		}
+
+		executeRunLoopToCleanUpReferences()
+	}
+
+	func assertThat(_ sut: ListViewController, hasViewConfiguredFor comment: ImageComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
+		let view = sut.imageCommentView(at: index)
+
+		guard let cell = view else {
+			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
+		}
+
+		XCTAssertEqual(cell.labelMessage.text, comment.message, "Expected message text to be \(String(describing: comment.message)) for comment  view at index (\(index))", file: file, line: line)
+
+		XCTAssertEqual(cell.labelUsername.text, comment.username, "Expected username text to be \(String(describing: comment.username)) for comment view at index (\(index)", file: file, line: line)
+	}
+
+	private func executeRunLoopToCleanUpReferences() {
+		RunLoop.current.run(until: Date())
 	}
 }

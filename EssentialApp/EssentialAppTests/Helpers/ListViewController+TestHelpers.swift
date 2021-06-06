@@ -93,3 +93,15 @@ extension ListViewController {
 
 	private var feedImagesSection: Int { 0 }
 }
+
+extension ListViewController {
+	func imageCommentView(at row: Int) -> ImageCommentCell? {
+		cell(row: row, section: ImageCommentsSection) as? ImageCommentCell
+	}
+
+	func numberOfRenderedImageCommentsViews() -> Int {
+		numberOfRows(in: ImageCommentsSection)
+	}
+
+	private var ImageCommentsSection: Int { 0 }
+}
