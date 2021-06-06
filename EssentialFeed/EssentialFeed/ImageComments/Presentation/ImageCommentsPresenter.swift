@@ -10,7 +10,16 @@ public final class ImageCommentsPresenter {
 			comment: "Title for the image comments view")
 	}
 
-	public static func map(_ feed: [FeedImage]) -> FeedViewModel {
-		FeedViewModel(feed: feed)
+	public static func map(_ comments: [ImageComment]) -> ImageCommentsViewModel {
+		let formatter = RelativeDateTimeFormatter()
+		let currentDate = Date()
+
+		return ImageCommentsViewModel(comments: comments.map {
+			ImageCommentViewModel(
+				message: $0.message,
+				date: formatter.localizedString(for: $0.createdAt, relativeTo: currentDate),
+				username: $0.author.username
+			)
+		})
 	}
 }
