@@ -6,8 +6,8 @@ import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
-class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
-	func test_imageCommentsView_hasTitle() {
+class ImageCommentsUIIntegrationTests: XCTestCase {
+	func test_commentsView_hasTitle() {
 		let (sut, _) = makeSUT()
 
 		sut.loadViewIfNeeded()
@@ -15,7 +15,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		XCTAssertEqual(sut.title, imageCommentsTitle)
 	}
 
-	func test_loadImageCommentsActions_requestImageCommentFromLoader() {
+	func test_loadCommentsActions_requestCommentFromLoader() {
 		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadCommentsCallCount, 0, "Expected no loading requests before view is loaded")
 
@@ -29,7 +29,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		XCTAssertEqual(loader.loadCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 
-	override func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
+	func test_loadingCommentsIndicator_isVisibleWhileLoadingFeed() {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
@@ -63,21 +63,20 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		assertThat(sut, isRendering: [comment0, comment1, comment2, comment3])
 	}
 
-//	override func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
-//		let comment0 = makeComment()
-//		let comment1 = makeComment()
-//		let (sut, loader) = makeSUT()
-//
-//		sut.loadViewIfNeeded()
-//		loader.completeCommentsLoading(with: [comment0, comment1], at: 0)
-//		assertThat(sut, isRendering: [comment0, comment1])
-//
-//		sut.simulateUserInitiatedReload()
-//		loader.completeCommentsLoading(with: [], at: 1)
-//		assertThat(sut, isRendering: [ImageComment]())
-//	}
+	func test_loadCommentsCompletion_rendersSuccessfullyLoadedEmptyCommentsAfterNonEmptyComments() {
+		let comment = makeComment()
+		let (sut, loader) = makeSUT()
 
-	override func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
+		sut.loadViewIfNeeded()
+		loader.completeCommentsLoading(with: [comment], at: 0)
+		assertThat(sut, isRendering: [comment])
+
+		sut.simulateUserInitiatedReload()
+		loader.completeCommentsLoading(with: [], at: 1)
+		assertThat(sut, isRendering: [ImageComment]())
+	}
+
+	func test_loadCommentsCompletion_doesNotAlterCurrentRenderingStateOnError() {
 		let comment0 = makeComment()
 		let (sut, loader) = makeSUT()
 
@@ -90,7 +89,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		assertThat(sut, isRendering: [comment0])
 	}
 
-	override func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+	func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
 
@@ -102,7 +101,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		wait(for: [exp], timeout: 1.0)
 	}
 
-	override func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+	func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
@@ -115,7 +114,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 
-	override func test_tapOnErrorView_hidesErrorMessage() {
+	func test_tapOnErrorView_hidesErrorMessage() {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
