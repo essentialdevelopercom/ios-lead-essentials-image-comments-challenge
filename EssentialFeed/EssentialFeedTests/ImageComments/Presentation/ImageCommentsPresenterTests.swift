@@ -8,28 +8,32 @@ class ImageCommentsPresenterTests: XCTestCase {
 	}
 
 	func test_map_createsViewModel() {
-		let (comments, viewModels) = uniqueImageComments()
+		let currentDate = Date()
+		let calendar = Calendar(identifier: .gregorian)
+		let locale = Locale(identifier: "en_US_POSIX")
 
-		let viewModel = ImageCommentsPresenter.map(comments)
+		let date1 = currentDate.adding(seconds: -20)
+		let date2 = currentDate.adding(days: -5)
+
+		let comment1 = ImageComment(id: UUID(), message: "a message", createdAt: date1, username: "an username")
+		let comment2 = ImageComment(id: UUID(), message: "another message", createdAt: date2, username: "another username")
+
+		let viewModel = ImageCommentsPresenter.map([comment1, comment2], currentDate: currentDate, calendar: calendar, locale: locale)
+
+		let viewModels = [
+			ImageCommentViewModel(
+				message: "a message",
+				date: "20 seconds ago",
+				username: "an username"
+			),
+			ImageCommentViewModel(
+				message: "another message",
+				date: "5 days ago",
+				username: "another username"
+			)
+		]
 
 		XCTAssertEqual(viewModel.comments, viewModels)
-	}
-
-	private func uniqueImageComment() -> ImageComment {
-		let currentDate = Date()
-		return ImageComment(id: UUID(), message: "a message", createdAt: currentDate, username: "an username")
-	}
-
-	private func uniqueImageComments() -> (models: [ImageComment], viewModels: [ImageCommentViewModel]) {
-		let models = [uniqueImageComment(), uniqueImageComment()]
-		let formatter = RelativeDateTimeFormatter()
-		let currentDate = Date()
-		let viewModels = models.map {
-			ImageCommentViewModel(
-				message: $0.message,
-				date: formatter.localizedString(for: $0.createdAt, relativeTo: currentDate),
-				username: $0.username) }
-		return (models, viewModels)
 	}
 
 	// MARK: - Helpers
