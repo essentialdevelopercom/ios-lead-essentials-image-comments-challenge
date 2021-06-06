@@ -51,6 +51,19 @@ class FeedAcceptanceTests: XCTestCase {
 		XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
 	}
 
+	func test_onSelectionImage_openComments() {
+		let feed = launch(httpClient: .online(response), store: .empty)
+
+		feed.simulateTapOnFeedImage(at: 0)
+		RunLoop.current.run(until: Date())
+
+		let nav = feed.navigationController
+		let vc = nav?.topViewController as! ListViewController
+
+		XCTAssertEqual(vc.numberOfRenderedImageCommentsViews(), 1)
+		XCTAssertEqual(vc.imageCommentView(at: 0)?.labelMessage.text, makeCommentMessage())
+	}
+
 	// MARK: - Helpers
 
 	private func launch(
@@ -83,6 +96,9 @@ class FeedAcceptanceTests: XCTestCase {
 		case "/essential-feed/v1/feed":
 			return makeFeedData()
 
+		case "/essential-feed/v1/image/2AB2AE66-A4B7-4A16-B374-51BBAC8DB086/comments":
+			return makeCommentsData()
+
 		default:
 			return Data()
 		}
@@ -97,5 +113,22 @@ class FeedAcceptanceTests: XCTestCase {
 			["id": "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086", "image": "http://feed.com/image-1"],
 			["id": "A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A", "image": "http://feed.com/image-2"]
 		]])
+	}
+
+	private func makeCommentsData() -> Data {
+		return try! JSONSerialization.data(withJSONObject: ["items": [
+			[
+				"id": UUID().uuidString,
+				"message": makeCommentMessage(),
+				"created_at": "2021-06-06T12:30:15+0000",
+				"author": [
+					"username": "a username"
+				]
+			],
+		]])
+	}
+
+	private func makeCommentMessage() -> String {
+		"a message"
 	}
 }
