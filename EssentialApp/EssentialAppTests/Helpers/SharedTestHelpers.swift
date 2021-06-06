@@ -32,3 +32,7 @@ var loadError: String {
 var feedTitle: String {
 	FeedPresenter.title
 }
+
+var imageCommentsTitle: String {
+	ImageCommentsPresenter.title
+}
