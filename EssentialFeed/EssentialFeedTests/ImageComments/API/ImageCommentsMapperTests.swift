@@ -37,35 +37,52 @@ class ImageCommentsMapperTests: XCTestCase {
 		}
 	}
 
-	func test_map_deliversItemsOn200HTTPResponseWithJSONItems() throws {
-		let item1 = makeItem(
+	func test_map_deliversItemsOn2xxHTTPResponseWithJSONItems() throws {
+		let item1 = makeComment(
 			id: UUID(),
-			imageURL: URL(string: "http://a-url.com")!)
+			message: "a message",
+			createdAt: Date(),
+			username: "a username"
+		)
 
-		let item2 = makeItem(
+		let item2 = makeComment(
 			id: UUID(),
-			description: "a description",
-			location: "a location",
-			imageURL: URL(string: "http://another-url.com")!)
-
+			message: "another message",
+			createdAt: Date(),
+			username: "another username"
+		)
 		let json = makeItemsJSON([item1.json, item2.json])
 
-		let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: 200))
-
-		XCTAssertEqual(result, [item1.model, item2.model])
+		let samples = [200, 201, 204, 250, 299]
+		try samples.forEach { code in
+			let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: code))
+			XCTAssertEqual(result, [item1.model, item2.model])
+		}
 	}
 
 	// MARK: - Helpers
 
-	private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
-		let item = FeedImage(id: id, description: description, location: location, url: imageURL)
+	private func makeComment(id: UUID, message: String = "a message", createdAt: Date = Date(), username: String = "a username") -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(
+			id: id,
+			message: message,
+			createdAt: createdAt,
+			author: Author(
+				username: username
+			)
+		)
 
-		let json = [
+		let formatter = ISO8601DateFormatter()
+		let date = formatter.string(from: createdAt)
+
+		let json: [String: Any] = [
 			"id": id.uuidString,
-			"description": description,
-			"location": location,
-			"image": imageURL.absoluteString
-		].compactMapValues { $0 }
+			"message": message,
+			"created_at": date,
+			"author": [
+				"username": username
+			]
+		]
 
 		return (item, json)
 	}
