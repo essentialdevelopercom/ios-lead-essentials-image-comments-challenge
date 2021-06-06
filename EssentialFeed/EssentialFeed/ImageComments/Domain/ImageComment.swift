@@ -2,10 +2,10 @@
 import Foundation
 
 public struct ImageComment: Equatable {
-	let id: UUID
-	let message: String
-	let createdAt: Date
-	let author: Author
+	public let id: UUID
+	public let message: String
+	public let createdAt: Date
+	public let author: Author
 
 	public init(id: UUID, message: String, createdAt: Date, author: Author) {
 		self.id = id
@@ -20,7 +20,7 @@ public struct ImageComment: Equatable {
 }
 
 public struct Author {
-	let username: String
+	public let username: String
 
 	public init(username: String) {
 		self.username = username
