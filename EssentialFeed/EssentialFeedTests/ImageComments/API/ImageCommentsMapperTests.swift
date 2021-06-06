@@ -32,8 +32,7 @@ class ImageCommentsMapperTests: XCTestCase {
 		let samples = [200, 201, 204, 250, 299]
 
 		try samples.forEach { code in
-			let result = try ImageCommentsMapper.map(emptyListJSON, from: HTTPURLResponse(statusCode: code))
-			XCTAssertEqual(result, [])
+			try assertThat(data: emptyListJSON, expectedResult: [], with: code)
 		}
 	}
 
@@ -55,8 +54,7 @@ class ImageCommentsMapperTests: XCTestCase {
 
 		let samples = [200, 201, 204, 250, 299]
 		try samples.forEach { code in
-			let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: code))
-			XCTAssertEqual(result, [item1.model, item2.model])
+			try assertThat(data: json, expectedResult: [item1.model, item2.model], with: code)
 		}
 	}
 
@@ -83,5 +81,10 @@ class ImageCommentsMapperTests: XCTestCase {
 		]
 
 		return (item, json)
+	}
+
+	private func assertThat(data: Data, expectedResult: [ImageComment], with statusCode: Int) throws {
+		let result = try ImageCommentsMapper.map(data, from: HTTPURLResponse(statusCode: statusCode))
+		XCTAssertEqual(result, expectedResult)
 	}
 }
