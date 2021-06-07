@@ -39,35 +39,43 @@ class ImageCommentsMapperTests: XCTestCase {
 		}
 	}
 
-	func test_map_deliversItemsOn200HTTPResponseWithJSONItems() throws {
+	func test_map_deliversItemsOn2xxHTTPResponseWithJSONItems() throws {
 		let item1 = makeItem(
 			id: UUID(),
-			imageURL: URL(string: "http://a-url.com")!)
+			message: "a message",
+			createdAt: (Date(timeIntervalSince1970: 1619818183), "2021-04-30T21:29:43+00:00"),
+			username: "a username")
 
 		let item2 = makeItem(
 			id: UUID(),
-			description: "a description",
-			location: "a location",
-			imageURL: URL(string: "http://another-url.com")!)
+			message: "another message",
+			createdAt: (Date(timeIntervalSince1970: 1619912749), "2021-05-01T23:45:49+00:00"),
+			username: "another username")
 
 		let json = makeItemsJSON([item1.json, item2.json])
 
-		let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: 200))
+		let samples = [200, 201, 250, 270, 299]
 
-		XCTAssertEqual(result, [item1.model, item2.model])
+		try samples.forEach { code in
+			let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: code))
+
+			XCTAssertEqual(result, [item1.model, item2.model])
+		}
 	}
 
 	// MARK: - Helpers
 
-	private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
-		let item = FeedImage(id: id, description: description, location: location, url: imageURL)
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), username: String) -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, username: username)
 
-		let json = [
+		let json: [String: Any] = [
 			"id": id.uuidString,
-			"description": description,
-			"location": location,
-			"image": imageURL.absoluteString
-		].compactMapValues { $0 }
+			"message": message,
+			"created_at": createdAt.iso8601String,
+			"author": [
+				"username": username
+			]
+		]
 
 		return (item, json)
 	}
