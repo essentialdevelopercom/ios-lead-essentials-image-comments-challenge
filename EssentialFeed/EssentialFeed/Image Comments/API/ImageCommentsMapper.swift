@@ -25,10 +25,14 @@ public final class ImageCommentsMapper {
 	}
 
 	public static func map(_ data: Data, from response: HTTPURLResponse) throws -> [FeedImage] {
-		guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data) else {
+		guard isOK(response: response), let root = try? JSONDecoder().decode(Root.self, from: data) else {
 			throw Error.invalidData
 		}
 
 		return root.images
+	}
+
+	private static func isOK(response: HTTPURLResponse) -> Bool {
+		return 200 <= response.statusCode && 299 >= response.statusCode
 	}
 }
