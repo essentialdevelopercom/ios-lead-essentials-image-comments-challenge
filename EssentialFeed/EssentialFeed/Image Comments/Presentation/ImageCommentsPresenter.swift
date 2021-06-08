@@ -4,6 +4,10 @@
 
 import Foundation
 
+public struct ImageCommentsViewModel {
+	public let comments: [ImageComment]
+}
+
 public final class ImageCommentsPresenter {
 	public static var title: String {
 		NSLocalizedString(
@@ -13,7 +17,7 @@ public final class ImageCommentsPresenter {
 			comment: "Title for the Image Comments view")
 	}
 
-	public static func map(_ feed: [FeedImage]) -> FeedViewModel {
-		FeedViewModel(feed: feed)
+	public static func map(_ comments: [ImageComment]) -> ImageCommentsViewModel {
+		ImageCommentsViewModel(comments: comments)
 	}
 }
