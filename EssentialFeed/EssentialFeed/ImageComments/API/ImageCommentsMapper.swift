@@ -29,7 +29,7 @@ public final class ImageCommentsMapper {
 		let decoder = JSONDecoder()
 		decoder.dateDecodingStrategy = .iso8601
 
-		guard ImageCommentsMapper.isOK(response), let root = try? decoder.decode(Root.self, from: data) else {
+		guard isOK(response), let root = try? decoder.decode(Root.self, from: data) else {
 			throw Error.invalidData
 		}
 
