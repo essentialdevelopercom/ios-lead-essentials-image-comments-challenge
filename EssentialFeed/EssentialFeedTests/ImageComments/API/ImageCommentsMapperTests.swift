@@ -40,14 +40,14 @@ class ImageCommentsMapperTests: XCTestCase {
 		let item1 = makeComment(
 			id: UUID(),
 			message: "a message",
-			createdAt: Date(),
+			createdAt: (Date(timeIntervalSince1970: 1623173481), "2021-06-08T17:31:21+00:00"),
 			username: "a username"
 		)
 
 		let item2 = makeComment(
 			id: UUID(),
 			message: "another message",
-			createdAt: Date(),
+			createdAt: (Date(timeIntervalSince1970: 1623100000), "2021-06-07T21:06:40+00:00"),
 			username: "another username"
 		)
 		let json = makeItemsJSON([item1.json, item2.json])
@@ -60,21 +60,18 @@ class ImageCommentsMapperTests: XCTestCase {
 
 	// MARK: - Helpers
 
-	private func makeComment(id: UUID, message: String = "a message", createdAt: Date = Date(), username: String = "a username") -> (model: ImageComment, json: [String: Any]) {
+	private func makeComment(id: UUID, message: String = "a message", createdAt: (date: Date, iso8601String: String), username: String = "a username") -> (model: ImageComment, json: [String: Any]) {
 		let item = ImageComment(
 			id: id,
 			message: message,
-			createdAt: createdAt,
+			createdAt: createdAt.date,
 			username: username
 		)
-
-		let formatter = ISO8601DateFormatter()
-		let date = formatter.string(from: createdAt)
 
 		let json: [String: Any] = [
 			"id": id.uuidString,
 			"message": message,
-			"created_at": date,
+			"created_at": createdAt.iso8601String,
 			"author": [
 				"username": username
 			]
