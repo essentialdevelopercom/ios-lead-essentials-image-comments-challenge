@@ -96,12 +96,12 @@ extension ListViewController {
 
 extension ListViewController {
 	func imageCommentView(at row: Int) -> ImageCommentCell? {
-		cell(row: row, section: ImageCommentsSection) as? ImageCommentCell
+		cell(row: row, section: imageCommentsSection) as? ImageCommentCell
 	}
 
 	func numberOfRenderedImageCommentsViews() -> Int {
-		numberOfRows(in: ImageCommentsSection)
+		numberOfRows(in: imageCommentsSection)
 	}
 
-	private var ImageCommentsSection: Int { 0 }
+	private var imageCommentsSection: Int { 0 }
 }
