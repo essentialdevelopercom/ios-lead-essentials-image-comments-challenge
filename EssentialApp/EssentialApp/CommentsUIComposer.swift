@@ -37,7 +37,7 @@ public final class CommentsUIComposer {
 	}
 }
 
-final class CommentsAdapter: ResourceView {
+private final class CommentsAdapter: ResourceView {
 	private weak var controller: ListViewController?
 
 	init(controller: ListViewController) {
