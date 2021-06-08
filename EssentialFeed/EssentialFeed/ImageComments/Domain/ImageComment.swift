@@ -13,8 +13,4 @@ public struct ImageComment: Equatable {
 		self.createdAt = createdAt
 		self.username = username
 	}
-
-	public static func == (lhs: ImageComment, rhs: ImageComment) -> Bool {
-		lhs.id == rhs.id
-	}
 }
