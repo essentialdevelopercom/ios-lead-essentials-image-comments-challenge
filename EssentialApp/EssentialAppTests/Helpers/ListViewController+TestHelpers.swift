@@ -96,15 +96,15 @@ extension ListViewController {
 
 extension ListViewController {
 	func imageCommentMessage(at row: Int) -> String? {
-		imageCommentView(at: row)?.labelMessage.text
+		imageCommentView(at: row)?.messageLabel.text
 	}
 
 	func imageCommentDate(at row: Int) -> String? {
-		imageCommentView(at: row)?.labelDate.text
+		imageCommentView(at: row)?.dateLabel.text
 	}
 
 	func imageCommentUsername(at row: Int) -> String? {
-		imageCommentView(at: row)?.labelUsername.text
+		imageCommentView(at: row)?.usernameLabel.text
 	}
 
 	func numberOfRenderedImageCommentsViews() -> Int {
