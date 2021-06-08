@@ -207,17 +207,11 @@ extension ImageCommentsUIIntegrationTests {
 	}
 
 	func assertThat(_ sut: ListViewController, hasViewConfiguredFor comment: ImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
-		let view = sut.imageCommentView(at: index)
+		XCTAssertEqual(sut.imageCommentMessage(at: index), comment.message, "Expected message text to be \(String(describing: comment.message)) for comment at index (\(index))", file: file, line: line)
 
-		guard let cell = view else {
-			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
-		}
+		XCTAssertEqual(sut.imageCommentUsername(at: index), comment.username, "Expected username text to be \(String(describing: comment.username)) for comment at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(cell.labelMessage.text, comment.message, "Expected message text to be \(String(describing: comment.message)) for comment  view at index (\(index))", file: file, line: line)
-
-		XCTAssertEqual(cell.labelUsername.text, comment.username, "Expected username text to be \(String(describing: comment.username)) for comment view at index (\(index))", file: file, line: line)
-
-		XCTAssertEqual(cell.labelDate.text, comment.date, "Expected date text to be \(String(describing: comment.date)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(sut.imageCommentDate(at: index), comment.date, "Expected date text to be \(String(describing: comment.date)) for comment at index (\(index))", file: file, line: line)
 	}
 
 	private func executeRunLoopToCleanUpReferences() {

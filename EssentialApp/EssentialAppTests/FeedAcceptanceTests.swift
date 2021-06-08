@@ -61,7 +61,7 @@ class FeedAcceptanceTests: XCTestCase {
 		let vc = nav?.topViewController as! ListViewController
 
 		XCTAssertEqual(vc.numberOfRenderedImageCommentsViews(), 1)
-		XCTAssertEqual(vc.imageCommentView(at: 0)?.labelMessage.text, makeCommentMessage())
+		XCTAssertEqual(vc.imageCommentMessage(at: 0), makeCommentMessage())
 	}
 
 	// MARK: - Helpers
