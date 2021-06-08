@@ -207,11 +207,11 @@ extension ImageCommentsUIIntegrationTests {
 	}
 
 	func assertThat(_ sut: ListViewController, hasViewConfiguredFor comment: ImageCommentViewModel, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
-		XCTAssertEqual(sut.imageCommentMessage(at: index), comment.message, "Expected message text to be \(String(describing: comment.message)) for comment at index (\(index))", file: file, line: line)
+		XCTAssertEqual(sut.imageCommentMessage(at: index), comment.message, "message at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(sut.imageCommentUsername(at: index), comment.username, "Expected username text to be \(String(describing: comment.username)) for comment at index (\(index))", file: file, line: line)
+		XCTAssertEqual(sut.imageCommentUsername(at: index), comment.username, "username at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(sut.imageCommentDate(at: index), comment.date, "Expected date text to be \(String(describing: comment.date)) for comment at index (\(index))", file: file, line: line)
+		XCTAssertEqual(sut.imageCommentDate(at: index), comment.date, "date at index (\(index))", file: file, line: line)
 	}
 
 	private func executeRunLoopToCleanUpReferences() {
