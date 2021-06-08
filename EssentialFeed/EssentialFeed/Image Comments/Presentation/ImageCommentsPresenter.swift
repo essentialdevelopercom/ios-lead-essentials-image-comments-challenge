@@ -4,10 +4,6 @@
 
 import Foundation
 
-public struct ImageCommentsViewModel {
-	public let comments: [ImageComment]
-}
-
 public final class ImageCommentsPresenter {
 	public static var title: String {
 		NSLocalizedString(
