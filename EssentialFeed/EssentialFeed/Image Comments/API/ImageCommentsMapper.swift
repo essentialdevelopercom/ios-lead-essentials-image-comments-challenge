@@ -39,6 +39,6 @@ public final class ImageCommentsMapper {
 	}
 
 	private static func isOK(response: HTTPURLResponse) -> Bool {
-		return 200 <= response.statusCode && 299 >= response.statusCode
+		(200 ... 299).contains(response.statusCode)
 	}
 }
