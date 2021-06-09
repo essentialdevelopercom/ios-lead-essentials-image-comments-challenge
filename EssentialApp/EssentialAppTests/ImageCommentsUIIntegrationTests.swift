@@ -152,7 +152,6 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	// MARK: - Helpers
 
 	private func makeSUT(
-		selection: @escaping (FeedImage) -> Void = { _ in },
 		file: StaticString = #filePath,
 		line: UInt = #line
 	) -> (sut: ListViewController, loader: LoaderSpy) {
