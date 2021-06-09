@@ -17,6 +17,22 @@ class FeedUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.title, feedTitle)
 	}
 
+	func test_imageSelection_notifiesHandler() {
+		let image0 = makeImage()
+		let image1 = makeImage()
+		var selectedImages = [FeedImage]()
+		let (sut, loader) = makeSUT(selection: { selectedImages.append($0) })
+
+		sut.loadViewIfNeeded()
+		loader.completeFeedLoading(with: [image0, image1], at: 0)
+
+		sut.simulateTapOnFeedImage(at: 0)
+		XCTAssertEqual(selectedImages, [image0])
+
+		sut.simulateTapOnFeedImage(at: 1)
+		XCTAssertEqual(selectedImages, [image0, image1])
+	}
+
 	func test_loadFeedActions_requestFeedFromLoader() {
 		let (sut, loader) = makeSUT()
 		XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded")
