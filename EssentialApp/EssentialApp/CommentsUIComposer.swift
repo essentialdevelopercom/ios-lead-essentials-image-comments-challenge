@@ -13,8 +13,7 @@ public final class CommentsUIComposer {
 	private typealias CommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
 
 	public static func commentsComposedWith(
-		commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>,
-		selection: @escaping (FeedImage) -> Void = { _ in }
+		commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
 	) -> ListViewController {
 		let presentationAdapter = CommentsPresentationAdapter(loader: commentsLoader)
 
