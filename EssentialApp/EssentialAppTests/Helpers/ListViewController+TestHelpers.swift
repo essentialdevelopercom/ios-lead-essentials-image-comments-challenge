@@ -42,6 +42,8 @@ extension ListViewController {
 	}
 }
 
+// MARK: - Feed UI
+
 extension ListViewController {
 	@discardableResult
 	func simulateFeedImageViewVisible(at index: Int) -> FeedImageCell? {
@@ -92,4 +94,30 @@ extension ListViewController {
 	}
 
 	private var feedImagesSection: Int { 0 }
+}
+
+// MARK: - ImageComments UI
+
+extension ListViewController {
+	func numberOfRenderedComments() -> Int {
+		numberOfRows(in: commentsSection)
+	}
+
+	func commentMessage(at row: Int) -> String? {
+		commentView(at: row)?.messageLabel.text
+	}
+
+	func commentCreatedAt(at row: Int) -> String? {
+		commentView(at: row)?.createAtLabel.text
+	}
+
+	func commentUsername(at row: Int) -> String? {
+		commentView(at: row)?.usernameLabel.text
+	}
+
+	private func commentView(at row: Int) -> ImageCommentCell? {
+		cell(row: row, section: commentsSection) as? ImageCommentCell
+	}
+
+	private var commentsSection: Int { 0 }
 }
