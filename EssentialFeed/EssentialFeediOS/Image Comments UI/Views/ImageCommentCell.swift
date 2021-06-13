@@ -4,8 +4,8 @@
 
 import UIKit
 
-class ImageCommentCell: UITableViewCell {
-	@IBOutlet weak var usernameLabel: UILabel!
-	@IBOutlet weak var createdAtLabel: UILabel!
-	@IBOutlet weak var messageLabel: UILabel!
+public class ImageCommentCell: UITableViewCell {
+	@IBOutlet private(set) public var usernameLabel: UILabel!
+	@IBOutlet private(set) public var createdAtLabel: UILabel!
+	@IBOutlet private(set) public var messageLabel: UILabel!
 }
