@@ -2,7 +2,7 @@
 // Copyright © 2021 Essential Developer. All rights reserved.
 //
 
-public struct ImageCommentViewModel: Equatable {
+public struct ImageCommentViewModel: Hashable {
 	public let message: String
 	public let createdAt: String
 	public let username: String
