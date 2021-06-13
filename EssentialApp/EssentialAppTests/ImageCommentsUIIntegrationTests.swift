@@ -102,7 +102,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		wait(for: [exp], timeout: 1.0)
 	}
 
-	override func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+	func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
