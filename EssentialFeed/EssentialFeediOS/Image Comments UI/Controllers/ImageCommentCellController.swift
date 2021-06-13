@@ -21,7 +21,7 @@ extension ImageCommentCellController: UITableViewDataSource {
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell: ImageCommentCell = tableView.dequeueReusableCell()
 		cell.usernameLabel.text = viewModel.username
-		cell.createdAtLabel.text = viewModel.createdAt
+		cell.dateLabel.text = viewModel.date
 		cell.messageLabel.text = viewModel.message
 		return cell
 	}

@@ -4,12 +4,12 @@
 
 public struct ImageCommentViewModel: Hashable {
 	public let message: String
-	public let createdAt: String
+	public let date: String
 	public let username: String
 
-	public init(message: String, createdAt: String, username: String) {
+	public init(message: String, date: String, username: String) {
 		self.message = message
-		self.createdAt = createdAt
+		self.date = date
 		self.username = username
 	}
 }

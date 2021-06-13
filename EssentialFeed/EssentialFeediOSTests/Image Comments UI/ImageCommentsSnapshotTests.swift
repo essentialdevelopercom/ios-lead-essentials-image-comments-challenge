@@ -34,17 +34,17 @@ class ImageCommentsSnapshotTests: XCTestCase {
 			ImageCommentCellController(
 				viewModel: ImageCommentViewModel(
 					message: "The East Side Gallery is an open-air gallery in Berlin. It consists of a series of murals painted directly on a 1,316 m long remnant of the Berlin Wall, located near the centre of Berlin, on Mühlenstraße in Friedrichshain-Kreuzberg. The gallery has official status as a Denkmal, or heritage-protected landmark.",
-					createdAt: "1000 yers ago",
+					date: "1000 yers ago",
 					username: "a long long long long username")),
 			ImageCommentCellController(
 				viewModel: ImageCommentViewModel(
 					message: "Garth Pier is a Grade II listed structure in Bangor, Gwynedd, North Wales.",
-					createdAt: "5 days ago",
+					date: "5 days ago",
 					username: "a username")),
 			ImageCommentCellController(
 				viewModel: ImageCommentViewModel(
 					message: "A message.",
-					createdAt: "5 minutes ago",
+					date: "5 minutes ago",
 					username: "a."))
 		].map { CellController(id: UUID(), $0) }
 	}

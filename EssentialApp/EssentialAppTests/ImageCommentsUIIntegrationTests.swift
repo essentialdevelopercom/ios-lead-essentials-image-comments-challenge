@@ -131,8 +131,8 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_deinit_cancelsRunningRequests() {
 		var cancelCallCount = 0
 		var sut: ListViewController?
-		
-        autoreleasepool {
+
+		autoreleasepool {
 			sut = CommentsUIComposer.commentsComposedWith {
 				PassthroughSubject<[ImageComment], Error>()
 					.handleEvents(receiveCancel: {
@@ -143,7 +143,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		}
 
 		XCTAssertEqual(cancelCallCount, 0)
-        
+
 		sut = nil
 
 		XCTAssertEqual(cancelCallCount, 1)
@@ -172,7 +172,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		viewModel.comments.enumerated().forEach { index, comment in
 			XCTAssertEqual(sut.commentMessage(at: index), comment.message, "message at \(index)", file: file, line: line)
-			XCTAssertEqual(sut.commentDate(at: index), comment.createdAt, "date at \(index)", file: file, line: line)
+			XCTAssertEqual(sut.commentDate(at: index), comment.date, "date at \(index)", file: file, line: line)
 			XCTAssertEqual(sut.commentUsername(at: index), comment.username, "username at \(index)", file: file, line: line)
 		}
 	}

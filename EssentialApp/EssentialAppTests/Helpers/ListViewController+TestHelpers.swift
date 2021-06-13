@@ -108,7 +108,7 @@ extension ListViewController {
 	}
 
 	func commentDate(at row: Int) -> String? {
-		commentView(at: row)?.createdAtLabel.text
+		commentView(at: row)?.dateLabel.text
 	}
 
 	func commentView(at row: Int) -> ImageCommentCell? {
