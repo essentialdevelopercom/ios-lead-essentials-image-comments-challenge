@@ -57,8 +57,6 @@ extension UIImage {
 final class CommentsViewAdapter: ResourceView {
 	private weak var controller: ListViewController?
 
-	private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
-
 	init(controller: ListViewController) {
 		self.controller = controller
 	}
