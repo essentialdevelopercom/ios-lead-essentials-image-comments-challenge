@@ -24,11 +24,3 @@ final class MainQueueDispatchDecorator<T> {
 		completion()
 	}
 }
-
-extension MainQueueDispatchDecorator: CommentsLoader where T == CommentsLoader {
-	func load(completion: @escaping (CommentsLoader.Result) -> Void) -> CancelableTask {
-		return decoratee.load { [weak self] result in
-			self?.dispatch { completion(result) }
-		}
-	}
-}

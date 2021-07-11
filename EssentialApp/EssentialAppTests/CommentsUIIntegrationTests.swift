@@ -6,11 +6,11 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
+import Combine
 import XCTest
 import EssentialFeed
 import EssentialFeediOS
 import EssentialApp
-import Combine
 
 final class CommentsUIIntegrationTests: XCTestCase {
 	
@@ -186,40 +186,28 @@ final class CommentsUIIntegrationTests: XCTestCase {
 		return Comment(id: id, message: message, createdAt: createdAt, author: author)
 	}
 	
-	private final class LoaderSpy: CommentsLoader {
-		private var completions = [(CommentsLoader.Result) -> Void]()
-		var loadCallCount: Int {
-			return completions.count
-		}
-		
+	private final class LoaderSpy {
+		private var commentsRequests = [PassthroughSubject<[Comment], Error>]()
 		private(set) var cancelCallCount = 0
-		
-		private final class CancelableTaskSpy: CancelableTask {
-			private let onCancel: () -> Void
-			
-			init (onCancel: @escaping () -> Void) {
-				self.onCancel = onCancel
-			}
-			
-			func cancel() {
-				onCancel()
-			}
+		var loadCallCount: Int {
+			return commentsRequests.count
 		}
 		
-		func load(completion: @escaping (CommentsLoader.Result) -> Void) -> CancelableTask {
-			completions.append(completion)
-			return CancelableTaskSpy() { [weak self] in
-				self?.cancelCallCount += 1
-			}
+		func loadPublisher() -> AnyPublisher<[Comment], Error> {
+			let publisher = PassthroughSubject<[Comment], Error>()
+			commentsRequests.append(publisher)
+			return publisher
+				.handleEvents(receiveCancel: { [weak self] in self?.cancelCallCount += 1 })
+				.eraseToAnyPublisher()
 		}
 		
 		func completeCommentsLoading(with comments: [Comment] = [], at: Int) {
-			completions[at](.success(comments))
+			commentsRequests[at].send(comments)
 		}
 		
 		func completeCommentsLoadingWithError(at: Int) {
 			let error = NSError(domain: "an error", code: 0)
-			completions[at](.failure(error))
+			commentsRequests[at].send(completion: .failure(error))
 		}
 	}
 }

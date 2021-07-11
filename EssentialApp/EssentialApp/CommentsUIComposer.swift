@@ -14,7 +14,7 @@ import EssentialFeediOS
 public final class CommentsUIComposer {
 	private init() {}
 	
-	public static func commentsComposedWith(commentsLoader: @escaping () -> CommentsLoader.Publisher) -> CommentsController {
+	public static func commentsComposedWith(commentsLoader: @escaping () -> AnyPublisher<[Comment], Error>) -> CommentsController {
 		let presentationAdapter = CommentsLoaderPresentationAdapter(commentsLoader: commentsLoader)
 		let commentsController = makeCommentsController()
 		commentsController.delegate = presentationAdapter
@@ -50,11 +50,11 @@ private final class CommentsAdapter: CommentView {
 }
 
 private final class CommentsLoaderPresentationAdapter: CommentsControllerDelegate {
-	private let commentsLoader: () -> CommentsLoader.Publisher
+	private let commentsLoader: () -> AnyPublisher<[Comment], Error>
 	private var cancellable: Cancellable?
 	var presenter: CommentsPresenter?
 	
-	init(commentsLoader: @escaping () -> CommentsLoader.Publisher) {
+	init(commentsLoader: @escaping () -> AnyPublisher<[Comment], Error>) {
 		self.commentsLoader = commentsLoader
 	}
 	

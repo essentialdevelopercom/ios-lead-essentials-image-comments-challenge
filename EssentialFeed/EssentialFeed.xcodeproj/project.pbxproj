@@ -89,7 +89,6 @@
 		730E97492608EB5400021845 /* CommentsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730E97482608EB5400021845 /* CommentsSnapshotTests.swift */; };
 		73587FB025EF744F00B55A8D /* ImageCommentsMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FAF25EF744F00B55A8D /* ImageCommentsMapperTests.swift */; };
 		73587FD225F0016C00B55A8D /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FD125F0016C00B55A8D /* Comment.swift */; };
-		73587FDC25F00E6F00B55A8D /* CommentsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */; };
 		73B434EF25FA00FC00099924 /* CommentsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */; };
 		73B434F525FA26CC00099924 /* CommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434F425FA26CC00099924 /* CommentsPresenter.swift */; };
 		73B434FB25FA271B00099924 /* CommentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B434FA25FA271B00099924 /* CommentLoadingViewModel.swift */; };
@@ -229,7 +228,6 @@
 		730E97482608EB5400021845 /* CommentsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsSnapshotTests.swift; sourceTree = "<group>"; };
 		73587FAF25EF744F00B55A8D /* ImageCommentsMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsMapperTests.swift; sourceTree = "<group>"; };
 		73587FD125F0016C00B55A8D /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
-		73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLoader.swift; sourceTree = "<group>"; };
 		73B434E425F962AE00099924 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainQueueDispatchDecorator.swift; path = ../../../EssentialApp/EssentialApp/MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		73B434EE25FA00FC00099924 /* CommentsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenterTests.swift; sourceTree = "<group>"; };
 		73B434F425FA26CC00099924 /* CommentsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsPresenter.swift; sourceTree = "<group>"; };
@@ -353,7 +351,6 @@
 				08F8822C236499B200CAEE16 /* FeedCache.swift */,
 				080EDF0B21B6DAE800813479 /* FeedImage.swift */,
 				73587FD125F0016C00B55A8D /* Comment.swift */,
-				73587FDB25F00E6F00B55A8D /* CommentsLoader.swift */,
 				0804862D236345A40087ED48 /* FeedImageDataCache.swift */,
 				08FC5AA922D5F47900148E12 /* FeedImageDataLoader.swift */,
 				73F29D3D26217A3E00EC538C /* CancelableTask.swift */,
@@ -833,7 +830,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				73F29D4426217A9900EC538C /* HTTPClientTaskWrapper.swift in Sources */,
-				73587FDC25F00E6F00B55A8D /* CommentsLoader.swift in Sources */,
 				08C4E986233E139400D939F8 /* LocalFeedImageDataLoader.swift in Sources */,
 				08285AFB228C17B8000A8987 /* CoreDataHelpers.swift in Sources */,
 				73B4350725FA279400099924 /* CommentViewModel.swift in Sources */,
