@@ -93,5 +93,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		navigationController.pushViewController(commentsController, animated: true)
 	}
 }
-
-extension RemoteLoader: FeedLoader where Resource == [FeedImage] {}
