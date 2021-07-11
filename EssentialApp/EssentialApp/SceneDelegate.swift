@@ -21,12 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 				.appendingPathComponent("feed-store.sqlite"))
 	}()
 	
-	private lazy var remoteFeedLoader: RemoteFeedLoader = {
-		RemoteFeedLoader(
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!,
-			client: httpClient)
-	}()
-	
 	private lazy var localFeedLoader: LocalFeedLoader = {
 		LocalFeedLoader(store: store, currentDate: Date.init)
 	}()
@@ -68,8 +62,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
-		return remoteFeedLoader
-			.loadPublisher()
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
+		return httpClient
+			.getPublisher(url: url)
+			.tryMap(FeedItemsMapper.map)
 			.caching(to: localFeedLoader)
 			.fallback(to: localFeedLoader.loadPublisher)
 	}
@@ -85,9 +81,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	private func onFeedImageSelect(_ feedImage: FeedImage) {
-		let remoteCommentsLoader = RemoteCommentsLoader(client: httpClient,
-			url: URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImage.id)/comments")!)
+		let url = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/image/\(feedImage.id)/comments")!
+		let httpClient = httpClient
+		let remoteCommentsLoader = {
+			httpClient
+			.getPublisher(url: url)
+			.tryMap(ImageCommentsMapper.map)
+			.eraseToAnyPublisher()
+		}
 		let commentsController = CommentsUIComposer.commentsComposedWith(commentsLoader: remoteCommentsLoader)
 		navigationController.pushViewController(commentsController, animated: true)
 	}
 }
+
+extension RemoteLoader: FeedLoader where Resource == [FeedImage] {}

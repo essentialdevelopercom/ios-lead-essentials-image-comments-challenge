@@ -6,6 +6,22 @@ import Foundation
 import Combine
 import EssentialFeed
 
+public extension HTTPClient {
+	typealias Publisher = AnyPublisher<(Data, HTTPURLResponse), Error>
+	
+	func getPublisher(url: URL) -> Publisher {
+		var task: HTTPClientTask?
+		
+		return Deferred {
+			Future { completion in
+				task = get(from: url, completion: completion)
+			}
+		}
+		.handleEvents(receiveCancel: { task?.cancel() })
+		.eraseToAnyPublisher()
+	}
+}
+
 public extension FeedImageDataLoader {
 	typealias Publisher = AnyPublisher<Data, Error>
 	
@@ -43,6 +59,22 @@ public extension FeedLoader {
 		Deferred {
 			Future(self.load)
 		}
+		.eraseToAnyPublisher()
+	}
+}
+
+public extension CommentsLoader {
+	typealias Publisher = AnyPublisher<[Comment], Error>
+	
+	func loadPublisher() -> Publisher {
+		var task: CancelableTask?
+		
+		return Deferred {
+			Future { completion in
+				task = self.load(completion: completion)
+			}
+		}
+		.handleEvents(receiveCancel: { task?.cancel() })
 		.eraseToAnyPublisher()
 	}
 }

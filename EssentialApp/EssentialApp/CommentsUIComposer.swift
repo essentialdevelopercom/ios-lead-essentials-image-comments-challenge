@@ -6,6 +6,7 @@
 //  Copyright © 2021 Essential Developer. All rights reserved.
 //
 
+import Combine
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
@@ -13,8 +14,8 @@ import EssentialFeediOS
 public final class CommentsUIComposer {
 	private init() {}
 	
-	public static func commentsComposedWith(commentsLoader: CommentsLoader) -> CommentsController {
-		let presentationAdapter = CommentsLoaderPresentationAdapter(loader: MainQueueDispatchDecorator(decoratee: commentsLoader))
+	public static func commentsComposedWith(commentsLoader: @escaping () -> CommentsLoader.Publisher) -> CommentsController {
+		let presentationAdapter = CommentsLoaderPresentationAdapter(commentsLoader: commentsLoader)
 		let commentsController = makeCommentsController()
 		commentsController.delegate = presentationAdapter
 		let presenter = CommentsPresenter(
@@ -49,29 +50,29 @@ private final class CommentsAdapter: CommentView {
 }
 
 private final class CommentsLoaderPresentationAdapter: CommentsControllerDelegate {
-	private let loader: CommentsLoader
-	private var task: CancelableTask?
+	private let commentsLoader: () -> CommentsLoader.Publisher
+	private var cancellable: Cancellable?
 	var presenter: CommentsPresenter?
 	
-	init(loader: CommentsLoader) {
-		self.loader = loader
-	}
-	
-	deinit {
-		task?.cancel()
+	init(commentsLoader: @escaping () -> CommentsLoader.Publisher) {
+		self.commentsLoader = commentsLoader
 	}
 	
 	func didRequestCommentsRefresh() {
 		presenter?.didStartLoadingComments()
 		
-		task = loader.load { [weak self] result in
-			switch result {
-			case let .success(comments):
+		cancellable = commentsLoader()
+			.dispatchOnMainQueue()
+			.sink(receiveCompletion: { [weak self] completion in
+				switch completion {
+				case .finished:
+					break
+
+				case let .failure(error):
+					self?.presenter?.didFinishLoadingComments(with: error)
+				}
+			}, receiveValue: { [weak self] comments in
 				self?.presenter?.didFinishLoadingComments(comments: comments)
-				
-			case let .failure(error):
-				self?.presenter?.didFinishLoadingComments(with: error)
-			}
-		}
+			})
 	}
 }
