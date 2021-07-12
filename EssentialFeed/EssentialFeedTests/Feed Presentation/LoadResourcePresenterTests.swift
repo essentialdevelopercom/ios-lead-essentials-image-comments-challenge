@@ -17,10 +17,10 @@ class LoadResourcePresenterTests: XCTestCase {
 		XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
 	}
 	
-	func test_didStartLoadingFeed_displaysNoErrorMessageAndStartsLoading() {
+	func test_didStartLoading_displaysNoErrorMessageAndStartsLoading() {
 		let (sut, view) = makeSUT()
 		
-		sut.didStartLoadingFeed()
+		sut.didStartLoading()
 		
 		XCTAssertEqual(view.messages, [
 			.display(errorMessage: .none),
@@ -28,14 +28,14 @@ class LoadResourcePresenterTests: XCTestCase {
 		])
 	}
 	
-	func test_didFinishLoadingFeed_displaysFeedAndStopsLoading() {
-		let (sut, view) = makeSUT()
-		let feed = uniqueImageFeed().models
+	func test_didFinishLoading_displaysResourceAndStopsLoading() {
+		let (sut, view) = makeSUT(mapper: { _ in "a mapped resource" })
+		let resource = "a resource"
 		
-		sut.didFinishLoadingFeed(with: feed)
+		sut.didFinishLoading(with: resource)
 		
 		XCTAssertEqual(view.messages, [
-			.display(feed: feed),
+			.display(resource: "a mapped resource"),
 			.display(isLoading: false)
 		])
 	}
@@ -53,9 +53,13 @@ class LoadResourcePresenterTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: LoadResourcePresenter, view: ViewSpy) {
+	private func makeSUT(
+		mapper: @escaping LoadResourcePresenter.Mapper = { _ in "any" },
+		file: StaticString = #filePath,
+		line: UInt = #line
+	) -> (sut: LoadResourcePresenter, view: ViewSpy) {
 		let view = ViewSpy()
-		let sut = LoadResourcePresenter(feedView: view, loadingView: view, errorView: view)
+		let sut = LoadResourcePresenter(resourceView: view, loadingView: view, errorView: view, mapper: mapper)
 		trackForMemoryLeaks(view, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, view)
@@ -71,14 +75,20 @@ class LoadResourcePresenterTests: XCTestCase {
 		return value
 	}
 	
-	private class ViewSpy: FeedView, FeedLoadingView, FeedErrorView {
+	private class ViewSpy: ResourceView, FeedView, FeedLoadingView, FeedErrorView {
+		
 		enum Message: Hashable {
 			case display(errorMessage: String?)
 			case display(isLoading: Bool)
 			case display(feed: [FeedImage])
+			case display(resource: String)
 		}
 		
 		private(set) var messages = Set<Message>()
+		
+		func display(_ resource: String) {
+			messages.insert(.display(resource: resource))
+		}
 		
 		func display(_ viewModel: FeedErrorViewModel) {
 			messages.insert(.display(errorMessage: viewModel.message))
