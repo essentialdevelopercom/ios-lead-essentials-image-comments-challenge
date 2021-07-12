@@ -9,11 +9,11 @@ import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
 	
-	class LoaderSpy: FeedImageDataLoader {
+	class LoaderSpy {
 		
 		// MARK: - FeedLoader
 		
-		private var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
+		private(set) var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
 		
 		var loadFeedCallCount: Int {
 			return feedRequests.count
@@ -36,33 +36,28 @@ extension FeedUIIntegrationTests {
 		
 		// MARK: - FeedImageDataLoader
 		
-		private struct TaskSpy: CancelableTask {
-			let cancelCallback: () -> Void
-			func cancel() {
-				cancelCallback()
-			}
-		}
-		
-		private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
+		private(set) var cancelledImageURLs = [URL]()
+		private(set) var feedImageRequests = [(url: URL, subject: PassthroughSubject<Data, Error>)]()
 		
 		var loadedImageURLs: [URL] {
-			return imageRequests.map { $0.url }
+			return feedImageRequests.map { $0.url }
 		}
 		
-		private(set) var cancelledImageURLs = [URL]()
-		
-		func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> CancelableTask {
-			imageRequests.append((url, completion))
-			return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
+		func loadImageDataPublisher(url: URL) -> AnyPublisher<Data, Error> {
+			let publisher = PassthroughSubject<Data, Error>()
+			feedImageRequests.append((url, publisher))
+			return publisher
+				.handleEvents(receiveCancel: { [weak self] in self?.cancelledImageURLs.append(url) })
+				.eraseToAnyPublisher()
 		}
-		
-		func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-			imageRequests[index].completion(.success(imageData))
+
+		func completeImageLoading(with data: Data = Data(), at: Int = 0) {
+			feedImageRequests[at].subject.send(data)
 		}
-		
-		func completeImageLoadingWithError(at index: Int = 0) {
+
+		func completeImageLoadingWithError(at: Int = 0) {
 			let error = NSError(domain: "an error", code: 0)
-			imageRequests[index].completion(.failure(error))
+			feedImageRequests[at].subject.send(completion: .failure(error))
 		}
 	}
 	

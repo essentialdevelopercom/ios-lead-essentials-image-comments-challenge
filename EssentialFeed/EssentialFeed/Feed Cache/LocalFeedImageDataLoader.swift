@@ -28,8 +28,8 @@ extension LocalFeedImageDataLoader: FeedImageDataCache {
 	}
 }
 
-extension LocalFeedImageDataLoader: FeedImageDataLoader {
-	public typealias LoadResult = FeedImageDataLoader.Result
+extension LocalFeedImageDataLoader {
+	public typealias LoadResult = Result<Data, Error>
 	
 	public enum LoadError: Error {
 		case failed
@@ -37,13 +37,13 @@ extension LocalFeedImageDataLoader: FeedImageDataLoader {
 	}
 	
 	private final class LoadImageDataTask: CancelableTask {
-		private var completion: ((FeedImageDataLoader.Result) -> Void)?
+		private var completion: ((LoadResult) -> Void)?
 		
-		init(_ completion: @escaping (FeedImageDataLoader.Result) -> Void) {
+		init(_ completion: @escaping (LoadResult) -> Void) {
 			self.completion = completion
 		}
 		
-		func complete(with result: FeedImageDataLoader.Result) {
+		func complete(with result: LoadResult) {
 			completion?(result)
 		}
 		

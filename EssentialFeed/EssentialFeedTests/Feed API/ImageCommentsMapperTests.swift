@@ -60,20 +60,6 @@ class ImageCommentsMapperTests: XCTestCase {
 		}
 	}
 	
-	func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
-		let url = URL(string: "https://a-url.com")!
-		let client = HTTPClientSpy()
-		var sut: RemoteCommentsLoader? = RemoteCommentsLoader(url: url, client: client)
-		
-		var capturesResults = [RemoteCommentsLoader.Result]()
-		_ = sut?.load { capturesResults.append($0) }
-		
-		sut = nil
-		client.complete(withStatusCode: 200, data: anyData())
-		
-		XCTAssertTrue(capturesResults.isEmpty)
-	}
-	
 	// MARK - Helpers
 	
 	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601String: String), author: String ) -> (model: Comment, json: [String: Any]) {

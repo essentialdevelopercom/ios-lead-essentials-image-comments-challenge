@@ -2,16 +2,17 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
+import Combine
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
 
 final class FeedViewAdapter: FeedView {
 	private weak var controller: FeedViewController?
-	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
+	private let imageLoader: (URL) -> AnyPublisher<Data, Error>
 	private let onSelect: (FeedImage) -> Void
 	
-	init(controller: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher, onSelect: @escaping (FeedImage) -> Void) {
+	init(controller: FeedViewController, imageLoader: @escaping (URL) -> AnyPublisher<Data, Error>, onSelect: @escaping (FeedImage) -> Void) {
 		self.controller = controller
 		self.imageLoader = imageLoader
 		self.onSelect = onSelect
