@@ -2,64 +2,62 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
+import Combine
 import Foundation
 import EssentialFeed
 import EssentialFeediOS
 
 extension FeedUIIntegrationTests {
 	
-	class LoaderSpy: FeedLoader, FeedImageDataLoader {
+	class LoaderSpy {
 		
 		// MARK: - FeedLoader
 		
-		private var feedRequests = [(FeedLoader.Result) -> Void]()
+		private(set) var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
 		
 		var loadFeedCallCount: Int {
 			return feedRequests.count
 		}
 		
-		func load(completion: @escaping (FeedLoader.Result) -> Void) {
-			feedRequests.append(completion)
+		func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
+			let publisher = PassthroughSubject<[FeedImage], Error>()
+			feedRequests.append(publisher)
+			return publisher.eraseToAnyPublisher()
 		}
 		
 		func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
-			feedRequests[index](.success(feed))
+			feedRequests[index].send(feed)
 		}
 		
 		func completeFeedLoadingWithError(at index: Int = 0) {
 			let error = NSError(domain: "an error", code: 0)
-			feedRequests[index](.failure(error))
+			feedRequests[index].send(completion: .failure(error))
 		}
 		
 		// MARK: - FeedImageDataLoader
 		
-		private struct TaskSpy: FeedImageDataLoaderTask {
-			let cancelCallback: () -> Void
-			func cancel() {
-				cancelCallback()
-			}
-		}
-		
-		private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
+		private(set) var cancelledImageURLs = [URL]()
+		private(set) var feedImageRequests = [(url: URL, subject: PassthroughSubject<Data, Error>)]()
 		
 		var loadedImageURLs: [URL] {
-			return imageRequests.map { $0.url }
+			return feedImageRequests.map { $0.url }
 		}
 		
-		private(set) var cancelledImageURLs = [URL]()
-		
-		func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-			imageRequests.append((url, completion))
-			return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
+		func loadImageDataPublisher(url: URL) -> AnyPublisher<Data, Error> {
+			let publisher = PassthroughSubject<Data, Error>()
+			feedImageRequests.append((url, publisher))
+			return publisher
+				.handleEvents(receiveCancel: { [weak self] in self?.cancelledImageURLs.append(url) })
+				.eraseToAnyPublisher()
 		}
-		
-		func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-			imageRequests[index].completion(.success(imageData))
+
+		func completeImageLoading(with data: Data = Data(), at: Int = 0) {
+			feedImageRequests[at].subject.send(data)
 		}
-		
-		func completeImageLoadingWithError(at index: Int = 0) {
+
+		func completeImageLoadingWithError(at: Int = 0) {
 			let error = NSError(domain: "an error", code: 0)
-			imageRequests[index].completion(.failure(error))
+			feedImageRequests[at].subject.send(completion: .failure(error))
 		}
 	}
 	

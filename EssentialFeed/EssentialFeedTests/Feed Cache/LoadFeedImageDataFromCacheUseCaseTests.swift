@@ -52,7 +52,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
 		let (sut, store) = makeSUT()
 		let foundData = anyData()
 		
-		var received = [FeedImageDataLoader.Result]()
+		var received = [LocalFeedImageDataLoader.LoadResult]()
 		let task = sut.loadImageData(from: anyURL()) { received.append($0) }
 		task.cancel()
 		
@@ -67,7 +67,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
 		let store = FeedImageDataStoreSpy()
 		var sut: LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
 		
-		var received = [FeedImageDataLoader.Result]()
+		var received = [LocalFeedImageDataLoader.LoadResult]()
 		_ = sut?.loadImageData(from: anyURL()) { received.append($0) }
 		
 		sut = nil
@@ -86,11 +86,11 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
 		return (sut, store)
 	}
 	
-	private func failed() -> FeedImageDataLoader.Result {
+	private func failed() -> LocalFeedImageDataLoader.LoadResult {
 		return .failure(LocalFeedImageDataLoader.LoadError.failed)
 	}
 	
-	private func notFound() -> FeedImageDataLoader.Result {
+	private func notFound() -> LocalFeedImageDataLoader.LoadResult {
 		return .failure(LocalFeedImageDataLoader.LoadError.notFound)
 	}
 	
@@ -98,7 +98,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
 		XCTFail("Expected no no invocations", file: file, line: line)
 	}
 	
-	private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: LocalFeedImageDataLoader.LoadResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load completion")
 		
 		_ = sut.loadImageData(from: anyURL()) { receivedResult in

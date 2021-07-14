@@ -9,14 +9,16 @@ import EssentialFeediOS
 
 final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
 	private let model: FeedImage
-	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
+	private let imageLoader: (URL) -> AnyPublisher<Data, Error>
 	private var cancellable: Cancellable?
+	private var onSelect: (FeedImage) -> Void
 	
 	var presenter: FeedImagePresenter<View, Image>?
 	
-	init(model: FeedImage, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
+	init(model: FeedImage, imageLoader: @escaping (URL) -> AnyPublisher<Data, Error>, onSelect: @escaping (FeedImage) -> Void) {
 		self.model = model
 		self.imageLoader = imageLoader
+		self.onSelect = onSelect
 	}
 	
 	func didRequestImage() {
@@ -42,5 +44,9 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
 	
 	func didCancelImageRequest() {
 		cancellable?.cancel()
+	}
+	
+	func didSelectImage() {
+		onSelect(model)
 	}
 }

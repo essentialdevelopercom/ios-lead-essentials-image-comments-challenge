@@ -28,22 +28,22 @@ extension LocalFeedImageDataLoader: FeedImageDataCache {
 	}
 }
 
-extension LocalFeedImageDataLoader: FeedImageDataLoader {
-	public typealias LoadResult = FeedImageDataLoader.Result
+extension LocalFeedImageDataLoader {
+	public typealias LoadResult = Result<Data, Error>
 	
 	public enum LoadError: Error {
 		case failed
 		case notFound
 	}
 	
-	private final class LoadImageDataTask: FeedImageDataLoaderTask {
-		private var completion: ((FeedImageDataLoader.Result) -> Void)?
+	private final class LoadImageDataTask: CancelableTask {
+		private var completion: ((LoadResult) -> Void)?
 		
-		init(_ completion: @escaping (FeedImageDataLoader.Result) -> Void) {
+		init(_ completion: @escaping (LoadResult) -> Void) {
 			self.completion = completion
 		}
 		
-		func complete(with result: FeedImageDataLoader.Result) {
+		func complete(with result: LoadResult) {
 			completion?(result)
 		}
 		
@@ -56,7 +56,7 @@ extension LocalFeedImageDataLoader: FeedImageDataLoader {
 		}
 	}
 	
-	public func loadImageData(from url: URL, completion: @escaping (LoadResult) -> Void) -> FeedImageDataLoaderTask {
+	public func loadImageData(from url: URL, completion: @escaping (LoadResult) -> Void) -> CancelableTask {
 		let task = LoadImageDataTask(completion)
 		store.retrieve(dataForURL: url) { [weak self] result in
 			guard self != nil else { return }
