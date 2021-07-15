@@ -6,13 +6,13 @@ import XCTest
 import EssentialFeed
 
 class ImageCommentsMapperTests: XCTestCase {
-	func test_map_throwsErrorOnNon200HTTPResponse() throws {
+	func test_map_throwsErrorOnNon2xxHTTPResponse() throws {
 		let json = makeItemsJSON([])
-		let samples = [199, 201, 300, 400, 500]
+		let samples = [150, 199, 300, 400, 500]
 
 		try samples.forEach { code in
 			XCTAssertThrowsError(
-				try FeedItemsMapper.map(json, from: HTTPURLResponse(statusCode: code))
+				try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: code))
 			)
 		}
 	}
