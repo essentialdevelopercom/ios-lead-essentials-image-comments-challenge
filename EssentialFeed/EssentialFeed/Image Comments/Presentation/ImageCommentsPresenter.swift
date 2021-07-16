@@ -26,19 +26,3 @@ public final class ImageCommentsPresenter {
 			) })
 	}
 }
-
-public struct ImageCommentsViewModel {
-	public let comments: [ImageCommentViewModel]
-}
-
-public struct ImageCommentViewModel: Equatable {
-	public let username: String
-	public let createdAt: String
-	public let message: String
-
-	public init(username: String, createdAt: String, message: String) {
-		self.username = username
-		self.createdAt = createdAt
-		self.message = message
-	}
-}
