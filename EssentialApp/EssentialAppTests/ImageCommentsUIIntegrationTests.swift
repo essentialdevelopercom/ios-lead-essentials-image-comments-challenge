@@ -32,19 +32,19 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		XCTAssertEqual(loader.loadImageCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 
-	override func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
+	func test_loadingImageCommentsIndicator_isVisibleWhileLoadingImageComments() {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
 
-		loader.completeFeedLoading(at: 0)
+		loader.completeImageCommentsLoading(at: 0)
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
 
 		sut.simulateUserInitiatedReload()
 		XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
 
-		loader.completeFeedLoadingWithError(at: 1)
+		loader.completeImageCommentsLoadingWithError(at: 1)
 		XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
 	}
 
@@ -58,11 +58,11 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 
-		loader.completeFeedLoading(with: [image0], at: 0)
+		loader.completeImageCommentsLoading(with: [image0], at: 0)
 		assertThat(sut, isRendering: [image0])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
+		loader.completeImageCommentsLoading(with: [image0, image1, image2, image3], at: 1)
 		assertThat(sut, isRendering: [image0, image1, image2, image3])
 	}
 
@@ -72,11 +72,11 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1], at: 0)
+		loader.completeImageCommentsLoading(with: [image0, image1], at: 0)
 		assertThat(sut, isRendering: [image0, image1])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeFeedLoading(with: [], at: 1)
+		loader.completeImageCommentsLoading(with: [], at: 1)
 		assertThat(sut, isRendering: [])
 	}
 
@@ -85,11 +85,11 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0], at: 0)
+		loader.completeImageCommentsLoading(with: [image0], at: 0)
 		assertThat(sut, isRendering: [image0])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeFeedLoadingWithError(at: 1)
+		loader.completeImageCommentsLoadingWithError(at: 1)
 		assertThat(sut, isRendering: [image0])
 	}
 
@@ -99,7 +99,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 
 		let exp = expectation(description: "Wait for background queue")
 		DispatchQueue.global().async {
-			loader.completeFeedLoading(at: 0)
+			loader.completeImageCommentsLoading(at: 0)
 			exp.fulfill()
 		}
 		wait(for: [exp], timeout: 1.0)
@@ -111,7 +111,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(sut.errorMessage, nil)
 
-		loader.completeFeedLoadingWithError(at: 0)
+		loader.completeImageCommentsLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, loadError)
 
 		sut.simulateUserInitiatedReload()
@@ -124,7 +124,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		sut.loadViewIfNeeded()
 		XCTAssertEqual(sut.errorMessage, nil)
 
-		loader.completeFeedLoadingWithError(at: 0)
+		loader.completeImageCommentsLoadingWithError(at: 0)
 		XCTAssertEqual(sut.errorMessage, loadError)
 
 		sut.simulateErrorViewTap()
@@ -139,7 +139,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1])
+		loader.completeImageCommentsLoading(with: [image0, image1])
 
 		XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until views become visible")
 
@@ -156,7 +156,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1])
+		loader.completeImageCommentsLoading(with: [image0, image1])
 		XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not visible")
 
 		sut.simulateFeedImageViewNotVisible(at: 0)
@@ -170,7 +170,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [makeImage(), makeImage()])
+		loader.completeImageCommentsLoading(with: [makeImage(), makeImage()])
 
 		let view0 = sut.simulateFeedImageViewVisible(at: 0)
 		let view1 = sut.simulateFeedImageViewVisible(at: 1)
@@ -194,7 +194,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [makeImage(), makeImage()])
+		loader.completeImageCommentsLoading(with: [makeImage(), makeImage()])
 
 		let view0 = sut.simulateFeedImageViewVisible(at: 0)
 		let view1 = sut.simulateFeedImageViewVisible(at: 1)
@@ -216,7 +216,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [makeImage(), makeImage()])
+		loader.completeImageCommentsLoading(with: [makeImage(), makeImage()])
 
 		let view0 = sut.simulateFeedImageViewVisible(at: 0)
 		let view1 = sut.simulateFeedImageViewVisible(at: 1)
@@ -241,7 +241,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [makeImage()])
+		loader.completeImageCommentsLoading(with: [makeImage()])
 
 		let view = sut.simulateFeedImageViewVisible(at: 0)
 		XCTAssertEqual(view?.isShowingRetryAction, false, "Expected no retry action while loading image")
@@ -257,7 +257,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1])
+		loader.completeImageCommentsLoading(with: [image0, image1])
 
 		let view0 = sut.simulateFeedImageViewVisible(at: 0)
 		let view1 = sut.simulateFeedImageViewVisible(at: 1)
@@ -280,7 +280,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1])
+		loader.completeImageCommentsLoading(with: [image0, image1])
 		XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
 
 		sut.simulateFeedImageViewNearVisible(at: 0)
@@ -296,7 +296,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1])
+		loader.completeImageCommentsLoading(with: [image0, image1])
 		XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not near visible")
 
 		sut.simulateFeedImageViewNotNearVisible(at: 0)
@@ -309,7 +309,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 	override func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
 		let (sut, loader) = makeSUT()
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [makeImage()])
+		loader.completeImageCommentsLoading(with: [makeImage()])
 
 		let view = sut.simulateFeedImageViewNotVisible(at: 0)
 		loader.completeImageLoading(with: anyImageData())
@@ -321,7 +321,7 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [makeImage()])
+		loader.completeImageCommentsLoading(with: [makeImage()])
 		_ = sut.simulateFeedImageViewVisible(at: 0)
 
 		let exp = expectation(description: "Wait for background queue")
@@ -373,11 +373,11 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 			return publisher.eraseToAnyPublisher()
 		}
 
-		func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
+		func completeImageCommentsLoading(with feed: [FeedImage] = [], at index: Int = 0) {
 			feedRequests[index].send(feed)
 		}
 
-		func completeFeedLoadingWithError(at index: Int = 0) {
+		func completeImageCommentsLoadingWithError(at index: Int = 0) {
 			let error = NSError(domain: "an error", code: 0)
 			feedRequests[index].send(completion: .failure(error))
 		}
