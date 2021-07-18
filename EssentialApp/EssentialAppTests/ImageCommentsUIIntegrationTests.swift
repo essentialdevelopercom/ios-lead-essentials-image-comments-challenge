@@ -7,6 +7,7 @@ import UIKit
 import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 	func test_imageCommentsView_hasTitle() {
@@ -17,34 +18,18 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 		XCTAssertEqual(sut.title, imageCommentsTitle)
 	}
 
-	override func test_imageSelection_notifiesHandler() {
-		let image0 = makeImage()
-		let image1 = makeImage()
-		var selectedImages = [FeedImage]()
-		let (sut, loader) = makeSUT(selection: { selectedImages.append($0) })
-
-		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1], at: 0)
-
-		sut.simulateTapOnFeedImage(at: 0)
-		XCTAssertEqual(selectedImages, [image0])
-
-		sut.simulateTapOnFeedImage(at: 1)
-		XCTAssertEqual(selectedImages, [image0, image1])
-	}
-
-	override func test_loadFeedActions_requestFeedFromLoader() {
+	func test_loadActions_requestFromLoader() {
 		let (sut, loader) = makeSUT()
-		XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 0, "Expected no loading requests before view is loaded")
 
 		sut.loadViewIfNeeded()
-		XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected a loading request once view is loaded")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 1, "Expected a loading request once view is loaded")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadFeedCallCount, 2, "Expected another loading request once user initiates a reload")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 2, "Expected another loading request once user initiates a reload")
 
 		sut.simulateUserInitiatedReload()
-		XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected yet another loading request once user initiates another reload")
+		XCTAssertEqual(loader.loadImageCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
 	}
 
 	override func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
@@ -371,5 +356,61 @@ class ImageCommentsUIIntegrationTests: FeedUIIntegrationTests {
 
 	private func anyImageData() -> Data {
 		return UIImage.make(withColor: .red).pngData()!
+	}
+
+	private class LoaderSpy: FeedImageDataLoader {
+		// MARK: - FeedLoader
+
+		private var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
+
+		var loadImageCommentsCallCount: Int {
+			return feedRequests.count
+		}
+
+		func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
+			let publisher = PassthroughSubject<[FeedImage], Error>()
+			feedRequests.append(publisher)
+			return publisher.eraseToAnyPublisher()
+		}
+
+		func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
+			feedRequests[index].send(feed)
+		}
+
+		func completeFeedLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			feedRequests[index].send(completion: .failure(error))
+		}
+
+		// MARK: - FeedImageDataLoader
+
+		private struct TaskSpy: FeedImageDataLoaderTask {
+			let cancelCallback: () -> Void
+			func cancel() {
+				cancelCallback()
+			}
+		}
+
+		private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
+
+		var loadedImageURLs: [URL] {
+			return imageRequests.map { $0.url }
+		}
+
+		private(set) var cancelledImageURLs = [URL]()
+
+		func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+			imageRequests.append((url, completion))
+			return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
+		}
+
+		func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
+			imageRequests[index].completion(.success(imageData))
+		}
+
+		func completeImageLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			imageRequests[index].completion(.failure(error))
+		}
 	}
 }
