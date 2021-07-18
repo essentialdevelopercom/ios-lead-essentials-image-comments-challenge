@@ -19,7 +19,7 @@ public final class ImageCommentsUIComposer {
 	) -> ListViewController {
 		let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
 
-		let feedController = makeFeedViewController(title: FeedPresenter.title)
+		let feedController = makeFeedViewController(title: ImageCommentsPresenter.title)
 		feedController.onRefresh = presentationAdapter.loadResource
 
 		presentationAdapter.presenter = LoadResourcePresenter(
