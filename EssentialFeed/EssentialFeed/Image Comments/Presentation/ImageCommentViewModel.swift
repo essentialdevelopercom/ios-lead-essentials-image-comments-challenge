@@ -4,7 +4,7 @@
 
 import Foundation
 
-public struct ImageCommentViewModel: Equatable {
+public struct ImageCommentViewModel: Equatable, Hashable {
 	public let username: String
 	public let createdAt: String
 	public let message: String
