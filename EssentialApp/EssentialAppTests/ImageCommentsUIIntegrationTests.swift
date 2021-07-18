@@ -144,16 +144,8 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		return (sut, loader)
 	}
 
-	private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
-		return FeedImage(id: UUID(), description: description, location: location, url: url)
-	}
-
 	private func makeComment(message: String, username: String) -> ImageComment {
 		ImageComment(id: UUID(), message: message, createdAt: Date(), username: username)
-	}
-
-	private func anyImageData() -> Data {
-		return UIImage.make(withColor: .red).pngData()!
 	}
 
 	func assertThat(_ sut: ListViewController, isRendering imageComments: [ImageComment], file: StaticString = #filePath, line: UInt = #line) {
@@ -190,9 +182,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		RunLoop.current.run(until: Date())
 	}
 
-	private class LoaderSpy: FeedImageDataLoader {
-		// MARK: - FeedLoader
-
+	private class LoaderSpy {
 		private var imageCommentsRequests = [PassthroughSubject<[ImageComment], Error>]()
 
 		var loadImageCommentsCallCount: Int {
@@ -213,36 +203,5 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			let error = NSError(domain: "an error", code: 0)
 			imageCommentsRequests[index].send(completion: .failure(error))
 		}
-
-		// MARK: - FeedImageDataLoader
-
-		private struct TaskSpy: FeedImageDataLoaderTask {
-			let cancelCallback: () -> Void
-			func cancel() {
-				cancelCallback()
-			}
-		}
-
-		private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
-
-		var loadedImageURLs: [URL] {
-			return imageRequests.map { $0.url }
-		}
-
-		private(set) var cancelledImageURLs = [URL]()
-
-		func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-			imageRequests.append((url, completion))
-			return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
-		}
-
-		func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-			imageRequests[index].completion(.success(imageData))
-		}
-
-		func completeImageLoadingWithError(at index: Int = 0) {
-			let error = NSError(domain: "an error", code: 0)
-			imageRequests[index].completion(.failure(error))
-		}
-	}
+    }
 }
