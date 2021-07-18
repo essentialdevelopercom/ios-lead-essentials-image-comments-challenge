@@ -12,7 +12,6 @@ public final class ImageCommentCell: UITableViewCell {
 }
 
 public final class ImageCommentCellController: NSObject {
-
 	private let viewModel: ImageCommentViewModel
 	private var cell: ImageCommentCell?
 
