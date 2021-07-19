@@ -203,5 +203,5 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			let error = NSError(domain: "an error", code: 0)
 			imageCommentsRequests[index].send(completion: .failure(error))
 		}
-    }
+	}
 }
