@@ -194,11 +194,11 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
 		}
 
-		XCTAssertEqual(cell.usernameText, comment.username, "Expected username text to be \(comment.username)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.usernameText, comment.username, "username at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(cell.messageText, comment.message, "Expected message text to be \(comment.message)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.messageText, comment.message, "message at index (\(index))", file: file, line: line)
 
-		XCTAssertEqual(cell.dateText, comment.createdAt, "Expected date text to be \(comment.createdAt)) for comment view at index (\(index))", file: file, line: line)
+		XCTAssertEqual(cell.dateText, comment.createdAt, "date at index (\(index))", file: file, line: line)
 	}
 
 	private func executeRunLoopToCleanUpReferences() {
