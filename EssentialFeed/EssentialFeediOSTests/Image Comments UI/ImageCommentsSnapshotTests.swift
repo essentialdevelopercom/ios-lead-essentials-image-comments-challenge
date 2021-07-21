@@ -9,11 +9,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
 	func test_imageCommentsWithContent() {
 		let sut = makeSUT()
 
-		sut.display([
-			ImageCommentCellController(viewModel: .init(username: "a username", createdAt: "5 seconds ago", message: "a message")),
-			ImageCommentCellController(viewModel: .init(username: "another username", createdAt: "10 minutes ago", message: "another message")),
-			ImageCommentCellController(viewModel: .init(username: "a long long long long long long long long long long long long long long long long long long long long long long long long username", createdAt: "10 months ago", message: "a long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long  message"))
-		])
+		sut.display(imageCommentsWithContent())
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_WITH_CONTENT_light")
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_CONTENT_dark")
@@ -30,6 +26,14 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		controller.tableView.showsVerticalScrollIndicator = false
 		controller.tableView.showsHorizontalScrollIndicator = false
 		return controller
+	}
+
+	private func imageCommentsWithContent() -> [ImageCommentCellController] {
+		[
+			ImageCommentCellController(viewModel: .init(username: "a username", createdAt: "5 seconds ago", message: "a message")),
+			ImageCommentCellController(viewModel: .init(username: "another username", createdAt: "10 minutes ago", message: "another message")),
+			ImageCommentCellController(viewModel: .init(username: "a long long long long long long long long long long long long long long long long long long long long long long long long username", createdAt: "10 months ago", message: "a long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long  message"))
+		]
 	}
 }
 
