@@ -13,7 +13,7 @@ class ImageCommentsPresenterTests: XCTestCase {
 	func test_map_createsViewModel() {
 		let now = Date()
 		let calendar = Calendar(identifier: .gregorian)
-		let locale = Locale(identifier: "en-US")
+		let locale = Locale(identifier: "en_US_POSIX")
 
 		let imageComments = [
 			ImageComment(id: UUID(),
