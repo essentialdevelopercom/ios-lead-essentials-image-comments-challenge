@@ -8,8 +8,8 @@ import EssentialFeed
 class ImageCommentsEndpointTests: XCTestCase {
 	func test_imageComments_endpintURL() {
 		let baseURL = URL(string: "http://base-url.com")!
-		let imageID = "an-image-id"
-		let expected = URL(string: "http://base-url.com/v1/image/an-image-id/comments")!
+		let imageID = UUID(uuidString: "087A31AF-87B9-4019-B708-DEA727E211F9")!
+		let expected = URL(string: "http://base-url.com/v1/image/087A31AF-87B9-4019-B708-DEA727E211F9/comments")!
 
 		let received = ImageCommentsEndpoint.get(imageID: imageID).url(baseURL: baseURL)
 
