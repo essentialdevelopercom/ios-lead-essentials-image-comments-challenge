@@ -5,6 +5,8 @@
 import UIKit
 import EssentialFeediOS
 
+// MARK: General
+
 extension ListViewController {
 	public override func loadViewIfNeeded() {
 		super.loadViewIfNeeded()
@@ -41,6 +43,8 @@ extension ListViewController {
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
 }
+
+// MARK: Feed
 
 extension ListViewController {
 	@discardableResult
@@ -92,4 +96,22 @@ extension ListViewController {
 	}
 
 	private var feedImagesSection: Int { 0 }
+}
+
+// MARK: ImageComments
+
+extension ListViewController {
+	func numberOfRenderedImageCommentsViews() -> Int {
+		numberOfRows(in: imageCommentsSection)
+	}
+
+	func imageCommentView(at row: Int) -> UITableViewCell? {
+		cell(row: row, section: imageCommentsSection)
+	}
+
+	func firstCommentMessage() -> String? {
+		(imageCommentView(at: 0) as? ImageCommentCell)?.messageText
+	}
+
+	private var imageCommentsSection: Int { 0 }
 }
